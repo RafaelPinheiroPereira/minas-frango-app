@@ -8,4 +8,22 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="Button.Tinted" parent="Widget.AppCompat.Button">
+        <item name="colorButtonNormal">#107FC9</item>
+        <item name="colorControlHighlight">@android:color/holo_red_light</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="Button.TintedDois" parent="Widget.AppCompat.Button">
+        <item name="colorButtonNormal">@android:color/holo_red_light</item>
+        <item name="colorControlHighlight">@android:color/holo_orange_dark</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="Button.TintedTres" parent="Widget.AppCompat.Button">
+        <item name="colorButtonNormal">@android:color/holo_green_dark</item>
+        <item name="colorControlHighlight">@android:color/holo_green_light</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
 </resources>

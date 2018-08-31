@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_swipe_item_neutral">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerInParent="true"
+        android:layout_margin="30dp"
+        android:src="@drawable/img_login" />
+
+    <LinearLayout
+        android:id="@+id/LoginBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="56dp">
+
+        <!-- Email Label -->
+
+        <EditText
+            android:id="@+id/edtUser"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:hint="Usuário..."
+            android:textColor="@android:color/black" />
+
+
+        <!-- Password Label -->
+        <EditText
+            android:id="@+id/edtSenha"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+
+            android:fontFamily="sans-serif"
+            android:hint="Senha..."
+            android:inputType="textPassword"
+            android:textColor="@android:color/black" />
+
+
+    </LinearLayout>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/submit"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:theme="@style/Button.Tinted"
+        android:text="@string/acessar"
+        android:textColor="@color/white"
+        android:textSize="24sp" />
+
+</RelativeLayout>
+
