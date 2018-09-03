@@ -38,6 +38,15 @@ public class LoginActivity extends AppCompatActivity {
 				initView();
 				verificaPermissao();
 				carregaAnimacao();
+			    session = new SessionManager(getApplicationContext());
+
+
+			submit.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						validarAcesso(edtMatricula,edtSenha);
+					}
+				});
 		}
 		
 		private void carregaAnimacao() {
@@ -123,8 +132,9 @@ public class LoginActivity extends AppCompatActivity {
 		
 		private void validarAcesso(EditText edtMatricula, EditText edtSenha) {
 				// tenho que chamar a api/rest e validar se der tudo certo crio a sessao do usuario
+
 				session.createUserLoginSession(edtMatricula.getText().toString(), edtSenha.getText().toString());
-				Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+				Intent i = new Intent(getApplicationContext(), MainActivity.class);
 				i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				startActivity(i);
