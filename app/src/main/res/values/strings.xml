@@ -2,6 +2,15 @@
     <string name="app_name">Minas Frango</string>
     <string name="title_activity_login">Sign in</string>
 
+
+    <string name="str_importar_dados">Importar Dados</string>
+    <string name="str_exportar_dados">Exportar Dados</string>
+    <string name="str_logout">Logout</string>
+    <string name="nome_do_usuario">Nome do Usuario:</string>
+    <string name="search_hint">Nome Fantasia,Razao Social,CNPJ/CPF,Cod.Cliente...</string>
+    <string name="action_delete">Limpar Historico</string>
+    <string name="title_spinner_rota">Todas as Rotas</string>
+
     <string name="acessar">Acessar</string>
 
     <!-- Strings related to login -->
@@ -17,3 +26,9 @@
         completions."
     </string>
 </resources>
+
+
+
+
+
+
