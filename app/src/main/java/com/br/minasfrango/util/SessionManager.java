@@ -1,12 +1,14 @@
-package util;
+package com.br.minasfrango.util;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
+import com.br.minasfrango.activity.LoginActivity;
+
 import java.util.HashMap;
 
-import rafaelpinheiro.ufma.com.br.minasfrango.activity.LoginActivity;
+
 
 /**
  * Created by 04717299302 on 26/08/2016.
@@ -21,6 +23,7 @@ public class SessionManager {
 		private static final String IS_USER_LOGIN = "IsUserLoggedIn";
 		public static final String KEY_MATRICULA = "matricula";
 		public static final String KEY_SENHA = "senha";
+		public static final String KEY_NOME = "nome";
 		
 		public SessionManager(Context context) {
 				this.context = context;
@@ -28,7 +31,7 @@ public class SessionManager {
 				editor = pref.edit();
 		}
 		
-		public void createUserLoginSession(String matricula, String senha) {
+		public void createUserLoginSession(String matricula, String senha, String nome) {
 				
 				editor.putBoolean(IS_USER_LOGIN, true);
 				
@@ -37,6 +40,7 @@ public class SessionManager {
 				
 				// salva senha
 				editor.putString(KEY_SENHA, senha);
+				editor.putString(KEY_NOME, nome);
 				
 				// commit changes
 				editor.commit();
@@ -80,6 +84,8 @@ public class SessionManager {
 				
 				user.put(KEY_SENHA, pref.getString(KEY_SENHA, null));
 				
+				user.put(KEY_NOME,pref.getString(KEY_NOME,null));
+				
 				// return user
 				return user;
 		}
@@ -88,6 +94,12 @@ public class SessionManager {
 				pref = this.context.getSharedPreferences(PREFER_NAME, 0);
 				int matricula = Integer.parseInt(pref.getString(KEY_MATRICULA, ""));
 				return matricula;
+		}
+		
+		public String getNome() {
+				pref = this.context.getSharedPreferences(PREFER_NAME, 0);
+				String nome = pref.getString(KEY_NOME, "");
+				return nome;
 		}
 		
 		/**

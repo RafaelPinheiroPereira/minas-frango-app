@@ -1,12 +1,15 @@
-package rafaelpinheiro.ufma.com.br.minasfrango.activity;
+package com.br.minasfrango.activity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -16,8 +19,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import rafaelpinheiro.ufma.com.br.minasfrango.R;
-import util.SessionManager;
+import com.br.minasfrango.R;
+import com.br.minasfrango.model.Funcionario;
+import com.br.minasfrango.service.LoginService;
+import com.br.minasfrango.util.RetrofitConfig;
+import com.br.minasfrango.util.SessionManager;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 		SessionManager session;
@@ -35,17 +45,21 @@ public class LoginActivity extends AppCompatActivity {
 		protected void onCreate(Bundle savedInstanceState) {
 				super.onCreate(savedInstanceState);
 				setContentView(R.layout.activity_login);
+				
 				initView();
 				verificaPermissao();
+				
 				carregaAnimacao();
-			    session = new SessionManager(getApplicationContext());
-
-
-			submit.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						validarAcesso(edtMatricula,edtSenha);
-					}
+				
+				StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+				StrictMode.setThreadPolicy(policy);
+				
+				session = new SessionManager(getApplicationContext());
+				submit.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View view) {
+								validarAcesso(edtMatricula, edtSenha);
+						}
 				});
 		}
 		
@@ -108,21 +122,7 @@ public class LoginActivity extends AppCompatActivity {
 				if (requestCode == REQUEST_STORAGE) {
 						if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 								Toast.makeText(this, "Permissão para acessar Arquivo de Dados concedida", Toast.LENGTH_LONG).show();
-								//cria os diretorios
-
-//								try {
-//										managerFile.lerArquivoVendedor();
-//								} catch (IOException e) {
-//										LoginActivity.this.runOnUiThread(new Runnable() {
-//												public void run() {
-//
-//
-//														Toast.makeText(LoginActivity.this, "ARQUIVO DE ENTRADA: VENDEDOR INVÁLIDO", Toast.LENGTH_LONG).show();
-//
-//												}
-//										});
-//								}
-//						}
+						
 						} else {
 								super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 						}
@@ -130,18 +130,48 @@ public class LoginActivity extends AppCompatActivity {
 				
 		}
 		
-		private void validarAcesso(EditText edtMatricula, EditText edtSenha) {
+		private void validarAcesso(final EditText edtMatricula, final EditText edtSenha) {
 				// tenho que chamar a api/rest e validar se der tudo certo crio a sessao do usuario
-
-				session.createUserLoginSession(edtMatricula.getText().toString(), edtSenha.getText().toString());
-				Intent i = new Intent(getApplicationContext(), MainActivity.class);
-				i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				startActivity(i);
 				
-				finish();
+				final ProgressDialog progressDialog = new ProgressDialog(this);
+				progressDialog.setTitle("Login");
+				progressDialog.setMessage("Realizando Login...");
+				progressDialog.show();
+			
+				LoginService loginService = new RetrofitConfig().getLoginService();
+				
+				Call<Funcionario> autenticaLoginCall = loginService.autenticaLogin(edtSenha.getText().toString(), Long.parseLong(edtMatricula.getText().toString()));
+				
+				autenticaLoginCall.enqueue(new Callback<Funcionario>() {
+						@Override
+						public void onResponse(Call<Funcionario> call, Response<Funcionario> response) {
+								
+								    Funcionario funcionario = response.body();
+								    if(funcionario.getId()==Long.parseLong(edtMatricula.getText().toString()))
+										session.createUserLoginSession(edtMatricula.getText().toString(), edtSenha.getText().toString(),funcionario.getNome());
+										Intent i = new Intent(getApplicationContext(), MainActivity.class);
+										i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+										i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+										progressDialog.dismiss();
+										startActivity(i);
+										finish();
+						}
+						
+						
+						@Override
+						public void onFailure(Call<Funcionario> call, Throwable t) {
+								
+								
+								progressDialog.dismiss();
+								Log.e("LoginService   ", "Erro ao autenticar:" + t.getMessage() );
+								
+						}
+				});
+				
 				
 		}
+		
+		
 }
 
 		

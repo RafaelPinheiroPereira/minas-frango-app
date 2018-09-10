@@ -1,4 +1,4 @@
-package rafaelpinheiro.ufma.com.br.minasfrango;
+package com.br.minasfrango;
 
 import org.junit.Test;
 

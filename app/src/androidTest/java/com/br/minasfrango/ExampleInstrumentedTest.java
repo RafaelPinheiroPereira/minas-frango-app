@@ -1,4 +1,4 @@
-package rafaelpinheiro.ufma.com.br.minasfrango;
+package com.br.minasfrango;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

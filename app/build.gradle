@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
     defaultConfig {
-        applicationId "rafaelpinheiro.ufma.com.br.minasfrango"
+        applicationId "com.br.minasfrango"
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 1
@@ -39,5 +39,19 @@ dependencies {
     }
 
     //Lib requisicao
-    implementation 'com.squareup.okhttp:okhttp:2.3.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+
+
+    //Serializacao e deserializacao de json
+    implementation 'com.squareup.retrofit2:converter-jackson:2.3.0'
+
+
+    compileOnly 'org.projectlombok:lombok:1.18.2'
+    annotationProcessor 'org.projectlombok:lombok:1.18.2'
+
+    //Progress
+
+
+
+
 }
