@@ -97,7 +97,7 @@ public class BaseActivity extends AppCompatActivity {
 														case 2:
 																break;
 														case 3:
-																startActivity(new Intent(BaseActivity.this, LoginActivity.class));
+																startActivity(new Intent(BaseActivity.this, ImportacaoActivity.class));
 																break;
 														case 4:
 																startActivity(new Intent(BaseActivity.this, LoginActivity.class));

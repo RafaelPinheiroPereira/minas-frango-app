@@ -33,6 +33,9 @@ public class SessionManager {
 		
 		public void createUserLoginSession(String matricula, String senha, String nome) {
 				
+				
+				
+				
 				editor.putBoolean(IS_USER_LOGIN, true);
 				
 				// salva matricula
@@ -41,6 +44,7 @@ public class SessionManager {
 				// salva senha
 				editor.putString(KEY_SENHA, senha);
 				editor.putString(KEY_NOME, nome);
+				
 				
 				// commit changes
 				editor.commit();
