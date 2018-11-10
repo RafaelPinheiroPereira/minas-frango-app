@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:id="@+id/layout_cliente"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:orientation="vertical"
+
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="NOME FANTASIA"
+                android:textColor="@color/grey_600"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewNomeFantasia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nome Fantasia"
+                android:textColor="@color/grey_600"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="CÓDIGO"
+                android:textColor="@color/grey_600"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewCodigoCliente"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Código"
+                android:textColor="@color/grey_600"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:maxLines="4"
+                    android:text="RAZÃO SOCIAL"
+                    android:textColor="@color/grey_600"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textViewRazaoSocial"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="4"
+                    android:text="Razão Social"
+                    android:textColor="@color/grey_600"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="CPF/CNPJ"
+                    android:textColor="@color/grey_600"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textCPFCNPJ"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="CPF/CNPJ"
+                    android:textColor="@color/grey_600"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+
+
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:maxLines="4"
+                    android:text="CIDADE"
+                    android:textColor="@color/grey_600"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textViewCidade"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="4"
+                    android:text="Cidade"
+                    android:textColor="@color/grey_600"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:text="BAIRRO"
+                    android:textColor="@color/grey_600"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textViewBairro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="Bairro"
+                    android:textColor="@color/grey_600"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btnReceber"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                android:text="RECEBIMENTOS"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:theme="@style/Button.Tinted" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btnVender"
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="60dp"
+                android:text="VENDAS"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:theme="@style/Button.Tinted_Vender" />
+        </LinearLayout>
+        <View
+            android:id="@+id/view_linha"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/colorPrimary"
+
+            />
+    </LinearLayout>
+
+</LinearLayout>

@@ -14,6 +14,13 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <style name="Button.Tinted_Vender" parent="Widget.AppCompat.Button">
+        <item name="colorButtonNormal">#ff2f8b2a</item>
+        <item name="colorControlHighlight">@android:color/holo_red_light</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+
     <style name="Button.TintedDois" parent="Widget.AppCompat.Button">
         <item name="colorButtonNormal">@android:color/holo_red_light</item>
         <item name="colorControlHighlight">@android:color/holo_orange_dark</item>

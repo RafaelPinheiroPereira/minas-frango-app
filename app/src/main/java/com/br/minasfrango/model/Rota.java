@@ -1,11 +1,16 @@
 package com.br.minasfrango.model;
 
+import java.io.Serializable;
+
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 import lombok.Data;
 
 @Data
-public class Rota {
+public class Rota  extends RealmObject implements Serializable {
 		
-		private double id;
+		@PrimaryKey
+		private long id;
 		
 		private Funcionario funcionario;
 		

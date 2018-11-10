@@ -12,7 +12,9 @@ import android.widget.Toast;
 
 import com.br.minasfrango.R;
 import com.br.minasfrango.activity.adapter.ImportacaoDadosAdapter;
+import com.br.minasfrango.model.Funcionario;
 import com.br.minasfrango.model.ImportacaoDados;
+import com.br.minasfrango.util.ImportData;
 
 import java.util.ArrayList;
 
@@ -71,19 +73,19 @@ public class ImportacaoActivity extends AppCompatActivity implements View.OnClic
             case R.id.btn_importar:
                 //chamar funcao importacao
 
+               
+               try {ImportData importData= new ImportData(ImportacaoActivity.this,importacaoDados,new Funcionario());
+                   importData.execute();
 
-//               try {ImportData importData= new ImportData(ImportacaoActivity.this,importacaoDados);
-//                   importData.execute();
-//
-//               }catch (final Exception e){
-//                   ImportacaoActivity.this.runOnUiThread(new Runnable() {
-//                       public void run() {
-//                           Toast.makeText(ImportacaoActivity.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
-//
-//                       }
-//                   });
-//
-//               }
+               }catch (final Exception e){
+                   ImportacaoActivity.this.runOnUiThread(new Runnable() {
+                       public void run() {
+                           Toast.makeText(ImportacaoActivity.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
+
+                       }
+                   });
+
+               }
 
                 break;
         }

@@ -149,7 +149,7 @@ public class LoginActivity extends AppCompatActivity {
 								    Funcionario funcionario = response.body();
 								    if(funcionario.getId()==Long.parseLong(edtMatricula.getText().toString()))
 										session.createUserLoginSession(edtMatricula.getText().toString(), edtSenha.getText().toString(),funcionario.getNome());
-										Intent i = new Intent(getApplicationContext(), MainActivity.class);
+										Intent i = new Intent(getApplicationContext(), ClienteActivity.class);
 										i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 										i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 										progressDialog.dismiss();

@@ -7,13 +7,9 @@ import io.realm.annotations.PrimaryKey;
 import lombok.Data;
 
 @Data
-public class Localidade extends RealmObject implements Serializable {
+public class TipoRecebimento extends RealmObject implements Serializable {
 		
 		@PrimaryKey
 		private long id;
-		
 		private String nome;
-		
-		private Rota rota;
-		
 }

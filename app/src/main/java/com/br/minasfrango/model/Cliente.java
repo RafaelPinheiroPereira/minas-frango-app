@@ -2,14 +2,17 @@ package com.br.minasfrango.model;
 
 import java.io.Serializable;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-public class Cliente implements Serializable {
+@AllArgsConstructor
+public class Cliente extends RealmObject implements Serializable {
 		
-		private static final long serialVersionUID = -5835341501816588891L;
-		
-		private double id;
+		@PrimaryKey
+		private long id;
 		
 		private String nome;
 		
@@ -32,4 +35,6 @@ public class Cliente implements Serializable {
 		private String telefone;
 		
 		private String cpf;
+		
+		
 }

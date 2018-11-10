@@ -1,5 +1,6 @@
 package com.br.minasfrango.util;
 
+import com.br.minasfrango.service.ImportacaoService;
 import com.br.minasfrango.service.LoginService;
 
 import retrofit2.Retrofit;
@@ -17,5 +18,9 @@ public class RetrofitConfig {
 		
 		public LoginService getLoginService() {
 				return this.retrofit.create(LoginService.class);
+		}
+		
+		public ImportacaoService getImportacaoService() {
+				return this.retrofit.create(ImportacaoService.class);
 		}
 }
