@@ -4,7 +4,7 @@ import com.br.minasfrango.model.Cliente;
 import com.br.minasfrango.model.Funcionario;
 import com.br.minasfrango.model.Preco;
 import com.br.minasfrango.model.Produto;
-import com.br.minasfrango.model.Rota;
+import com.br.minasfrango.model.com.br.minasfrango.dto.RecebimentoDTO;
 import com.br.minasfrango.model.TipoRecebimento;
 import com.br.minasfrango.model.Unidade;
 
@@ -14,7 +14,6 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.Query;
 
 public interface ImportacaoService {
 		
@@ -30,4 +29,7 @@ public interface ImportacaoService {
 		Call<List<Unidade>>importacaoUnidade();
 		@GET("importaPreco")
 		Call<List<Preco>>importacaoPreco();
+		
+		@GET("importaRecebimento")
+		Call<List<RecebimentoDTO>>importacaoRecebimentos();
 }

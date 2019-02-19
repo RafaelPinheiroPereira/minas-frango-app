@@ -11,7 +11,7 @@ public class PrecoID extends RealmObject implements Serializable {
 	  @PrimaryKey
 		private long id;
 		
-		private double idProduto;
+		private long idProduto;
 		
 		private String unidadeProduto;
 		

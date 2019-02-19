@@ -1,9 +1,281 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.VendasActivity">
+    android:fitsSystemWindows="true">
 
-</android.support.constraint.ConstraintLayout>
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+    </android.support.design.widget.AppBarLayout>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="60dp"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="8dp"
+                android:orientation="vertical"
+
+                android:padding="5dp">
+
+                <Spinner
+                    android:id="@+id/spinner_forma_pagamento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Produtos"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/auto_txt_codigo"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="5dp"
+                        android:completionThreshold="1"
+                        android:hint="COD."
+                        android:inputType="number"
+                        android:maxLength="5"
+                        android:textSize="12sp" />
+
+                    <Spinner
+                        android:id="@+id/spn_produtos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="5dp"
+                        android:prompt="@string/title_spinner_rota" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <EditText
+                        android:id="@+id/edtBicos"
+                        android:layout_width="30dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="5dp"
+                        android:hint="Bicos."
+                        android:inputType="number"
+                        android:maxLength="5"
+                        android:textSize="12sp" />
+
+                    <EditText
+                        android:id="@+id/edtQTD"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="5dp"
+                        android:hint="QTD."
+                        android:inputType="number"
+                        android:maxLength="5"
+                        android:textSize="12sp" />
+
+                    <Spinner
+
+                        android:id="@+id/spinner_unidade"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="5dp" />
+
+
+                    <com.br.minasfrango.util.FieldMoney
+                        android:id="@+id/txt_preco_unitario"
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="5dp"
+                        android:inputType="numberDecimal"
+                        android:lines="1"
+                        android:maxLength="13"
+                        android:textSize="12sp">
+
+                        <requestFocus />
+                    </com.br.minasfrango.util.FieldMoney>
+
+
+
+                    <TextView
+                        android:id="@+id/txt_valor_total"
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:textStyle="bold"
+                        android:textColor="#107FC9"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+
+                <Button
+                    android:id="@+id/button_add"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="10dp"
+                    android:text="Adicionar Item"
+                    android:textSize="12sp"
+                    android:theme="@style/Button.Tinted" />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:text="Itens do Pedido"
+                android:textSize="18sp"
+                android:textColor="@android:color/background_dark"
+                android:textStyle="bold" />
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:id="@+id/header"
+                android:orientation="horizontal">
+                <TextView
+
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:layout_marginLeft="5dp"
+                    android:textStyle="bold"
+                    android:text="CÓD."/>
+
+                <TextView
+
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="DESCRIÇÃO"
+                    android:layout_marginLeft="5dp"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+                <TextView
+
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:layout_marginLeft="5dp"
+                    android:textStyle="bold"
+                    android:text="QTD."/>
+                <TextView
+
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:layout_marginLeft="5dp"
+                    android:textStyle="bold"
+                    android:text="UNIDADE"/>
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:layout_marginLeft="5dp"
+                    android:textStyle="bold"
+                    android:text="TOTAL"/>
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/card_recycler_itens"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="8dp"
+                 />
+
+            <TextView
+                android:id="@+id/txt_valor_total_pedido"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="20dp"
+                android:text="Total:"
+                android:textSize="16sp"
+                android:textColor="#107FC9"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+
+                <Button
+                    android:id="@+id/btn_cancelar_pedido"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/icon_cancel_24"
+                    android:text="Cancelar"
+                    android:textSize="14sp"
+                    android:theme="@style/Button.Tinted" />
+
+                <Button
+                    android:id="@+id/btn_confirmar_pedido"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+
+
+                    android:drawableLeft="@mipmap/icon_done"
+                    android:text="Confirmar"
+                    android:textSize="14sp"
+                    android:theme="@style/Button.Tinted" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</android.support.design.widget.CoordinatorLayout>

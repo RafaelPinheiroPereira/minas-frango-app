@@ -23,7 +23,9 @@
 
         <!-- Email Label -->
 
-
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
         <EditText
             android:id="@+id/edtUser"
@@ -34,8 +36,10 @@
             android:inputType="number"
             android:hint="Matricula"
             android:textColor="@android:color/black" />
-
-
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
         <!-- Password Label -->
         <EditText
             android:id="@+id/edtSenha"
@@ -43,12 +47,11 @@
             android:layout_height="40dp"
             android:layout_margin="10dp"
             android:padding="10dp"
-
             android:fontFamily="sans-serif"
             android:hint="Senha"
             android:inputType="textPassword"
             android:textColor="@android:color/black" />
-
+        </android.support.design.widget.TextInputLayout>
 
     </LinearLayout>
 

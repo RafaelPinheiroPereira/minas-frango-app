@@ -6,12 +6,14 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.br.minasfrango.dao.RecebimentoDAO;
 import com.br.minasfrango.model.Cliente;
 import com.br.minasfrango.model.Funcionario;
 import com.br.minasfrango.model.ImportacaoDados;
 import com.br.minasfrango.model.Preco;
 import com.br.minasfrango.model.Produto;
-import com.br.minasfrango.model.Rota;
+import com.br.minasfrango.model.Recebimento;
+import com.br.minasfrango.model.com.br.minasfrango.dto.RecebimentoDTO;
 import com.br.minasfrango.model.TipoRecebimento;
 import com.br.minasfrango.model.Unidade;
 import com.br.minasfrango.service.ImportacaoService;
@@ -33,135 +35,110 @@ public class ImportData extends AsyncTask<Void, Void, Boolean> {
 		
 		private ProgressDialog dialog;
 		private Context ctx;
-		ArrayList<ImportacaoDados> importacaoDados;
+		private int count = 0;
 		Funcionario funcionario;
+		RecebimentoDAO recebimentoDAO;
 		
-		public ImportData(Context ctx, ArrayList<ImportacaoDados> importacaoDados, Funcionario funcionario) {
+		public ImportData(Context ctx, Funcionario funcionario) {
 				dialog = new ProgressDialog(ctx);
-				this.importacaoDados = importacaoDados;
 				this.ctx = ctx;
 				this.funcionario = funcionario;
+				
 		}
 		
 		@Override
 		protected void onPreExecute() {
-				super.onPreExecute();
+				
 				dialog.setMessage("Importando dados...");
 				dialog.show();
 		}
 		
 		@Override
-		protected void onPostExecute(Boolean aBoolean) {
-				super.onPostExecute(aBoolean);
-				if (dialog.isShowing()) {
+		protected void onPostExecute(Boolean importou) {
+				super.onPostExecute(importou);
+				
+				if (importou) {
 						dialog.dismiss();
 						Toast.makeText(ctx, "Importacao Realizada", Toast.LENGTH_LONG).show();
 				}
 		}
 		
 		@Override
-		protected Boolean doInBackground(Void... voids) {
+		protected Boolean doInBackground(Void... params) {
+				
 				try {
+						return realizaImportacao();
+				} catch (IOException e) {
+						e.printStackTrace();
 						
-						realizaImportacao(importacaoDados);
-						
-				} catch (Exception e) {
-				
 				}
-				return true;
+				
+				return false;
 		}
 		
-		public boolean realizaImportacao(ArrayList<ImportacaoDados> importacaoDados) throws IOException {
-				
-				for (ImportacaoDados aux : importacaoDados) {
+		public boolean realizaImportacao() throws IOException {
+				boolean importou = false;
+				if (importarClientes()) {
 						
-						if (aux.isSelected()) {
-								switch (aux.getCodigo()) {
-										case "1":
-												
-												importarClientes();
-												
-												break;
-										case "2":
-												importarTipoRecebimentos();
-												break;
-										case "3":
-												
-												importarUnidades();
-												
-												break;
-										case "4":
-												
-												importarProdutos();
-												
-												break;
-										case "5":
-												importarPrecos();
-												break;
-								}
-						}
-				}
-				return true;
-				
-		}
-		
-		private void importarClientes() {
-				ImportacaoService importacaoService = new RetrofitConfig().getImportacaoService();
-				
-				Funcionario aux = new Funcionario();
-				aux.setId(1);
-				Call<List<Cliente>> clientes = importacaoService.importacaoCliente(aux);
-				
-				clientes.enqueue(new Callback<List<Cliente>>() {
-						@Override
-						public void onResponse(Call<List<Cliente>> call, Response<List<Cliente>> response) {
-								List<Cliente> clientes = response.body();
-								
-								//salva no realm
-
-// Get a Realm instance for this thread
-								Realm realm = Realm.getDefaultInstance();
-								
-								realm.beginTransaction();
-								for (Cliente aux : clientes) {
-										realm.copyToRealmOrUpdate(aux);
-								}
-								realm.commitTransaction();
-								
-								RealmResults<Cliente> results = realm.where(Cliente.class).findAll();
-								//perguntar para milson se eh para excluir tudo
-								if (results.size() >= 0) {
-										
-										for (int i = 0; i < results.size(); i++) {
-												Log.d("Clientes", results.get(i).getRazaoSocial());
+						if (importarTipoRecebimentos()) {
+								if (importarProdutos()) {
+										if (importarUnidades()) {
+												if (importarPrecos()) {
+														if (importarRecebimentos()) {
+																importou = true;
+														}
+														
+												}
 												
 										}
+										
 								}
 								
-								
 						}
-						
-						@Override
-						public void onFailure(Call<List<Cliente>> call, Throwable t) {
-								dialog.dismiss();
-								Log.e("ImportacaoService   ", "Erro ao importar:" + t.getMessage());
-								
-						}
-				});
+				}
+				
+				return importou;
+				
 		}
 		
-		private void importarProdutos() {
+		private boolean importarClientes() {
+				
 				ImportacaoService importacaoService = new RetrofitConfig().getImportacaoService();
-				
-				Produto aux = new Produto();
-				
-				final Call<List<Produto>> produtos = importacaoService.importacaoProduto();
-				
-				produtos.enqueue(new Callback<List<Produto>>() {
-						@Override
-						public void onResponse(Call<List<Produto>> call, Response<List<Produto>> response) {
-								List<Produto> produtos = response.body();
+				Funcionario aux = new Funcionario();
+				aux.setId(1);
+				Call<List<Cliente>> callCliente = importacaoService.importacaoCliente(aux);
+				Response<List<Cliente>> responseCliente = null;
+				try {
+						responseCliente = callCliente.execute();
+						
+						if (responseCliente.isSuccessful()) {
+								List<Cliente> clientes = responseCliente.body();
+								Realm realm = Realm.getDefaultInstance();
+								realm.beginTransaction();
+								for (Cliente clienteEntityToSave : clientes) {
+										realm.copyToRealmOrUpdate(clienteEntityToSave);
+								}
+								realm.commitTransaction();
+								Log.d("Importacao Clientes", "Sucess");
+								return true;
 								
+						} else {
+								dialog.dismiss();
+						}
+						
+				} catch (IOException e) {
+						e.printStackTrace();
+				}
+				return false;
+		}
+		
+		private boolean importarProdutos() {
+				ImportacaoService importacaoService = new RetrofitConfig().getImportacaoService();
+				Call<List<Produto>> callProdutos = importacaoService.importacaoProduto();
+				try {
+						Response<List<Produto>> responseProdutos = callProdutos.execute();
+						if (responseProdutos.isSuccessful()) {
+								List<Produto> produtos = responseProdutos.body();
 								Realm realm = Realm.getDefaultInstance();
 								
 								realm.beginTransaction();
@@ -169,122 +146,73 @@ public class ImportData extends AsyncTask<Void, Void, Boolean> {
 										realm.copyToRealmOrUpdate(aux);
 								}
 								realm.commitTransaction();
-								
-								RealmResults<Produto> results = realm.where(Produto.class).findAll();
-								//perguntar para milson se eh para excluir tudo
-								if (results.size() >= 0) {
-										
-										for (int i = 0; i < results.size(); i++) {
-												Log.d("Produtos", results.get(i).getNome());
-												
-										}
-								}
-								
-								
+								Log.d("Importacao Produtos", "Sucess");
+								return true;
 						}
 						
-						@Override
-						public void onFailure(Call<List<Produto>> call, Throwable t) {
-								dialog.dismiss();
-								Log.e("ImportacaoService   ", "Erro ao importar:" + t.getMessage());
-								
-						}
-				});
-		}
-		
-		private void importarTipoRecebimentos() {
-				ImportacaoService importacaoService = new RetrofitConfig().getImportacaoService();
-				
-				final Call<List<TipoRecebimento>> rotas = importacaoService.importacaoTipoRecebimento();
-				
-				rotas.enqueue(new Callback<List<TipoRecebimento>>() {
-						@Override
-						public void onResponse(Call<List<TipoRecebimento>> call, Response<List<TipoRecebimento>> response) {
-								List<TipoRecebimento> tipos = response.body();
-								
-								Realm realm = Realm.getDefaultInstance();
-								
-								realm.beginTransaction();
-								for (TipoRecebimento aux : tipos) {
-										realm.copyToRealmOrUpdate(aux);
-								}
-								realm.commitTransaction();
-								
-								RealmResults<TipoRecebimento> results = realm.where(TipoRecebimento.class).findAll();
-								//perguntar para milson se eh para excluir tudo
-								if (results.size() >= 0) {
-										
-										for (int i = 0; i < results.size(); i++) {
-												Log.d("TipoRecebimento", results.get(i).getNome());
-												
-										}
-								}
-								
-								
-						}
 						
-						@Override
-						public void onFailure(Call<List<TipoRecebimento>> call, Throwable t) {
-								dialog.dismiss();
-								Log.e("ImportacaoService   ", "Erro ao importar:" + t.getMessage());
-								
-						}
-				});
+				} catch (IOException e) {
+						e.printStackTrace();
+				}
+				return false;
 		}
 		
-		private void importarUnidades() {
+		private boolean importarTipoRecebimentos() {
 				ImportacaoService importacaoService = new RetrofitConfig().getImportacaoService();
-				
-				final Call<List<Unidade>> unidades = importacaoService.importacaoUnidade();
-				
-				unidades.enqueue(new Callback<List<Unidade>>() {
-						@Override
-						public void onResponse(Call<List<Unidade>> call, Response<List<Unidade>> response) {
-								List<Unidade> unidades = response.body();
-								
+				Call<List<TipoRecebimento>> callTipoRecebimento = importacaoService.importacaoTipoRecebimento();
+				try {
+						Response<List<TipoRecebimento>> responseTipoRecebimento = callTipoRecebimento.execute();
+						List<TipoRecebimento> tipoRecebimentos = responseTipoRecebimento.body();
+						Realm realm = Realm.getDefaultInstance();
+						
+						realm.beginTransaction();
+						for (TipoRecebimento aux : tipoRecebimentos) {
+								realm.copyToRealmOrUpdate(aux);
+						}
+						realm.commitTransaction();
+						Log.d("Importacao Tipo", "Sucess");
+						return true;
+				} catch (IOException e) {
+						e.printStackTrace();
+				}
+				return false;
+		}
+		
+		private boolean importarUnidades() {
+				ImportacaoService importacaoService = new RetrofitConfig().getImportacaoService();
+				Call<List<Unidade>> callUnidades = importacaoService.importacaoUnidade();
+				try {
+						Response<List<Unidade>> responseUnidades = callUnidades.execute();
+						if (responseUnidades.isSuccessful()) {
+								List<Unidade> unidades = responseUnidades.body();
 								Realm realm = Realm.getDefaultInstance();
 								
 								realm.beginTransaction();
 								for (Unidade aux : unidades) {
-										aux.setId(aux.getChavesUnidade().getIdUnidade() + aux.getChavesUnidade().getIdProduto());
+										aux.setId(aux.getChavesUnidade().getIdUnidade() + "-" + aux.getChavesUnidade().getIdProduto());
+										
 										realm.copyToRealmOrUpdate(aux);
 								}
 								realm.commitTransaction();
-								
-								RealmResults<Unidade> results = realm.where(Unidade.class).findAll();
-								//perguntar para milson se eh para excluir tudo
-								if (results.size() >= 0) {
-										
-										for (int i = 0; i < results.size(); i++) {
-												Log.d("Unidades", results.get(i).getNome());
-												
-										}
-								}
-								
-								
+								Log.d("Importacao Unidades", "Sucess");
+								return true;
 						}
-						
-						@Override
-						public void onFailure(Call<List<Unidade>> call, Throwable t) {
-								dialog.dismiss();
-								Log.e("ImportacaoService   ", "Erro ao importar:" + t.getMessage());
-								
-						}
-				});
+				} catch (IOException e) {
+						e.printStackTrace();
+				}
+				
+				return false;
+				
 		}
 		
-		private void importarPrecos() {
+		private boolean importarPrecos() {
 				ImportacaoService importacaoService = new RetrofitConfig().getImportacaoService();
-				
-				final Call<List<Preco>> precos = importacaoService.importacaoPreco();
-				
-				precos.enqueue(new Callback<List<Preco>>() {
-						@Override
-						public void onResponse(Call<List<Preco>> call, Response<List<Preco>> response) {
-								List<Preco> precos = response.body();
-								
+				Call<List<Preco>> callPrecos = importacaoService.importacaoPreco();
+				try {
+						Response<List<Preco>> responsePrecos = callPrecos.execute();
+						if (responsePrecos.isSuccessful()) {
+								List<Preco> precos = responsePrecos.body();
 								Realm realm = Realm.getDefaultInstance();
-								
 								realm.beginTransaction();
 								for (Preco aux : precos) {
 										aux.setId(aux.getChavesPreco().getId() + "-" + aux.getChavesPreco().getIdCliente() + "-" +
@@ -292,26 +220,40 @@ public class ImportData extends AsyncTask<Void, Void, Boolean> {
 										realm.copyToRealmOrUpdate(aux);
 								}
 								realm.commitTransaction();
+								Log.d("Importacao Precos", "Sucess");
+								return true;
+						}
+				} catch (IOException e) {
+						e.printStackTrace();
+				}
+				
+				return false;
+				
+		}
+		
+		private boolean importarRecebimentos() {
+				ImportacaoService importacaoService = new RetrofitConfig().getImportacaoService();
+				Call<List<RecebimentoDTO>> callRecebimentos = importacaoService.importacaoRecebimentos();
+				try {
+						Response<List<RecebimentoDTO>> responseRecebimentoDTO = callRecebimentos.execute();
+						if (responseRecebimentoDTO.isSuccessful()) {
+								List<RecebimentoDTO> recebimentoDTOS = responseRecebimentoDTO.body();
+								recebimentoDAO = RecebimentoDAO.getInstace();
 								
-								RealmResults<Preco> results = realm.where(Preco.class).findAll();
-								//perguntar para milson se eh para excluir tudo
-								if (results.size() >= 0) {
+								for (RecebimentoDTO aux : recebimentoDTOS) {
 										
-										for (int i = 0; i < results.size(); i++) {
-												Log.d("Preco", results.get(i).getId() + " - " + results.get(i).getValor());
-												
-										}
+										Recebimento recebimento = RecebimentoDTO.transformaDTOParaModel(aux);
+										recebimentoDAO.addRecibo(recebimento);
+										
 								}
-								
 						}
-						
-						@Override
-						public void onFailure(Call<List<Preco>> call, Throwable t) {
-								dialog.dismiss();
-								Log.e("ImportacaoService   ", "Erro ao importar:" + t.getMessage());
-								
-						}
-				});
+						Log.d("Importacao RecebDTos", "Sucess");
+						return true;
+				} catch (IOException e) {
+						e.printStackTrace();
+				}
+				return false;
+				
 		}
 		
 }

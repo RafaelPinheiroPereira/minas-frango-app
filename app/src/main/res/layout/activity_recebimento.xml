@@ -1,0 +1,342 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@color/colorPrimary"
+            android:elevation="0dp"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
+
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp"
+            android:text="Dados do Cliente"
+            android:textColor="@android:color/background_dark"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/icon_razao_social_48"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/txt_codigo_cliente"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="Codigo Cliente"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txt_nome_fantasia"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="3dp"
+                        android:text="Nome Fantasia"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+
+                    >
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txt_cidade"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="3dp"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/icon_cidade"
+                        android:text="Endereço:"
+                        android:textColor="@android:color/background_dark"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txt_endereco"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="2dp"
+                        android:text="Rua das Paparaubas, 14 - Renascença"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Formas de Pagamento:"
+                        android:textColor="@android:color/background_dark"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/spinner_tipo_recebimento"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/background_dark"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Valor a Amortizar:"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="wrap_content">
+
+                    <com.br.minasfrango.util.FieldMoney
+                        android:id="@+id/edt_amortizacao"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:inputType="numberDecimal"
+                        android:lines="1"
+                        android:gravity="center_vertical"
+                        android:maxLength="13"
+                        android:text=""
+                        android:textSize="14sp">
+                        <requestFocus />
+                    </com.br.minasfrango.util.FieldMoney>
+                </android.support.design.widget.TextInputLayout>
+
+                <Button
+                    android:id="@+id/btn_confirmar_amortizacao"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="30dp"
+                    android:drawableLeft="@mipmap/icon_vender"
+                    android:text="Amortizar"
+                    android:textSize="14sp"
+                    android:theme="@style/Button.Tinted" />
+            </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginTop="20dp"
+                    android:text="Vendas a Receber"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal"
+
+                    >
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ID"
+                        android:layout_marginLeft="5dp"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        />
+                    <TextView
+
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        android:text="VENDA"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="5dp"
+                        android:textSize="10sp"
+                        />
+
+
+
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="DT.VENDA"
+                        android:layout_marginLeft="5dp"
+                        android:textColor="@color/grey_600"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        />
+                    <TextView
+
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:text="$ VENDA"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="10dp"
+                        android:textSize="10sp"
+                        />
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$ AMORTIZADO"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="5dp"
+                        android:textSize="10sp"
+                        />
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SALDO"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="15dp"
+                        android:textSize="10sp"
+                        />
+
+
+                </LinearLayout>
+
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycleview_recebimentos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    ></android.support.v7.widget.RecyclerView>
+
+                <Button
+                    android:id="@+id/btn_imprimir_recibo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:drawableLeft="@mipmap/icone_print"
+                    android:text="Gerar Recibo"
+                    android:textSize="14sp"
+                    android:theme="@style/Button.Tinted" />
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
+
+        >
+        <TextView
+            android:id="@+id/textViewID"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="ID"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/grey_600"
+            android:textSize="12sp"
+            />
+        <TextView
+            android:id="@+id/textViewDescricaoItem"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="Descricao"
+            android:textStyle="bold"
+            android:layout_marginLeft="5dp"
+            android:textSize="12sp"
+            />
+
+
+
+        <TextView
+            android:id="@+id/textViewQTDItem"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:text="QTD."
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/grey_600"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:id="@+id/textViewUnidade"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:text="Unidade"
+            android:textStyle="bold"
+            android:layout_marginLeft="10dp"
+            android:textSize="12sp"
+            />
+
+
+        <TextView
+            android:id="@+id/textValorTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total"
+            android:textStyle="bold"
+
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/grey_600"
+            android:textSize="12sp"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/Button.Tinted"
+        android:text="Editar"
+        android:textSize="10sp"
+        android:drawableStart="@mipmap/icon_cancel_24"
+        android:id="@+id/btn_edit_item_pedido"
+
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_delete_item_pedido"
+        android:layout_marginLeft="15dp"
+        android:text="Deletar"
+        android:textSize="10sp"
+        android:drawableStart="@mipmap/icon_delete_24"
+        android:theme="@style/Button.Tinted"
+        />
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorPrimary" />
+
+</LinearLayout>

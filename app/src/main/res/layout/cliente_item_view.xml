@@ -3,7 +3,7 @@
 
     android:id="@+id/layout_cliente"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="5dp">
 
@@ -14,52 +14,63 @@
         android:orientation="vertical"
 
         >
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/txtPositivado"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="POSITIVADO"
+            android:textColor="@color/primary_dark"
+            android:textSize="14sp"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
 
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:text="NOME FANTASIA"
-                android:textColor="@color/grey_600"
-                android:textSize="14sp"
-                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textViewNomeFantasia"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Nome Fantasia"
-                android:textColor="@color/grey_600"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+            <ImageView
 
-            <TextView
-                android:layout_width="120dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="CÓDIGO"
-                android:textColor="@color/grey_600"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:src="@mipmap/icon_razao_social_48"
 
+                />
             <TextView
                 android:id="@+id/textViewCodigoCliente"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Código"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
                 android:textColor="@color/grey_600"
-                android:textSize="12sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewNomeFantasia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nome Fantasia"
+                android:textColor="@color/grey_600"
+                android:textSize="16sp"
+
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:textStyle="bold" />
+
+
+
+
+
 
         </LinearLayout>
 
@@ -67,106 +78,45 @@
 
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
-
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:maxLines="4"
-                    android:text="RAZÃO SOCIAL"
-                    android:textColor="@color/grey_600"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textViewRazaoSocial"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLines="4"
-                    android:text="Razão Social"
-                    android:textColor="@color/grey_600"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
 
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:text="CPF/CNPJ"
-                    android:textColor="@color/grey_600"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/textCPFCNPJ"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
 
-                    android:text="CPF/CNPJ"
-                    android:textColor="@color/grey_600"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
             </LinearLayout>
 
 
 
 
 
+
+
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
-
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:maxLines="4"
-                    android:text="CIDADE"
-                    android:textColor="@color/grey_600"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textViewCidade"
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxLines="4"
-                    android:text="Cidade"
-                    android:textColor="@color/grey_600"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
+                    android:src="@mipmap/icon_cidade"
+                    />
                 <TextView
-
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:text="BAIRRO"
-                    android:textColor="@color/grey_600"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textViewBairro"
+                    android:id="@+id/textViewEndereco"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
-                    android:text="Bairro"
+                    android:text="Endereco"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
                     android:textColor="@color/grey_600"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -175,30 +125,32 @@
 
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginTop="5dp"
-
             android:orientation="horizontal">
 
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/btnReceber"
-                android:layout_width="150dp"
-                android:layout_height="match_parent"
-                android:text="RECEBIMENTOS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RECEBER"
+                android:drawableLeft="@mipmap/icon_receber"
                 android:textColor="@color/white"
-                android:textSize="12sp"
+                android:textSize="10sp"
                 android:theme="@style/Button.Tinted" />
 
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/btnVender"
-                android:layout_width="120dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="60dp"
                 android:text="VENDAS"
+                android:drawableLeft="@mipmap/icon_vender"
                 android:textColor="@color/white"
-                android:textSize="12sp"
-                android:theme="@style/Button.Tinted_Vender" />
+                android:textSize="10sp"
+                android:theme="@style/Button.Tinted" />
+
         </LinearLayout>
         <View
             android:id="@+id/view_linha"

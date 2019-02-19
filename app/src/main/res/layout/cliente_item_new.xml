@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="-4dp"
+    android:layout_marginLeft="3dp"
+    android:layout_marginStart="3dp"
+    android:layout_marginRight="3dp"
+    android:layout_marginEnd="3dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:id="@+id/contentContainerRl"
+        android:layout_width="wrap_content"
+        android:layout_height="156dp"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground">
+
+        <ImageView
+            android:id="@+id/profileImageIv"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="14dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+
+            android:padding="10dp"
+            android:src="@mipmap/icon_razao_social_48" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="18dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="13dp"
+            android:layout_marginRight="13dp"
+            android:layout_marginBottom="15dp"
+            android:layout_toStartOf="@+id/buttonsContainerLl"
+            android:layout_toLeftOf="@+id/buttonsContainerLl"
+            android:layout_toEndOf="@id/profileImageIv"
+            android:layout_toRightOf="@id/profileImageIv"
+            android:gravity="center_horizontal|start"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewNomeFantasia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:ellipsize="end"
+                android:text="Nome Fanstasia"
+                android:textColor="@color/primary_text"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/textViewEndereco"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:text="Bairro"
+                android:textColor="@color/secondary_text"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/buttonsContainerLl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="45dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="15dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/btnReceber"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignStart="@+id/buttonsContainerLl"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="4dp"
+                android:background="@drawable/user_action_button_idle_selector"
+                android:paddingStart="15dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="15dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="5dp"
+                android:src="@mipmap/icon_receber" />
+
+            <ImageView
+                android:id="@+id/btnVender"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"
+                android:background="@drawable/user_action_button_activated_selector"
+                android:paddingStart="15dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="15dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="5dp"
+                android:src="@mipmap/icon_vender" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imgInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="21dp"
+            app:srcCompat="@mipmap/more_horizontal_36" />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

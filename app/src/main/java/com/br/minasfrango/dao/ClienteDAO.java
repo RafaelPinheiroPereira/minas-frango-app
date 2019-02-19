@@ -1,6 +1,8 @@
 package com.br.minasfrango.dao;
 
 import com.br.minasfrango.model.Cliente;
+import com.br.minasfrango.model.Funcionario;
+import com.br.minasfrango.model.Localidade;
 import com.br.minasfrango.model.Rota;
 
 import java.util.ArrayList;
@@ -31,23 +33,29 @@ public class ClienteDAO {
 		public ArrayList<Cliente> allClientes() {
 				ArrayList<Cliente> clientes = new ArrayList<Cliente>();
 				
-				RealmResults<Cliente> results = realm.where(Cliente.class).findAll();
+				RealmResults<Cliente> results = realm.where(Cliente.class).sort("nome",Sort.DESCENDING).findAll();
 				
 				if (results != null && results.size() > 0) {
 						
 						for (int i = 0; i < results.size(); i++) {
+								Funcionario funcionario = new Funcionario(results.get(i).getLocalidade().getRota().getFuncionario().getId()
+												, results.get(i).getLocalidade().getRota().getFuncionario().getSenha(),
+												results.get(i).getLocalidade().getRota().getFuncionario().getNome(), results.get(i).getLocalidade().getRota().getFuncionario().getTipoFuncionario());
+								Rota rota = new Rota(results.get(i).getLocalidade().getRota().getId(), funcionario,
+												results.get(i).getLocalidade().getRota().getNome());
+								Localidade localidade = new Localidade(results.get(i).getLocalidade().getId(), results.get(i).getLocalidade().getNome(),rota );
 								Cliente aux = new Cliente(results.get(i).getId(),
-																						results.get(i).getNome(),
-																						results.get(i).getRazaoSocial(),
-																						results.get(i).getLocalidade(),
-																						results.get(i).getEndereco(),
-																						results.get(i).getNumero(),
-																						results.get(i).getBairro(),
-																						results.get(i).getCidade(),
-																						results.get(i).getCep(),
-																						results.get(i).getReferencia(),
-																						results.get(i).getTelefone(),
-																						results.get(i).getCpf());
+												results.get(i).getNome(),
+												results.get(i).getRazaoSocial(),
+												localidade,
+												results.get(i).getEndereco(),
+												results.get(i).getNumero(),
+												results.get(i).getBairro(),
+												results.get(i).getCidade(),
+												results.get(i).getCep(),
+												results.get(i).getReferencia(),
+												results.get(i).getTelefone(),
+												results.get(i).getCpf());
 								clientes.add(aux);
 						}
 						
@@ -57,16 +65,31 @@ public class ClienteDAO {
 				
 		}
 		
-		public ArrayList<Cliente> carregaClientesPorRota(Rota rota) {
+		public ArrayList<Cliente> carregaClientesPorRota(Rota rotaToSearch) {
 				ArrayList<Cliente> clientes = new ArrayList<Cliente>();
 				RealmQuery<Cliente> clienteRealmQuery = realm.where(Cliente.class);
-				RealmResults<Cliente> resultCliente = clienteRealmQuery.equalTo("codigoRota", rota.getId()).findAll();
-				resultCliente.sort("ordemRota", Sort.ASCENDING);
-				
-				if (resultCliente != null) {
-						for (int i = 0; i < resultCliente.size(); i++) {
-								cliente = resultCliente.get(i);
-								clientes.add(cliente);
+				RealmResults<Cliente> results = clienteRealmQuery.equalTo("localidade.rota.id", rotaToSearch.getId()).sort("nome",Sort.DESCENDING).findAll();
+				if (results != null) {
+						for (int i = 0; i < results.size(); i++) {
+								Funcionario funcionario = new Funcionario(results.get(i).getLocalidade().getRota().getFuncionario().getId()
+												, results.get(i).getLocalidade().getRota().getFuncionario().getSenha(),
+												results.get(i).getLocalidade().getRota().getFuncionario().getNome(), results.get(i).getLocalidade().getRota().getFuncionario().getTipoFuncionario());
+								Rota rota = new Rota(results.get(i).getLocalidade().getRota().getId(), funcionario,
+												results.get(i).getLocalidade().getRota().getNome());
+								Localidade localidade = new Localidade(results.get(i).getLocalidade().getId(), results.get(i).getLocalidade().getNome(),rota );
+								Cliente aux = new Cliente(results.get(i).getId(),
+												results.get(i).getNome(),
+												results.get(i).getRazaoSocial(),
+												localidade,
+												results.get(i).getEndereco(),
+												results.get(i).getNumero(),
+												results.get(i).getBairro(),
+												results.get(i).getCidade(),
+												results.get(i).getCep(),
+												results.get(i).getReferencia(),
+												results.get(i).getTelefone(),
+												results.get(i).getCpf());
+								clientes.add(aux);
 						}
 				}
 				return clientes;

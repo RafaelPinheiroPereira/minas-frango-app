@@ -1,5 +1,6 @@
 package com.br.minasfrango.util;
 
+ import com.br.minasfrango.service.ExportacaoService;
 import com.br.minasfrango.service.ImportacaoService;
 import com.br.minasfrango.service.LoginService;
 
@@ -11,7 +12,9 @@ public class RetrofitConfig {
 		private Retrofit retrofit;
 		
 		public RetrofitConfig() {
-				this.retrofit = new Retrofit.Builder().baseUrl("http://10.0.2.2:8080/rest/minasFrango/").
+				this.retrofit = new Retrofit.Builder().
+								//baseUrl("http://10.0.2.2:8080/rest/minasFrango/").
+								baseUrl("http://192.168.0.10:8080/rest/minasFrango/").
 								addConverterFactory(JacksonConverterFactory.create()).
 								build();
 		}
@@ -22,5 +25,9 @@ public class RetrofitConfig {
 		
 		public ImportacaoService getImportacaoService() {
 				return this.retrofit.create(ImportacaoService.class);
+		}
+		
+		public ExportacaoService getExportacaoService() {
+				return this.retrofit.create(ExportacaoService.class);
 		}
 }

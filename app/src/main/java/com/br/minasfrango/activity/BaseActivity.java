@@ -16,8 +16,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.br.minasfrango.R;
+import com.br.minasfrango.model.ItemPedido;
+import com.br.minasfrango.model.Pedido;
+import com.br.minasfrango.model.com.br.minasfrango.dto.ItemPedidoDTO;
+import com.br.minasfrango.model.com.br.minasfrango.dto.PedidoDTO;
+import com.br.minasfrango.util.ExportData;
 import com.br.minasfrango.util.SessionManager;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
@@ -26,6 +32,14 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 
 public class BaseActivity extends AppCompatActivity {
 		
@@ -97,12 +111,10 @@ public class BaseActivity extends AppCompatActivity {
 														case 2:
 																break;
 														case 3:
-																startActivity(new Intent(BaseActivity.this, ImportacaoActivity.class));
+																startActivity(new Intent(BaseActivity.this, SincronizarDadosActivity.class));
 																break;
+													
 														case 4:
-																startActivity(new Intent(BaseActivity.this, LoginActivity.class));
-																break;
-														case 5:
 																alertaConfirmacao();
 																break;
 												}
@@ -113,15 +125,17 @@ public class BaseActivity extends AppCompatActivity {
 				fullView.addItem(new PrimaryDrawerItem().withName("Home").withIcon(getResources().getDrawable(R.mipmap.ic_home)));
 				fullView.addItem(new PrimaryDrawerItem().withName("Pedidos").withIcon(getResources().getDrawable(R.mipmap.ic_cart)));
 				fullView.addItem(new PrimaryDrawerItem().withName("Clientes").withIcon(getResources().getDrawable(R.drawable.ic_face_black_24dp)));
-				fullView.addItem(new PrimaryDrawerItem().withName("Importar Dados").withIcon(getResources().getDrawable(R.drawable.ic_file_download_black_24dp)));
-				fullView.addItem(new PrimaryDrawerItem().withName("Exportar Dados").withIcon(getResources().getDrawable(R.drawable.ic_file_upload_black_24dp)));
-				
+				fullView.addItem(new PrimaryDrawerItem().withName("Sincronizar Dados").withIcon(getResources().getDrawable(R.drawable.sicronizacao_dados)));
 				fullView.addItem(new PrimaryDrawerItem().withName("Sair").withIcon(getResources().getDrawable(R.mipmap.ic_logout)));
 				if (Build.VERSION.SDK_INT >= 19) {
 						fullView.getDrawerLayout().setFitsSystemWindows(false);
 				}
 				
 		}
+		
+		
+		
+		
 		
 		protected void setDrawer(Bundle savedInstanceState, int layoutId, String titulo) {
 				super.onCreate(savedInstanceState);

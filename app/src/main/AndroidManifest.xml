@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-        <activity android:name=".activity.ClienteActivity"></activity>
+        <activity android:name=".activity.ClienteActivity" />
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,13 +27,28 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.ImportacaoActivity"
+            android:name=".activity.SincronizarDadosActivity"
             android:parentActivityName=".activity.ClienteActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.ImportacaoActivity" />
+                android:value=".activity.SincronizarDadosActivity" />
         </activity>
-        <activity android:name=".activity.VendasActivity"></activity>
+
+        <activity
+            android:name=".activity.VendasActivity"
+            android:parentActivityName=".activity.ClienteActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.VendasActivity" />
+        </activity>
+        <activity
+            android:name=".activity.RecebimentoActivity"
+            android:label="@string/title_activity_recebimento"
+            android:parentActivityName=".activity.ClienteActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.RecebimentoActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -25,6 +25,8 @@ import com.br.minasfrango.service.LoginService;
 import com.br.minasfrango.util.RetrofitConfig;
 import com.br.minasfrango.util.SessionManager;
 
+import java.io.IOException;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -95,7 +97,9 @@ public class LoginActivity extends AppCompatActivity {
 				submit.setVisibility(View.GONE);
 				imgLogo = findViewById(R.id.logo);
 				edtMatricula = findViewById(R.id.edtUser);
+				edtMatricula.setText("1");
 				edtSenha = findViewById(R.id.edtSenha);
+				edtSenha.setText("1234");
 		}
 		
 		private void verificaPermissao() {
@@ -141,32 +145,30 @@ public class LoginActivity extends AppCompatActivity {
 				LoginService loginService = new RetrofitConfig().getLoginService();
 				
 				Call<Funcionario> autenticaLoginCall = loginService.autenticaLogin(edtSenha.getText().toString(), Long.parseLong(edtMatricula.getText().toString()));
-				
-				autenticaLoginCall.enqueue(new Callback<Funcionario>() {
-						@Override
-						public void onResponse(Call<Funcionario> call, Response<Funcionario> response) {
-								
-								    Funcionario funcionario = response.body();
-								    if(funcionario.getId()==Long.parseLong(edtMatricula.getText().toString()))
+				try {
+						Response<Funcionario> responseFuncionario=autenticaLoginCall.execute();
+						if(responseFuncionario.isSuccessful()) {
+								Funcionario funcionario = responseFuncionario.body();
+								if(funcionario.getId()==Long.parseLong(edtMatricula.getText().toString()))
 										session.createUserLoginSession(edtMatricula.getText().toString(), edtSenha.getText().toString(),funcionario.getNome());
-										Intent i = new Intent(getApplicationContext(), ClienteActivity.class);
-										i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-										i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-										progressDialog.dismiss();
-										startActivity(i);
-										finish();
-						}
-						
-						
-						@Override
-						public void onFailure(Call<Funcionario> call, Throwable t) {
-								
-								
+								Intent i = new Intent(getApplicationContext(), ClienteActivity.class);
+								i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+								i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 								progressDialog.dismiss();
-								Log.e("LoginService   ", "Erro ao autenticar:" + t.getMessage() );
-								
+								startActivity(i);
+								finish();
 						}
-				});
+						else{
+								progressDialog.dismiss();
+						}
+				} catch (IOException e) {
+						e.printStackTrace();
+				}
+				
+				
+						
+						
+				
 				
 				
 		}

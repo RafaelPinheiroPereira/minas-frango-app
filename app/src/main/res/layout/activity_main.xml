@@ -40,8 +40,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ROTA"
-                android:textStyle="bold"/>
+                android:text="ROTAS"
+                android:textColor="@color/textColorPrimary"
+                android:textSize="15sp"
+                />
             <Spinner
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -51,14 +53,6 @@
 
             </Spinner>
 
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/edit_text_data_venda"
-                android:layout_marginLeft="10dp"
-                android:maxLength="10"
-                android:inputType="date"
-                android:hint="Data Venda..."/>
 
         </LinearLayout>
 
