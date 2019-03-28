@@ -3,27 +3,16 @@ package com.br.minasfrango.util;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.br.minasfrango.model.Cliente;
-import com.br.minasfrango.model.Funcionario;
-import com.br.minasfrango.model.ItemPedido;
-import com.br.minasfrango.model.Pedido;
-import com.br.minasfrango.model.com.br.minasfrango.dto.ListaPedidoDTO;
-import com.br.minasfrango.model.com.br.minasfrango.dto.PedidoDTO;
+import com.br.minasfrango.dto.ListaPedidoDTO;
+import com.br.minasfrango.dto.PedidoDTO;
 import com.br.minasfrango.service.ExportacaoService;
-import com.br.minasfrango.service.ImportacaoService;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.Realm;
-import io.realm.RealmResults;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 

@@ -4,7 +4,7 @@ import com.br.minasfrango.model.Cliente;
 import com.br.minasfrango.model.Funcionario;
 import com.br.minasfrango.model.Preco;
 import com.br.minasfrango.model.Produto;
-import com.br.minasfrango.model.com.br.minasfrango.dto.RecebimentoDTO;
+import com.br.minasfrango.dto.RecebimentoDTO;
 import com.br.minasfrango.model.TipoRecebimento;
 import com.br.minasfrango.model.Unidade;
 
@@ -30,6 +30,6 @@ public interface ImportacaoService {
 		@GET("importaPreco")
 		Call<List<Preco>>importacaoPreco();
 		
-		@GET("importaRecebimento")
-		Call<List<RecebimentoDTO>>importacaoRecebimentos();
+		@POST("importaRecebimento")
+		Call<List<RecebimentoDTO>>importacaoRecebimentos(@Body Funcionario funcionario);
 }

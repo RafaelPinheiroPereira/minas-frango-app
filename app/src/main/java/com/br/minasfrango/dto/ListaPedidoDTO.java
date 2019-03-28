@@ -1,6 +1,4 @@
-package com.br.minasfrango.model.com.br.minasfrango.dto;
-
-import com.br.minasfrango.model.Pedido;
+package com.br.minasfrango.dto;
 
 import java.io.Serializable;
 import java.util.List;

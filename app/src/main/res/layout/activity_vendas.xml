@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cl_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
@@ -32,195 +32,189 @@
 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="60dp"
+            android:padding="5dp"
             android:orientation="vertical">
-
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="8dp"
                 android:orientation="vertical"
+                 android:padding="5dp">
 
-                android:padding="5dp">
 
                 <Spinner
                     android:id="@+id/spinner_forma_pagamento"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
+                <View
+                    android:id="@+id/divider6"
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:background="?android:attr/listDivider" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Produtos"
-                    android:textColor="@android:color/background_dark"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
                     android:orientation="horizontal">
+
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content">
 
                     <AutoCompleteTextView
                         android:id="@+id/auto_txt_codigo"
-                        android:layout_width="60dp"
+                        android:layout_width="110dp"
                         android:layout_height="wrap_content"
+                        android:padding="10dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="5dp"
                         android:completionThreshold="1"
-                        android:hint="COD."
+                        android:hint="COD.PRODUTO"
                         android:inputType="number"
                         android:maxLength="5"
-                        android:textSize="12sp" />
+                        android:textSize="18sp" />
+                    </android.support.design.widget.TextInputLayout>
 
                     <Spinner
                         android:id="@+id/spn_produtos"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="5dp"
-                        android:prompt="@string/title_spinner_rota" />
+                        android:gravity="center_vertical"
+                        android:padding="5dp"
+                        />
+
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:orientation="horizontal">
-                    <EditText
-                        android:id="@+id/edtBicos"
-                        android:layout_width="30dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="5dp"
-                        android:hint="Bicos."
-                        android:inputType="number"
-                        android:maxLength="5"
-                        android:textSize="12sp" />
-
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content">
                     <EditText
                         android:id="@+id/edtQTD"
-                        android:layout_width="60dp"
+                        android:layout_width="110dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="5dp"
-                        android:hint="QTD."
+                        android:padding="10dp"
+                        android:hint="QUANTIDADE."
                         android:inputType="number"
-                        android:maxLength="5"
-                        android:textSize="12sp" />
+                        android:maxLength="6"
+                        android:layout_gravity="center_vertical"
+                        android:textSize="18sp" />
+                    </android.support.design.widget.TextInputLayout>
 
                     <Spinner
-
                         android:id="@+id/spinner_unidade"
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="5dp" />
-
-
-                    <com.br.minasfrango.util.FieldMoney
-                        android:id="@+id/txt_preco_unitario"
-                        android:layout_width="40dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="5dp"
-                        android:inputType="numberDecimal"
-                        android:lines="1"
-                        android:maxLength="13"
-                        android:textSize="12sp">
-
-                        <requestFocus />
-                    </com.br.minasfrango.util.FieldMoney>
-
-
-
-                    <TextView
-                        android:id="@+id/txt_valor_total"
-                        android:layout_width="80dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_marginLeft="10dp"
-                        android:textStyle="bold"
-                        android:textColor="#107FC9"
-                        android:textSize="18sp" />
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:padding="5dp" />
+
                 </LinearLayout>
 
+                 <LinearLayout
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_marginTop="10dp"
+                     android:orientation="horizontal">
+                     <android.support.design.widget.TextInputLayout
+                         android:layout_width="110dp"
+                         android:layout_height="wrap_content">
 
-                <Button
+                         <EditText
+                             android:id="@+id/edtBicos"
+                             android:layout_width="110dp"
+                             android:layout_height="wrap_content"
+                             android:layout_gravity="center_vertical"
+                             android:hint="QTD.BICOS"
+                             android:text="0"
+                             android:inputType="number"
+                             android:padding="10dp"
+                             android:textSize="18sp" />
+                     </android.support.design.widget.TextInputLayout>
+
+                     <android.support.design.widget.TextInputLayout
+                         android:layout_width="80dp"
+                         android:layout_height="wrap_content">
+
+                         <com.br.minasfrango.util.CurrencyEditText
+
+                             android:id="@+id/txt_preco_unitario"
+                             android:layout_width="80dp"
+                             android:layout_height="wrap_content"
+                             android:hint="PREÇO"
+                             android:layout_gravity="center_vertical"
+                             android:inputType="numberDecimal"
+                             android:lines="1"
+                             android:maxLength="9"
+                             android:textColor="@android:color/black"
+                             android:textSize="18sp"
+                             app:groupDivider="."
+                             app:locale="en_US"
+                             app:monetaryDivider=","
+                             app:showSymbol="false">
+
+                             <requestFocus />
+                         </com.br.minasfrango.util.CurrencyEditText>
+                     </android.support.design.widget.TextInputLayout>
+
+                     <TextView
+                         android:id="@+id/txt_valor_total"
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         android:layout_gravity="center_vertical"
+                         android:gravity="right"
+                         android:padding="5dp"
+                         android:layout_marginRight="10dp"
+                         android:textColor="@color/primary_text"
+                         android:textSize="18sp" />
+                   </LinearLayout>
+
+
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="ITENS DO PEDIDO"
+                    android:textSize="18sp"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@android:color/background_dark"
+                    android:textStyle="bold" />
+
+                <android.support.design.button.MaterialButton
                     android:id="@+id/button_add"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="10dp"
-                    android:text="Adicionar Item"
-                    android:textSize="12sp"
-                    android:theme="@style/Button.Tinted" />
-
-
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="20dp"
-                android:text="Itens do Pedido"
-                android:textSize="18sp"
-                android:textColor="@android:color/background_dark"
-                android:textStyle="bold" />
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:id="@+id/header"
-                android:orientation="horizontal">
-                <TextView
-
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:layout_marginLeft="5dp"
-                    android:textStyle="bold"
-                    android:text="CÓD."/>
-
-                <TextView
-
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:text="DESCRIÇÃO"
-                    android:layout_marginLeft="5dp"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-                <TextView
-
-                    android:layout_width="60dp"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:layout_marginLeft="5dp"
-                    android:textStyle="bold"
-                    android:text="QTD."/>
-                <TextView
-
-                    android:layout_width="60dp"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:layout_marginLeft="5dp"
-                    android:textStyle="bold"
-                    android:text="UNIDADE"/>
-                <TextView
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:layout_marginLeft="5dp"
-                    android:textStyle="bold"
-                    android:text="TOTAL"/>
+                    android:layout_marginLeft="10dp"
+                    android:text="ADICIONAR ITEM"
+                    app:backgroundTint="@color/primary_dark"
+                    style="@style/Widget.MaterialComponents.Button"
+                    app:icon="@mipmap/add_circle_white_36dp"
+                    />
 
             </LinearLayout>
+
+
+
+
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/card_recycler_itens"
@@ -237,11 +231,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_marginTop="15dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginRight="10dp"
                 android:text="Total:"
-                android:textSize="16sp"
-                android:textColor="#107FC9"
-                android:textStyle="bold" />
+                android:textSize="18sp"
+                android:textColor="@color/primary_text"
+              />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -249,28 +243,16 @@
                 android:gravity="right"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal">
-
-
-                <Button
-                    android:id="@+id/btn_cancelar_pedido"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@mipmap/icon_cancel_24"
-                    android:text="Cancelar"
-                    android:textSize="14sp"
-                    android:theme="@style/Button.Tinted" />
-
-                <Button
+                <android.support.design.button.MaterialButton
                     android:id="@+id/btn_confirmar_pedido"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Salvar Pedido"
+                    android:textColor="#fff"
+                    app:backgroundTint="@color/primary_dark"
+                    app:icon="@mipmap/icon_done" />
 
-
-                    android:drawableLeft="@mipmap/icon_done"
-                    android:text="Confirmar"
-                    android:textSize="14sp"
-                    android:theme="@style/Button.Tinted" />
             </LinearLayout>
 
 
@@ -278,4 +260,4 @@
     </ScrollView>
 
 
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

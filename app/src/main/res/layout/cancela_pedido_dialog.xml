@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clickable="true"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/motivo_cancelamento_edt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="MOTIVO CANCELAMENTO*"
+            android:inputType="text"
+            android:lines="15"
+            android:maxLength="300"
+            android:padding="15dp"
+            android:textColor="@android:color/black"
+            android:textSize="18sp">
+
+            <requestFocus />
+        </EditText>
+    </android.support.design.widget.TextInputLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:padding="10dp"
+        android:textColor="@color/primary_text"
+        android:text="DESEJA REALMENTE CANCELAR ESTE PEDIDO?"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:padding="30dp"
+
+        android:orientation="horizontal">
+
+        <android.support.design.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/nao_button"
+
+            android:text="NÃO"
+            android:textColor="#fff"
+            android:textSize="14sp"
+            app:backgroundTint="@color/fab"
+            style="@style/Widget.MaterialComponents.Button"
+            app:icon="@mipmap/icon_cancel_24"/>
+
+        <android.support.design.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/sim_button"
+            app:backgroundTint="@color/brand_red"
+            android:text="SIM"
+            android:textSize="14sp"
+            android:textColor="#fff"
+            style="@style/Widget.MaterialComponents.Button"
+            app:icon="@mipmap/icon_done"/>
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
+
+
+
+

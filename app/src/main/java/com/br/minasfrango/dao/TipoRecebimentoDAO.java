@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import java.util.List;
 
 /**
  * Created by 04717299302 on 16/01/2017.
@@ -15,62 +16,88 @@ import io.realm.RealmResults;
 
 public class TipoRecebimentoDAO {
 
-    RealmResults<TipoRecebimento> result;
-    Realm realm ;
 
-    public static  TipoRecebimentoDAO getInstace(){
+    Realm realm;
+
+    RealmQuery<TipoRecebimento> query;
+
+    public static TipoRecebimentoDAO getInstace() {
         return new TipoRecebimentoDAO();
     }
+
     public TipoRecebimentoDAO() {
-        realm=Realm.getDefaultInstance();
+        realm = Realm.getDefaultInstance();
     }
 
-    public ArrayList<String> carregaFormaPagamentoCliente(Cliente cliente) {
-        ArrayList<String> formas  = new ArrayList<String>();
-        formas.add("FORMAS DE PAGAMENTO");
-        RealmQuery<TipoRecebimento> formaPagamentoRealmQuery= realm.where(TipoRecebimento.class);
-        result = formaPagamentoRealmQuery.findAll();
+    public List<TipoRecebimento> findTipoRecebimentoByCliente(Cliente cliente) {
+        List<TipoRecebimento> tipoRecebimentos = new ArrayList<TipoRecebimento>();
+        query = realm.where(TipoRecebimento.class);
+        RealmResults<TipoRecebimento> results = query.findAll();
 
-        if (result != null) {
-            
-            for (TipoRecebimento tipoRecebimento : result) {
-                formas.add(String.valueOf(tipoRecebimento.getNome()));
+        if (results != null && results.size() > 0) {
+
+            for (TipoRecebimento tipoRecebimento : results) {
+                tipoRecebimentos.add(transformaResultEmTipoRecebimento(tipoRecebimento));
             }
+            return tipoRecebimentos;
         }
-        return formas;
-
+        return null;
     }
 
 
-    
-    
+    private TipoRecebimento transformaResultEmTipoRecebimento(TipoRecebimento tipoRecebimentoToTransforme) {
+        TipoRecebimento tipoRecebimento = new TipoRecebimento();
+        tipoRecebimento.setId(tipoRecebimentoToTransforme.getId());
+        tipoRecebimento.setNome(tipoRecebimentoToTransforme.getNome());
+
+        return tipoRecebimento;
+    }
+
 
     public int codigoFormaPagamento(String descricaoFormaPagamento) {
 
-        RealmQuery<TipoRecebimento> formaPagamentoRealmQuery= realm.where(TipoRecebimento.class);
-        result = formaPagamentoRealmQuery.equalTo("nome",descricaoFormaPagamento).findAll();
-        int codigo=0;
+        RealmQuery<TipoRecebimento> formaPagamentoRealmQuery = realm.where(TipoRecebimento.class);
+        RealmResults<TipoRecebimento> result = formaPagamentoRealmQuery.equalTo("nome", descricaoFormaPagamento)
+                .findAll();
+        int codigo = 0;
         if (result != null) {
 
             for (TipoRecebimento tipoRecebimento : result) {
-                 codigo= (int) tipoRecebimento.getId();
+                codigo = (int) tipoRecebimento.getId();
             }
         }
         return codigo;
 
     }
-		
-		public ArrayList<String>  carregaFormaPagamentoAmortizacao() {
-        ArrayList<String> formas  = new ArrayList<String>();
-        RealmQuery<TipoRecebimento> formaPagamentoRealmQuery= realm.where(TipoRecebimento.class);
-        result = formaPagamentoRealmQuery.equalTo("id",1).findAll();
-        
+
+    public TipoRecebimento findById(long id) {
+
+        query = realm.where(TipoRecebimento.class);
+        TipoRecebimento result = query.equalTo("id", id).findAll().first();
+
         if (result != null) {
-            
+
+            return transformaResultToTipoRecebimento(result);
+        }
+        return null;
+
+    }
+
+    private TipoRecebimento transformaResultToTipoRecebimento(TipoRecebimento result) {
+        return new TipoRecebimento(result.getId(), result.getNome());
+    }
+
+    public ArrayList<String> carregaFormaPagamentoAmortizacao() {
+        ArrayList<String> formas = new ArrayList<String>();
+        RealmQuery<TipoRecebimento> formaPagamentoRealmQuery = realm.where(TipoRecebimento.class);
+        RealmResults<TipoRecebimento> result = formaPagamentoRealmQuery.equalTo("id", 1).findAll();
+
+        if (result != null) {
+
             for (TipoRecebimento tipoRecebimento : result) {
                 formas.add(String.valueOf(tipoRecebimento.getNome()));
             }
         }
         return formas;
-		}
+    }
 }

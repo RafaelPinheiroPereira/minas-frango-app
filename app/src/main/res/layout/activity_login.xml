@@ -34,7 +34,7 @@
             android:layout_margin="10dp"
             android:padding="10dp"
             android:inputType="number"
-            android:hint="Matricula"
+            android:hint="MATRICULA"
             android:textColor="@android:color/black" />
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
@@ -48,7 +48,8 @@
             android:layout_margin="10dp"
             android:padding="10dp"
             android:fontFamily="sans-serif"
-            android:hint="Senha"
+            android:hint="SENHA"
+
             android:inputType="textPassword"
             android:textColor="@android:color/black" />
         </android.support.design.widget.TextInputLayout>
@@ -57,13 +58,19 @@
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/submit"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:theme="@style/Button.Tinted"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="36dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginBottom="107dp"
+        android:gravity="center_horizontal"
         android:text="@string/acessar"
         android:textColor="@color/white"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:theme="@style/Button.Tinted" />
 
 </RelativeLayout>
 

@@ -18,7 +18,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-        <activity android:name=".activity.ClienteActivity" />
+        <activity android:name=".activity.ClienteActivity">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable_clientes" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.PedidoActivity" />
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,13 +42,19 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.SincronizarDadosActivity" />
         </activity>
-
         <activity
             android:name=".activity.VendasActivity"
             android:parentActivityName=".activity.ClienteActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.VendasActivity" />
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable_vendas" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activity.RecebimentoActivity"
@@ -49,6 +64,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.RecebimentoActivity" />
         </activity>
+        <activity
+            android:name=".activity.VisualizarPedidoActivity"
+            android:parentActivityName=".activity.PedidoActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.VisualizarPedidoActivity" />
+        </activity>
+
     </application>
 
 </manifest>

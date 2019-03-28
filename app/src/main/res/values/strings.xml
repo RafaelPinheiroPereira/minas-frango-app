@@ -7,7 +7,8 @@
     <string name="str_exportar_dados">Exportar Dados</string>
     <string name="str_logout">Logout</string>
     <string name="nome_do_usuario">Nome do Usuario:</string>
-    <string name="search_hint">Nome Fantasia,Razao Social,CNPJ/CPF,Cod.Cliente...</string>
+    <string name="search_hint">FANTASIA...</string>
+    <string name="search_vendas_hint">ID PRODUTO, DESCRIÇÃO...</string>
     <string name="action_delete">Limpar Historico</string>
     <string name="title_spinner_rota">Todas as Rotas</string>
 

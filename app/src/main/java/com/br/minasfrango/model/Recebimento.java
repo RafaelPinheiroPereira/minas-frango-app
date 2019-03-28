@@ -25,13 +25,17 @@ public class Recebimento extends RealmObject implements Serializable {
 		private double valorAmortizado;
 		private Date dataRecebimento;
 		private long tipoRecebimento;
+		private Date dataVencimento;
+
+		private boolean check=false;
 		
-		public Recebimento(long idFuncionario, long idCliente, long idVenda, Date dataVenda, double valorVenda) {
+		public Recebimento(long idFuncionario, long idCliente, long idVenda, Date dataVenda, double valorVenda,Date dataVencimento) {
 				this.idFuncionario = idFuncionario;
 				this.idCliente = idCliente;
 				this.idVenda = idVenda;
 				this.dataVenda = dataVenda;
 				this.valorVenda = valorVenda;
+				this.dataVencimento=dataVencimento;
 				
 		}
 }

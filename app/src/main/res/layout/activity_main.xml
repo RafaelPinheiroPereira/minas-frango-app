@@ -42,7 +42,8 @@
                 android:layout_height="wrap_content"
                 android:text="ROTAS"
                 android:textColor="@color/textColorPrimary"
-                android:textSize="15sp"
+                android:textSize="18sp"
+                android:padding="5dp"
                 />
             <Spinner
                 android:layout_width="wrap_content"

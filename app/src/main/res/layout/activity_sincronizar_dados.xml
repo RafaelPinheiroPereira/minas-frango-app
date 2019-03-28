@@ -33,7 +33,10 @@
 
         <android.support.design.button.MaterialButton
             android:id="@+id/btn_importar"
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            app:backgroundTint="@color/primary_dark"
+            style="@style/Widget.MaterialComponents.Button"
+
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -46,6 +49,7 @@
 
         <android.support.design.button.MaterialButton
             android:id="@+id/btn_exportar"
+            app:backgroundTint="@color/primary_dark"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,7 +57,6 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="30dp"
             android:minWidth="200dp"
-
             android:text="Exportar"
             android:textSize="20sp"
             app:icon="@drawable/ic_file_upload_black_24dp" />

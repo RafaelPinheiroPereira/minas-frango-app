@@ -41,7 +41,12 @@ public class ProdutoDAO {
         if (resultProduto != null && resultProduto.size() >0) {
             for (Produto produto : resultProduto) {
                  if(produto.getUnidade() !=null) {
-                     produtos.add(produto);
+                     Produto aux= new Produto();
+                     aux.setNome(produto.getNome());
+                     aux.setId(produto.getId());
+                     aux.setUnidade(produto.getUnidade());
+                     aux.setQuantidade(produto.getQuantidade());
+                     produtos.add(aux);
                  }
             }
         }

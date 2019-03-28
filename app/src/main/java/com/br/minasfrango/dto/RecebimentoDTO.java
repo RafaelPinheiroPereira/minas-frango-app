@@ -1,4 +1,4 @@
-package com.br.minasfrango.model.com.br.minasfrango.dto;
+package com.br.minasfrango.dto;
 
 import com.br.minasfrango.model.Recebimento;
 
@@ -19,7 +19,14 @@ public class RecebimentoDTO implements Serializable {
 		private long idVenda;
 		private Date dataVenda;
 		private double valorVenda;
-		public static Recebimento transformaDTOParaModel(RecebimentoDTO recebimentoDTO){
-				return new Recebimento(recebimentoDTO.getIdFuncionario(),recebimentoDTO.getIdCliente(),recebimentoDTO.getIdVenda(),recebimentoDTO.getDataVenda(),recebimentoDTO.getValorVenda());
+		private Date dataVencimento;
+		
+		public static Recebimento transformaDTOParaModel(RecebimentoDTO recebimentoDTO) {
+				return new Recebimento(recebimentoDTO.getIdFuncionario(),
+								recebimentoDTO.getIdCliente(),
+								recebimentoDTO.getIdVenda(),
+								recebimentoDTO.getDataVenda(),
+								recebimentoDTO.getValorVenda(),
+								recebimentoDTO.getDataVencimento());
 		}
 }

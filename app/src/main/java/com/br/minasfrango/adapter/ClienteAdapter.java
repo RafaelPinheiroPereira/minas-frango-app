@@ -1,18 +1,18 @@
-package com.br.minasfrango.activity.adapter;
+package com.br.minasfrango.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.br.minasfrango.R;
 import com.br.minasfrango.dao.PedidoDAO;
+import com.br.minasfrango.listener.RecyclerViewOnClickListenerHack;
 import com.br.minasfrango.model.Cliente;
 
 import java.util.ArrayList;
@@ -23,22 +23,21 @@ import java.util.List;
  */
 
 public class ClienteAdapter
-				extends RecyclerView.Adapter<ClienteAdapter.MyViewHolder> {
+				extends RecyclerView.Adapter<ClienteAdapter.MyViewHolder> implements Filterable {
 		private Context mContext;
 		private List<Cliente> mList;
 		private LayoutInflater mLayoutInflater;
 		private RecyclerViewOnClickListenerHack mRecyclerViewOnClickListenerHack;
 		PedidoDAO pedidoDAO;
-
-		
-		
+		private List<Cliente> clienteListFiltered;
+		private ClienteAdapterListener listener;
 		
 		public ClienteAdapter(Context c, List<Cliente> l) {
 				this.mContext = c;
 				this.mList = l;
-
+				this.clienteListFiltered=l;
 				this.mLayoutInflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			  pedidoDAO = PedidoDAO.getInstace();
+				pedidoDAO = PedidoDAO.getInstace();
 				
 				
 		}
@@ -51,21 +50,20 @@ public class ClienteAdapter
 		}
 		
 		public Cliente getItem(int position) {
-				return this.mList.get(position);
+				return this.clienteListFiltered.get(position);
 		}
 		
 		@Override
 		public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
 				
-			
-				myViewHolder.nomeFantasiaTextView.setText(mList.get(position).getNome());
-				myViewHolder.enderecoTextView.setText(mList.get(position).getEndereco() != null ? mList.get(position).getEndereco() : "");
-		
+				myViewHolder.nomeFantasiaTextView.setText(clienteListFiltered.get(position).getNome());
+				myViewHolder.enderecoTextView.setText(clienteListFiltered.get(position).getEndereco() != null ? clienteListFiltered.get(position).getEndereco() : "");
+				
 		}
 		
 		@Override
 		public int getItemCount() {
-				return mList.size();
+				return clienteListFiltered.size();
 		}
 		
 		public void setRecyclerViewOnClickListenerHack(RecyclerViewOnClickListenerHack r) {
@@ -73,38 +71,73 @@ public class ClienteAdapter
 		}
 		
 		public void addListItem(Cliente c, int position) {
-				mList.add(c);
+				clienteListFiltered.add(c);
 				notifyItemInserted(position);
 		}
 		
 		public void removeListItem(int position) {
-				mList.remove(position);
+				clienteListFiltered.remove(position);
 				notifyItemRemoved(position);
+		}
+		
+		@Override
+		public Filter getFilter() {
+				return new Filter() {
+						@Override
+						protected FilterResults performFiltering(CharSequence charSequence) {
+								String charString = charSequence.toString();
+								if (charString.isEmpty()) {
+										clienteListFiltered = mList;
+								} else {
+										List<Cliente> filteredList = new ArrayList<>();
+										for (Cliente cliente : mList) {
+												
+												if (cliente.getNome().toLowerCase().contains(charString.toLowerCase())) {
+														filteredList.add(cliente);
+												}
+										}
+										
+										clienteListFiltered = filteredList;
+								}
+								
+								FilterResults filterResults = new FilterResults();
+								filterResults.values = clienteListFiltered;
+								return filterResults;
+						}
+						
+						@Override
+						protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+								clienteListFiltered = (ArrayList<Cliente>) filterResults.values;
+								notifyDataSetChanged();
+						}
+				};
+		}
+		public interface ClienteAdapterListener {
+				void onClienteSelected(Cliente cliente);
 		}
 		
 		public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 				
+				public ImageView imgReceber, imgVender, imgInfo;
 				
-				
-				public ImageView imgReceber, imgVender,imgInfo;
-			
 				public TextView nomeFantasiaTextView, enderecoTextView;
 				
 				public MyViewHolder(View itemView) {
 						super(itemView);
 						
-
-						
-						nomeFantasiaTextView = (TextView) itemView.findViewById(R.id.textViewNomeFantasia);
-						enderecoTextView = (TextView) itemView.findViewById(R.id.textViewEndereco);
-						imgReceber = (ImageView) itemView.findViewById(R.id.btnReceber);
-						imgVender = (ImageView) itemView.findViewById(R.id.btnVender);
-						imgInfo = (ImageView) itemView.findViewById(R.id.imgInfo);
+						nomeFantasiaTextView = itemView.findViewById(R.id.textViewNomeFantasia);
+						enderecoTextView = itemView.findViewById(R.id.textViewEndereco);
+						imgReceber = itemView.findViewById(R.id.btnReceber);
+						imgVender = itemView.findViewById(R.id.btnVender);
+						imgInfo = itemView.findViewById(R.id.imgInfo);
 						itemView.setOnClickListener(this);
 						itemView.setOnLongClickListener(this);
 						imgVender.setOnClickListener(this);
 						imgReceber.setOnClickListener(this);
 						imgInfo.setOnClickListener(this);
+						
+						
+
 				}
 				
 				@Override
@@ -122,6 +155,7 @@ public class ClienteAdapter
 						}
 						return false;
 				}
+				
 		}
 		
 		

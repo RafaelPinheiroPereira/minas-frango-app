@@ -14,12 +14,12 @@ import lombok.NoArgsConstructor;
 public class ItemPedido extends RealmObject implements Serializable {
 		@PrimaryKey
 		private long id;
-	  ItemPedidoID chavesItemPedido;
+	    ItemPedidoID chavesItemPedido;
 		private String descricao;
 		private Double valorUnitario;
 		private double valorTotal;
-		private double quantidade;
-		private double bicos;
+		private int quantidade;
+		private int bicos;
 		
 		
 }

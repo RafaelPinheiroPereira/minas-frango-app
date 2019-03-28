@@ -1,4 +1,4 @@
-package com.br.minasfrango.activity.adapter;
+package com.br.minasfrango.adapter;
 
 import android.content.Context;
 import android.util.Log;

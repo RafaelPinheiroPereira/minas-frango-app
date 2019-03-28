@@ -1,5 +1,6 @@
 package com.br.minasfrango.model;
 
+import com.br.minasfrango.dao.ItemPedidoDAO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -19,23 +20,35 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Pedido extends RealmObject implements Serializable {
-		
-		
-				@PrimaryKey
-				private long id;
-				private long codigoCliente;
-				private long codigoFuncionario;
-				private RealmList<ItemPedido> itens;
-				private double valorTotal;
-			  private long tipoRecebimento;
-				private Date dataPedido;
-				
-				public List<ItemPedido> realmListToList(){
-						List<ItemPedido> itemPedidos = new ArrayList<ItemPedido>();
-						for(ItemPedido aux:getItens()){
-								itemPedidos.add(aux);
-						}
-						return itemPedidos;
-				}
-				
-		}
+
+
+    @PrimaryKey
+    private long id;
+
+    private long codigoCliente;
+
+    private long codigoFuncionario;
+
+    private RealmList<ItemPedido> itens;
+
+    private double valorTotal;
+
+    private long tipoRecebimento;
+
+    private Date dataPedido;
+
+    private String motivoCancelamento;
+
+    private boolean cancelado;
+    
+    public List<ItemPedido> realmListToList() {
+        ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstace();
+        List<ItemPedido> itemPedidos = new ArrayList<ItemPedido>();
+        for (ItemPedido aux : getItens()) {
+
+            itemPedidos.add(itemPedidoDAO.searchItem(aux));
+        }
+        return itemPedidos;
+    }
+
+}

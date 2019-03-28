@@ -101,7 +101,8 @@ public class FieldMoney
         //
         // Preenche o campo com a mascara a ser utilizada.
         //
-        this.setText("Valor da Venda");
+        this.setText("VALOR RECEBIDO");
+        this.setHint("VALOR RECEBIDO");
 
         //
         // Seta a seleção na primeira casa.

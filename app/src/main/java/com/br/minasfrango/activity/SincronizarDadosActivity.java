@@ -7,17 +7,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.br.minasfrango.R;
-import com.br.minasfrango.activity.adapter.ImportacaoDadosAdapter;
 import com.br.minasfrango.model.Funcionario;
-import com.br.minasfrango.model.ImportacaoDados;
 import com.br.minasfrango.model.ItemPedido;
 import com.br.minasfrango.model.Pedido;
-import com.br.minasfrango.model.com.br.minasfrango.dto.ItemPedidoDTO;
-import com.br.minasfrango.model.com.br.minasfrango.dto.PedidoDTO;
+import com.br.minasfrango.dto.ItemPedidoDTO;
+import com.br.minasfrango.dto.PedidoDTO;
 import com.br.minasfrango.util.ExportData;
 import com.br.minasfrango.util.ImportData;
 
@@ -39,7 +36,7 @@ public class SincronizarDadosActivity extends AppCompatActivity implements View.
 				super.onCreate(savedInstanceState);
 				setContentView(R.layout.activity_sincronizar_dados);
 				Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-				toolbar.setTitle("Sincronização de Dados");
+				toolbar.setTitle("SINCRONIZAÇÃO DE DADOS");
 				setSupportActionBar(toolbar);
 				
 				getSupportActionBar().setDisplayHomeAsUpEnabled(true);

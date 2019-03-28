@@ -1,107 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
 
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp"
-    android:orientation="vertical"
-    >
-
+    android:layout_marginBottom="-4dp"
+    android:layout_marginLeft="3dp"
+    android:layout_marginStart="3dp"
+    android:layout_marginRight="3dp"
+    android:layout_marginEnd="3dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp"
+    app:cardUseCompatPadding="true">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="15dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:padding="5dp">
 
-        >
         <TextView
             android:id="@+id/textViewID"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:text="ID"
-            android:layout_marginLeft="5dp"
-            android:textColor="@color/grey_600"
-            android:textSize="12sp"
-            />
-        <TextView
-            android:id="@+id/textViewDescricaoItem"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="Descricao"
-            android:textStyle="bold"
-            android:layout_marginLeft="5dp"
-            android:textSize="12sp"
-            />
-
-
-
-        <TextView
-            android:id="@+id/textViewQTDItem"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:text="QTD."
-            android:layout_marginLeft="5dp"
-            android:textColor="@color/grey_600"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            />
-        <TextView
-            android:id="@+id/textViewUnidade"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:text="Unidade"
-            android:textStyle="bold"
-            android:layout_marginLeft="10dp"
-            android:textSize="12sp"
-            />
-
-
-        <TextView
-            android:id="@+id/textValorTotal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Total"
-            android:textStyle="bold"
+            android:padding="5dp"
+            android:layout_marginLeft="10dp"
+            android:text="ID"
+            android:textColor="@color/primary_text"
+            android:textSize="18sp"/>
 
+        <TextView
+            android:id="@+id/textViewDescricaoItem"
+            android:layout_width="match_parent"
+            android:textColor="@color/primary_text"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:textColor="@color/grey_600"
-            android:textSize="12sp"
+            android:padding="5dp"
+            android:text="Descricao"
+            android:textSize="18sp"
             />
+
+
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:layout_marginTop="5dp"
-        android:orientation="horizontal">
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:theme="@style/Button.Tinted"
-        android:text="Editar"
-        android:textSize="10sp"
-        android:drawableStart="@mipmap/icon_cancel_24"
-        android:id="@+id/btn_edit_item_pedido"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="5dp">
 
-        />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_delete_item_pedido"
-        android:layout_marginLeft="15dp"
-        android:text="Deletar"
-        android:textSize="10sp"
-        android:drawableStart="@mipmap/icon_delete_24"
-        android:theme="@style/Button.Tinted"
-        />
+
+            <TextView
+                android:id="@+id/textViewQTDItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="QTD."
+                android:textColor="@color/primary_text"
+                android:padding="5dp"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textViewUnidade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="Unidade"
+                android:textColor="@color/primary_text"
+                android:textSize="18sp" />
+
+
+            <TextView
+                android:id="@+id/textValorTotal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:gravity="right"
+                android:text="Valor Total"
+                android:textColor="@color/primary_text"
+                android:textSize="18sp" />
+
+
+        </LinearLayout>
+
     </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/colorPrimary" />
+</android.support.v7.widget.CardView>
 
-</LinearLayout>
+
+
+

@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <item
-        android:id="@+id/menu1"
-        android:title="Menu 1" />
-
-    <item
-        android:id="@+id/menu2"
-        android:title="Menu 2" />
-
-    <item
-        android:id="@+id/menu3"
-        android:title="Menu 3" />
+        android:id="@+id/action_search"
+        android:icon="@android:drawable/ic_menu_search"
+        android:orderInCategory="100"
+        android:title="@string/action_search"
+        app:showAsAction="always"
+        app:actionViewClass="android.support.v7.widget.SearchView" />
 
 
 </menu>

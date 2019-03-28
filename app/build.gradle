@@ -52,13 +52,19 @@ dependencies {
     //problema de reflexao
     implementation 'io.reactivex.rxjava2:rxjava:2.1.8'
 
-
     //Cardview novo
-    implementation  'com.android.support:cardview-v7:28.0.0'
+    implementation 'com.android.support:cardview-v7:28.0.0'
 
     implementation 'com.android.support:appcompat-v7:28.0.0-alpha1'
     implementation 'com.android.support:design:28.0.0-alpha1'
     implementation 'com.android.support:support-v4:28.0.0-alpha1'
+
+    //SearchView Realm
+    implementation 'com.github.mancj:MaterialSearchBar:0.8.2'
+
+
+
+    implementation 'com.mikhaellopez:hfrecyclerview:1.1.1'
 
 
 }
