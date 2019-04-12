@@ -2,15 +2,18 @@ package com.br.minasfrango.activity;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -18,32 +21,31 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import com.br.minasfrango.R;
+import com.br.minasfrango.model.ErrorResponse;
 import com.br.minasfrango.model.Funcionario;
 import com.br.minasfrango.service.LoginService;
+import com.br.minasfrango.util.HttpConstant;
 import com.br.minasfrango.util.RetrofitConfig;
 import com.br.minasfrango.util.SessionManager;
-
 import java.io.IOException;
-
+import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements OnClickListener {
 
     SessionManager session;
 
-    LinearLayout loginBox;
+    LinearLayout lnLoginBox;
 
-    Button submit;
+    Button btnSubmit;
 
     ImageView imgLogo;
 
-    EditText edtMatricula;
+    EditText edtUserId, edtPassword;
 
-    EditText edtSenha;
+
 
     private static int REQUEST_STORAGE = 112;
 
@@ -57,23 +59,58 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         initView();
-        verificaPermissao();
-
-        carregaAnimacao();
+        verifyPermission();
+        loadAnimation();
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
         session = new SessionManager(getApplicationContext());
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                validarAcesso(edtMatricula, edtSenha);
-            }
-        });
+        btnSubmit.setOnClickListener(this);
+
+
     }
 
-    private void carregaAnimacao() {
+    @Override
+    public void onClick(final View view) {
+        switch (view.getId()){
+            case R.id.submit:
+                //validar forms
+                if(validateForm()){
+                    // realizar login
+                    try {
+                        LoginTask loginTask = new LoginTask(LoginActivity.this);
+                        loginTask.execute();
+
+                    } catch (final Exception e) {
+                        LoginActivity.this.runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(LoginActivity.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+
+                }
+                break;
+        }
+    }
+
+    private boolean validateForm() {
+           if(TextUtils.isEmpty(edtUserId.getText().toString())) {
+               edtUserId.setError("Matricula Obrigatória!");
+               edtUserId.requestFocus();
+               return false;
+           }
+           if(TextUtils.isEmpty(edtPassword.getText().toString())){
+               edtPassword.setError("Senha Obrigatória!");
+               edtPassword.requestFocus();
+               return false;
+           }
+
+            return  true;
+    }
+
+    private void loadAnimation() {
         Animation animTranslate = AnimationUtils.loadAnimation(this, R.anim.translate);
         animTranslate.setAnimationListener(new Animation.AnimationListener() {
 
@@ -87,11 +124,11 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation arg0) {
-                loginBox.setVisibility(View.VISIBLE);
-                submit.setVisibility(View.VISIBLE);
+                lnLoginBox.setVisibility(View.VISIBLE);
+                btnSubmit.setVisibility(View.VISIBLE);
                 Animation animFade = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.fade);
-                loginBox.startAnimation(animFade);
-                submit.startAnimation(animFade);
+                lnLoginBox.startAnimation(animFade);
+                btnSubmit.startAnimation(animFade);
 
             }
         });
@@ -99,18 +136,18 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        loginBox = findViewById(R.id.LoginBox);
-        submit = findViewById(R.id.submit);
-        loginBox.setVisibility(View.GONE);
-        submit.setVisibility(View.GONE);
+        lnLoginBox = findViewById(R.id.LoginBox);
+        btnSubmit = findViewById(R.id.submit);
+        lnLoginBox.setVisibility(View.GONE);
+        btnSubmit.setVisibility(View.GONE);
         imgLogo = findViewById(R.id.logo);
-        edtMatricula = findViewById(R.id.edtUser);
-        edtMatricula.setText("1");
-        edtSenha = findViewById(R.id.edtSenha);
-        edtSenha.setText("1234");
+        edtUserId = findViewById(R.id.edtUser);
+        edtUserId.setText("1");
+        edtPassword = findViewById(R.id.edtSenha);
+        edtPassword.setText("1234");
     }
 
-    private void verificaPermissao() {
+    private void verifyPermission() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
@@ -145,40 +182,84 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void validarAcesso(final EditText edtMatricula, final EditText edtSenha) {
-        // tenho que chamar a api/rest e validar se der tudo certo crio a sessao do usuario
 
-        ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
-        progressDialog.setTitle("Login");
-        progressDialog.setMessage("Realizando Login...");
-        progressDialog.show();
+    private class LoginTask extends AsyncTask<Void, Void, String>  {
 
-        LoginService loginService = new RetrofitConfig().getLoginService();
+        Context ctx;
 
-        Call<Funcionario> autenticaLoginCall = loginService
-                .autenticaLogin(edtSenha.getText().toString(), Long.parseLong(edtMatricula.getText().toString()));
-        try {
-            Response<Funcionario> responseFuncionario = autenticaLoginCall.execute();
-            if (responseFuncionario.isSuccessful()) {
-                Funcionario funcionario = responseFuncionario.body();
-                if (funcionario.getId() == Long.parseLong(edtMatricula.getText().toString())) {
-                    session.createUserLoginSession(edtMatricula.getText().toString(), edtSenha.getText().toString(),
-                            funcionario.getNome());
-                }
-                Intent i = new Intent(getApplicationContext(), ClienteActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                progressDialog.dismiss();
-                startActivity(i);
-                finish();
-            } else {
-                progressDialog.dismiss();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        ProgressDialog progressDialog;
+
+        public LoginTask(final Context ctx) {
+            this.ctx = ctx;
+
         }
 
+        @Override
+        protected void onPreExecute() {
 
+            progressDialog = new ProgressDialog(ctx);
+            progressDialog.setTitle("Login");
+            progressDialog.setMessage("Realizando Login...");
+            progressDialog.show();
+
+        }
+
+        @Override
+        protected void onPostExecute(String islogin) {
+            super.onPostExecute(islogin);
+            progressDialog.dismiss();
+            if(islogin.equals("SUCESS")) {
+                startActivity(new Intent(getApplicationContext(), ClienteActivity.class));
+            }else if (islogin.equals("UNAUTHORIZED")){
+                Toast.makeText(this.ctx,"Matricula/Senha inválidos!",Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this.ctx,islogin,Toast.LENGTH_LONG).show();
+            }
+
+
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            try {
+                return validarAcesso(edtUserId, edtPassword);
+            } catch (IOException e) {
+                return e.getMessage();
+            }
+
+
+        }
+
+        private String validarAcesso(final EditText edtMatricula, final EditText edtSenha) throws IOException {
+            // tenho que chamar a api/rest e validar se der tudo certo crio a sessao do usuario
+
+            LoginService loginService = new RetrofitConfig().getLoginService();
+            Call<Funcionario> autenticaLoginCall = loginService
+                    .autenticaLogin(edtSenha.getText().toString(), Long.parseLong(edtMatricula.getText().toString()));
+
+            Response<Funcionario> response = autenticaLoginCall.execute();
+
+
+                switch (response.code()) {
+                    case HttpConstant
+                            .OK:
+                        Funcionario funcionario = response.body();
+                        session.createUserLoginSession(edtMatricula.getText().toString(),
+                                edtSenha.getText().toString(),
+                                funcionario.getNome());
+                        return "SUCESS";
+
+                    case HttpConstant
+                            .UNAUTHORIZED:
+                        return "UNAUTHORIZED";
+
+
+                }
+
+
+          throw new IOException("Funcionário não cadastrado!");
+        }
     }
 
 

@@ -65,8 +65,6 @@ public class RecebimentoActivity extends AppCompatActivity
 
     Button confirmaAmortizacao;
 
-    BigDecimal totalDevido;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -2,7 +2,6 @@ package com.br.minasfrango.activity;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -10,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +19,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -71,27 +72,25 @@ public class VendasActivity extends AppCompatActivity
 
     SearchView searchView;
 
-    RecyclerView itemPedidoRecyclerView;
+    RecyclerView rcItemPedido;
 
-    EditText qtdEditText, qtdBicos;
+    EditText edtQuantidade, edtBicos;
 
-    CurrencyEditText precoEditText;
+    CurrencyEditText cetPrecoUnitario;
 
-    Spinner uniSpinner;
+    Spinner spnUnidade;
 
     Paint p = new Paint();
 
-    Button addButton;
+    Button btnAddItem;
 
-    Spinner formaPagamentoSpinner;
+    Spinner spnFormaPagamento, spnProduto;
 
-    AutoCompleteTextView codigoProdutoAutoCompleteTextView;
+    AutoCompleteTextView actCodigoProduto;
 
-    Spinner spnProduto;
+    Button btnConfirmar;
 
-    Button confirmarPedidoButton;
-
-    TextView valorTotalProduto, valorTotalTextView;
+    TextView txtValorTotalProduto, txtValorTotal;
 
     LinearLayoutManager layoutManager;
 
@@ -113,12 +112,13 @@ public class VendasActivity extends AppCompatActivity
 
     ArrayAdapter<String> adapterFormaPagamento;
 
+    ArrayList<ItemPedido> itens = new ArrayList<>();
 
-    ArrayList<ItemPedido> itens;
+    ArrayList<ItemPedido> itensTemp = new ArrayList<>();
+
 
     ItemPedidoAdapter adapterItemPedidoAdapter;
 
-    ArrayList<String> codigosProdutos;
 
     ArrayAdapter<String> adaptadorCodigoProduto;
 
@@ -128,9 +128,6 @@ public class VendasActivity extends AppCompatActivity
 
     ArrayAdapter<String> adapterUnidade;
 
-    List<TipoRecebimento> tiposRecebimento;
-
-    ArrayList<String> strTiposRecebimentos = new ArrayList<String>();
 
     Produto produtoSelecionado;
 
@@ -147,11 +144,24 @@ public class VendasActivity extends AppCompatActivity
 
     private String codigoUnidade;
 
+    private TipoRecebimentoDAO mTipoRecebimentoDAO;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vendas);
 
+        getParams();
+        initViews();
+
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        //Instanciando os DAOS necessarios
         produtoDAO = ProdutoDAO.getInstace();
         pedidoDAO = PedidoDAO.getInstace();
         mClienteDAO = ClienteDAO.getInstace();
@@ -159,148 +169,41 @@ public class VendasActivity extends AppCompatActivity
         unidadeDAO = UnidadeDAO.getInstace();
         precoDAO = PrecoDAO.getInstace();
         itemPedidoDAO = ItemPedidoDAO.getInstace();
+        mTipoRecebimentoDAO = TipoRecebimentoDAO.getInstace();
 
-        getParams();
-        initView();
+        //Seta todos os adaptadores necessarios
+        setAdapters();
 
-        //Formas de Pagamento
-
-        tiposRecebimento = tipoRecebimentoDAO.findTipoRecebimentoByCliente(cliente);
-        populateSpinnerTipoRecebimento();
-
-        adapterFormaPagamento = new ArrayAdapter<String>(VendasActivity.this, android.R.layout.simple_list_item_1,
-                strTiposRecebimentos);
-        formaPagamentoSpinner.setAdapter(adapterFormaPagamento);
+        //Todos os listeners da Activity
+        listeners();
 
         //Edição de Pedido
         if (pedidoRealizado != null) {
-            itens = new ArrayList<ItemPedido>();
-
-            for (ItemPedido aux : pedidoRealizado.realmListToList()) {
-                ItemPedido itensAux = new ItemPedido();
-                itensAux.setId(aux.getId());
-                itensAux.setQuantidade(aux.getQuantidade());
-                itensAux.setValorUnitario(aux.getValorUnitario());
-                itensAux.setChavesItemPedido(aux.getChavesItemPedido());
-                itensAux.setDescricao(aux.getDescricao());
-                itensAux.setValorTotal(aux.getValorTotal());
-                itens.add(itensAux);
-
-
-            }
-
-            adapterItemPedidoAdapter = new ItemPedidoAdapter(this, itens, valorTotalProduto);
-            itemPedidoRecyclerView.setLayoutManager(layoutManager);
-            itemPedidoRecyclerView.setAdapter(adapterItemPedidoAdapter);
-            initSwipe();
-            valorTotalProduto.setText(
-                    NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(pedidoRealizado.getValorTotal()));
-            for (int i = 0; i < strTiposRecebimentos.size(); i++) {
-                for (int j = 0; j < tiposRecebimento.size(); j++) {
-                    if (strTiposRecebimentos.get(i).equals(tiposRecebimento.get(j).getNome())) {
-                        formaPagamentoSpinner.setSelection(i);
-                        break;
-                    }
-                }
-            }
+            loadDetailsSale();
         } else {
             //Carrega a lista de itens vazio
-
-            itens = new ArrayList<ItemPedido>();
-            adapterItemPedidoAdapter = new ItemPedidoAdapter(this, itens, valorTotalProduto);
-            itemPedidoRecyclerView.setLayoutManager(layoutManager);
-            itemPedidoRecyclerView.setAdapter(adapterItemPedidoAdapter);
             initSwipe();
-            formaPagamentoSpinner.setSelection(0);
-            formaPagamento = adapterFormaPagamento.getItem(0);
         }
 
-        produtos = produtoDAO.carregaProdutos();
-        carregaCodigoProdutos(produtos);
-        carregaDescricoesProdutos(produtos);
 
-        adaptadorCodigoProduto = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,
-                codigosProdutos);
-        codigoProdutoAutoCompleteTextView.setAdapter(adaptadorCodigoProduto);
-        codigoProdutoAutoCompleteTextView.setOnItemClickListener(this);
 
-        adaptadorDescricaoProduto = new ArrayAdapter(this,
-                android.R.layout.simple_list_item_1, descricoesProdutos);
-        spnProduto.setAdapter(adaptadorDescricaoProduto);
 
+    }
+
+    private void listeners() {
+        actCodigoProduto.setOnItemClickListener(this);
         spnProduto.setOnItemSelectedListener(this);
+        actCodigoProduto.setOnClickListener(this);
+        btnConfirmar.setOnClickListener(this);
+        btnAddItem.setOnClickListener(this);
+        spnFormaPagamento.setOnItemSelectedListener(this);
 
-        layoutManager = new LinearLayoutManager(VendasActivity.this);
-        layoutManager.setReverseLayout(true);
-        layoutManager.setStackFromEnd(true);
+        spnFormaPagamento.setSelection(0);
+        formaPagamento = adapterFormaPagamento.getItem(0);
 
-        codigoProdutoAutoCompleteTextView.setOnClickListener(this);
-        confirmarPedidoButton.setOnClickListener(this);
+        spnUnidade.setSelection(0);
 
-        uniSpinner.setSelection(0);
-        uniSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                codigoUnidade = (String) parent.getAdapter().getItem(position);
-                preco = precoDAO.carregaPrecoUnidadeProduto(produtoSelecionado, codigoUnidade);
-                precoEditText.setText(String.valueOf(preco.getValor()));
-                quantidadeAtual = Integer.parseInt(qtdEditText.getText().toString());
-                if (quantidadeAtual >= 0) {
-                    Double preco = precoEditText.getCurrencyDouble();
-                    valorTotal = Integer.parseInt(qtdEditText.getText().toString()) * preco;
-                    valorTotalTextView.setText(NumberFormat.getCurrencyInstance().format(valorTotal));
-                }
-                valorTotalTextView.setText(NumberFormat.getCurrencyInstance().format(valorTotal));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (!qtdEditText.getText().toString().isEmpty()
-                        && Integer.parseInt(qtdEditText.getText().toString()) > 0) {
-                    String qtd = qtdEditText.getText().toString();
-                    if (valorTotal >= 0 && Integer.parseInt(qtd) >= 1) {
-                        int i = 0;
-                        while (i < itens.size()) {
-
-                            if (itens.get(i).getDescricao().equals(produtoSelecionado.getNome())) {
-                                break;
-                            } else {
-                                i++;
-                            }
-
-                        }
-                        if (i == itens.size()) {
-                            //
-                            addItemPedido(produtoSelecionado, Integer.parseInt(qtdEditText.getText().toString()));
-                        } else {
-                            Toast.makeText(VendasActivity.this,
-                                    "O PRODUTO JÁ EXISTE NA LISTA", Toast.LENGTH_LONG)
-                                    .show();
-                        }
-
-
-                    } else {
-                        qtdEditText.setError("QUANTIDADE INVÁLIDA");
-                        Toast.makeText(VendasActivity.this, "A QUANTIDADE MÍNIMA É DE 1 ITEM",
-                                Toast.LENGTH_LONG).show();
-
-                    }
-                } else {
-                    qtdEditText.setError("QUANTIDADE INVÁLIDA");
-                }
-            }
-        });
-
-        formaPagamentoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spnFormaPagamento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 formaPagamento = (String) parent.getAdapter().getItem(position);
@@ -311,112 +214,154 @@ public class VendasActivity extends AppCompatActivity
 
             }
         });
+        spnUnidade.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                codigoUnidade = (String) parent.getAdapter().getItem(position);
+                preco = precoDAO.carregaPrecoUnidadeProduto(produtoSelecionado, codigoUnidade);
+                cetPrecoUnitario.setText(String.valueOf(preco.getValor()));
+                quantidadeAtual = Integer.parseInt(edtQuantidade.getText().toString());
+                if (quantidadeAtual >= 0) {
+                    Double preco = cetPrecoUnitario.getCurrencyDouble();
+                    valorTotal = Integer.parseInt(edtQuantidade.getText().toString()) * preco;
+                    txtValorTotal.setText(NumberFormat.getCurrencyInstance().format(valorTotal));
+                }
+                txtValorTotal.setText(NumberFormat.getCurrencyInstance().format(valorTotal));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
 
     }
 
-    private void populateSpinnerTipoRecebimento() {
+    private void setAdapters() {
+
+        adapterFormaPagamento = new ArrayAdapter<String>(VendasActivity.this, android.R.layout.simple_list_item_1,
+                loadTipoRecebimentos());
+
+        produtos = produtoDAO.getAll();
+
+        ArrayList<String> codigosProdutos = loadProductById(produtos);
+        adaptadorCodigoProduto = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line,
+                codigosProdutos);
+
+        loadProductByDescription(produtos);
+
+        adaptadorDescricaoProduto = new ArrayAdapter(this,
+                android.R.layout.simple_list_item_1, descricoesProdutos);
+        spnProduto.setAdapter(adaptadorDescricaoProduto);
+
+        spnFormaPagamento.setAdapter(adapterFormaPagamento);
+        adapterItemPedidoAdapter = new ItemPedidoAdapter(this, itensTemp, txtValorTotalProduto);
+
+        actCodigoProduto.setAdapter(adaptadorCodigoProduto);
+
+        rcItemPedido.setAdapter(adapterItemPedidoAdapter);
+
+
+    }
+
+    private void loadDetailsSale() {
+
+        TipoRecebimento tipoRecebimento = mTipoRecebimentoDAO.findById(pedidoRealizado.getTipoRecebimento());
+        int position = adapterFormaPagamento.getPosition(tipoRecebimento.getNome());
+        spnFormaPagamento.setSelection(position);
+
+        for (ItemPedido aux : pedidoRealizado.realmListToList()) {
+            ItemPedido itensAux = new ItemPedido();
+            itensAux.setId(aux.getId());
+            itensAux.setQuantidade(aux.getQuantidade());
+            itensAux.setValorUnitario(aux.getValorUnitario());
+            itensAux.setChavesItemPedido(aux.getChavesItemPedido());
+            itensAux.setDescricao(aux.getDescricao());
+            itensAux.setValorTotal(aux.getValorTotal());
+            itens.add(itensAux);
+
+
+        }
+        itensTemp.addAll(itens);
+
+        adapterItemPedidoAdapter.notifyDataSetChanged();
+
+        initSwipe();
+        txtValorTotalProduto.setText(
+                NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(pedidoRealizado.getValorTotal()));
+
+    }
+
+    private ArrayList<String> loadTipoRecebimentos() {
+        ArrayList<String> strTiposRecebimentos = new ArrayList<String>();
+        List<TipoRecebimento> tiposRecebimento = tipoRecebimentoDAO.findTipoRecebimentoByCliente(cliente);
         strTiposRecebimentos.add("FORMAS DE PAGAMENTO");
         for (TipoRecebimento tipoRecebimento : tiposRecebimento) {
             strTiposRecebimentos.add(tipoRecebimento.getNome());
         }
+        return strTiposRecebimentos;
+
     }
 
+    private void addItem(ItemPedido itemPedido) {
 
-    private void addItemPedido(Produto produto, int quantidade) {
-
-        ItemPedido itemPedido = new ItemPedido();
-
-        ItemPedidoID itemPedidoID = new ItemPedidoID();
-
-        itemPedidoID.setIdProduto(produto.getId());
-        itemPedidoID.setIdUnidade(codigoUnidade);
-
-        SimpleDateFormat formatador = new SimpleDateFormat("yyyy/MM/dd");
-        String strData = formatador.format(new Date(System.currentTimeMillis()));
-        try {
-            itemPedidoID.setDataVenda(formatador.parse(strData));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        //Nao sei o significado
-        itemPedidoID.setVendaMae("N");
-        itemPedidoID.setNucleoCodigo(1);
-        itemPedidoID.setTipoVenda("?");
-
-        itemPedido.setQuantidade(quantidade);
-
-        Double number = precoEditText.getCurrencyDouble();
-        itemPedido.setValorUnitario(number.doubleValue());
-        itemPedido.setDescricao(produto.getNome());
-
-        try {
-            itemPedido.setValorTotal(
-                    NumberFormat.getCurrencyInstance().parse(valorTotalTextView.getText().toString()).doubleValue());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        itemPedido.setChavesItemPedido(itemPedidoID);
-        long id = itemPedidoDAO.addItemPedido(itemPedido);
-        itemPedido.setId(id);
-
-        adapterItemPedidoAdapter.addListItem(itemPedido, (itens.size() + 1));
-
-        valorTotalProduto
+        adapterItemPedidoAdapter.addListItem(itemPedido, (itensTemp.size() + 1));
+        txtValorTotalProduto
                 .setText("TOTAL: " + NumberFormat.getCurrencyInstance(new Locale("pt", "BR"))
-                        .format(calculaValorTotalPedido(itens)));
+                        .format(calculaValorTotalPedido(itensTemp)));
+
     }
 
-    private void carregaDescricoesProdutos(ArrayList<Produto> produtos) {
+    private void loadProductByDescription(ArrayList<Produto> produtos) {
         descricoesProdutos = new ArrayList<String>();
         for (Produto produto : produtos) {
             descricoesProdutos.add(produto.getNome());
         }
+
     }
 
-    private void carregaCodigoProdutos(ArrayList<Produto> produtos) {
+    private ArrayList<String> loadProductById(ArrayList<Produto> produtos) {
 
-        codigosProdutos = new ArrayList<String>();
+        ArrayList<String> codigosProdutos = new ArrayList<>();
 
         for (Produto produto : produtos) {
             codigosProdutos.add(String.valueOf(produto.getId()));
         }
-
+        return codigosProdutos;
 
     }
 
-    private void initView() {
-
+    private void initViews() {
+        //Toolbar
         mToolbar = findViewById(R.id.toolbar);
         mToolbar.setTitle("VENDAS");
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        codigoProdutoAutoCompleteTextView = findViewById(R.id.auto_txt_codigo);
+        actCodigoProduto = findViewById(R.id.auto_txt_codigo);
         spnProduto = findViewById(R.id.spn_produtos);
+        rcItemPedido = findViewById(R.id.card_recycler_itens);
+        btnConfirmar = findViewById(R.id.btn_confirmar_pedido);
+        txtValorTotal = findViewById(R.id.txt_valor_total);
+        edtBicos = findViewById(R.id.edtBicos);
+        edtQuantidade = findViewById(R.id.edtQTD);
+        cetPrecoUnitario = findViewById(R.id.txt_preco_unitario);
+        spnFormaPagamento = findViewById(R.id.spinner_forma_pagamento);
+        spnUnidade = findViewById(R.id.spinner_unidade);
+        btnAddItem = findViewById(R.id.button_add);
 
-        itemPedidoRecyclerView = findViewById(R.id.card_recycler_itens);
-        confirmarPedidoButton = findViewById(R.id.btn_confirmar_pedido);
-
-        valorTotalTextView = findViewById(R.id.txt_valor_total);
-
-        qtdBicos = findViewById(R.id.edtBicos);
-
-        qtdEditText = findViewById(R.id.edtQTD);
-        precoEditText = findViewById(R.id.txt_preco_unitario);
-
-        formaPagamentoSpinner = findViewById(R.id.spinner_forma_pagamento);
-
-        uniSpinner = findViewById(R.id.spinner_unidade);
-        addButton = findViewById(R.id.button_add);
-
-        valorTotalProduto = findViewById(R.id.txt_valor_total_pedido);
-        valorTotalProduto.setText("VALOR TOTAL: 00,00");
+        txtValorTotalProduto = findViewById(R.id.txt_valor_total_pedido);
+        txtValorTotalProduto.setText("VALOR TOTAL: 00,00");
 
         layoutManager = new LinearLayoutManager(VendasActivity.this);
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
+
+        //Configurando os recycle views
+        rcItemPedido.setLayoutManager(layoutManager);
 
 
     }
@@ -467,12 +412,9 @@ public class VendasActivity extends AppCompatActivity
         String descricaoProduto = (String) parent.getAdapter().getItem(position);
         for (Produto aux : produtos) {
             if (aux.getNome().equals(descricaoProduto)) {
-
-                codigoProdutoAutoCompleteTextView.setText(String.valueOf(aux.getId()));
-
+                actCodigoProduto.setText(String.valueOf(aux.getId()));
                 for (int i = 0; i < descricoesProdutos.size(); i++) {
                     if (descricoesProdutos.get(i).equals(aux.getNome())) {
-
                         produtoSelecionado = aux;
                         showADDProduto();
                         break;
@@ -484,7 +426,7 @@ public class VendasActivity extends AppCompatActivity
     }
 
     private void setaSpinner(String codigoProduto) {
-        qtdEditText.requestFocus();
+        edtQuantidade.requestFocus();
         for (Produto aux : produtos) {
             if (aux.getId() == Integer.parseInt(codigoProduto)) {
 
@@ -522,7 +464,7 @@ public class VendasActivity extends AppCompatActivity
 
             case R.id.btn_confirmar_pedido:
 
-                if (itens.size() > 0 && !formaPagamento.equals("FORMAS DE PAGAMENTO")) {
+                if (itensTemp.size() > 0 && !formaPagamento.equals("FORMAS DE PAGAMENTO")) {
                     if (pedidoRealizado != null) {
                         updatePedido();
                     } else {
@@ -538,13 +480,99 @@ public class VendasActivity extends AppCompatActivity
 
                 break;
 
-
             case R.id.auto_txt_codigo:
 
                 break;
 
+            case R.id.button_add:
 
+                if (validateFieldsForAddItem(edtQuantidade,edtBicos)) {
+
+                    ItemPedido itemPedido = getItemPedido();
+                    ItemPedidoID itemPedidoID = getItemPedidoID();
+
+                    itemPedido.setChavesItemPedido(itemPedidoID);
+
+                    if (!itensTemp.contains(itemPedido)) {
+                        addItem(itemPedido);
+                    } else {
+                        Toast.makeText(VendasActivity.this,
+                                "O PRODUTO JÁ EXISTE NA LISTA", Toast.LENGTH_LONG)
+                                .show();
+                    }
+
+                    //vai somente na hora de salvar
+       /* itemPedido.setChavesItemPedido(itemPedidoID);
+        long id = itemPedidoDAO.addItemPedido(itemPedido);
+        itemPedido.setId(id);*/
+                }
+
+                break;
         }
+    }
+
+    @NonNull
+    private ItemPedidoID getItemPedidoID() {
+        ItemPedidoID itemPedidoID = new ItemPedidoID();
+
+        itemPedidoID.setIdProduto(produtoSelecionado.getId());
+        itemPedidoID.setIdUnidade(codigoUnidade);
+
+        SimpleDateFormat formatador = new SimpleDateFormat("yyyy/MM/dd");
+        String strData = formatador.format(new Date(System.currentTimeMillis()));
+        try {
+            itemPedidoID.setDataVenda(formatador.parse(strData));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //Nao sei o significado
+        itemPedidoID.setVendaMae("N");
+        itemPedidoID.setNucleoCodigo(1);
+        itemPedidoID.setTipoVenda("?");
+        return itemPedidoID;
+    }
+
+    @NonNull
+    private ItemPedido getItemPedido() {
+        ItemPedido itemPedido = new ItemPedido();
+        itemPedido.setQuantidade(Integer.parseInt(edtQuantidade.getText().toString()));
+        itemPedido.setValorUnitario(cetPrecoUnitario.getCurrencyDouble());
+        itemPedido.setDescricao(produtoSelecionado.getNome());
+        itemPedido.setBicos(Integer.parseInt(edtBicos.getText().toString()));
+        try {
+            itemPedido.setValorTotal(
+                    NumberFormat.getCurrencyInstance().parse(txtValorTotal.getText().toString())
+                            .doubleValue());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return itemPedido;
+    }
+
+    private boolean validateFieldsForAddItem(final EditText edtQTD,final EditText edtBicos) {
+
+        if (TextUtils.isEmpty(edtQTD.getText().toString())) {
+            edtQTD.setError("Quantidade Obrigatória!");
+            edtQTD.requestFocus();
+            return false;
+        }
+        if (Integer.parseInt(edtQTD.getText().toString()) <= 0) {
+            edtQTD.setError("Quantidade mínima de 1 item!");
+            edtQTD.requestFocus();
+            return false;
+        }
+        if (TextUtils.isEmpty(edtBicos.getText().toString())) {
+            edtBicos.setError("Quantidade de Bicos Obrigatória!");
+            edtBicos.requestFocus();
+            return false;
+        }
+        if (Integer.parseInt(edtBicos.getText().toString()) <= 0) {
+            edtBicos.setError("Quantidade mínima de 1 bico!");
+            edtBicos.requestFocus();
+            return false;
+        }
+        return true;
     }
 
     private void updatePedido() {
@@ -657,7 +685,7 @@ public class VendasActivity extends AppCompatActivity
 
     private void showADDProduto() {
 
-        qtdEditText.setText("1");
+        edtQuantidade.setText("1");
         quantidadeAtual = 1;
 
         preco = precoDAO.carregaPrecoProduto(produtoSelecionado);
@@ -670,16 +698,16 @@ public class VendasActivity extends AppCompatActivity
         unidades.addAll(todasUnidades);
         adapterUnidade = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, unidades);
         //adapter da unidade
-        uniSpinner.setAdapter(adapterUnidade);
+        spnUnidade.setAdapter(adapterUnidade);
         codigoUnidade = adapterUnidade.getItem(0);
         //unidade clicada seta o preco
 
-        valorTotalTextView.setText(
+        txtValorTotal.setText(
                 NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(quantidadeAtual * preco.getValor()));
 
         // valorTotal = quantidadeAtual * preco.getValor();
-        precoEditText.setText(String.valueOf(preco.getValor()));
-        qtdEditText.addTextChangedListener(new TextWatcher() {
+        cetPrecoUnitario.setText(String.valueOf(preco.getValor()));
+        edtQuantidade.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -690,10 +718,10 @@ public class VendasActivity extends AppCompatActivity
 
                 quantidadeAtual = Double.parseDouble(s.toString().equals("") ? "0" : s.toString());
                 if (quantidadeAtual > 0) {
-                    valorTotal = quantidadeAtual * Double
-                            .parseDouble(precoEditText.getText().toString().replace(",", "."));
+                    valorTotal = quantidadeAtual *
+                            cetPrecoUnitario.getCurrencyDouble();
 
-                    valorTotalTextView
+                    txtValorTotal
                             .setText(NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(valorTotal));
 
                 }
@@ -701,12 +729,12 @@ public class VendasActivity extends AppCompatActivity
 
             @Override
             public void afterTextChanged(Editable s) {
-                valorTotalTextView
+                txtValorTotal
                         .setText(NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(valorTotal));
             }
         });
 
-        precoEditText.addTextChangedListener(new TextWatcher() {
+        cetPrecoUnitario.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -716,12 +744,12 @@ public class VendasActivity extends AppCompatActivity
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 if (quantidadeAtual > 0) {
-                    Double preco = precoEditText.getCurrencyDouble();
-                    valorTotal = Integer.parseInt(qtdEditText.getText().toString()) * preco;
-                    valorTotalTextView
+                    Double preco = cetPrecoUnitario.getCurrencyDouble();
+                    valorTotal = Integer.parseInt(edtQuantidade.getText().toString()) * preco;
+                    txtValorTotal
                             .setText(NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(valorTotal));
                 }
-                valorTotalTextView.setText(NumberFormat.getCurrencyInstance().format(valorTotal));
+                txtValorTotal.setText(NumberFormat.getCurrencyInstance().format(valorTotal));
             }
 
             @Override
@@ -731,42 +759,6 @@ public class VendasActivity extends AppCompatActivity
 
     }
 
-    public void alertaConfirmacao(Context ctx, String strMsg) {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-        builder.setTitle("Cancelamento de Pedido");
-        builder.setMessage(strMsg);
-
-        String positiveText = "SIM";
-        builder.setPositiveButton(positiveText,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // positive button logic
-
-                        finish();
-                        dialog.dismiss();
-                        //edtConfirmaEmail.setText("");
-
-                        return;
-                    }
-                });
-
-        String negativeText = "NÃO";
-        builder.setNegativeButton(negativeText,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // negative button logic
-                        dialog.dismiss();
-                        return;
-                    }
-                });
-
-        AlertDialog dialog = builder.create();
-        // display dialog
-        dialog.show();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -815,13 +807,13 @@ public class VendasActivity extends AppCompatActivity
 
                 if (direction == ItemTouchHelper.LEFT) {
                     adapterItemPedidoAdapter.removeListItem(position);
-                    valorTotalProduto.setText(
-                            "TOTALIZADOR" + NumberFormat.getCurrencyInstance(new Locale("pt", "BR"))
-                                    .format(calculaValorTotalPedido(itens)));
+                    txtValorTotalProduto.setText(
+                            "TOTAL: " + NumberFormat.getCurrencyInstance(new Locale("pt", "BR"))
+                                    .format(calculaValorTotalPedido(itensTemp)));
 
                 } else {
 
-                    updateDialog(itens.get(position), position, valorTotalTextView, valorTotalProduto);
+                    updateDialog(itensTemp.get(position), position, txtValorTotal, txtValorTotalProduto);
 //                    
                 }
             }
@@ -863,7 +855,7 @@ public class VendasActivity extends AppCompatActivity
             }
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(itemPedidoRecyclerView);
+        itemTouchHelper.attachToRecyclerView(rcItemPedido);
     }
 
 
@@ -879,26 +871,31 @@ public class VendasActivity extends AppCompatActivity
         dialogBuilder.setTitle("DADOS DO ITEM");
 
         TextView idProdutoTextView, descricaoProdutoTextView;
-        final EditText quantidadeEditText;
-        final CurrencyEditText precoEditText;
-        Spinner unidadeSpinner = null;
-        Button cancelarEdicaoButton, salvaEdicaoButton;
+        final EditText edtQuantidade;
+        final CurrencyEditText cetPreco;
+        Spinner spnUnidade ;
+        Button btnCancelar, btnSave;
+
+        idProdutoTextView = dialogView.findViewById(R.id.txt_codigo_produto);
+        descricaoProdutoTextView = dialogView.findViewById(R.id.txt_descricao_produto);
+        edtQuantidade = dialogView.findViewById(R.id.edt_quantidade_produto);
+        cetPreco = dialogView.findViewById(R.id.edt_preco);
+        spnUnidade = dialogView.findViewById(R.id.spinner_unidade_produto);
+        btnCancelar = dialogView.findViewById(R.id.button_cancelar_edicao);
+        btnSave = dialogView.findViewById(R.id.button_confirmar_edicao);
+
+
         ArrayList<String> unidades = new ArrayList<String>();
         ArrayList<String> todasUnidades = new ArrayList<String>();
         String unidadePadrao = "";
 
-        idProdutoTextView = dialogView.findViewById(R.id.txt_codigo_produto);
-        descricaoProdutoTextView = dialogView.findViewById(R.id.txt_descricao_produto);
-        quantidadeEditText = dialogView.findViewById(R.id.edt_quantidade_produto);
-        precoEditText = dialogView.findViewById(R.id.edt_preco);
-        unidadeSpinner = dialogView.findViewById(R.id.spinner_unidade_produto);
-        cancelarEdicaoButton = dialogView.findViewById(R.id.button_cancelar_edicao);
-        salvaEdicaoButton = dialogView.findViewById(R.id.button_confirmar_edicao);
 
         idProdutoTextView.setText(String.valueOf(itemPedido.getChavesItemPedido().getIdProduto()));
         descricaoProdutoTextView.setText(itemPedido.getDescricao());
-        precoEditText.setText(String.valueOf(itemPedido.getValorUnitario()));
-        quantidadeEditText.setText(String.valueOf(itemPedido.getQuantidade()));
+
+
+        cetPreco.setText(NumberFormat.getCurrencyInstance().format(itemPedido.getValorUnitario()));
+        edtQuantidade.setText(String.valueOf(itemPedido.getQuantidade()));
 
         precoDAO = PrecoDAO.getInstace();
         final Produto produto = new Produto();
@@ -911,16 +908,19 @@ public class VendasActivity extends AppCompatActivity
         adapterUnidade = new ArrayAdapter<String>(VendasActivity.this, android.R.layout.simple_spinner_item,
                 unidades);
         //adapter da unidade
-        unidadeSpinner.setAdapter(adapterUnidade);
-        codigoUnidade = adapterUnidade.getItem(0);
+        spnUnidade.setAdapter(adapterUnidade);
 
-        unidadeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spnUnidade.setSelection(adapterUnidade.getPosition(itemPedido.getChavesItemPedido().getIdUnidade()));
+
+
+        spnUnidade.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 codigoUnidade = (String) parent.getAdapter().getItem(position);
                 preco = precoDAO.carregaPrecoUnidadeProduto(produto, codigoUnidade);
-                precoEditText.setText(String.valueOf(preco.getValor()));
+                //Preciso descomentar assim que conseguir pegar o preco pela de acordo com a unidade
+              //  cetPreco.setText(String.valueOf(preco.getValor()));
             }
 
             @Override
@@ -932,25 +932,25 @@ public class VendasActivity extends AppCompatActivity
         final AlertDialog b = dialogBuilder.create();
         b.show();
 
-        cancelarEdicaoButton.setOnClickListener(new View.OnClickListener() {
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 b.dismiss();
                 adapterItemPedidoAdapter.notifyDataSetChanged();
             }
         });
-        salvaEdicaoButton.setOnClickListener(new View.OnClickListener() {
+        btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //chama o edit no item pedido dao e chama edit na lista de itens
 
-                itemPedido.setQuantidade(Integer.parseInt(quantidadeEditText.getText().toString()));
-                itemPedido.setValorUnitario(precoEditText.getCurrencyDouble());
+                itemPedido.setQuantidade(Integer.parseInt(edtQuantidade.getText().toString()));
+                itemPedido.setValorUnitario(cetPreco.getCurrencyDouble());
 
                 valorTotal = 0.0;
-                int quantidadeAtual = Integer.parseInt(quantidadeEditText.getText().toString());
+                int quantidadeAtual = Integer.parseInt(edtQuantidade.getText().toString());
                 if (quantidadeAtual >= 0) {
-                    Double preco = precoEditText.getCurrencyDouble();
+                    Double preco = cetPreco.getCurrencyDouble();
                     valorTotal = (quantidadeAtual * preco);
                     txtValorTotal
                             .setText(NumberFormat.getCurrencyInstance().format(valorTotal));
@@ -960,12 +960,11 @@ public class VendasActivity extends AppCompatActivity
                 itemPedido.setValorTotal(valorTotal);
                 itemPedido.setDescricao(produto.getNome());
                 itemPedido.getChavesItemPedido().setIdUnidade(codigoUnidade);
-                itemPedidoDAO.updateItem(itemPedido);
 
                 adapterItemPedidoAdapter.updateListItem(itemPedido, position);
                 valorTotalProduto.setText(
-                        "Totalizador" + NumberFormat.getCurrencyInstance(new Locale("pt", "BR"))
-                                .format(calculaValorTotalPedido(itens)));
+                        "TOTAL: " + NumberFormat.getCurrencyInstance(new Locale("pt", "BR"))
+                                .format(calculaValorTotalPedido(itensTemp)));
 
                 b.dismiss();
                 Toast.makeText(VendasActivity.this, "Item alterado com sucesso", Toast.LENGTH_LONG).show();

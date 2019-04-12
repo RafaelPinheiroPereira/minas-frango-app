@@ -12,28 +12,30 @@ import io.realm.RealmResults;
  * Created by 04717299302 on 28/12/2016.
  */
 
-public class PrecoDAO {
+public class PrecoDAO extends DAO<Preco> {
 
-    Realm realm;
 
-    RealmQuery<Preco> query;
+
+    RealmQuery<Preco> where() {
+        return realm.where(Preco.class);
+    }
 
     public static PrecoDAO getInstace() {
         return new PrecoDAO();
     }
 
     public PrecoDAO() {
-        realm = Realm.getDefaultInstance();
+        super();
     }
 
 
     public Preco carregaPrecoProduto(Produto produto) {
         Preco preco = new Preco();
         preco.setValor(0.0);
-        query = realm.where(Preco.class);
-        query.equalTo("chavesPreco.idProduto", produto.getId())
-                .equalTo("chavesPreco.unidadeProduto", produto.getUnidade());
-        RealmResults<Preco> result = query.findAll();
+
+        RealmResults<Preco> result = where().equalTo("chavesPreco.idProduto", produto.getId())
+                .equalTo("chavesPreco.unidadeProduto", produto.getUnidade()).findAll();
+
         if (result != null && result.size() > 0) {
             for (Preco aux : result) {
                 if (aux.getValor() != 0) {
@@ -48,10 +50,9 @@ public class PrecoDAO {
     public Preco carregaPrecoUnidadeProduto(Produto produto, String unidade) {
         Preco preco = new Preco();
         preco.setValor(0);
-        query = realm.where(Preco.class);
 
-        query.equalTo("chavesPreco.idProduto", produto.getId()).equalTo("chavesPreco.unidadeProduto", unidade);
-        RealmResults<Preco> result = query.findAll();
+        RealmResults<Preco> result = where().equalTo("chavesPreco.idProduto", produto.getId())
+                .equalTo("chavesPreco.unidadeProduto", unidade).findAll();
 
         if (result != null && result.size() > 0) {
             for (Preco aux : result) {

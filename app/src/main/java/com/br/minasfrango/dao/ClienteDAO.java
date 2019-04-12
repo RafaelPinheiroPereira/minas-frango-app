@@ -7,10 +7,8 @@ import com.br.minasfrango.model.Pedido;
 import com.br.minasfrango.model.Rota;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -20,11 +18,7 @@ import java.util.List;
  * Created by 04717299302 on 16/12/2016.
  */
 
-public class ClienteDAO {
-
-    Realm realm;
-
-    RealmQuery<Cliente> query;
+public class ClienteDAO extends DAO<Cliente> {
 
 
     public static ClienteDAO getInstace() {
@@ -32,16 +26,18 @@ public class ClienteDAO {
     }
 
     public ClienteDAO() {
-        realm = Realm.getDefaultInstance();
+        super();
+    }
 
+    private RealmQuery<Cliente> where() {
+        return realm.where(Cliente.class);
     }
 
     public ArrayList<Cliente> allClientes() {
         ArrayList<Cliente> clientes = new ArrayList<Cliente>();
-        RealmResults<Cliente> results = realm.where(Cliente.class).sort("nome", Sort.DESCENDING).findAll();
+        RealmResults<Cliente> results = where().sort("nome", Sort.DESCENDING).findAll();
         if (results != null && results.size() > 0) {
             for (int i = 0; i < results.size(); i++) {
-
                 clientes.add(transformaResultEmCliente(results.get(i)));
             }
         }
@@ -73,20 +69,18 @@ public class ClienteDAO {
         return cliente;
     }
 
-    public List<Cliente> carregaClienteByPedidos(List<Pedido> pedidos){
-        List<Cliente>clientes= new ArrayList<>();
-        for(Pedido pedido:pedidos){
-            query = realm.where(Cliente.class);
-
-            RealmResults<Cliente> cliente=query.beginGroup()
+    public List<Cliente> pesquisarClientePorPedido(List<Pedido> pedidos) {
+        List<Cliente> clientes = new ArrayList<>();
+        for (Pedido pedido : pedidos) {
+            RealmResults<Cliente> clientesResult = where().beginGroup()
                     .equalTo("id", pedido.getCodigoCliente()).
-                    endGroup().findAll();
+                            endGroup().findAll();
 
-            Cliente aux =new Cliente();
-            if(cliente.size()>0) {
-                aux= transformaResultEmCliente(cliente.first());
+            Cliente aux = new Cliente();
+            if (clientesResult.size() > 0) {
+                aux = transformaResultEmCliente(clientesResult.first());
             }
-            if(!clientes.contains(aux)){
+            if (!clientes.contains(aux)) {
                 clientes.add(aux);
             }
         }
@@ -94,14 +88,12 @@ public class ClienteDAO {
         return clientes;
     }
 
-    public ArrayList<Cliente> carregaClientesPorRota(Rota rotaToSearch) {
+    public ArrayList<Cliente> pesquisarClientePorRota(Rota rotaToSearch) {
         ArrayList<Cliente> clientes = new ArrayList<Cliente>();
-        RealmQuery<Cliente> clienteRealmQuery = realm.where(Cliente.class);
-        RealmResults<Cliente> results = clienteRealmQuery.equalTo("localidade.rota.id", rotaToSearch.getId())
+        RealmResults<Cliente> results = where().equalTo("localidade.rota.id", rotaToSearch.getId())
                 .sort("nome", Sort.DESCENDING).findAll();
         if (results != null) {
             for (int i = 0; i < results.size(); i++) {
-
                 clientes.add(transformaResultEmCliente(results.get(i)));
             }
         }
@@ -110,15 +102,6 @@ public class ClienteDAO {
     }
 
     public Cliente findById(Long id) {
-        query = realm.where(Cliente.class);
-        Cliente cliente = query.equalTo("id", id).findFirst();
-        if (cliente != null) {
-            return transformaResultEmCliente(cliente);
-
-        } else {
-            return null;
-        }
+        return where().equalTo("id", id).findFirst();
     }
-
-
 }

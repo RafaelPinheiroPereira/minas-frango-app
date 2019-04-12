@@ -98,27 +98,6 @@ public class ItemPedidoAdapter extends RecyclerView.Adapter<ItemPedidoAdapter.My
         myViewHolder.valorTotalTextView
                 .setText(NumberFormat.getCurrencyInstance().format(itemPedido.getValorTotal()));
 
-//        myViewHolder.btnExcluir.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                itemPedidoDAO.removeItemPedido(itemPedido);
-//                removeListItem(posicao);
-//                txtValorTotal.setText(
-//                        "Totalizador" + NumberFormat.getCurrencyInstance(new Locale("pt","BR")).format(calculaValorTotalPedido(mList)));
-//
-//            }
-//        });
-
-//        myViewHolder.btnEdit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                initDialog(itemPedido, posicao, myViewHolder.valorTotalTextView, txtValorTotal);
-//
-//
-//            }
-//        });
-
-
     }
 
     @Override

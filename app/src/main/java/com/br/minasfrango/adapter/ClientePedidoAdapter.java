@@ -149,6 +149,11 @@ public class ClientePedidoAdapter extends ExpandableRecyclerAdapter<ClientePedid
 
     }
 
+    @Override
+    public void notifyChildItemChanged(final int parentPosition, final int childPosition) {
+        super.notifyChildItemChanged(parentPosition, childPosition);
+    }
+
     private void cancelamentoDialog(final Pedido pedido) {
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);

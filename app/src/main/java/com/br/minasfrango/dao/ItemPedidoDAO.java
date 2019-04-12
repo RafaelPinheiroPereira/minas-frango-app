@@ -16,15 +16,19 @@ import java.util.List;
  * Created by 04717299302 on 13/01/2017.
  */
 
-public class ItemPedidoDAO {
+public class ItemPedidoDAO  extends  DAO<ItemPedido>{
 
-    Realm realm ;
-    RealmQuery<ItemPedido> query;
+
+
+    private RealmQuery<ItemPedido> where() {
+        return realm.where(ItemPedido.class);
+    }
+
     public static  ItemPedidoDAO getInstace(){
         return new ItemPedidoDAO();
     }
     public ItemPedidoDAO() {
-        realm=Realm.getDefaultInstance();
+        super();
     }
 
     public  long addItemPedido(ItemPedido itemPedido){
@@ -100,8 +104,7 @@ return  id;
 
     public List<ItemPedido> allItensByPedido(Pedido pedido){
         List<ItemPedido> itens= new ArrayList<>();
-        query = realm.where(ItemPedido.class);
-        RealmResults<ItemPedido> results = query.equalTo("chavesItemPedido.idVenda",Double.valueOf(pedido.getId())).findAll();
+        RealmResults<ItemPedido> results = where().equalTo("chavesItemPedido.idVenda",Double.valueOf(pedido.getId())).findAll();
         if(results.size()>0 && results!=null){
             for(ItemPedido result:results){
                 itens.add(transformaResultItemPedido(result));

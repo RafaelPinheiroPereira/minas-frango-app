@@ -34,7 +34,7 @@
             android:layout_margin="10dp"
             android:padding="10dp"
             android:inputType="number"
-            android:hint="MATRICULA"
+            android:hint="MATRÍCULA"
             android:textColor="@android:color/black" />
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout

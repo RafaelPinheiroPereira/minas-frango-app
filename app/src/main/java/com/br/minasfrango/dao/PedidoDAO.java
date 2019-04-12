@@ -20,17 +20,22 @@ import io.realm.internal.IOException;
 import java.util.List;
 import org.w3c.dom.Entity;
 
-public class PedidoDAO {
+public class PedidoDAO  extends DAO<Pedido> {
 
-    Realm realm;
-    RealmQuery<Pedido> pedidoRealmQuery;
+
+
+
+    private RealmQuery<Pedido> where() {
+        return realm.where(Pedido.class);
+    }
+
 
     public static PedidoDAO getInstace() {
         return new PedidoDAO();
     }
 
     public PedidoDAO() {
-        realm = Realm.getDefaultInstance();
+        super();
 
     }
 
@@ -57,12 +62,11 @@ public class PedidoDAO {
         return id;
     }
 
-    public Pedido searchPedido(Cliente cliente) {
+    public Pedido pesquisarPedido(Cliente cliente) {
 
 
 
-        pedidoRealmQuery.equalTo("codigoCliente", cliente.getId());
-        RealmResults<Pedido> results = pedidoRealmQuery.findAll();
+        RealmResults<Pedido> results =  where().equalTo("codigoCliente", cliente.getId()).findAll();
 
         if (results.size() > 0 && results != null) {
             results.first();
@@ -74,12 +78,12 @@ public class PedidoDAO {
     }
 
 
-    public List<Pedido> buscaPedidosPorCliente(Cliente cliente) {
+    public List<Pedido> pesquisarPedidosPorCliente(Cliente cliente) {
         List<Pedido> pedidos = new ArrayList<Pedido>();
 
-        pedidoRealmQuery = realm.where(Pedido.class);
-        pedidoRealmQuery.equalTo("codigoCliente", cliente.getId());
-        RealmResults<Pedido> results = pedidoRealmQuery.findAll();
+
+
+        RealmResults<Pedido> results =  where().equalTo("codigoCliente", cliente.getId()).findAll();
         if (results.size() > 0 && results != null) {
             for (Pedido auxPedido : results) {
                 pedidos.add(transformaResultEmPedido(auxPedido));
@@ -92,11 +96,11 @@ public class PedidoDAO {
     }
 
 
-    public  Pedido findById(long id){
-        pedidoRealmQuery=realm.where(Pedido.class);
-        Pedido result=pedidoRealmQuery.equalTo("id",id).findAll().first();
-        if(result!=null){
-            return  transformaResultEmPedido(result);
+    public Pedido findById(long id) {
+
+        Pedido result = where().equalTo("id", id).findAll().first();
+        if (result != null) {
+            return transformaResultEmPedido(result);
         }
         return null;
     }
@@ -119,93 +123,18 @@ public class PedidoDAO {
 
     public List<Pedido> findAll() {
         List<Pedido> pedidos = new ArrayList<>();
-        pedidoRealmQuery = realm.where(Pedido.class);
-        RealmResults<Pedido> results=pedidoRealmQuery.findAll();
-        if(results.size()>0){
-            for(Pedido auxPedido: results)
-            pedidos.add(transformaResultEmPedido(auxPedido));
+
+        RealmResults<Pedido> results = where().findAll();
+        if (results.size() > 0) {
+            for (Pedido auxPedido : results) {
+                pedidos.add(transformaResultEmPedido(auxPedido));
+            }
             return pedidos;
         }
 
         return new ArrayList<Pedido>();
     }
 
-    public ArrayList<Cliente> positivados(String data) {
-        RealmQuery<Pedido> queryProduto = realm.where(Pedido.class);
-        Date dataFiltro = null;
-        DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        ArrayList<Cliente> clientes = new ArrayList<Cliente>();
-
-        try {
-            dataFiltro = (Date) format.parse(data);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        RealmResults<Pedido> results = queryProduto.equalTo("dataPedido", dataFiltro).findAll();
-        if (results.size() > 0) {
-            for (int i = 0; i < results.size(); i++) {
-                Pedido pedido = new Pedido();
-                Cliente cliente = new Cliente();
-                pedido.setCodigoCliente(results.get(i).getCodigoCliente());
-                pedido.setCodigoFuncionario(results.get(i).getCodigoFuncionario());
-                cliente.setId(pedido.getCodigoCliente());
-                clientes.add(cliente);
-
-            }
-        }
-        return clientes;
-    }
-
-    public ArrayList<Cliente> naoPositivados(String data) {
-
-        RealmQuery<Pedido> queryProduto = realm.where(Pedido.class);
-        Date dataFiltro = null;
-        DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        ArrayList<Cliente> clientes = new ArrayList<Cliente>();
-
-        try {
-            dataFiltro = (Date) format.parse(data);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        RealmResults<Pedido> results = queryProduto.notEqualTo("dataPedido", dataFiltro).findAll();
-        if (results.size() > 0) {
-            for (int i = 0; i < results.size(); i++) {
-                Pedido pedido = new Pedido();
-                Cliente cliente = new Cliente();
-                pedido.setCodigoCliente(results.get(i).getCodigoCliente());
-                pedido.setCodigoFuncionario(results.get(i).getCodigoFuncionario());
-                cliente.setId(pedido.getCodigoCliente());
-                clientes.add(cliente);
-
-            }
-        }
-        return clientes;
-    }
-
-
-    public boolean isPositivado(Cliente cliente, String data) {
-        RealmQuery<Pedido> queryProduto = realm.where(Pedido.class);
-        Date dataFiltro = null;
-        DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        ArrayList<Cliente> clientes = new ArrayList<Cliente>();
-
-        try {
-            dataFiltro = (Date) format.parse(data);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        RealmResults<Pedido> results = queryProduto.equalTo("dataPedido", dataFiltro)
-                .equalTo("codigoCliente", cliente.getId()).findAll();
-
-        if (results.size() > 0) {
-            return true;
-        }
-        return false;
-    }
 
     public void updatePedido(Pedido pedido) {
         try {

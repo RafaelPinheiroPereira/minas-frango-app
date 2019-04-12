@@ -12,25 +12,24 @@ import io.realm.Sort;
 import io.realm.exceptions.RealmException;
 import java.util.Iterator;
 
-public class RecebimentoDAO {
+public class RecebimentoDAO extends  DAO<Recebimento> {
 
-    Realm realm;
+
 
     Recebimento recebimento;
-
+    private RealmQuery<Recebimento> where() {
+        return realm.where(Recebimento.class);
+    }
     public static RecebimentoDAO getInstace() {
         return new RecebimentoDAO();
     }
 
     public RecebimentoDAO() {
-        realm = Realm.getDefaultInstance();
+        super();
     }
 
-
     public Recebimento findByID(Long id) {
-
-        RealmResults<Recebimento> results = realm.where(Recebimento.class).equalTo("id", id).findAll();
-
+        RealmResults<Recebimento> results = where().equalTo("id", id).findAll();
         if (results.size() > 0 && results != null) {
             Recebimento recebimento = new Recebimento(results.get(0).getIdFuncionario(),
                     results.get(0).getIdCliente(), results.get(0).getIdVenda(), results.get(0).getDataVenda(),
@@ -45,7 +44,7 @@ public class RecebimentoDAO {
     public ArrayList<Recebimento> recebimentosPorCliente(Cliente cliente) {
         ArrayList<Recebimento> recebimentos = new ArrayList<Recebimento>();
 
-        RealmResults<Recebimento> results = realm.where(Recebimento.class).equalTo("idCliente", cliente.getId())
+        RealmResults<Recebimento> results = where().equalTo("idCliente", cliente.getId())
                 .findAll();
 
         if (results != null && results.size() > 0) {
@@ -72,11 +71,7 @@ public class RecebimentoDAO {
 
     }
 
-    public void updateRecebimento(Recebimento recebimento) {
-        realm.beginTransaction();
-        realm.copyToRealmOrUpdate(recebimento);
-        realm.commitTransaction();
-    }
+
 
 
     public void addRecibo(Recebimento recebimento) {

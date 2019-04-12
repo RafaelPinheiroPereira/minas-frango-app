@@ -28,7 +28,6 @@ import com.br.minasfrango.dao.ClienteDAO;
 import com.br.minasfrango.dao.RecebimentoDAO;
 import com.br.minasfrango.dao.RotaDAO;
 import com.br.minasfrango.model.Cliente;
-import com.br.minasfrango.model.Pedido;
 import com.br.minasfrango.model.Rota;
 import com.br.minasfrango.util.SessionManager;
 
@@ -155,7 +154,7 @@ public class ClienteActivity extends BaseActivity
     private void carregaClientesPorRota(Rota rota) {
 
         ArrayList<Cliente> aux = new ArrayList<Cliente>();
-        for (Cliente cliente : clienteDAO.carregaClientesPorRota(rota)) {
+        for (Cliente cliente : clienteDAO.pesquisarClientePorRota(rota)) {
             aux.add(cliente);
         }
         clienteRota.clear();
