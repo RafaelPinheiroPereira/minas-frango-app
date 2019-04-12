@@ -868,7 +868,7 @@ public class VendasActivity extends AppCompatActivity
         final View dialogView = inflater.inflate(R.layout.dialog_edit_item_pedido, null);
         dialogBuilder.setView(dialogView);
 
-        dialogBuilder.setTitle("DADOS DO ITEM");
+        dialogBuilder.setTitle("DADOS DO Item");
 
         TextView idProdutoTextView, descricaoProdutoTextView;
         final EditText edtQuantidade;
@@ -892,7 +892,6 @@ public class VendasActivity extends AppCompatActivity
 
         idProdutoTextView.setText(String.valueOf(itemPedido.getChavesItemPedido().getIdProduto()));
         descricaoProdutoTextView.setText(itemPedido.getDescricao());
-
 
         cetPreco.setText(NumberFormat.getCurrencyInstance().format(itemPedido.getValorUnitario()));
         edtQuantidade.setText(String.valueOf(itemPedido.getQuantidade()));
