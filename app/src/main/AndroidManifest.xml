@@ -20,7 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         tools:replace="android:appComponentFactory">
-        <activity android:name=".activity.ClienteActivity">
+        <activity android:name=".activity.HomeActivity">
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable_clientes" />
@@ -39,14 +39,14 @@
         </activity>
         <activity
             android:name=".activity.SincronizarDadosActivity"
-            android:parentActivityName=".activity.ClienteActivity">
+            android:parentActivityName=".activity.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.SincronizarDadosActivity" />
         </activity>
         <activity
             android:name=".activity.VendasActivity"
-            android:parentActivityName=".activity.ClienteActivity">
+            android:parentActivityName=".activity.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.VendasActivity" />
@@ -61,7 +61,7 @@
         <activity
             android:name=".activity.RecebimentoActivity"
             android:label="@string/title_activity_recebimento"
-            android:parentActivityName=".activity.ClienteActivity">
+            android:parentActivityName=".activity.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.RecebimentoActivity" />

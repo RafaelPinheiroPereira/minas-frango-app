@@ -33,7 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ClienteActivity extends BaseActivity
+public class HomeActivity extends BaseActivity
         implements RecyclerViewOnClickListenerHack, AdapterView.OnItemSelectedListener,
         ClienteAdapter.ClienteAdapterListener {
 
@@ -81,7 +81,7 @@ public class ClienteActivity extends BaseActivity
     @Override
     protected void onStart() {
         super.onStart();
-        LinearLayoutManager layoutManager = new LinearLayoutManager(ClienteActivity.this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(HomeActivity.this);
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
 
@@ -199,7 +199,7 @@ public class ClienteActivity extends BaseActivity
                     receIntent.putExtras(receBundle);
                     startActivity(receIntent);
                 } else {
-                    Toast.makeText(ClienteActivity.this, "Cliente sem débito!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(HomeActivity.this, "Cliente sem débito!", Toast.LENGTH_LONG).show();
                 }
                 break;
             case R.id.imgInfo:
@@ -219,7 +219,7 @@ public class ClienteActivity extends BaseActivity
 
     private void dialogDetalheCliente(Cliente cliente) {
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ClienteActivity.this);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(HomeActivity.this);
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.dialog_detalhe_cliente, null);
         dialogBuilder.setView(dialogView);

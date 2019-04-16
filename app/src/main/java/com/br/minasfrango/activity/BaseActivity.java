@@ -95,7 +95,7 @@ public class BaseActivity extends AppCompatActivity {
                             IDrawerItem drawerItem) {
                         switch (position) {
                             case 0:
-                                startActivity(new Intent(BaseActivity.this, ClienteActivity.class));
+                                startActivity(new Intent(BaseActivity.this, HomeActivity.class));
                                 break;
                             case 1:
                                 startActivity(new Intent(BaseActivity.this, PedidoActivity.class));

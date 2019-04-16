@@ -4,7 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
-import com.br.minasfrango.activity.ClienteActivity;
+import com.br.minasfrango.activity.HomeActivity;
 import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.presenter.ILoginPresenter;
 import com.br.minasfrango.util.HttpConstant;
@@ -50,7 +50,7 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
         super.onPostExecute(islogin);
         progressDialog.dismiss();
         if (islogin.equals("SUCESS")) {
-            mPresenter.getContext().startActivity(new Intent(mPresenter.getContext(), ClienteActivity.class));
+            mPresenter.getContext().startActivity(new Intent(mPresenter.getContext(), HomeActivity.class));
         } else if (islogin.equals("UNAUTHORIZED")) {
             Toast.makeText(mPresenter.getContext(), "Matricula/Senha inválidos!", Toast.LENGTH_LONG).show();
         } else {
