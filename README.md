@@ -1,3 +1,3 @@
 # minas_frango
 
-Projeto de integração com o trinity.
+Projeto de integração com o trinity - Mobile.
