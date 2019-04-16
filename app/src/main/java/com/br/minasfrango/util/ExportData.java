@@ -4,14 +4,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
-
-import com.br.minasfrango.dto.ListaPedidoDTO;
-import com.br.minasfrango.dto.PedidoDTO;
+import com.br.minasfrango.data.dto.ListaPedidoDTO;
+import com.br.minasfrango.data.dto.PedidoDTO;
 import com.br.minasfrango.service.ExportacaoService;
-
 import java.io.IOException;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Response;
 

@@ -6,14 +6,13 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.NumberKeyListener;
 import android.util.AttributeSet;
-import android.widget.EditText;
 
 /**
  * Created by 04717299302 on 20/01/2017.
  */
 
 public class FieldMoney
-        extends android.support.v7.widget.AppCompatEditText
+        extends androidx.appcompat.widget.AppCompatEditText
 {
     /**
      Indicativo de atualização do campo.

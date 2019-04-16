@@ -5,7 +5,7 @@
     android:background="@color/bg_swipe_item_neutral">
 
     <ImageView
-        android:id="@+id/logo"
+        android:id="@+id/imgLogo"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_centerInParent="true"
@@ -13,7 +13,7 @@
         android:src="@drawable/img_login" />
 
     <LinearLayout
-        android:id="@+id/LoginBox"
+        android:id="@+id/lnLoginBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -23,7 +23,7 @@
 
         <!-- Email Label -->
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -36,13 +36,14 @@
             android:inputType="number"
             android:hint="MATRÍCULA"
             android:textColor="@android:color/black" />
-        </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.TextInputLayout
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         <!-- Password Label -->
         <EditText
-            android:id="@+id/edtSenha"
+            android:id="@+id/edtPassword"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_margin="10dp"
@@ -52,12 +53,12 @@
 
             android:inputType="textPassword"
             android:textColor="@android:color/black" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
 
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/submit"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnLogin"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentStart="true"

@@ -8,8 +8,6 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
-
-
 import com.br.minasfrango.R;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -17,7 +15,7 @@ import java.util.Currency;
 import java.util.Locale;
 
 
-public class CurrencyEditText extends android.support.v7.widget.AppCompatEditText {
+public class CurrencyEditText extends androidx.appcompat.widget.AppCompatEditText {
     private char mGroupDivider;
     private char mMonetaryDivider;
     private String mLocale = "";

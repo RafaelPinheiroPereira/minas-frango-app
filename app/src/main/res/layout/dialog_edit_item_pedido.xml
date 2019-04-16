@@ -97,7 +97,7 @@
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -109,7 +109,7 @@
                         android:inputType="number"
                         android:textSize="14sp"
                         android:textStyle="bold" />
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
 
@@ -118,7 +118,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -140,7 +140,7 @@
                         app:showSymbol="false">
                         <requestFocus />
                     </com.br.minasfrango.util.CurrencyEditText>
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
 
@@ -151,7 +151,7 @@
                 android:padding="10dp"
                 android:orientation="horizontal">
 
-                <android.support.design.button.MaterialButton
+                <com.google.android.material.button.MaterialButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/button_cancelar_edicao"
@@ -162,7 +162,7 @@
                     style="@style/Widget.MaterialComponents.Button"
                     app:icon="@mipmap/icon_cancel_24"/>
 
-                <android.support.design.button.MaterialButton
+                <com.google.android.material.button.MaterialButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"

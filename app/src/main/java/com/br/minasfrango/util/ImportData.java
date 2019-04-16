@@ -5,23 +5,20 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
-
-import com.br.minasfrango.dao.RecebimentoDAO;
-import com.br.minasfrango.model.Cliente;
-import com.br.minasfrango.model.Funcionario;
-import com.br.minasfrango.model.Preco;
-import com.br.minasfrango.model.PrecoID;
-import com.br.minasfrango.model.Produto;
-import com.br.minasfrango.model.Recebimento;
-import com.br.minasfrango.dto.RecebimentoDTO;
-import com.br.minasfrango.model.TipoRecebimento;
-import com.br.minasfrango.model.Unidade;
+import com.br.minasfrango.data.dao.RecebimentoDAO;
+import com.br.minasfrango.data.dto.RecebimentoDTO;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.Funcionario;
+import com.br.minasfrango.data.model.Preco;
+import com.br.minasfrango.data.model.PrecoID;
+import com.br.minasfrango.data.model.Produto;
+import com.br.minasfrango.data.model.Recebimento;
+import com.br.minasfrango.data.model.TipoRecebimento;
+import com.br.minasfrango.data.model.Unidade;
 import com.br.minasfrango.service.ImportacaoService;
-
+import io.realm.Realm;
 import java.io.IOException;
 import java.util.List;
-
-import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -62,20 +59,7 @@ public class ImportData extends AsyncTask<Void, Void, Boolean> {
         }
     }
 
-    @Override
-    protected Boolean doInBackground(Void... params) {
-
-        try {
-            return realizaImportacao();
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        }
-
-        return false;
-    }
-
-    public boolean realizaImportacao() throws IOException {
+    public boolean realizaImportacao() {
         boolean importou = false;
         if (importarClientes()) {
 
@@ -97,6 +81,14 @@ public class ImportData extends AsyncTask<Void, Void, Boolean> {
         }
 
         return importou;
+
+    }
+
+    @Override
+    protected Boolean doInBackground(Void... params) {
+
+        return realizaImportacao();
+
 
     }
 

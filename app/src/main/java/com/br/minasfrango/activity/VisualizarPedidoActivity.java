@@ -1,43 +1,25 @@
 package com.br.minasfrango.activity;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NavUtils;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.br.minasfrango.R;
-import com.br.minasfrango.adapter.ItemPedidoAdapter;
-import com.br.minasfrango.adapter.ItensPedidoVisualizarAdapter;
-import com.br.minasfrango.dao.ClienteDAO;
-import com.br.minasfrango.dao.ItemPedidoDAO;
-import com.br.minasfrango.dao.PedidoDAO;
-import com.br.minasfrango.dao.PrecoDAO;
-import com.br.minasfrango.dao.TipoRecebimentoDAO;
-import com.br.minasfrango.dao.UnidadeDAO;
-import com.br.minasfrango.model.Cliente;
-import com.br.minasfrango.model.ItemPedido;
-import com.br.minasfrango.model.Pedido;
-import com.br.minasfrango.model.Produto;
-import com.br.minasfrango.model.TipoRecebimento;
-import com.br.minasfrango.util.CurrencyEditText;
+import com.br.minasfrango.data.adapter.ItensPedidoVisualizarAdapter;
+import com.br.minasfrango.data.dao.ClienteDAO;
+import com.br.minasfrango.data.dao.ItemPedidoDAO;
+import com.br.minasfrango.data.dao.PedidoDAO;
+import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.ItemPedido;
+import com.br.minasfrango.data.model.Pedido;
+import com.br.minasfrango.data.model.TipoRecebimento;
 import java.text.DateFormat;
-import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class VisualizarPedidoActivity extends AppCompatActivity {
     
@@ -140,7 +122,7 @@ public class VisualizarPedidoActivity extends AppCompatActivity {
 
     private Pedido getParams() {
         Bundle args = getIntent().getExtras();
-        long id = (long) args.getLong("keyPedido");
+        long id = args.getLong("keyPedido");
 
         return mPedidoDAO.findById(id);
     }

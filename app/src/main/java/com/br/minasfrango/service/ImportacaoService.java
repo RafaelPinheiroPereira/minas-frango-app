@@ -1,15 +1,13 @@
 package com.br.minasfrango.service;
 
-import com.br.minasfrango.model.Cliente;
-import com.br.minasfrango.model.Funcionario;
-import com.br.minasfrango.model.Preco;
-import com.br.minasfrango.model.Produto;
-import com.br.minasfrango.dto.RecebimentoDTO;
-import com.br.minasfrango.model.TipoRecebimento;
-import com.br.minasfrango.model.Unidade;
-
+import com.br.minasfrango.data.dto.RecebimentoDTO;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.Funcionario;
+import com.br.minasfrango.data.model.Preco;
+import com.br.minasfrango.data.model.Produto;
+import com.br.minasfrango.data.model.TipoRecebimento;
+import com.br.minasfrango.data.model.Unidade;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;

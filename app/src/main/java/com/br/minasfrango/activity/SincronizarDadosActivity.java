@@ -1,30 +1,27 @@
 package com.br.minasfrango.activity;
 
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NavUtils;
 import com.br.minasfrango.R;
-import com.br.minasfrango.model.Funcionario;
-import com.br.minasfrango.model.ItemPedido;
-import com.br.minasfrango.model.Pedido;
-import com.br.minasfrango.dto.ItemPedidoDTO;
-import com.br.minasfrango.dto.PedidoDTO;
+import com.br.minasfrango.data.dto.ItemPedidoDTO;
+import com.br.minasfrango.data.dto.PedidoDTO;
+import com.br.minasfrango.data.model.Funcionario;
+import com.br.minasfrango.data.model.ItemPedido;
+import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.util.ExportData;
 import com.br.minasfrango.util.ImportData;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SincronizarDadosActivity extends AppCompatActivity implements View.OnClickListener {
 		
@@ -35,7 +32,7 @@ public class SincronizarDadosActivity extends AppCompatActivity implements View.
 		protected void onCreate(Bundle savedInstanceState) {
 				super.onCreate(savedInstanceState);
 				setContentView(R.layout.activity_sincronizar_dados);
-				Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            Toolbar toolbar = findViewById(R.id.toolbar);
 				toolbar.setTitle("SINCRONIZAÇÃO DE DADOS");
 				setSupportActionBar(toolbar);
 				
@@ -49,52 +46,53 @@ public class SincronizarDadosActivity extends AppCompatActivity implements View.
 				
 		}
 		
-		private void initView() {
-				
-				btnImportar = (Button) findViewById(R.id.btn_importar);
-				btnExportar = (Button) findViewById(R.id.btn_exportar);
-				
-				
-		}
-		
 		@Override
 		public void onClick(View v) {
-				
+
 				switch (v.getId()) {
 						case R.id.btn_importar:
 								//chamar funcao importacao
-								
+
 								try {
 										ImportData importData = new ImportData(SincronizarDadosActivity.this, new Funcionario());
 										importData.execute();
-										
-										
-								} catch (final Exception e) {
+
+
+                                } catch (final Exception e) {
 										SincronizarDadosActivity.this.runOnUiThread(new Runnable() {
 												public void run() {
-														Toast.makeText(SincronizarDadosActivity.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
-														
+                                                    Toast.makeText(SincronizarDadosActivity.this, e.getMessage(),
+                                                            Toast.LENGTH_LONG).show();
+
 												}
 										});
-										
-								}
-								
-								break;
-						
-						case R.id.btn_exportar:
+
+                                }
+
+                            break;
+
+                    case R.id.btn_exportar:
 								realm = Realm.getDefaultInstance();
 								RealmQuery<Pedido> query = realm.where(Pedido.class);
 								RealmResults<Pedido> results = query.findAll();
-								
-								if (results.size() > 0) {
+
+                        if (results.size() > 0) {
 										exportaDados(results);
 								} else {
 										Toast.makeText(SincronizarDadosActivity.this, "Dados Inexistentes para o periodo informado!", Toast.LENGTH_LONG).show();
 								}
 								break;
 				}
-				
-		}
+
+        }
+
+    private void initView() {
+
+        btnImportar = findViewById(R.id.btn_importar);
+        btnExportar = findViewById(R.id.btn_exportar);
+
+
+    }
 		
 		private void exportaDados(RealmResults<Pedido> results) {
 				

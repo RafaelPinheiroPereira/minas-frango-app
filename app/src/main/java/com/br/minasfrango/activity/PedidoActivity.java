@@ -2,17 +2,16 @@ package com.br.minasfrango.activity;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.br.minasfrango.R;
-import com.br.minasfrango.adapter.ClientePedidoAdapter;
-import com.br.minasfrango.adapter.ExpandableRecyclerAdapter;
-import com.br.minasfrango.dao.ClienteDAO;
-import com.br.minasfrango.dao.PedidoDAO;
-import com.br.minasfrango.model.Cliente;
-import com.br.minasfrango.model.ClientePedido;
-import com.br.minasfrango.model.Pedido;
+import com.br.minasfrango.data.adapter.ClientePedidoAdapter;
+import com.br.minasfrango.data.adapter.ExpandableRecyclerAdapter;
+import com.br.minasfrango.data.dao.ClienteDAO;
+import com.br.minasfrango.data.dao.PedidoDAO;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.ClientePedido;
+import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.util.SessionManager;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +64,7 @@ public class PedidoActivity extends BaseActivity  {
     }
 
     protected void setupRecyclerView() {
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        recyclerView = findViewById(R.id.recyclerview);
 
     }
 

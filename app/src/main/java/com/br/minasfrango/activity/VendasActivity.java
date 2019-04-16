@@ -1,5 +1,6 @@
 package com.br.minasfrango.activity;
 
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -9,15 +10,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -33,24 +25,34 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NavUtils;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.br.minasfrango.R;
-import com.br.minasfrango.adapter.ItemPedidoAdapter;
-import com.br.minasfrango.dao.ClienteDAO;
-import com.br.minasfrango.dao.ItemPedidoDAO;
-import com.br.minasfrango.dao.PedidoDAO;
-import com.br.minasfrango.dao.PrecoDAO;
-import com.br.minasfrango.dao.ProdutoDAO;
-import com.br.minasfrango.dao.TipoRecebimentoDAO;
-import com.br.minasfrango.dao.UnidadeDAO;
+import com.br.minasfrango.data.adapter.ItemPedidoAdapter;
+import com.br.minasfrango.data.dao.ClienteDAO;
+import com.br.minasfrango.data.dao.ItemPedidoDAO;
+import com.br.minasfrango.data.dao.PedidoDAO;
+import com.br.minasfrango.data.dao.PrecoDAO;
+import com.br.minasfrango.data.dao.ProdutoDAO;
+import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
+import com.br.minasfrango.data.dao.UnidadeDAO;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.ItemPedido;
+import com.br.minasfrango.data.model.ItemPedidoID;
+import com.br.minasfrango.data.model.Pedido;
+import com.br.minasfrango.data.model.Preco;
+import com.br.minasfrango.data.model.Produto;
+import com.br.minasfrango.data.model.TipoRecebimento;
 import com.br.minasfrango.listener.RecyclerViewOnClickListenerHack;
-import com.br.minasfrango.model.Cliente;
-import com.br.minasfrango.model.ItemPedido;
-import com.br.minasfrango.model.ItemPedidoID;
-import com.br.minasfrango.model.Pedido;
-import com.br.minasfrango.model.Preco;
-import com.br.minasfrango.model.Produto;
-import com.br.minasfrango.model.TipoRecebimento;
 import com.br.minasfrango.util.CurrencyEditText;
+import com.br.minasfrango.util.FormatacaoMoeda;
 import com.br.minasfrango.util.SessionManager;
 import io.realm.RealmList;
 import io.realm.exceptions.RealmException;
@@ -114,7 +116,7 @@ public class VendasActivity extends AppCompatActivity
 
     ArrayList<ItemPedido> itens = new ArrayList<>();
 
-    ArrayList<ItemPedido> itensTemp = new ArrayList<>();
+    List<ItemPedido> itensTemp = new ArrayList<>();
 
 
     ItemPedidoAdapter adapterItemPedidoAdapter;
@@ -425,39 +427,6 @@ public class VendasActivity extends AppCompatActivity
 
     }
 
-    private void setaSpinner(String codigoProduto) {
-        edtQuantidade.requestFocus();
-        for (Produto aux : produtos) {
-            if (aux.getId() == Integer.parseInt(codigoProduto)) {
-
-                for (int i = 0; i < descricoesProdutos.size(); i++) {
-                    if (descricoesProdutos.get(i).equals(aux.getNome())) {
-                        spnProduto.setSelection(i);
-                        produtoSelecionado = aux;
-                        showADDProduto();
-                        break;
-                    }
-                }
-            }
-        }
-
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-        String codigoProduto = (String) parent.getAdapter().getItem(position);
-        setaSpinner(codigoProduto);
-
-
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -472,9 +441,9 @@ public class VendasActivity extends AppCompatActivity
                     }
 
                 } else if (formaPagamento.equals("FORMAS DE PAGAMENTO")) {
-                    Toast.makeText(VendasActivity.this, "Forma de Pagamento Inválida!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(VendasActivity.this, "FORMA DE PAGAMENTO INVÁLIDA!", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(VendasActivity.this, "Por favor, adicione no minimo um item na lista!",
+                    Toast.makeText(VendasActivity.this, " NO MÍNIMO UM ITEM DEVE SER ADICIONADO!",
                             Toast.LENGTH_LONG).show();
                 }
 
@@ -509,6 +478,53 @@ public class VendasActivity extends AppCompatActivity
 
                 break;
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.info_vendas_menu, menu);
+
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) menu.findItem(R.id.action_vendas_search)
+                .getActionView();
+        searchView.setSearchableInfo(searchManager
+                .getSearchableInfo(getComponentName()));
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+
+        // listening to search query text change
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextChange(String query) {
+                // filter recycler view when text is changed
+                adapterItemPedidoAdapter.getFilter().filter(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // filter recycler view when query submitted
+                adapterItemPedidoAdapter.getFilter().filter(query);
+                return false;
+            }
+        });
+        return true;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        //Quando chama o auto complete deve setar no spinner de descricao do produto
+        String codigoProduto = (String) parent.getAdapter().getItem(position);
+        spnProduto.setSelection(adaptadorDescricaoProduto.getPosition(codigoProduto));
+
+        //setaSpinner(codigoProduto);
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 
     @NonNull
@@ -672,7 +688,8 @@ public class VendasActivity extends AppCompatActivity
 
     }
 
-    private double calculaValorTotalPedido(ArrayList<ItemPedido> itens) {
+    @SuppressLint("NewApi")
+    private double calculaValorTotalPedido(List<ItemPedido> itens) {
         Double valorTotalPedido = 0.0;
         for (int i = 0; i < itens.size(); i++) {
 
@@ -680,115 +697,8 @@ public class VendasActivity extends AppCompatActivity
 
 
         }
+        //return itens.stream().mapToDouble(ItemPedido::getValorTotal).sum();
         return valorTotalPedido;
-    }
-
-    private void showADDProduto() {
-
-        edtQuantidade.setText("1");
-        quantidadeAtual = 1;
-
-        preco = precoDAO.carregaPrecoProduto(produtoSelecionado);
-        ArrayList<String> unidades = new ArrayList<String>();
-        ArrayList<String> todasUnidades = new ArrayList<String>();
-        String unidadePadrao = "";
-        unidadePadrao = unidadeDAO.carregaUnidadePadraoProduto(produtoSelecionado);
-        unidades.add(unidadePadrao);
-        todasUnidades = unidadeDAO.carregaUnidadesProduto(produtoSelecionado);
-        unidades.addAll(todasUnidades);
-        adapterUnidade = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, unidades);
-        //adapter da unidade
-        spnUnidade.setAdapter(adapterUnidade);
-        codigoUnidade = adapterUnidade.getItem(0);
-        //unidade clicada seta o preco
-
-        txtValorTotal.setText(
-                NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(quantidadeAtual * preco.getValor()));
-
-        // valorTotal = quantidadeAtual * preco.getValor();
-        cetPrecoUnitario.setText(String.valueOf(preco.getValor()));
-        edtQuantidade.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                quantidadeAtual = Double.parseDouble(s.toString().equals("") ? "0" : s.toString());
-                if (quantidadeAtual > 0) {
-                    valorTotal = quantidadeAtual *
-                            cetPrecoUnitario.getCurrencyDouble();
-
-                    txtValorTotal
-                            .setText(NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(valorTotal));
-
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                txtValorTotal
-                        .setText(NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(valorTotal));
-            }
-        });
-
-        cetPrecoUnitario.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                if (quantidadeAtual > 0) {
-                    Double preco = cetPrecoUnitario.getCurrencyDouble();
-                    valorTotal = Integer.parseInt(edtQuantidade.getText().toString()) * preco;
-                    txtValorTotal
-                            .setText(NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(valorTotal));
-                }
-                txtValorTotal.setText(NumberFormat.getCurrencyInstance().format(valorTotal));
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.info_vendas_menu, menu);
-
-        // Associate searchable configuration with the SearchView
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchView = (SearchView) menu.findItem(R.id.action_vendas_search)
-                .getActionView();
-        searchView.setSearchableInfo(searchManager
-                .getSearchableInfo(getComponentName()));
-        searchView.setMaxWidth(Integer.MAX_VALUE);
-
-        // listening to search query text change
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // filter recycler view when query submitted
-                adapterItemPedidoAdapter.getFilter().filter(query);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String query) {
-                // filter recycler view when text is changed
-                adapterItemPedidoAdapter.getFilter().filter(query);
-                return false;
-            }
-        });
-        return true;
     }
 
     private void initSwipe() {
@@ -808,13 +718,12 @@ public class VendasActivity extends AppCompatActivity
                 if (direction == ItemTouchHelper.LEFT) {
                     adapterItemPedidoAdapter.removeListItem(position);
                     txtValorTotalProduto.setText(
-                            "TOTAL: " + NumberFormat.getCurrencyInstance(new Locale("pt", "BR"))
-                                    .format(calculaValorTotalPedido(itensTemp)));
+                            "TOTAL: " + FormatacaoMoeda.convertDoubleToString(calculaValorTotalPedido(itensTemp)));
 
                 } else {
 
                     updateDialog(itensTemp.get(position), position, txtValorTotal, txtValorTotalProduto);
-//                    
+//
                 }
             }
 
@@ -858,6 +767,100 @@ public class VendasActivity extends AppCompatActivity
         itemTouchHelper.attachToRecyclerView(rcItemPedido);
     }
 
+    private void setaSpinner(String codigoProduto) {
+
+        for (Produto aux : produtos) {
+            if (aux.getId() == Integer.parseInt(codigoProduto)) {
+
+                for (int i = 0; i < descricoesProdutos.size(); i++) {
+                    if (descricoesProdutos.get(i).equals(aux.getNome())) {
+                        spnProduto.setSelection(i);
+                        produtoSelecionado = aux;
+                        showADDProduto();
+                        break;
+                    }
+                }
+            }
+        }
+
+
+    }
+
+    private void showADDProduto() {
+
+        edtQuantidade.setText("1");
+        quantidadeAtual = 1;
+
+        preco = precoDAO.carregaPrecoProduto(produtoSelecionado);
+        ArrayList<String> unidades = new ArrayList<String>();
+        ArrayList<String> todasUnidades = new ArrayList<String>();
+        String unidadePadrao = "";
+        unidadePadrao = unidadeDAO.carregaUnidadePadraoProduto(produtoSelecionado);
+        unidades.add(unidadePadrao);
+        todasUnidades = unidadeDAO.carregaUnidadesProduto(produtoSelecionado);
+        unidades.addAll(todasUnidades);
+        adapterUnidade = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, unidades);
+        //adapter da unidade
+        spnUnidade.setAdapter(adapterUnidade);
+        codigoUnidade = adapterUnidade.getItem(0);
+        //unidade clicada seta o preco
+
+        txtValorTotal.setText(
+                FormatacaoMoeda.convertDoubleToString(quantidadeAtual * preco.getValor()));
+
+        // valorTotal = quantidadeAtual * preco.getValor();
+        cetPrecoUnitario.setText(String.valueOf(preco.getValor()));
+        edtQuantidade.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                txtValorTotal
+                        .setText(NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(valorTotal));
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                quantidadeAtual = Double.parseDouble(s.toString().equals("") ? "0" : s.toString());
+                if (quantidadeAtual > 0) {
+                    valorTotal = quantidadeAtual *
+                            cetPrecoUnitario.getCurrencyDouble();
+
+                    txtValorTotal
+                            .setText(FormatacaoMoeda.convertDoubleToString(valorTotal));
+
+                }
+            }
+        });
+
+        cetPrecoUnitario.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if (quantidadeAtual > 0) {
+                    Double preco = cetPrecoUnitario.getCurrencyDouble();
+                    valorTotal = Integer.parseInt(edtQuantidade.getText().toString()) * preco;
+                    txtValorTotal
+                            .setText(FormatacaoMoeda.convertDoubleToString(valorTotal));
+                }
+                txtValorTotal.setText(FormatacaoMoeda.convertDoubleToString(valorTotal));
+            }
+        });
+
+    }
 
     private void updateDialog(final ItemPedido itemPedido, final int position, final TextView txtValorTotal,
             final TextView valorTotalProduto) {
@@ -868,7 +871,7 @@ public class VendasActivity extends AppCompatActivity
         final View dialogView = inflater.inflate(R.layout.dialog_edit_item_pedido, null);
         dialogBuilder.setView(dialogView);
 
-        dialogBuilder.setTitle("DADOS DO Item");
+        dialogBuilder.setTitle("DADOS DO ITEM");
 
         TextView idProdutoTextView, descricaoProdutoTextView;
         final EditText edtQuantidade;
@@ -952,7 +955,7 @@ public class VendasActivity extends AppCompatActivity
                     Double preco = cetPreco.getCurrencyDouble();
                     valorTotal = (quantidadeAtual * preco);
                     txtValorTotal
-                            .setText(NumberFormat.getCurrencyInstance().format(valorTotal));
+                            .setText(FormatacaoMoeda.convertDoubleToString(valorTotal));
 
                 }
 
@@ -962,8 +965,7 @@ public class VendasActivity extends AppCompatActivity
 
                 adapterItemPedidoAdapter.updateListItem(itemPedido, position);
                 valorTotalProduto.setText(
-                        "TOTAL: " + NumberFormat.getCurrencyInstance(new Locale("pt", "BR"))
-                                .format(calculaValorTotalPedido(itensTemp)));
+                        "TOTAL: " + FormatacaoMoeda.convertDoubleToString(calculaValorTotalPedido(itensTemp)));
 
                 b.dismiss();
                 Toast.makeText(VendasActivity.this, "Item alterado com sucesso", Toast.LENGTH_LONG).show();

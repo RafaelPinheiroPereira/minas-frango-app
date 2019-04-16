@@ -1,10 +1,6 @@
 package com.br.minasfrango.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnKeyListener;
@@ -18,16 +14,18 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.br.minasfrango.R;
-import com.br.minasfrango.adapter.RecebimentoAdapter;
+import com.br.minasfrango.data.adapter.RecebimentoAdapter;
+import com.br.minasfrango.data.dao.RecebimentoDAO;
+import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.Recebimento;
 import com.br.minasfrango.listener.RecyclerViewOnClickListenerHack;
-import com.br.minasfrango.dao.RecebimentoDAO;
-import com.br.minasfrango.dao.TipoRecebimentoDAO;
-import com.br.minasfrango.model.Cliente;
-import com.br.minasfrango.model.Recebimento;
-
 import com.br.minasfrango.util.FormatacaoMoeda;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -310,10 +308,6 @@ public class RecebimentoActivity extends AppCompatActivity
                 valorTotalDevido += aux.getValorVenda();
             }
         }
-        if (valorTotalDevido - valorAmortizado >= 0) {
-            return false;
-        }
-
-        return true;
+        return !(valorTotalDevido - valorAmortizado >= 0);
     }
 }

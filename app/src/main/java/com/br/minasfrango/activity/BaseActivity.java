@@ -7,16 +7,15 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import com.br.minasfrango.R;
 import com.br.minasfrango.util.SessionManager;
 import com.mikepenz.materialdrawer.Drawer;
@@ -70,7 +69,7 @@ public class BaseActivity extends AppCompatActivity {
                 .withSelectionFistLineShown(true) // Nome
                 .withSelectionSecondLineShown(false) // E-mail
                 .addProfiles(
-                        new ProfileDrawerItem().withName(session.getNome().toString()).withNameShown(true)
+                        new ProfileDrawerItem().withName(session.getNome()).withNameShown(true)
                                 .withIcon(getResources().getDrawable(R.mipmap.ic_profile))
                 )
 
@@ -139,8 +138,8 @@ public class BaseActivity extends AppCompatActivity {
         if (session.checkLogin()) {
             finish();
         }
-        ln = (LinearLayout) findViewById(R.id.nav_header_container);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ln = findViewById(R.id.nav_header_container);
+        toolbar = findViewById(R.id.toolbar);
 
         if (!titulo.equals("")) {
             toolbar.setTitle(titulo);

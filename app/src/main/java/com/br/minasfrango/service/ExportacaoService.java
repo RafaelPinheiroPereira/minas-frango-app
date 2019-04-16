@@ -1,7 +1,6 @@
 package com.br.minasfrango.service;
 
-import com.br.minasfrango.dto.ListaPedidoDTO;
-
+import com.br.minasfrango.data.dto.ListaPedidoDTO;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
