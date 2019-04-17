@@ -1,6 +1,6 @@
 package com.br.minasfrango.data.dto;
 
-import com.br.minasfrango.data.model.Pedido;
+import com.br.minasfrango.data.pojo.Pedido;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;

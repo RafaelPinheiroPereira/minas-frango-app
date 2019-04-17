@@ -1,11 +1,11 @@
 package com.br.minasfrango.presenter;
 
 import android.content.Context;
-import com.br.minasfrango.data.model.Funcionario;
+import com.br.minasfrango.data.pojo.Funcionario;
 import com.br.minasfrango.service.LoginService;
 import retrofit2.Call;
 
-public interface ILoginPresenter {
+public interface ILoginActivityPresenter {
 
 
     Call<Funcionario> autenticateLogin(String idUser, String password);

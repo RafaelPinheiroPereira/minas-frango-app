@@ -1,9 +1,8 @@
 package com.br.minasfrango.view;
 
-public interface ILoginView {
+public interface ILoginActivityView {
 
     void loadAnimation();
-
     boolean validateForm();
 
 }

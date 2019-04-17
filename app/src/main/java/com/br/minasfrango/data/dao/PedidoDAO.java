@@ -1,7 +1,7 @@
 package com.br.minasfrango.data.dao;
 
-import com.br.minasfrango.data.model.Cliente;
-import com.br.minasfrango.data.model.Pedido;
+import com.br.minasfrango.data.pojo.Cliente;
+import com.br.minasfrango.data.pojo.Pedido;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.exceptions.RealmException;

@@ -36,20 +36,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.br.minasfrango.R;
 import com.br.minasfrango.data.adapter.ItemPedidoAdapter;
-import com.br.minasfrango.data.dao.ClienteDAO;
+import com.br.minasfrango.data.dao.ClientDAO;
 import com.br.minasfrango.data.dao.ItemPedidoDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
 import com.br.minasfrango.data.dao.PrecoDAO;
 import com.br.minasfrango.data.dao.ProdutoDAO;
 import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
 import com.br.minasfrango.data.dao.UnidadeDAO;
-import com.br.minasfrango.data.model.Cliente;
-import com.br.minasfrango.data.model.ItemPedido;
-import com.br.minasfrango.data.model.ItemPedidoID;
-import com.br.minasfrango.data.model.Pedido;
-import com.br.minasfrango.data.model.Preco;
-import com.br.minasfrango.data.model.Produto;
-import com.br.minasfrango.data.model.TipoRecebimento;
+import com.br.minasfrango.data.pojo.Cliente;
+import com.br.minasfrango.data.pojo.ItemPedido;
+import com.br.minasfrango.data.pojo.ItemPedidoID;
+import com.br.minasfrango.data.pojo.Pedido;
+import com.br.minasfrango.data.pojo.Preco;
+import com.br.minasfrango.data.pojo.Produto;
+import com.br.minasfrango.data.pojo.TipoRecebimento;
 import com.br.minasfrango.listener.RecyclerViewOnClickListenerHack;
 import com.br.minasfrango.util.CurrencyEditText;
 import com.br.minasfrango.util.FormatacaoMoeda;
@@ -98,7 +98,7 @@ public class VendasActivity extends AppCompatActivity
 
     ProdutoDAO produtoDAO;
 
-    ClienteDAO mClienteDAO;
+    ClientDAO mClientDAO;
 
     PrecoDAO precoDAO;
 
@@ -166,7 +166,7 @@ public class VendasActivity extends AppCompatActivity
         //Instanciando os DAOS necessarios
         produtoDAO = ProdutoDAO.getInstace();
         pedidoDAO = PedidoDAO.getInstace();
-        mClienteDAO = ClienteDAO.getInstace();
+        mClientDAO = ClientDAO.getInstace();
         tipoRecebimentoDAO = TipoRecebimentoDAO.getInstace();
         unidadeDAO = UnidadeDAO.getInstace();
         precoDAO = PrecoDAO.getInstace();
@@ -368,19 +368,71 @@ public class VendasActivity extends AppCompatActivity
 
     }
 
-    private void getParams() {
-        Bundle args = getIntent().getExtras();
-        long idPedido = args.getLong("keyPedido");
-        if (idPedido == 0) {
-            pedidoRealizado = null;
-            cliente = (Cliente) args.getSerializable("keyCliente");
-        } else {
+    private void confirmaPedido() {
 
-            pedidoRealizado = pedidoDAO.findById(idPedido);
-            cliente = mClienteDAO.findById(pedidoRealizado.getCodigoCliente());
+        try {
+            Double valorTotalPedido;
 
+            Pedido pedido = new Pedido();
 
+            RealmList<ItemPedido> itensPedidos = new RealmList<ItemPedido>();
+
+            int codigoFormaPagamento = tipoRecebimentoDAO.codigoFormaPagamento(formaPagamento);
+
+            SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
+            String strData = formatador.format(new Date(System.currentTimeMillis()));
+            try {
+                pedido.setDataPedido(formatador.parse(strData));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            for (int i = 0; i < itens.size(); i++) {
+                ItemPedido aux = new ItemPedido();
+                ItemPedidoID itemPedidoID = itens.get(i).getChavesItemPedido();
+                itemPedidoID.setDataVenda(pedido.getDataPedido());
+                aux.setDescricao(itens.get(i).getDescricao());
+                aux.setValorTotal(itens.get(i).getValorTotal());
+                aux.setId(itens.get(i).getId());
+                aux.setChavesItemPedido(itemPedidoID);
+                aux.setQuantidade(itens.get(i).getQuantidade());
+                aux.setValorUnitario(itens.get(i).getValorUnitario());
+                itensPedidos.add(aux);
+            }
+            SessionManager session = new SessionManager(getApplicationContext());
+            if (session.checkLogin()) {
+                finish();
+            }
+            pedido.setCodigoFuncionario(session.getUserID());
+            pedido.setItens(itensPedidos);
+            pedido.setCodigoCliente(cliente.getId());
+            pedido.setValorTotal(calculaValorTotalPedido(itens));
+
+            pedido.setTipoRecebimento(codigoFormaPagamento);
+            pedidoDAO = PedidoDAO.getInstace();
+
+            long idVenda = pedidoDAO.addPedido(pedido);
+
+            for (ItemPedido itemPedido : itensPedidos) {
+                ItemPedidoID itemPedidoID = itemPedido.getChavesItemPedido();
+                itemPedidoID.setIdVenda(idVenda);
+                itemPedido.setChavesItemPedido(itemPedidoID);
+
+            }
+
+            pedido.setItens(itensPedidos);
+
+            pedidoDAO.updatePedido(pedido);
+
+            //alert de confimacao
+
+            Toast.makeText(VendasActivity.this, "PEDIDO REALIZADO COM SUCESSO!", Toast.LENGTH_LONG).show();
+            NavUtils.navigateUpFromSameTask(this);
+        } catch (RealmException ex) {
+
+            System.out.println("Erro ao inserir:" + ex.getMessage());
         }
+
 
     }
 
@@ -620,71 +672,19 @@ public class VendasActivity extends AppCompatActivity
         NavUtils.navigateUpFromSameTask(this);
     }
 
-    private void confirmaPedido() {
+    private void getParams() {
+        Bundle args = getIntent().getExtras();
+        long idPedido = args.getLong("keyPedido");
+        if (idPedido == 0) {
+            pedidoRealizado = null;
+            cliente = (Cliente) args.getSerializable("keyCliente");
+        } else {
 
-        try {
-            Double valorTotalPedido;
+            pedidoRealizado = pedidoDAO.findById(idPedido);
+            cliente = mClientDAO.findById(pedidoRealizado.getCodigoCliente());
 
-            Pedido pedido = new Pedido();
 
-            RealmList<ItemPedido> itensPedidos = new RealmList<ItemPedido>();
-
-            int codigoFormaPagamento = tipoRecebimentoDAO.codigoFormaPagamento(formaPagamento);
-
-            SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
-            String strData = formatador.format(new Date(System.currentTimeMillis()));
-            try {
-                pedido.setDataPedido(formatador.parse(strData));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-            for (int i = 0; i < itens.size(); i++) {
-                ItemPedido aux = new ItemPedido();
-                ItemPedidoID itemPedidoID = itens.get(i).getChavesItemPedido();
-                itemPedidoID.setDataVenda(pedido.getDataPedido());
-                aux.setDescricao(itens.get(i).getDescricao());
-                aux.setValorTotal(itens.get(i).getValorTotal());
-                aux.setId(itens.get(i).getId());
-                aux.setChavesItemPedido(itemPedidoID);
-                aux.setQuantidade(itens.get(i).getQuantidade());
-                aux.setValorUnitario(itens.get(i).getValorUnitario());
-                itensPedidos.add(aux);
-            }
-            SessionManager session = new SessionManager(getApplicationContext());
-            if (session.checkLogin()) {
-                finish();
-            }
-            pedido.setCodigoFuncionario(session.getMatricula());
-            pedido.setItens(itensPedidos);
-            pedido.setCodigoCliente(cliente.getId());
-            pedido.setValorTotal(calculaValorTotalPedido(itens));
-
-            pedido.setTipoRecebimento(codigoFormaPagamento);
-            pedidoDAO = PedidoDAO.getInstace();
-
-            long idVenda = pedidoDAO.addPedido(pedido);
-
-            for (ItemPedido itemPedido : itensPedidos) {
-                ItemPedidoID itemPedidoID = itemPedido.getChavesItemPedido();
-                itemPedidoID.setIdVenda(idVenda);
-                itemPedido.setChavesItemPedido(itemPedidoID);
-
-            }
-
-            pedido.setItens(itensPedidos);
-
-            pedidoDAO.updatePedido(pedido);
-
-            //alert de confimacao
-
-            Toast.makeText(VendasActivity.this, "PEDIDO REALIZADO COM SUCESSO!", Toast.LENGTH_LONG).show();
-            NavUtils.navigateUpFromSameTask(this);
-        } catch (RealmException ex) {
-
-            System.out.println("Erro ao inserir:" + ex.getMessage());
         }
-
 
     }
 
@@ -800,7 +800,7 @@ public class VendasActivity extends AppCompatActivity
         todasUnidades = unidadeDAO.carregaUnidadesProduto(produtoSelecionado);
         unidades.addAll(todasUnidades);
         adapterUnidade = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, unidades);
-        //adapter da unidade
+        //mClientAdapter da unidade
         spnUnidade.setAdapter(adapterUnidade);
         codigoUnidade = adapterUnidade.getItem(0);
         //unidade clicada seta o preco
@@ -909,7 +909,7 @@ public class VendasActivity extends AppCompatActivity
         unidades.addAll(todasUnidades);
         adapterUnidade = new ArrayAdapter<String>(VendasActivity.this, android.R.layout.simple_spinner_item,
                 unidades);
-        //adapter da unidade
+        //mClientAdapter da unidade
         spnUnidade.setAdapter(adapterUnidade);
 
         spnUnidade.setSelection(adapterUnidade.getPosition(itemPedido.getChavesItemPedido().getIdUnidade()));

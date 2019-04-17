@@ -1,17 +1,20 @@
-package com.br.minasfrango.data.model;
+package com.br.minasfrango.data.pojo;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(callSuper=false,includeFieldNames=false)
+@EqualsAndHashCode(callSuper = false)
+
+
 public class Rota  extends RealmObject implements Serializable {
 		
 		@PrimaryKey

@@ -23,8 +23,8 @@ import com.br.minasfrango.R;
 import com.br.minasfrango.data.adapter.RecebimentoAdapter;
 import com.br.minasfrango.data.dao.RecebimentoDAO;
 import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
-import com.br.minasfrango.data.model.Cliente;
-import com.br.minasfrango.data.model.Recebimento;
+import com.br.minasfrango.data.pojo.Cliente;
+import com.br.minasfrango.data.pojo.Recebimento;
 import com.br.minasfrango.listener.RecyclerViewOnClickListenerHack;
 import com.br.minasfrango.util.FormatacaoMoeda;
 import java.math.BigDecimal;
@@ -159,7 +159,7 @@ public class RecebimentoActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         recebimentoDAO = RecebimentoDAO.getInstace();
-        recebimentos = recebimentoDAO.recebimentosPorCliente(cliente);
+        recebimentos = recebimentoDAO.findReceiptsByClient(cliente);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(RecebimentoActivity.this);
         layoutManager.setReverseLayout(false);

@@ -5,8 +5,8 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.model.Cliente;
-import com.br.minasfrango.data.model.Pedido;
+import com.br.minasfrango.data.pojo.Cliente;
+import com.br.minasfrango.data.pojo.Pedido;
 
 public class ClientePedidoViewHolder extends ParentViewHolder   {
 

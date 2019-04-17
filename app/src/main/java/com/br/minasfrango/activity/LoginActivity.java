@@ -21,15 +21,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.br.minasfrango.R;
-import com.br.minasfrango.presenter.ILoginPresenter;
-import com.br.minasfrango.presenter.LoginPresenter;
-import com.br.minasfrango.util.SessionManager;
-import com.br.minasfrango.view.ILoginView;
+import com.br.minasfrango.presenter.ILoginActivityPresenter;
+import com.br.minasfrango.presenter.LoginActivityPresenter;
+import com.br.minasfrango.view.ILoginActivityView;
 
-public class LoginActivity extends AppCompatActivity implements ILoginView {
-
-
-    SessionManager session;
+public class LoginActivity extends AppCompatActivity implements ILoginActivityView {
 
     private static String[] PERMISSIONS = {Manifest.permission.BLUETOOTH,
             Manifest.permission.BLUETOOTH_ADMIN, Manifest.permission.BLUETOOTH_PRIVILEGED,
@@ -52,7 +48,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     private static int REQUEST_STORAGE = 112;
 
-    ILoginPresenter presenter;
+    ILoginActivityPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +69,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     protected void onStart() {
         super.onStart();
         //Init
-        presenter = new LoginPresenter(this);
+        presenter = new LoginActivityPresenter(this);
     }
 
     @OnClick(R.id.btnLogin)

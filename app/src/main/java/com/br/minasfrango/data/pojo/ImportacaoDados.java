@@ -1,4 +1,4 @@
-package com.br.minasfrango.data.model;
+package com.br.minasfrango.data.pojo;
 
 /**
  * Created by 04717299302 on 02/11/2016.

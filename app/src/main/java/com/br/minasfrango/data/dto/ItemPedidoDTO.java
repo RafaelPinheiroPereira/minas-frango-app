@@ -1,6 +1,6 @@
 package com.br.minasfrango.data.dto;
 
-import com.br.minasfrango.data.model.ItemPedido;
+import com.br.minasfrango.data.pojo.ItemPedido;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;

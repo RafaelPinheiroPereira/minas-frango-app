@@ -1,10 +1,10 @@
 package com.br.minasfrango.data.dao;
 
-import com.br.minasfrango.data.model.Cliente;
-import com.br.minasfrango.data.model.Funcionario;
-import com.br.minasfrango.data.model.Localidade;
-import com.br.minasfrango.data.model.Pedido;
-import com.br.minasfrango.data.model.Rota;
+import com.br.minasfrango.data.pojo.Cliente;
+import com.br.minasfrango.data.pojo.Funcionario;
+import com.br.minasfrango.data.pojo.Localidade;
+import com.br.minasfrango.data.pojo.Pedido;
+import com.br.minasfrango.data.pojo.Rota;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -15,14 +15,14 @@ import java.util.List;
  * Created by 04717299302 on 16/12/2016.
  */
 
-public class ClienteDAO extends DAO<Cliente> {
+public class ClientDAO extends DAO<Cliente> {
 
 
-    public static ClienteDAO getInstace() {
-        return new ClienteDAO();
+    public static ClientDAO getInstace() {
+        return new ClientDAO();
     }
 
-    public ClienteDAO() {
+    public ClientDAO() {
         super();
     }
 
@@ -30,7 +30,7 @@ public class ClienteDAO extends DAO<Cliente> {
         return realm.where(Cliente.class);
     }
 
-    public ArrayList<Cliente> allClientes() {
+    public ArrayList<Cliente> allClients() {
         ArrayList<Cliente> clientes = new ArrayList<Cliente>();
         RealmResults<Cliente> results = where().sort("nome", Sort.DESCENDING).findAll();
         if (results != null && results.size() > 0) {
@@ -85,7 +85,7 @@ public class ClienteDAO extends DAO<Cliente> {
         return clientes;
     }
 
-    public ArrayList<Cliente> pesquisarClientePorRota(Rota rotaToSearch) {
+    public ArrayList<Cliente> findClientsRoute(Rota rotaToSearch) {
         ArrayList<Cliente> clientes = new ArrayList<Cliente>();
         RealmResults<Cliente> results = where().equalTo("localidade.rota.id", rotaToSearch.getId())
                 .sort("nome", Sort.DESCENDING).findAll();

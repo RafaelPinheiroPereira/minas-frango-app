@@ -1,4 +1,4 @@
-package com.br.minasfrango.data.model;
+package com.br.minasfrango.data.pojo;
 
 import com.br.minasfrango.util.ParentListItem;
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package com.br.minasfrango.data.dto;
 
-import com.br.minasfrango.data.model.Recebimento;
+import com.br.minasfrango.data.pojo.Recebimento;
 import java.io.Serializable;
 import java.sql.Date;
 import lombok.AllArgsConstructor;

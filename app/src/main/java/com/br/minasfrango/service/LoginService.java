@@ -1,6 +1,6 @@
 package com.br.minasfrango.service;
 
-import com.br.minasfrango.data.model.Funcionario;
+import com.br.minasfrango.data.pojo.Funcionario;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;

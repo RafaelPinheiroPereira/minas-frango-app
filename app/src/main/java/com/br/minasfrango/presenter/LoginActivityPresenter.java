@@ -1,23 +1,23 @@
 package com.br.minasfrango.presenter;
 
 import android.content.Context;
-import com.br.minasfrango.data.model.Funcionario;
+import com.br.minasfrango.data.pojo.Funcionario;
 import com.br.minasfrango.service.LoginService;
 import com.br.minasfrango.tasks.LoginTask;
 import com.br.minasfrango.util.RetrofitConfig;
 import com.br.minasfrango.util.SessionManager;
-import com.br.minasfrango.view.ILoginView;
+import com.br.minasfrango.view.ILoginActivityView;
 import retrofit2.Call;
 
-public class LoginPresenter implements ILoginPresenter {
+public class LoginActivityPresenter implements ILoginActivityPresenter {
 
     SessionManager mSessionManager;
 
     private LoginTask mLoginTask;
 
-    private ILoginView view;
+    private ILoginActivityView view;
 
-    public LoginPresenter(final ILoginView view) {
+    public LoginActivityPresenter(final ILoginActivityView view) {
         this.view = view;
     }
 

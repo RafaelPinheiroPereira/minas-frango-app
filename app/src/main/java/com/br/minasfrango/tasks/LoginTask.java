@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 import com.br.minasfrango.activity.HomeActivity;
-import com.br.minasfrango.data.model.Funcionario;
-import com.br.minasfrango.presenter.ILoginPresenter;
+import com.br.minasfrango.data.pojo.Funcionario;
+import com.br.minasfrango.presenter.ILoginActivityPresenter;
 import com.br.minasfrango.util.HttpConstant;
-import com.br.minasfrango.view.ILoginView;
+import com.br.minasfrango.view.ILoginActivityView;
 import java.io.IOException;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -18,13 +18,14 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
 
     String idUser, password;
 
-    ILoginView mLoginView;
+    ILoginActivityView mLoginView;
 
-    ILoginPresenter mPresenter;
+    ILoginActivityPresenter mPresenter;
 
     ProgressDialog progressDialog;
 
-    public LoginTask(ILoginPresenter presenter, ILoginView loginView, String idUser, String password) {
+    public LoginTask(ILoginActivityPresenter presenter, ILoginActivityView loginView, String idUser,
+            String password) {
         this.mPresenter = presenter;
         this.mLoginView = loginView;
         this.idUser = idUser;

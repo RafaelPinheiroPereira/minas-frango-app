@@ -10,21 +10,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.br.minasfrango.R;
 import com.br.minasfrango.data.adapter.ItensPedidoVisualizarAdapter;
-import com.br.minasfrango.data.dao.ClienteDAO;
+import com.br.minasfrango.data.dao.ClientDAO;
 import com.br.minasfrango.data.dao.ItemPedidoDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
 import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
-import com.br.minasfrango.data.model.Cliente;
-import com.br.minasfrango.data.model.ItemPedido;
-import com.br.minasfrango.data.model.Pedido;
-import com.br.minasfrango.data.model.TipoRecebimento;
+import com.br.minasfrango.data.pojo.Cliente;
+import com.br.minasfrango.data.pojo.ItemPedido;
+import com.br.minasfrango.data.pojo.Pedido;
+import com.br.minasfrango.data.pojo.TipoRecebimento;
 import java.text.DateFormat;
 import java.util.List;
 
 public class VisualizarPedidoActivity extends AppCompatActivity {
     
     PedidoDAO mPedidoDAO;
-    ClienteDAO mClienteDAO;
+
+    ClientDAO mClientDAO;
     TipoRecebimentoDAO mTipoRecebimentoDAO;
     ItemPedidoDAO mItemPedidoDAO;
 
@@ -46,7 +47,7 @@ public class VisualizarPedidoActivity extends AppCompatActivity {
         initView();
 
         mPedidoDAO=PedidoDAO.getInstace();
-        mClienteDAO=ClienteDAO.getInstace();
+        mClientDAO = ClientDAO.getInstace();
         mTipoRecebimentoDAO=TipoRecebimentoDAO.getInstace();
         mItemPedidoDAO=ItemPedidoDAO.getInstace();
 
@@ -60,7 +61,7 @@ public class VisualizarPedidoActivity extends AppCompatActivity {
 
         Pedido pedido= getParams();
 
-        Cliente cliente=mClienteDAO.findById(pedido.getCodigoCliente());
+        Cliente cliente = mClientDAO.findById(pedido.getCodigoCliente());
         TipoRecebimento tipoRecebimento=mTipoRecebimentoDAO.findById(pedido.getTipoRecebimento());
 
         List<ItemPedido> itemPedidos =mItemPedidoDAO.allItensByPedido(pedido);

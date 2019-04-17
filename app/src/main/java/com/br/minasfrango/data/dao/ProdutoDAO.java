@@ -1,6 +1,6 @@
 package com.br.minasfrango.data.dao;
 
-import com.br.minasfrango.data.model.Produto;
+import com.br.minasfrango.data.pojo.Produto;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;

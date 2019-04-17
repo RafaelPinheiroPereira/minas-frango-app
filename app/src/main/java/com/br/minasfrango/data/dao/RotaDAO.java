@@ -1,6 +1,6 @@
 package com.br.minasfrango.data.dao;
 
-import com.br.minasfrango.data.model.Rota;
+import com.br.minasfrango.data.pojo.Rota;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class RotaDAO  extends DAO<Rota>{
         return realm.where(Rota.class);
     }
 
-    public ArrayList<Rota> carregaRota() {
+    public ArrayList<Rota> allRoutes() {
         ArrayList<Rota> rotas = new ArrayList<Rota>();
         RealmResults<Rota>  result = where().findAll();
         if (result != null) {

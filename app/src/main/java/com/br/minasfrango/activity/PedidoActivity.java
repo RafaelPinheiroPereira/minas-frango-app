@@ -1,46 +1,41 @@
 package com.br.minasfrango.activity;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.br.minasfrango.R;
 import com.br.minasfrango.data.adapter.ClientePedidoAdapter;
 import com.br.minasfrango.data.adapter.ExpandableRecyclerAdapter;
-import com.br.minasfrango.data.dao.ClienteDAO;
+import com.br.minasfrango.data.dao.ClientDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
-import com.br.minasfrango.data.model.Cliente;
-import com.br.minasfrango.data.model.ClientePedido;
-import com.br.minasfrango.data.model.Pedido;
-import com.br.minasfrango.util.SessionManager;
+import com.br.minasfrango.data.pojo.Cliente;
+import com.br.minasfrango.data.pojo.ClientePedido;
+import com.br.minasfrango.data.pojo.Pedido;
+import com.mikepenz.materialdrawer.Drawer;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class PedidoActivity extends BaseActivity  {
+public class PedidoActivity extends AppCompatActivity {
 
 
     private PedidoDAO mPedidoDAO;
 
-    private ClienteDAO mClienteDAO;
+    private ClientDAO mClientDAO;
 
     private ClientePedidoAdapter mAdapter;
     private RecyclerView recyclerView;
     List<ClientePedido> mClientePedidos;
 
 
-    @SuppressLint("MissingSuperCall")
+    private Drawer result;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        session = new SessionManager(getApplicationContext());
-        if (session.checkLogin()) {
-            finish();
-        }
-
-        setDrawer(savedInstanceState, R.layout.activity_pedido, "PEDIDOS");
-        initDrawer(savedInstanceState);
-
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_pedido);
         initViews();
     }
 
@@ -49,7 +44,7 @@ public class PedidoActivity extends BaseActivity  {
         super.onStart();
 
         mPedidoDAO = PedidoDAO.getInstace();
-        mClienteDAO = ClienteDAO.getInstace();
+        mClientDAO = ClientDAO.getInstace();
 
         fillAdapter();
 
@@ -72,7 +67,7 @@ public class PedidoActivity extends BaseActivity  {
     protected void fillAdapter() {
         mClientePedidos= new ArrayList<>();
         List<Pedido> auxPedidos = mPedidoDAO.findAll();
-        List<Cliente> clientes = mClienteDAO.pesquisarClientePorPedido(auxPedidos);
+        List<Cliente> clientes = mClientDAO.pesquisarClientePorPedido(auxPedidos);
         List<Pedido> pedidos= new ArrayList<Pedido>();
         for(Cliente cliente:clientes){
             pedidos= mPedidoDAO.pesquisarPedidosPorCliente(cliente);

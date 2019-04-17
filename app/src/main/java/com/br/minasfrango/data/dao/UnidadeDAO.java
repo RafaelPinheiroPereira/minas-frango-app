@@ -1,7 +1,7 @@
 package com.br.minasfrango.data.dao;
 
-import com.br.minasfrango.data.model.Produto;
-import com.br.minasfrango.data.model.Unidade;
+import com.br.minasfrango.data.pojo.Produto;
+import com.br.minasfrango.data.pojo.Unidade;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;

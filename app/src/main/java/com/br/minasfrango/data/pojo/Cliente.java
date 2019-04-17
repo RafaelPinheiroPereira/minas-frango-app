@@ -1,4 +1,4 @@
-package com.br.minasfrango.data.model;
+package com.br.minasfrango.data.pojo;
 
 import io.realm.RealmModel;
 import io.realm.annotations.PrimaryKey;

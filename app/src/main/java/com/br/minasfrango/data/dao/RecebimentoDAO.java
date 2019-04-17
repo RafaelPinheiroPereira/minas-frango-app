@@ -1,7 +1,7 @@
 package com.br.minasfrango.data.dao;
 
-import com.br.minasfrango.data.model.Cliente;
-import com.br.minasfrango.data.model.Recebimento;
+import com.br.minasfrango.data.pojo.Cliente;
+import com.br.minasfrango.data.pojo.Recebimento;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -37,7 +37,7 @@ public class RecebimentoDAO extends  DAO<Recebimento> {
     }
 
 
-    public ArrayList<Recebimento> recebimentosPorCliente(Cliente cliente) {
+    public ArrayList<Recebimento> findReceiptsByClient(Cliente cliente) {
         ArrayList<Recebimento> recebimentos = new ArrayList<Recebimento>();
 
         RealmResults<Recebimento> results = where().equalTo("idCliente", cliente.getId())
