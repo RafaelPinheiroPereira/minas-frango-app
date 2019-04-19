@@ -1,4 +1,4 @@
-package com.br.minasfrango.util;
+package com.br.minasfrango.network.tasks;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -6,20 +6,21 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 import com.br.minasfrango.data.dto.ListaPedidoDTO;
 import com.br.minasfrango.data.dto.PedidoDTO;
-import com.br.minasfrango.service.ExportacaoService;
+import com.br.minasfrango.network.service.ExportacaoService;
+import com.br.minasfrango.network.RetrofitConfig;
 import java.io.IOException;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
 
-public class ExportData extends AsyncTask<Void, Void, Boolean> {
+public class DataExport extends AsyncTask<Void, Void, Boolean> {
 		
 		private ProgressDialog dialog;
 		private Context ctx;
 		List<PedidoDTO> pedidoDTOS;
 		
-		public ExportData(Context ctx, List<PedidoDTO> pedidoDTOS) {
+		public DataExport(Context ctx, List<PedidoDTO> pedidoDTOS) {
 				dialog = new ProgressDialog(ctx);
 				this.ctx = ctx;
 				this.pedidoDTOS = pedidoDTOS;

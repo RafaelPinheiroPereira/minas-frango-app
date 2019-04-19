@@ -1,4 +1,4 @@
-package com.br.minasfrango.activity;
+package com.br.minasfrango.ui.activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -21,11 +21,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.br.minasfrango.R;
-import com.br.minasfrango.presenter.ILoginActivityPresenter;
-import com.br.minasfrango.presenter.LoginActivityPresenter;
-import com.br.minasfrango.view.ILoginActivityView;
+import com.br.minasfrango.ui.mvp.login.ILoginMVP.IPresenter;
+import com.br.minasfrango.ui.mvp.login.ILoginMVP.IView;
+import com.br.minasfrango.ui.mvp.login.Presenter;
 
-public class LoginActivity extends AppCompatActivity implements ILoginActivityView {
+public class LoginActivity extends AppCompatActivity implements IView {
 
     private static String[] PERMISSIONS = {Manifest.permission.BLUETOOTH,
             Manifest.permission.BLUETOOTH_ADMIN, Manifest.permission.BLUETOOTH_PRIVILEGED,
@@ -48,7 +48,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginActivityVi
 
     private static int REQUEST_STORAGE = 112;
 
-    ILoginActivityPresenter presenter;
+    IPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginActivityVi
     protected void onStart() {
         super.onStart();
         //Init
-        presenter = new LoginActivityPresenter(this);
+        presenter = new Presenter(this);
     }
 
     @OnClick(R.id.btnLogin)
