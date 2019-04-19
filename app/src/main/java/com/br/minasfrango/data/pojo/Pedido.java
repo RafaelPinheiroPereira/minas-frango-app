@@ -40,12 +40,9 @@ public class Pedido extends RealmObject implements Serializable {
     private boolean cancelado;
     
     public List<ItemPedido> realmListToList() {
-        ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstace();
+        ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstace(ItemPedido.class);
         List<ItemPedido> itemPedidos = new ArrayList<ItemPedido>();
-        for (ItemPedido aux : getItens()) {
-
-            itemPedidos.add(itemPedidoDAO.searchItem(aux));
-        }
+        getItens().forEach(item->itemPedidos.add(itemPedidoDAO.searchItem(item)));
         return itemPedidos;
     }
 

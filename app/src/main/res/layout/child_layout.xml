@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:padding="5dp"
-            android:textColor="@color/primary_text"
+            android:textColor="@color/textColorPrimary"
             android:text="lore insprosume"
 
             />
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:padding="10dp"
-            android:textColor="@color/primary_text"
+            android:textColor="@color/textColorPrimary"
 
              android:text="lore insprosume"
 
@@ -51,7 +51,7 @@
             android:padding="10dp"
             android:layout_gravity="right"
             android:gravity="right"
-            android:textColor="@color/primary_text"
+            android:textColor="@color/textColorPrimary"
             android:text="lore insprosume"
 
             />

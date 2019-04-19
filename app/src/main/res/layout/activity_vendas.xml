@@ -175,7 +175,7 @@
                          android:gravity="right"
                          android:padding="5dp"
                          android:layout_marginRight="10dp"
-                         android:textColor="@color/primary_text"
+                         android:textColor="@color/textColorPrimary"
                          android:textSize="18sp" />
                    </LinearLayout>
 
@@ -233,7 +233,7 @@
                 android:layout_marginRight="10dp"
                 android:text="TOTAL:"
                 android:textSize="18sp"
-                android:textColor="@color/primary_text"
+                android:textColor="@color/textColorPrimary"
               />
 
             <LinearLayout

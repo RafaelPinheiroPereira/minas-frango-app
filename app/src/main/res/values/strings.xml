@@ -27,6 +27,8 @@
         completions."
     </string>
     <string name="title_activity_recebimento">RecebimentoActivity</string>
+    <string name="str_importar">Importar</string>
+    <string name="str_exportar">Exportar</string>
 </resources>
 
 

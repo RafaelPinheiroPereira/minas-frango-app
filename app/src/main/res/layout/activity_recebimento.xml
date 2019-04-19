@@ -63,7 +63,7 @@
 
 
                     <TextView
-                        android:id="@+id/txt_codigo_cliente"
+                        android:id="@+id/txtClientID"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -72,7 +72,7 @@
                         android:textSize="18sp" />
 
                     <TextView
-                        android:id="@+id/txt_nome_fantasia"
+                        android:id="@+id/txtFanstasyName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -88,7 +88,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/txt_cidade"
+                        android:id="@+id/txtCidade"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="3dp"
@@ -96,7 +96,7 @@
 
 
                     <TextView
-                        android:id="@+id/txt_endereco"
+                        android:id="@+id/txtEndereco"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"

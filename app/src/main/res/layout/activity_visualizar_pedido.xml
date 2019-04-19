@@ -41,21 +41,21 @@
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
                     android:text="Lorem ipsum volutpat inceptos, suscipit ipsum.  "
-                    android:textColor="@color/primary_text"
+                    android:textColor="@color/textColorPrimary"
                     android:id="@+id/fantasia_txt_visualizar_pedido"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
                     android:text="Lorem ipsum interdum faucibus nullam senectus, tempor habitant tempor. "
-                    android:textColor="@color/secondary_text"
+                    android:textColor="@color/textColorSecondary"
                     android:id="@+id/endereco_txt_visualizar_pedido"/>
 
             </LinearLayout>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/primary_text"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="18sp"
                 android:padding="20dp"
                 android:text="LISTA DE ITENS"
@@ -70,7 +70,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/primary_text"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="18sp"
                 android:padding="20dp"
                 android:text="MAIS INFORMAÇÕES"
@@ -101,7 +101,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/primary_text"
+                        android:textColor="@color/textColorPrimary"
                         android:textSize="14sp"
                         android:padding="10dp"
                         android:text="N° PEDIDO"/>
@@ -111,7 +111,7 @@
                             android:gravity="right"
                             android:padding="5dp"
                             android:id="@+id/num_pedido_visualiza_pedido"
-                            android:textColor="@color/secondary_text"
+                            android:textColor="@color/textColorSecondary"
                             android:textSize="14sp"
                             android:text="N° PEDIDO"/>
                     </LinearLayout>
@@ -125,7 +125,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/primary_text"
+                            android:textColor="@color/textColorPrimary"
                             android:textSize="14sp"
                             android:padding="10dp"
                             android:text="DATA DO PEDIDO"/>
@@ -134,7 +134,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="right"
                             android:id="@+id/data_visualiza_pedido"
-                            android:textColor="@color/secondary_text"
+                            android:textColor="@color/textColorSecondary"
                             android:textSize="14sp"
                             android:padding="5dp"
                             android:text="N° PEDIDO"/>
@@ -146,7 +146,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/primary_text"
+                            android:textColor="@color/textColorPrimary"
                             android:textSize="14sp"
                             android:padding="10dp"
                             android:text="FORMA PAGAMENTO"/>
@@ -155,7 +155,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="right"
                             android:id="@+id/forma_pagamento_visualiza_pedido"
-                            android:textColor="@color/secondary_text"
+                            android:textColor="@color/textColorSecondary"
                             android:textSize="14sp"
                             android:padding="5dp"
                             android:text="N° PEDIDO"/>

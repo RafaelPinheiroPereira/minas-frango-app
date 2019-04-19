@@ -12,15 +12,16 @@
     <application
         android:name=".application.MyApplication"
         android:allowBackup="true"
-        android:appComponentFactory="whateverString"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
+        tools:replace="android:appComponentFactory"
+        android:appComponentFactory="whateverString"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        tools:replace="android:appComponentFactory">
-        <activity android:name=".activity.HomeActivity">
+       >
+        <activity android:name=".ui.activity.HomeActivity">
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable_clientes" />
@@ -29,8 +30,8 @@
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.PedidoActivity" />
-        <activity android:name=".activity.LoginActivity">
+        <activity android:name=".ui.activity.PedidoActivity" />
+        <activity android:name=".ui.activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,18 +39,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.SincronizarDadosActivity"
-            android:parentActivityName=".activity.HomeActivity">
+            android:name=".ui.activity.SincronizarDadosActivity"
+            android:parentActivityName=".ui.activity.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.SincronizarDadosActivity" />
+                android:value=".ui.activity.SincronizarDadosActivity" />
         </activity>
         <activity
-            android:name=".activity.VendasActivity"
-            android:parentActivityName=".activity.HomeActivity">
+            android:name=".ui.activity.VendasActivity"
+            android:parentActivityName=".ui.activity.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.VendasActivity" />
+                android:value=".ui.activity.VendasActivity" />
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable_vendas" />
@@ -59,19 +60,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.RecebimentoActivity"
+            android:name=".ui.activity.RecebimentoActivity"
             android:label="@string/title_activity_recebimento"
-            android:parentActivityName=".activity.HomeActivity">
+            android:parentActivityName=".ui.activity.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.RecebimentoActivity" />
+                android:value=".ui.activity.RecebimentoActivity" />
         </activity>
         <activity
-            android:name=".activity.VisualizarPedidoActivity"
-            android:parentActivityName=".activity.PedidoActivity">
+            android:name=".ui.activity.VisualizarPedidoActivity"
+            android:parentActivityName=".ui.activity.PedidoActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.VisualizarPedidoActivity" />
+                android:value=".ui.activity.VisualizarPedidoActivity" />
         </activity>
 
     </application>

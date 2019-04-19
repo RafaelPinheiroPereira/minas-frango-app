@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:padding="10dp"
-        android:textColor="@color/primary_text"
+        android:textColor="@color/textColorPrimary"
         android:text="DESEJA REALMENTE CANCELAR ESTE PEDIDO?"/>
     <LinearLayout
         android:layout_width="match_parent"

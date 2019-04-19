@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".activity.RecebimentoActivity"
+    tools:context=".ui.activity.RecebimentoActivity"
     tools:showIn="@layout/activity_recebimento">
 
 </androidx.constraintlayout.widget.ConstraintLayout>

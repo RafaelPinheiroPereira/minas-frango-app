@@ -27,7 +27,7 @@
             android:layout_height="24dp"
             android:layout_marginRight="32dp"
             android:src="@mipmap/ic_view_black_48dp"
-            android:tint="@color/primary_text" />
+            android:tint="@color/textColorPrimary" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -57,7 +57,7 @@
             android:layout_height="24dp"
             android:layout_marginRight="32dp"
             android:src="@mipmap/ic_edit_black_48dp"
-            android:tint="@color/primary_text" />
+            android:tint="@color/textColorPrimary" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -87,7 +87,7 @@
             android:layout_height="24dp"
             android:layout_marginRight="32dp"
             android:src="@mipmap/ic_remove_pedido_48dp"
-            android:tint="@color/primary_text" />
+            android:tint="@color/textColorPrimary" />
 
         <TextView
             android:layout_width="wrap_content"

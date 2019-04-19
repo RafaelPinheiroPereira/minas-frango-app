@@ -3,14 +3,14 @@ package com.br.minasfrango.util;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import com.br.minasfrango.activity.LoginActivity;
+import com.br.minasfrango.ui.activity.LoginActivity;
 import java.util.HashMap;
 
 
 /**
  * Created by 04717299302 on 26/08/2016.
  */
-public class SessionManager implements ISessionManager {
+public class SessionManager  {
 
     private static final String PREFER_NAME = "TrinityMobilePref";
 
@@ -41,7 +41,7 @@ public class SessionManager implements ISessionManager {
      * If false it will redirect user to login page
      * Else do anything
      */
-    @Override
+
     public boolean checkLogin() {
         // Check login status
         if (!this.isUserLoggedIn()) {
@@ -63,7 +63,7 @@ public class SessionManager implements ISessionManager {
         return false;
     }
 
-    @Override
+
     public void createUserLoginSession(String matricula, String senha, String nome) {
 
         editor.putBoolean(IS_USER_LOGIN, true);
@@ -82,7 +82,7 @@ public class SessionManager implements ISessionManager {
     /**
      * Get stored session data
      */
-    @Override
+
     public HashMap<String, String> getUserDetails() {
 
         //Use hashmap to store user credentials
@@ -99,13 +99,13 @@ public class SessionManager implements ISessionManager {
     }
 
 
-    @Override
+
     public int getUserID() {
         pref = this.context.getSharedPreferences(PREFER_NAME, 0);
         return Integer.parseInt(pref.getString(KEY_MATRICULA, ""));
     }
 
-    @Override
+
 
     public String getUserName() {
         pref = this.context.getSharedPreferences(PREFER_NAME, 0);
@@ -113,7 +113,7 @@ public class SessionManager implements ISessionManager {
     }
 
     // Check for login
-    @Override
+
     public boolean isUserLoggedIn() {
         return pref.getBoolean(IS_USER_LOGIN, false);
     }
@@ -121,7 +121,7 @@ public class SessionManager implements ISessionManager {
     /**
      * Clear session details
      */
-    @Override
+
     public void logout() {
 
         // Clearing all user data from Shared Preferences

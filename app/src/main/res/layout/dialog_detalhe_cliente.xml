@@ -19,7 +19,7 @@
 
 
             <TextView
-                android:id="@+id/txt_nome_fantasia"
+                android:id="@+id/txtFanstasyName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -30,7 +30,7 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/txt_razao_social"
+                android:id="@+id/txtSocialName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -41,7 +41,7 @@
                  />
 
             <TextView
-                android:id="@+id/txt_codigo_cliente"
+                android:id="@+id/txtClientID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -60,7 +60,7 @@
 
 
             <TextView
-                android:id="@+id/txt_endereco"
+                android:id="@+id/txtEndereco"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -72,7 +72,7 @@
 
 
             <TextView
-                android:id="@+id/txt_bairro"
+                android:id="@+id/txtBairro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -85,7 +85,7 @@
 
 
             <TextView
-                android:id="@+id/txt_cep"
+                android:id="@+id/txtCEP"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -97,7 +97,7 @@
 
 
             <TextView
-                android:id="@+id/txt_cidade"
+                android:id="@+id/txtCidade"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -107,7 +107,7 @@
 
 
             <TextView
-                android:id="@+id/txt_codigo_localidade"
+                android:id="@+id/txtCodeLocal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -125,7 +125,7 @@
                 android:background="?android:attr/listDivider" />
 
             <TextView
-                android:id="@+id/txt_telefone"
+                android:id="@+id/txtPhone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -136,7 +136,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/txt_contato"
+                android:id="@+id/txtContact"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -146,7 +146,7 @@
 
 
             <TextView
-                android:id="@+id/txt_ponto_REF"
+                android:id="@+id/txtReferencia"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -158,7 +158,7 @@
 
 
             <TextView
-                android:id="@+id/txt_cpf_cnpj"
+                android:id="@+id/txtCPFCNPJ"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -168,7 +168,7 @@
 
 
             <TextView
-                android:id="@+id/txt_rg"
+                android:id="@+id/txtRg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -185,7 +185,7 @@
 
 
             <TextView
-                android:id="@+id/txt_observacao"
+                android:id="@+id/txtObs"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -196,7 +196,7 @@
 
 
             <TextView
-                android:id="@+id/txt_qtd_notas_abertas"
+                android:id="@+id/txtOpenNotes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"

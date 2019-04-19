@@ -32,32 +32,31 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_importar"
-            app:backgroundTint="@color/primary_dark"
-            style="@style/Widget.MaterialComponents.Button"
-
-
+            app:backgroundTint="@color/primary"
+            style="@style/Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:layout_gravity="center_horizontal"
             android:minWidth="200dp"
-            android:text="Importar"
+            android:text="@string/str_importar"
             android:textColor="#fff"
             android:textSize="20sp"
             app:icon="@drawable/ic_file_download_black_24dp" />
 
+
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_exportar"
-            app:backgroundTint="@color/primary_dark"
-            style="@style/Widget.MaterialComponents.Button"
+            app:backgroundTint="@color/colorPrimary"
+            style="@style/Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="30dp"
             android:minWidth="200dp"
-            android:text="Exportar"
+            android:text="@string/str_exportar"
             android:textSize="20sp"
+            android:textColor="#fff"
             app:icon="@drawable/ic_file_upload_black_24dp" />
     </LinearLayout>
 

@@ -8,20 +8,18 @@ import io.realm.Sort;
 import io.realm.exceptions.RealmException;
 import java.util.ArrayList;
 
-public class RecebimentoDAO extends  DAO<Recebimento> {
+public class RecebimentoDAO extends GenericsDAO<Recebimento> {
 
 
 
-    Recebimento recebimento;
-    private RealmQuery<Recebimento> where() {
-        return realm.where(Recebimento.class);
-    }
-    public static RecebimentoDAO getInstace() {
-        return new RecebimentoDAO();
+
+
+    public static RecebimentoDAO getInstace(final Class<Recebimento> type) {
+        return new RecebimentoDAO(type);
     }
 
-    public RecebimentoDAO() {
-        super();
+    public RecebimentoDAO(final Class<Recebimento> type) {
+        super(type);
     }
 
     public Recebimento findByID(Long id) {

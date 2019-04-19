@@ -15,29 +15,18 @@ import java.util.List;
  * Created by 04717299302 on 16/12/2016.
  */
 
-public class ClientDAO extends DAO<Cliente> {
+public class ClientDAO extends GenericsDAO<Cliente> {
 
 
-    public static ClientDAO getInstace() {
-        return new ClientDAO();
+    public static ClientDAO getInstace(final Class<Cliente> type) {
+        return new ClientDAO(type);
     }
-
-    public ClientDAO() {
-        super();
+    public ClientDAO(final Class<Cliente> type) {
+        super(type);
     }
-
-    private RealmQuery<Cliente> where() {
-        return realm.where(Cliente.class);
-    }
-
-    public ArrayList<Cliente> allClients() {
-        ArrayList<Cliente> clientes = new ArrayList<Cliente>();
-        RealmResults<Cliente> results = where().sort("nome", Sort.DESCENDING).findAll();
-        if (results != null && results.size() > 0) {
-            for (int i = 0; i < results.size(); i++) {
-                clientes.add(transformaResultEmCliente(results.get(i)));
-            }
-        }
+    public List<Cliente> loadAll() {
+        ArrayList<Cliente> clientes = new ArrayList<>();
+        where().sort("nome").findAll().forEach(item -> clientes.add(transformaResultEmCliente(item)));
         return clientes;
     }
 
@@ -66,8 +55,10 @@ public class ClientDAO extends DAO<Cliente> {
         return cliente;
     }
 
-    public List<Cliente> pesquisarClientePorPedido(List<Pedido> pedidos) {
+    public List<Cliente> findClientByOrder(List<Pedido> pedidos) {
         List<Cliente> clientes = new ArrayList<>();
+
+
         for (Pedido pedido : pedidos) {
             RealmResults<Cliente> clientesResult = where().beginGroup()
                     .equalTo("id", pedido.getCodigoCliente()).
@@ -85,20 +76,14 @@ public class ClientDAO extends DAO<Cliente> {
         return clientes;
     }
 
-    public ArrayList<Cliente> findClientsRoute(Rota rotaToSearch) {
-        ArrayList<Cliente> clientes = new ArrayList<Cliente>();
-        RealmResults<Cliente> results = where().equalTo("localidade.rota.id", rotaToSearch.getId())
+    public List<Cliente> findClientsRoute(Rota rotaToSearch) {
+           List<Cliente> clientes = new ArrayList<Cliente>();
+           RealmResults<Cliente> results = where().equalTo("localidade.rota.id", rotaToSearch.getId())
                 .sort("nome", Sort.DESCENDING).findAll();
-        if (results != null) {
-            for (int i = 0; i < results.size(); i++) {
-                clientes.add(transformaResultEmCliente(results.get(i)));
-            }
-        }
+           results.forEach(item -> clientes.add(transformaResultEmCliente(item)));
         return clientes;
 
     }
 
-    public Cliente findById(Long id) {
-        return where().equalTo("id", id).findFirst();
-    }
+
 }

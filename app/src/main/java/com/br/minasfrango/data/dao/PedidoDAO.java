@@ -9,22 +9,18 @@ import io.realm.internal.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PedidoDAO  extends DAO<Pedido> {
+public class PedidoDAO extends GenericsDAO<Pedido> {
 
 
 
 
-    private RealmQuery<Pedido> where() {
-        return realm.where(Pedido.class);
+
+    public static PedidoDAO getInstace(final Class<Pedido> type) {
+        return new PedidoDAO(type);
     }
 
-
-    public static PedidoDAO getInstace() {
-        return new PedidoDAO();
-    }
-
-    public PedidoDAO() {
-        super();
+    public PedidoDAO(final Class<Pedido> type) {
+        super(type);
 
     }
 

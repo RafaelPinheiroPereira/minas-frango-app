@@ -58,7 +58,7 @@
 
                 android:ellipsize="end"
                 android:text="Nome Fanstasia"
-                android:textColor="@color/primary_text"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="15sp" />
 
             <TextView
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:text="Bairro"
-                android:textColor="@color/secondary_text"
+                android:textColor="@color/textColorSecondary"
                 android:textSize="12sp" />
 
         </LinearLayout>
