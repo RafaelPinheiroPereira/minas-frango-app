@@ -23,7 +23,6 @@ import butterknife.ButterKnife;
 import butterknife.OnItemSelected;
 import com.br.minasfrango.R;
 import com.br.minasfrango.data.pojo.Cliente;
-import com.br.minasfrango.data.pojo.Funcionario;
 import com.br.minasfrango.data.pojo.Rota;
 import com.br.minasfrango.listener.IDrawer;
 import com.br.minasfrango.listener.NavigateDrawer;
@@ -33,7 +32,6 @@ import com.br.minasfrango.ui.adapter.ClienteAdapter;
 import com.br.minasfrango.ui.mvp.home.IHomeMVP.IPresenter;
 import com.br.minasfrango.ui.mvp.home.IHomeMVP.IView;
 import com.br.minasfrango.ui.mvp.home.Presenter;
-import com.br.minasfrango.network.tasks.DataImport;
 import com.br.minasfrango.util.AlertDialogClient;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
@@ -87,55 +85,15 @@ public class HomeActivity extends AppCompatActivity
         mClientAdapter.setRecyclerViewOnClickListenerHack(this);
     }
 
-    @Override
-    public void confirmAlertDialog() {
-
-        AlertDialog.Builder builder = new Builder(presenter.getContext());
-        builder.setTitle("REALIZAR LOGOUT");
-        builder.setMessage("Deseja realmente sair do sistema?");
-        String positiveText = "Sim";
-        builder.setPositiveButton(positiveText,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // positive button logic
-
-                        presenter.logout();
-                        dialog.dismiss();
-                        //edtConfirmaEmail.setText("");
-
-                        return;
-                    }
-                });
-
-        String negativeText = "Não";
-        builder.setNegativeButton(negativeText,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // negative button logic
-                        return;
-                    }
-                });
-
-        AlertDialog dialog = builder.create();
-        // display mProgressDialog
-        dialog.show();
-    }
 
     @Override
-    public void onShowProgressDialog() {
-        if (getProgressDialog().isShowing()) {
-            return;
+    public void closerDrawer() {
+
+        if (result != null && result.isDrawerOpen()) {
+            result.closeDrawer();
         }
-        getProgressDialog().show();
-    }
 
-    @Override
-    public void onHideProgressDialog() {
-        if (getProgressDialog().isShowing()) {
-            getProgressDialog().dismiss();
-        }
+
     }
 
     @Override
@@ -149,7 +107,20 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void onHideProgressDialog() {
+        if (getProgressDialog().isShowing()) {
+            getProgressDialog().dismiss();
+        }
+    }
 
+    @Override
+    public void onShowProgressDialog() {
+        if (getProgressDialog().isShowing()) {
+            return;
+        }
+        getProgressDialog().show();
+    }
 
 
     public ProgressDialog getProgressDialog() {
@@ -237,21 +208,6 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void setAdapters() {
-
-        mClientAdapter = new ClienteAdapter(this,
-                presenter.allClients());
-
-        rvCliente.setAdapter(mClientAdapter);
-
-        mRouteAdapter = new ArrayAdapter(this,
-                android.R.layout.simple_list_item_1, presenter.allRoutes());
-
-        spnRoute.setAdapter(mRouteAdapter);
-        spnRoute.setPrompt("Todas as Rotas");
-    }
-
-    @Override
     public void setDrawer(final Bundle savedInstanceState) {
 
         navigateDrawer = new NavigateDrawer(this);
@@ -275,19 +231,13 @@ public class HomeActivity extends AppCompatActivity
                         break;
 
                     case 4:
-                        Funcionario funcionario = new Funcionario();
-                        funcionario.setId(presenter.getUserId());
-                        funcionario.setNome(presenter.getUserName());
-                        new DataImport(funcionario, presenter).execute();
-                        closeDrawer();
+                        presenter.dataImport();
                         break;
                     case 5:
-
-                        confirmAlertDialog();
+                        presenter.dataExport();
                         break;
                     case 6:
-
-                        confirmAlertDialog();
+                        presenter.showDialogLogout();
                         break;
                 }
                 return true;
@@ -295,15 +245,59 @@ public class HomeActivity extends AppCompatActivity
         });
 
         navigateDrawer.addItemInDrawer(result);
+    }
 
+    @Override
+    public void setAdapters() {
+
+        mClientAdapter = new ClienteAdapter(this,
+                presenter.allClients());
+
+        rvCliente.setAdapter(mClientAdapter);
+
+        mRouteAdapter = new ArrayAdapter(this,
+                android.R.layout.simple_list_item_1, presenter.allRoutes());
+
+        spnRoute.setAdapter(mRouteAdapter);
+        spnRoute.setPrompt("Todas as Rotas");
+    }
+
+    @Override
+    public void showDialogLogout() {
+        AlertDialog.Builder builder = new Builder(presenter.getContext());
+        builder.setTitle("Realizar Logout");
+        builder.setMessage("Deseja realmente sair do sistema?");
+        String positiveText = "Sim";
+        builder.setPositiveButton(positiveText,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // positive button logic
+
+                        presenter.logout();
+                        dialog.dismiss();
+                        //edtConfirmaEmail.setText("");
+
+                        return;
+                    }
+                });
+
+        String negativeText = "Não";
+        builder.setNegativeButton(negativeText,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // negative button logic
+                        return;
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        // display mProgressDialog
+        dialog.show();
 
     }
 
-    private void closeDrawer() {
-        if (result != null && result.isDrawerOpen()) {
-            result.closeDrawer();
-        }
-    }
 
     @Override
     public void showDialogClient(final Cliente cliente) {

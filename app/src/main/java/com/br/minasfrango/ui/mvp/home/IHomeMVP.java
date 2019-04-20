@@ -3,9 +3,9 @@ package com.br.minasfrango.ui.mvp.home;
 import android.content.Context;
 import android.os.Bundle;
 import com.br.minasfrango.data.pojo.Cliente;
+import com.br.minasfrango.data.pojo.Pedido;
 import com.br.minasfrango.data.pojo.Recebimento;
 import com.br.minasfrango.data.pojo.Rota;
-
 import java.util.List;
 
 
@@ -13,6 +13,12 @@ public interface IHomeMVP {
 
     interface IPresenter {
 
+
+        void closeDrawer();
+
+        void dataExport();
+
+        void dataImport();
 
         List<Cliente> findClientsByRoute(Rota route);
 
@@ -46,6 +52,8 @@ public interface IHomeMVP {
 
         void hideProgressDialog();
 
+        void showDialogLogout();
+
         void showProgressDialog();
 
         void showDialogClient(final Cliente cliente);
@@ -54,8 +62,10 @@ public interface IHomeMVP {
 
     }
 
-    interface IView  {
+    interface IView {
 
+
+        void closerDrawer();
 
         void setAdapters();
 
@@ -63,7 +73,6 @@ public interface IHomeMVP {
 
         void showDialogClient(final Cliente cliente);
 
-        void confirmAlertDialog();
 
         void onShowProgressDialog();
 
@@ -72,12 +81,20 @@ public interface IHomeMVP {
         void loadClientsAfterDataImport();
 
         void loadRoutesAfterDataImport();
+
+        void showDialogLogout();
     }
 
     interface IModel {
+
         List<Cliente> findClientsByRoute(Rota rota);
+
         List<Recebimento> findReceiptsByClient(Cliente cliente);
+
         List<Cliente> getAllClients();
+
         List<Rota> getAllRoutes();
+
+        List<Pedido> getAllOrders();
     }
 }

@@ -13,10 +13,9 @@ import com.br.minasfrango.data.pojo.Produto;
 import com.br.minasfrango.data.pojo.Recebimento;
 import com.br.minasfrango.data.pojo.TipoRecebimento;
 import com.br.minasfrango.data.pojo.Unidade;
-import com.br.minasfrango.ui.mvp.home.IHomeMVP;
-import com.br.minasfrango.ui.mvp.pedido.IPedidoActivityPresenter;
-import com.br.minasfrango.network.service.ImportacaoService;
 import com.br.minasfrango.network.RetrofitConfig;
+import com.br.minasfrango.network.service.ImportacaoService;
+import com.br.minasfrango.ui.mvp.home.IHomeMVP;
 import io.realm.Realm;
 import java.io.IOException;
 import java.util.List;
@@ -29,49 +28,19 @@ import retrofit2.Response;
 public class DataImport extends AsyncTask<Void, Void, Boolean> {
 
     Funcionario funcionario;
+
     RecebimentoDAO recebimentoDAO;
+
     IHomeMVP.IPresenter mHomePresenter;
-    IPedidoActivityPresenter mPedidoActivityPresenter;
 
     public DataImport(Funcionario funcionario, IHomeMVP.IPresenter homePresenter) {
         this.funcionario = funcionario;
         this.mHomePresenter = homePresenter;
 
     }
-    public DataImport(Funcionario funcionario,IPedidoActivityPresenter PedidoActivityPresenter) {
-        this.funcionario = funcionario;
-        this.mPedidoActivityPresenter=PedidoActivityPresenter;
 
-    }
 
-    @Override
-    protected void onPreExecute() {
-        if(this.mHomePresenter !=null){
-            this.mHomePresenter.showProgressDialog();
-        }else{
-            this.mPedidoActivityPresenter.onShowProgressDialog();
-        }
-    }
-
-    @Override
-    protected void onPostExecute(Boolean importou) {
-        super.onPostExecute(importou);
-
-        if (importou) {
-            if(this.mHomePresenter !=null){
-                this.mHomePresenter.hideProgressDialog();
-                this.mHomePresenter.showToast("Importação realizada com sucesso!");
-                this.mHomePresenter.loadClientsAfterDataImport();
-                this.mHomePresenter.loadRoutesAfterDataImport();
-            }else{
-                this.mPedidoActivityPresenter.hideProgressDialog();
-                this.mPedidoActivityPresenter.showToast("Importação realizada com sucesso!");
-            }
-
-        }
-    }
-
-    public boolean realizaImportacao() {
+    public boolean importData() {
         boolean importou = false;
         if (importarClientes()) {
 
@@ -99,8 +68,32 @@ public class DataImport extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected Boolean doInBackground(Void... params) {
 
-        return realizaImportacao();
+        return importData();
 
+
+    }
+
+    @Override
+    protected void onPostExecute(Boolean importou) {
+        super.onPostExecute(importou);
+
+        if (importou) {
+
+            this.mHomePresenter.hideProgressDialog();
+            this.mHomePresenter.showToast("Importação realizada com sucesso!");
+            this.mHomePresenter.loadClientsAfterDataImport();
+            this.mHomePresenter.loadRoutesAfterDataImport();
+
+            this.mHomePresenter.closeDrawer();
+
+
+        }
+    }
+
+    @Override
+    protected void onPreExecute() {
+
+        this.mHomePresenter.showProgressDialog();
 
     }
 
@@ -127,12 +120,10 @@ public class DataImport extends AsyncTask<Void, Void, Boolean> {
                 return true;
 
             } else {
-                if(this.mHomePresenter !=null){
-                    this.mHomePresenter.hideProgressDialog();
 
-                }else{
-                    this.mPedidoActivityPresenter.hideProgressDialog();
-                }
+                this.mHomePresenter.hideProgressDialog();
+
+
             }
 
         } catch (IOException e) {

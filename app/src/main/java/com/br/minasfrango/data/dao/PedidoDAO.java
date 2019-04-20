@@ -2,7 +2,6 @@ package com.br.minasfrango.data.dao;
 
 import com.br.minasfrango.data.pojo.Cliente;
 import com.br.minasfrango.data.pojo.Pedido;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.exceptions.RealmException;
 import io.realm.internal.IOException;
@@ -10,9 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PedidoDAO extends GenericsDAO<Pedido> {
-
-
-
 
 
     public static PedidoDAO getInstace(final Class<Pedido> type) {
@@ -47,11 +43,16 @@ public class PedidoDAO extends GenericsDAO<Pedido> {
         return id;
     }
 
+    public List<Pedido> findAll() {
+        List<Pedido> pedidos = new ArrayList<>();
+        RealmResults<Pedido> results = where().findAll();
+        results.forEach(item -> pedidos.add(transformaResultEmPedido(item)));
+        return pedidos;
+    }
+
     public Pedido pesquisarPedido(Cliente cliente) {
 
-
-
-        RealmResults<Pedido> results =  where().equalTo("codigoCliente", cliente.getId()).findAll();
+        RealmResults<Pedido> results = where().equalTo("codigoCliente", cliente.getId()).findAll();
 
         if (results.size() > 0 && results != null) {
             results.first();
@@ -59,24 +60,6 @@ public class PedidoDAO extends GenericsDAO<Pedido> {
 
         }
         return null;
-
-    }
-
-
-    public List<Pedido> pesquisarPedidosPorCliente(Cliente cliente) {
-        List<Pedido> pedidos = new ArrayList<Pedido>();
-
-
-
-        RealmResults<Pedido> results =  where().equalTo("codigoCliente", cliente.getId()).findAll();
-        if (results.size() > 0 && results != null) {
-            for (Pedido auxPedido : results) {
-                pedidos.add(transformaResultEmPedido(auxPedido));
-            }
-
-        }
-
-        return pedidos;
 
     }
 
@@ -90,6 +73,19 @@ public class PedidoDAO extends GenericsDAO<Pedido> {
         return null;
     }
 
+    public List<Pedido> pesquisarPedidosPorCliente(Cliente cliente) {
+        List<Pedido> pedidos = new ArrayList<Pedido>();
+        RealmResults<Pedido> results = where().equalTo("codigoCliente", cliente.getId()).findAll();
+        if (results.size() > 0 && results != null) {
+            for (Pedido auxPedido : results) {
+                pedidos.add(transformaResultEmPedido(auxPedido));
+            }
+
+        }
+
+        return pedidos;
+
+    }
 
     private Pedido transformaResultEmPedido(Pedido pedidoToTransforme) {
         Pedido pedido = new Pedido();
@@ -101,25 +97,10 @@ public class PedidoDAO extends GenericsDAO<Pedido> {
         pedido.setDataPedido(pedidoToTransforme.getDataPedido());
         pedido.setMotivoCancelamento(pedidoToTransforme.getMotivoCancelamento());
         pedido.setCancelado(pedidoToTransforme.isCancelado());
-
         pedido.setItens(pedidoToTransforme.getItens());
+        pedido.setMItemPedidos(pedidoToTransforme.realmListToList());
         return pedido;
     }
-
-    public List<Pedido> findAll() {
-        List<Pedido> pedidos = new ArrayList<>();
-
-        RealmResults<Pedido> results = where().findAll();
-        if (results.size() > 0) {
-            for (Pedido auxPedido : results) {
-                pedidos.add(transformaResultEmPedido(auxPedido));
-            }
-            return pedidos;
-        }
-
-        return new ArrayList<Pedido>();
-    }
-
 
     public void updatePedido(Pedido pedido) {
         try {

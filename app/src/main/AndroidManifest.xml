@@ -30,7 +30,14 @@
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.PedidoActivity" />
+        <activity
+            android:name=".ui.activity.PedidoActivity"
+            android:parentActivityName=".ui.activity.HomeActivity"></activity>
+
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".ui.activity.PedidoActivity" />
+
         <activity android:name=".ui.activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,13 +45,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.activity.SincronizarDadosActivity"
-            android:parentActivityName=".ui.activity.HomeActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activity.SincronizarDadosActivity" />
-        </activity>
+
         <activity
             android:name=".ui.activity.VendasActivity"
             android:parentActivityName=".ui.activity.HomeActivity">

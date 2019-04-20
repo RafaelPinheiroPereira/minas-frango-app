@@ -3,12 +3,16 @@ package com.br.minasfrango.ui.mvp.home;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import com.br.minasfrango.ui.activity.RecebimentoActivity;
-import com.br.minasfrango.ui.activity.VendasActivity;
 import com.br.minasfrango.data.pojo.Cliente;
+import com.br.minasfrango.data.pojo.Funcionario;
+import com.br.minasfrango.data.pojo.Pedido;
 import com.br.minasfrango.data.pojo.Recebimento;
 import com.br.minasfrango.data.pojo.Rota;
+import com.br.minasfrango.network.tasks.DataExport;
+import com.br.minasfrango.network.tasks.DataImport;
 import com.br.minasfrango.ui.abstracts.AbstractActivity;
+import com.br.minasfrango.ui.activity.RecebimentoActivity;
+import com.br.minasfrango.ui.activity.VendasActivity;
 import com.br.minasfrango.ui.mvp.home.IHomeMVP.IModel;
 import com.br.minasfrango.ui.mvp.home.IHomeMVP.IView;
 import com.br.minasfrango.util.SessionManager;
@@ -42,6 +46,18 @@ public class Presenter implements IHomeMVP.IPresenter {
     }
 
     @Override
+    public void closeDrawer() {
+        this.view.closerDrawer();
+    }
+
+    @Override
+    public void dataExport() {
+        List<Pedido> orders = this.model.getAllOrders();
+        new DataExport(this, orders).execute();
+
+    }
+
+    @Override
     public List<Cliente> findClientsByRoute(final Rota route) {
         clients.clear();
         clients.addAll(model.findClientsByRoute(route));
@@ -65,6 +81,16 @@ public class Presenter implements IHomeMVP.IPresenter {
         routes.clear();
         routes.addAll(model.getAllRoutes());
         return routes;
+    }
+
+    @Override
+    public void dataImport() {
+        Funcionario funcionario = new Funcionario();
+        funcionario.setId(getUserId());
+        funcionario.setNome(getUserName());
+        new DataImport(funcionario, this).execute();
+
+
     }
 
     @Override
@@ -132,6 +158,11 @@ public class Presenter implements IHomeMVP.IPresenter {
     @Override
     public void hideProgressDialog() {
         this.view.onHideProgressDialog();
+    }
+
+    @Override
+    public void showDialogLogout() {
+        this.view.showDialogLogout();
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.br.minasfrango.data.pojo;
 import com.br.minasfrango.data.dao.ItemPedidoDAO;
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,6 +30,8 @@ public class Pedido extends RealmObject implements Serializable {
 
     private RealmList<ItemPedido> itens;
 
+    @Ignore
+    private List<ItemPedido> mItemPedidos;
     private double valorTotal;
 
     private long tipoRecebimento;
@@ -45,5 +48,4 @@ public class Pedido extends RealmObject implements Serializable {
         getItens().forEach(item->itemPedidos.add(itemPedidoDAO.searchItem(item)));
         return itemPedidos;
     }
-
 }

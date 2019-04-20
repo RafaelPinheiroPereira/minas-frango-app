@@ -37,7 +37,7 @@
             android:layout_margin="10dp"
             android:padding="10dp"
             android:inputType="number"
-            android:hint="MATRÍCULA"
+            android:hint="Matrícula"
 
             android:textColor="@android:color/black" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -54,7 +54,7 @@
             android:layout_margin="10dp"
             android:padding="10dp"
             android:fontFamily="sans-serif"
-            android:hint="SENHA"
+            android:hint="Senha"
 
             android:inputType="textPassword"
             android:textColor="@android:color/black" />

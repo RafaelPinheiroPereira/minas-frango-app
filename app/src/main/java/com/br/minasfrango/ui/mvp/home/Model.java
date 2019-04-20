@@ -1,9 +1,11 @@
 package com.br.minasfrango.ui.mvp.home;
 
 import com.br.minasfrango.data.dao.ClientDAO;
+import com.br.minasfrango.data.dao.PedidoDAO;
 import com.br.minasfrango.data.dao.RecebimentoDAO;
 import com.br.minasfrango.data.dao.RouteDAO;
 import com.br.minasfrango.data.pojo.Cliente;
+import com.br.minasfrango.data.pojo.Pedido;
 import com.br.minasfrango.data.pojo.Recebimento;
 import com.br.minasfrango.data.pojo.Rota;
 import com.br.minasfrango.ui.mvp.home.IHomeMVP.IModel;
@@ -15,7 +17,9 @@ public class Model implements IModel {
 
     RecebimentoDAO mRecebimentoDAO = RecebimentoDAO.getInstace(Recebimento.class);
 
-    RouteDAO mRotaDAO = RouteDAO.getInstace(Rota.class);
+    PedidoDAO mOrderDAO = PedidoDAO.getInstace(Pedido.class);
+
+    RouteDAO mRouteDAO = RouteDAO.getInstace(Rota.class);
 
     private Presenter mPresenter;
 
@@ -39,7 +43,13 @@ public class Model implements IModel {
     }
 
     @Override
+    public List<Pedido> getAllOrders() {
+
+        return mOrderDAO.findAll();
+    }
+
+    @Override
     public List<Rota> getAllRoutes() {
-        return mRotaDAO.allRoutes();
+        return mRouteDAO.allRoutes();
     }
 }
