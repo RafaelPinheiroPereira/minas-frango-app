@@ -67,7 +67,7 @@ public class TipoRecebimentoDAO {
 
     public TipoRecebimento findById(long id) throws Throwable {
         TipoRecebimento result = where().equalTo("id", id).findAll().first();
-        return Optional.ofNullable(transformaResultToTipoRecebimento(result)).orElse(new TipoRecebimento());
+        return Optional.ofNullable(transformaResultToTipoRecebimento(result)).orElseThrow(Throwable::new);
     }
 
     private TipoRecebimento transformaResultToTipoRecebimento(TipoRecebimento result) {

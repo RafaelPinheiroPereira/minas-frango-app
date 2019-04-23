@@ -98,7 +98,7 @@ public class PedidoDAO extends GenericsDAO<Pedido> {
         pedido.setMotivoCancelamento(pedidoToTransforme.getMotivoCancelamento());
         pedido.setCancelado(pedidoToTransforme.isCancelado());
         pedido.setItens(pedidoToTransforme.getItens());
-        pedido.setMItemPedidos(pedidoToTransforme.realmListToList());
+        pedido.setMItemPedidos(pedidoToTransforme.realmListToDTO());
         return pedido;
     }
 

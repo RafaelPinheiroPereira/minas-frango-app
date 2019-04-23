@@ -42,14 +42,14 @@
                     android:textSize="18sp"
                     android:text="Lorem ipsum volutpat inceptos, suscipit ipsum.  "
                     android:textColor="@color/textColorPrimary"
-                    android:id="@+id/fantasia_txt_visualizar_pedido"/>
+                    android:id="@+id/txtClientName" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
                     android:text="Lorem ipsum interdum faucibus nullam senectus, tempor habitant tempor. "
                     android:textColor="@color/textColorSecondary"
-                    android:id="@+id/endereco_txt_visualizar_pedido"/>
+                    android:id="@+id/txtAdress" />
 
             </LinearLayout>
             <TextView
@@ -58,7 +58,7 @@
                 android:textColor="@color/textColorPrimary"
                 android:textSize="18sp"
                 android:padding="20dp"
-                android:text="LISTA DE ITENS"
+                android:text="Lista de Itens"
                 />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -66,14 +66,14 @@
                 android:layout_height="match_parent"
                 android:padding="5dp"
                 android:layout_marginTop="10dp"
-                android:id="@+id/recycleview_itensPedido"></androidx.recyclerview.widget.RecyclerView>
+                android:id="@+id/rcvItensViewOrder"></androidx.recyclerview.widget.RecyclerView>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/textColorPrimary"
                 android:textSize="18sp"
                 android:padding="20dp"
-                android:text="MAIS INFORMAÇÕES"
+                android:text="Mais Informações"
                 />
 
             <androidx.cardview.widget.CardView
@@ -104,13 +104,13 @@
                         android:textColor="@color/textColorPrimary"
                         android:textSize="14sp"
                         android:padding="10dp"
-                        android:text="N° PEDIDO"/>
+                        android:text="N° Pedido" />
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="right"
                             android:padding="5dp"
-                            android:id="@+id/num_pedido_visualiza_pedido"
+                            android:id="@+id/txtSaleOrderID"
                             android:textColor="@color/textColorSecondary"
                             android:textSize="14sp"
                             android:text="N° PEDIDO"/>
@@ -128,12 +128,12 @@
                             android:textColor="@color/textColorPrimary"
                             android:textSize="14sp"
                             android:padding="10dp"
-                            android:text="DATA DO PEDIDO"/>
+                            android:text="Data do Pedido" />
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="right"
-                            android:id="@+id/data_visualiza_pedido"
+                            android:id="@+id/txtSaleOrderDate"
                             android:textColor="@color/textColorSecondary"
                             android:textSize="14sp"
                             android:padding="5dp"
@@ -149,16 +149,67 @@
                             android:textColor="@color/textColorPrimary"
                             android:textSize="14sp"
                             android:padding="10dp"
-                            android:text="FORMA PAGAMENTO"/>
+                            android:text="Forma Pagamento" />
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="right"
-                            android:id="@+id/forma_pagamento_visualiza_pedido"
+                            android:id="@+id/txtTipoRecebimento"
                             android:textColor="@color/textColorSecondary"
                             android:textSize="14sp"
                             android:padding="5dp"
                             android:text="N° PEDIDO"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="Status do Pedido"
+                            android:textColor="@color/textColorPrimary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/txtStatus"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:padding="5dp"
+                            android:text="N° PEDIDO"
+                            android:textColor="@color/textColorSecondary"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/lnlMotivoCancelamento"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="Motivo Cancelamento"
+                            android:textColor="@color/textColorPrimary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/txtMotivoCancelamento"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:padding="5dp"
+                            android:text="N° PEDIDO"
+                            android:textColor="@color/textColorSecondary"
+                            android:textSize="14sp" />
                     </LinearLayout>
 
 

@@ -187,7 +187,10 @@ public class VendasActivity extends AppCompatActivity implements IView {
             try {
                 itemPedidoID = getItemPedidoID();
             } catch (ParseException e) {
-                e.printStackTrace();
+                VendasActivity.this.runOnUiThread(
+                        ()->
+                                AbstractActivity.showToast(
+                                        mPresenter.getContext(), "Erro Formatação Data Pedido :" + e.getMessage()));
             }
             mPresenter.getItemPedido().setChavesItemPedido(itemPedidoID);
             if (!mPresenter.getItens().contains(mPresenter.getItemPedido())) {
@@ -222,7 +225,11 @@ public class VendasActivity extends AppCompatActivity implements IView {
                     NavUtils.navigateUpFromSameTask(this);
 
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    VendasActivity.this.runOnUiThread(
+                            ()->
+                                    AbstractActivity.showToast(
+                                            mPresenter.getContext(),
+                                            "Erro Formatacao Data Pedido: " + e.getMessage()));
                 }
             }
 
@@ -244,7 +251,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
         TipoRecebimento tipoRecebimento = mPresenter.loadTipoRecebimentoById();
         spnFormaPagamento.setSelection(adapterFormaPagamento.getPosition(tipoRecebimento.getNome()));
         mPresenter.setTipoRecebimento(tipoRecebimento.getNome());
-        mPresenter.setItens(mPresenter.getOrderSale().realmListToList());
+        mPresenter.setItens(mPresenter.getOrderSale().realmListToDTO());
         mPresenter.updateRecyclerItens();
         initSwipe();
     }
@@ -375,10 +382,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
     @Override
     public void updateTxtAmountProducts() {
 
-        mPresenter
-                .getPrice()
-                .setValor(
-                        cetPrecoUnitario.getCurrencyDouble());
+        mPresenter.getPrice().setValor(cetPrecoUnitario.getCurrencyDouble());
         mPresenter.setQtdProdutos(
                 new BigDecimal(
                         edtQTDProducts.getText().toString().isEmpty()

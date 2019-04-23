@@ -2,136 +2,126 @@ package com.br.minasfrango.ui.activity;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NavUtils;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.dao.ClientDAO;
-import com.br.minasfrango.data.dao.ItemPedidoDAO;
-import com.br.minasfrango.data.dao.PedidoDAO;
-import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
-import com.br.minasfrango.data.pojo.Cliente;
-import com.br.minasfrango.data.pojo.ItemPedido;
-import com.br.minasfrango.data.pojo.Pedido;
-import com.br.minasfrango.data.pojo.TipoRecebimento;
+import com.br.minasfrango.ui.abstracts.AbstractActivity;
 import com.br.minasfrango.ui.adapter.ItensPedidoVisualizarAdapter;
+import com.br.minasfrango.ui.mvp.vieworder.IViewOrderMVP;
+import com.br.minasfrango.ui.mvp.vieworder.IViewOrderMVP.IView;
+import com.br.minasfrango.ui.mvp.vieworder.Presenter;
 import java.text.DateFormat;
-import java.util.List;
 
-public class VisualizarPedidoActivity extends AppCompatActivity {
-    
-    PedidoDAO mPedidoDAO;
+public class VisualizarPedidoActivity extends AppCompatActivity implements IView {
 
-    ClientDAO mClientDAO;
-    TipoRecebimentoDAO mTipoRecebimentoDAO;
-    ItemPedidoDAO mItemPedidoDAO;
+  @BindView(R.id.lnlMotivoCancelamento)
+  LinearLayout lnlMotivoCancelamento;
 
-    private Toolbar mToolbar;
-    RecyclerView itensRecyclerView;
-    TextView nomeCienteTextView,enderecoTextView,numeroPedidoTextView,dataPedidoTextView,formaPagamentoTextView;
+  ItensPedidoVisualizarAdapter mAdapter;
 
+  IViewOrderMVP.IPresenter mPresenter;
 
-    ItensPedidoVisualizarAdapter mAdapter;
+  @BindView(R.id.toolbar)
+  Toolbar mToolbar;
 
+  @BindView(R.id.rcvItensViewOrder)
+  RecyclerView rcvItensViewOrder;
 
+  @BindView(R.id.txtAdress)
+  TextView txtAdress;
 
+  @BindView(R.id.txtClientName)
+  TextView txtClientName;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_visualizar_pedido);
-        
-        initView();
+  @BindView(R.id.txtMotivoCancelamento)
+  TextView txtMotivoCancelamento;
 
-        mPedidoDAO= PedidoDAO.getInstace(Pedido.class);
-        mClientDAO = ClientDAO.getInstace(Cliente.class);
-        mTipoRecebimentoDAO=TipoRecebimentoDAO.getInstace();
-        mItemPedidoDAO= ItemPedidoDAO.getInstace(ItemPedido.class);
+  @BindView(R.id.txtSaleOrderDate)
+  TextView txtSaleOrderDate;
 
+  @BindView(R.id.txtSaleOrderID)
+  TextView txtSaleOrderID;
 
+  @BindView(R.id.txtStatus)
+  TextView txtStatus;
 
+  @BindView(R.id.txtTipoRecebimento)
+  TextView txtTipoRecebimento;
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_visualizar_pedido);
+    ButterKnife.bind(this);
+    initView();
+  }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+
+    mPresenter = new Presenter(this);
+    mPresenter.setPedido(mPresenter.getSaleOrderParams(getIntent().getExtras()));
+    mPresenter.setCliente(mPresenter.findClientByID(mPresenter.getPedido().getCodigoCliente()));
+    try {
+      mPresenter.setTipoRecebimento(
+              mPresenter.findTipoRecebimentoByID(mPresenter.getPedido().getTipoRecebimento()));
+    } catch (Throwable throwable) {
+      VisualizarPedidoActivity.this.runOnUiThread(
+              ()->{
+                AbstractActivity.showToast(this, throwable.getMessage());
+              });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+    mPresenter.setDataView();
+  }
 
-        Pedido pedido= getParams();
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    int id = item.getItemId();
 
-        Cliente cliente = mClientDAO.findById(pedido.getCodigoCliente());
-        TipoRecebimento tipoRecebimento= null;
-        try {
-            tipoRecebimento = mTipoRecebimentoDAO.findById(pedido.getTipoRecebimento());
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
-
-        List<ItemPedido> itemPedidos =mItemPedidoDAO.allItensByPedido(pedido);
-
-        mAdapter= new ItensPedidoVisualizarAdapter(this,itemPedidos);
-
-        itensRecyclerView.setAdapter(mAdapter);
-        itensRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
-        formaPagamentoTextView.setText(tipoRecebimento.getNome());
-        dataPedidoTextView.setText(DateFormat.getDateInstance().format(pedido.getDataPedido()).toUpperCase());
-        numeroPedidoTextView.setText(String.valueOf(pedido.getId()));
-        nomeCienteTextView.setText(cliente.getNome());
-        enderecoTextView.setText(cliente.getEndereco());
-
-
-
-
-
-
-
-
-
+    switch (id) {
+      case android.R.id.home:
+        NavUtils.navigateUpFromSameTask(this);
+        break;
+      case R.id.action_search:
+        break;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+    return super.onOptionsItemSelected(item);
+  }
 
-        switch (id) {
+  @Override
+  public void setDataView() {
+    mAdapter = new ItensPedidoVisualizarAdapter(this, mPresenter.getPedido().realmListToDTO());
+    rcvItensViewOrder.setAdapter(mAdapter);
+    rcvItensViewOrder.setLayoutManager(new LinearLayoutManager(this));
 
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                break;
-            case R.id.action_search:
-                break;
-        }
-
-
-        return super.onOptionsItemSelected(item);
+    txtTipoRecebimento.setText(mPresenter.getTipoRecebimento().getNome());
+    txtSaleOrderDate.setText(
+            DateFormat.getDateInstance().format(mPresenter.getPedido().getDataPedido()).toUpperCase());
+    txtSaleOrderID.setText(String.valueOf(mPresenter.getPedido().getId()));
+    txtClientName.setText(mPresenter.getCliente().getNome());
+    txtAdress.setText(mPresenter.getCliente().getEndereco());
+    txtStatus.setText(mPresenter.getPedido().isCancelado() ? "Cancelado" : "Ativo");
+    if (mPresenter.getPedido().isCancelado()) {
+      txtMotivoCancelamento.setText(mPresenter.getPedido().getMotivoCancelamento());
+    } else {
+      lnlMotivoCancelamento.setVisibility(View.INVISIBLE);
     }
+  }
 
-    private void initView() {
-        mToolbar = findViewById(R.id.toolbar);
-        mToolbar.setTitle("VISUALIZAR PEDIDOS");
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        nomeCienteTextView=findViewById(R.id.fantasia_txt_visualizar_pedido);
-        enderecoTextView=findViewById(R.id.endereco_txt_visualizar_pedido);
-        numeroPedidoTextView=findViewById(R.id.num_pedido_visualiza_pedido);
-        dataPedidoTextView=findViewById(R.id.data_visualiza_pedido);
-        formaPagamentoTextView=findViewById(R.id.forma_pagamento_visualiza_pedido);
-
-        itensRecyclerView=findViewById(R.id.recycleview_itensPedido);
-    }
-
-
-    private Pedido getParams() {
-        Bundle args = getIntent().getExtras();
-        long id = args.getLong("keyPedido");
-
-        return mPedidoDAO.findById(id);
-    }
-
-
+  private void initView() {
+    mToolbar.setTitle("Visualizar Pedidos");
+    setSupportActionBar(mToolbar);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+  }
 }

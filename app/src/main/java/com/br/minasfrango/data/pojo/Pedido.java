@@ -39,8 +39,8 @@ public class Pedido extends RealmObject implements Serializable {
     private String motivoCancelamento;
 
     private boolean cancelado;
-    
-    public List<ItemPedido> realmListToList() {
+
+    public List<ItemPedido> realmListToDTO() {
         ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstace(ItemPedido.class);
         List<ItemPedido> itemPedidos = new ArrayList<ItemPedido>();
         getItens().forEach(item->itemPedidos.add(itemPedidoDAO.searchItem(item)));
