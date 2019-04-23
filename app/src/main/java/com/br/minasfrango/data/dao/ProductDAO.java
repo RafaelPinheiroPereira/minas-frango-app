@@ -1,6 +1,6 @@
 package com.br.minasfrango.data.dao;
 
-import com.br.minasfrango.data.pojo.Produto;
+import com.br.minasfrango.data.realm.Produto;
 import io.realm.Sort;
 import java.util.ArrayList;
 import java.util.List;

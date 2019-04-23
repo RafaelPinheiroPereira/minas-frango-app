@@ -1,12 +1,12 @@
 package com.br.minasfrango.network.service;
 
 import com.br.minasfrango.data.dto.RecebimentoDTO;
-import com.br.minasfrango.data.pojo.Cliente;
-import com.br.minasfrango.data.pojo.Funcionario;
-import com.br.minasfrango.data.pojo.Preco;
-import com.br.minasfrango.data.pojo.Produto;
-import com.br.minasfrango.data.pojo.TipoRecebimento;
-import com.br.minasfrango.data.pojo.Unidade;
+import com.br.minasfrango.data.realm.Cliente;
+import com.br.minasfrango.data.realm.Funcionario;
+import com.br.minasfrango.data.realm.Preco;
+import com.br.minasfrango.data.realm.Produto;
+import com.br.minasfrango.data.realm.TipoRecebimento;
+import com.br.minasfrango.data.realm.Unidade;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Body;

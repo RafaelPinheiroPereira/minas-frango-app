@@ -1,6 +1,6 @@
 package com.br.minasfrango.data.dao;
 
-import com.br.minasfrango.data.pojo.Rota;
+import com.br.minasfrango.data.realm.Rota;
 import io.realm.RealmResults;
 import java.util.ArrayList;
 import java.util.List;

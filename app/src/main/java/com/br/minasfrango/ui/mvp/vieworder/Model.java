@@ -4,10 +4,10 @@ import com.br.minasfrango.data.dao.ClientDAO;
 import com.br.minasfrango.data.dao.ItemPedidoDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
 import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
-import com.br.minasfrango.data.pojo.Cliente;
-import com.br.minasfrango.data.pojo.ItemPedido;
-import com.br.minasfrango.data.pojo.Pedido;
-import com.br.minasfrango.data.pojo.TipoRecebimento;
+import com.br.minasfrango.data.realm.Cliente;
+import com.br.minasfrango.data.realm.ItemPedido;
+import com.br.minasfrango.data.realm.Pedido;
+import com.br.minasfrango.data.realm.TipoRecebimento;
 
 public class Model implements IViewOrderMVP.IModel {
 

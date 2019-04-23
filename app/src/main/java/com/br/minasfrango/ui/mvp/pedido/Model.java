@@ -2,9 +2,9 @@ package com.br.minasfrango.ui.mvp.pedido;
 
 import com.br.minasfrango.data.dao.ClientDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
-import com.br.minasfrango.data.pojo.Cliente;
-import com.br.minasfrango.data.pojo.ClientePedido;
-import com.br.minasfrango.data.pojo.Pedido;
+import com.br.minasfrango.data.realm.Cliente;
+import com.br.minasfrango.data.realm.ClientePedido;
+import com.br.minasfrango.data.realm.Pedido;
 import com.br.minasfrango.ui.mvp.pedido.IPedidoMVP.IModel;
 import java.util.ArrayList;
 import java.util.List;

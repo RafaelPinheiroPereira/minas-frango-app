@@ -1,10 +1,10 @@
 package com.br.minasfrango.data.dao;
 
-import com.br.minasfrango.data.pojo.Cliente;
-import com.br.minasfrango.data.pojo.Funcionario;
-import com.br.minasfrango.data.pojo.Localidade;
-import com.br.minasfrango.data.pojo.Pedido;
-import com.br.minasfrango.data.pojo.Rota;
+import com.br.minasfrango.data.realm.Cliente;
+import com.br.minasfrango.data.realm.Funcionario;
+import com.br.minasfrango.data.realm.Localidade;
+import com.br.minasfrango.data.realm.Pedido;
+import com.br.minasfrango.data.realm.Rota;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import java.util.ArrayList;

@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.pojo.ItemPedido;
+import com.br.minasfrango.data.realm.ItemPedido;
 import com.br.minasfrango.ui.mvp.sales.ISalesMVP;
 import com.br.minasfrango.util.FormatacaoMoeda;
 

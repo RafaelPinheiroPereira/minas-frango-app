@@ -1,15 +1,14 @@
 package com.br.minasfrango.ui.mvp.sales;
 
 import android.content.Context;
-import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
-import com.br.minasfrango.data.pojo.Cliente;
-import com.br.minasfrango.data.pojo.ItemPedido;
-import com.br.minasfrango.data.pojo.Pedido;
-import com.br.minasfrango.data.pojo.Preco;
-import com.br.minasfrango.data.pojo.Produto;
-import com.br.minasfrango.data.pojo.TipoRecebimento;
-import com.br.minasfrango.data.pojo.Unidade;
+import com.br.minasfrango.data.realm.Cliente;
+import com.br.minasfrango.data.realm.ItemPedido;
+import com.br.minasfrango.data.realm.Pedido;
+import com.br.minasfrango.data.realm.Preco;
+import com.br.minasfrango.data.realm.Produto;
+import com.br.minasfrango.data.realm.TipoRecebimento;
+import com.br.minasfrango.data.realm.Unidade;
 import com.br.minasfrango.ui.mvp.sales.ISalesMVP.IView;
 import com.br.minasfrango.util.DateUtils;
 import com.br.minasfrango.util.SessionManager;
@@ -70,8 +69,18 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
+    public Cliente findClienteByID(final long codigoCliente) {
+        return this.mModel.findClientById(codigoCliente);
+    }
+
+    @Override
     public AlertDialog getAlertDialog() {
         return mAlertDialog;
+    }
+
+    @Override
+    public Pedido getOrderSale() {
+        return this.orderSale;
     }
 
     @Override
@@ -115,25 +124,19 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
-    public Pedido getOrderSale() {
-        return orderSale;
-    }
-
-    @Override
-    public void setOrderSale(final Pedido orderSale) {
+    public void setOrderSale(Pedido orderSale) {
         this.orderSale = orderSale;
     }
 
     @Override
-    public void getParams(Bundle bundle) {
+    public void getParams() {
+        this.mView.getParams();
 
-        if (bundle.getLong("keyPedido") == 0) {
-            setOrderSale(null);
-            setClient((Cliente) bundle.getSerializable("keyCliente"));
-        } else {
-            setOrderSale(this.mModel.findSalesById(bundle.getLong("keyPedido")));
-            setClient(this.mModel.findClientById(getOrderSale().getCodigoCliente()));
-        }
+    }
+
+    @Override
+    public Pedido loadSaleOrder(final long keyPedido) {
+        return this.mModel.findSalesById(keyPedido);
     }
 
     @Override

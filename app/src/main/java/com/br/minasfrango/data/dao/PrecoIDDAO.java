@@ -1,8 +1,8 @@
 package com.br.minasfrango.data.dao;
 
-import com.br.minasfrango.data.pojo.Cliente;
-import com.br.minasfrango.data.pojo.PrecoID;
-import com.br.minasfrango.data.pojo.Produto;
+import com.br.minasfrango.data.realm.Cliente;
+import com.br.minasfrango.data.realm.PrecoID;
+import com.br.minasfrango.data.realm.Produto;
 import io.realm.RealmResults;
 
 public class PrecoIDDAO extends GenericsDAO<PrecoID> {

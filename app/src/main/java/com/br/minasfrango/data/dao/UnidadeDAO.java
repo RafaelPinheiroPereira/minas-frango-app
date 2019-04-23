@@ -1,7 +1,7 @@
 package com.br.minasfrango.data.dao;
 
-import com.br.minasfrango.data.pojo.Produto;
-import com.br.minasfrango.data.pojo.Unidade;
+import com.br.minasfrango.data.realm.Produto;
+import com.br.minasfrango.data.realm.Unidade;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import java.util.ArrayList;

@@ -4,10 +4,10 @@ import com.br.minasfrango.data.dao.ClientDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
 import com.br.minasfrango.data.dao.RecebimentoDAO;
 import com.br.minasfrango.data.dao.RouteDAO;
-import com.br.minasfrango.data.pojo.Cliente;
-import com.br.minasfrango.data.pojo.Pedido;
-import com.br.minasfrango.data.pojo.Recebimento;
-import com.br.minasfrango.data.pojo.Rota;
+import com.br.minasfrango.data.realm.Cliente;
+import com.br.minasfrango.data.realm.Pedido;
+import com.br.minasfrango.data.realm.Recebimento;
+import com.br.minasfrango.data.realm.Rota;
 import com.br.minasfrango.ui.mvp.home.IHomeMVP.IModel;
 import java.util.List;
 

@@ -9,7 +9,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.pojo.Recebimento;
+import com.br.minasfrango.data.realm.Recebimento;
 import com.br.minasfrango.ui.listener.RecyclerViewOnClickListenerHack;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;

@@ -1,6 +1,6 @@
 package com.br.minasfrango.data.dto;
 
-import com.br.minasfrango.data.pojo.Pedido;
+import com.br.minasfrango.data.realm.Pedido;
 import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;

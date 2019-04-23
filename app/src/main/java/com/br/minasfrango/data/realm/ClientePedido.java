@@ -1,4 +1,4 @@
-package com.br.minasfrango.data.pojo;
+package com.br.minasfrango.data.realm;
 
 import com.br.minasfrango.util.ParentListItem;
 import java.util.ArrayList;

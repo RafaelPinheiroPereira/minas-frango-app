@@ -1,6 +1,6 @@
 package com.br.minasfrango.data.dto;
 
-import com.br.minasfrango.data.pojo.Localidade;
+import com.br.minasfrango.data.realm.Localidade;
 import lombok.Data;
 
 

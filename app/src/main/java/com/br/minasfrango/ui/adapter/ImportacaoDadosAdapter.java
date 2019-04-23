@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.pojo.ImportacaoDados;
+import com.br.minasfrango.data.realm.ImportacaoDados;
 import java.util.ArrayList;
 
 public class ImportacaoDadosAdapter extends ArrayAdapter<ImportacaoDados> {

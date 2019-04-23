@@ -1,4 +1,4 @@
-package com.br.minasfrango.data.pojo;
+package com.br.minasfrango.data.realm;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -12,15 +12,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class ItemPedido extends RealmObject implements Serializable {
+public class Funcionario extends RealmObject implements Serializable {
+		
 		@PrimaryKey
 		private long id;
-	    ItemPedidoID chavesItemPedido;
-		private String descricao;
-		private Double valorUnitario;
-		private double valorTotal;
-		private int quantidade;
-		private int bicos;
+		
+		private String senha;
+		
+		private String nome;
+		
+		private String tipoFuncionario;
+		
+		
 		
 		
 }

@@ -2,10 +2,10 @@ package com.br.minasfrango.ui.mvp.home;
 
 import android.content.Context;
 import android.os.Bundle;
-import com.br.minasfrango.data.pojo.Cliente;
-import com.br.minasfrango.data.pojo.Pedido;
-import com.br.minasfrango.data.pojo.Recebimento;
-import com.br.minasfrango.data.pojo.Rota;
+import com.br.minasfrango.data.realm.Cliente;
+import com.br.minasfrango.data.realm.Pedido;
+import com.br.minasfrango.data.realm.Recebimento;
+import com.br.minasfrango.data.realm.Rota;
 import java.util.List;
 
 

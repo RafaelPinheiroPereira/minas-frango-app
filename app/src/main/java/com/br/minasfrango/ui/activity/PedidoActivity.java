@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.pojo.Pedido;
+import com.br.minasfrango.data.realm.Pedido;
 import com.br.minasfrango.ui.adapter.ExpandableRecyclerAdapter;
 import com.br.minasfrango.ui.adapter.PedidosAdapter;
 import com.br.minasfrango.ui.mvp.pedido.IPedidoMVP;

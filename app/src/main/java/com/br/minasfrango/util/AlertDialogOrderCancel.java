@@ -11,7 +11,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.pojo.Pedido;
+import com.br.minasfrango.data.realm.Pedido;
 import com.br.minasfrango.ui.mvp.pedido.IPedidoMVP;
 import com.br.minasfrango.ui.mvp.pedido.IPedidoMVP.IPresenter;
 

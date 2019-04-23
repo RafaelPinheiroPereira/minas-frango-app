@@ -1,8 +1,8 @@
 package com.br.minasfrango.data.dao;
 
-import com.br.minasfrango.data.pojo.ItemPedido;
-import com.br.minasfrango.data.pojo.ItemPedidoID;
-import com.br.minasfrango.data.pojo.Pedido;
+import com.br.minasfrango.data.realm.ItemPedido;
+import com.br.minasfrango.data.realm.ItemPedidoID;
+import com.br.minasfrango.data.realm.Pedido;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.internal.IOException;

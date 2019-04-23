@@ -1,10 +1,10 @@
 package com.br.minasfrango.ui.mvp.login;
 
 import android.content.Context;
-import com.br.minasfrango.data.pojo.Funcionario;
+import com.br.minasfrango.data.realm.Funcionario;
+import com.br.minasfrango.network.RetrofitConfig;
 import com.br.minasfrango.network.service.LoginService;
 import com.br.minasfrango.network.tasks.LoginTask;
-import com.br.minasfrango.network.RetrofitConfig;
 import com.br.minasfrango.util.SessionManager;
 import retrofit2.Call;
 

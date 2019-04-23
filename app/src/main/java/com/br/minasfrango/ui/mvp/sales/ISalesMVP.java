@@ -1,15 +1,14 @@
 package com.br.minasfrango.ui.mvp.sales;
 
 import android.content.Context;
-import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
-import com.br.minasfrango.data.pojo.Cliente;
-import com.br.minasfrango.data.pojo.ItemPedido;
-import com.br.minasfrango.data.pojo.Pedido;
-import com.br.minasfrango.data.pojo.Preco;
-import com.br.minasfrango.data.pojo.Produto;
-import com.br.minasfrango.data.pojo.TipoRecebimento;
-import com.br.minasfrango.data.pojo.Unidade;
+import com.br.minasfrango.data.realm.Cliente;
+import com.br.minasfrango.data.realm.ItemPedido;
+import com.br.minasfrango.data.realm.Pedido;
+import com.br.minasfrango.data.realm.Preco;
+import com.br.minasfrango.data.realm.Produto;
+import com.br.minasfrango.data.realm.TipoRecebimento;
+import com.br.minasfrango.data.realm.Unidade;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -26,7 +25,11 @@ public interface ISalesMVP {
 
         void dissmis();
 
+        Cliente findClienteByID(long codigoCliente);
+
         AlertDialog getAlertDialog();
+
+        void getParams();
 
         void setAlertDialog(AlertDialog alertDialog);
 
@@ -48,7 +51,7 @@ public interface ISalesMVP {
 
         void setOrderSale(final Pedido orderSale);
 
-        void getParams(Bundle bundle);
+        Pedido loadSaleOrder(long keyPedido);
 
         Preco getPrice();
 
@@ -132,6 +135,8 @@ public interface ISalesMVP {
     interface IView {
 
         void dissmiss();
+
+        void getParams();
 
         void loadDetailsSale() throws Throwable;
 

@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.pojo.ItemPedido;
+import com.br.minasfrango.data.realm.ItemPedido;
 import java.text.NumberFormat;
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.br.minasfrango.data.dao;
 
-import com.br.minasfrango.data.pojo.Cliente;
-import com.br.minasfrango.data.pojo.Pedido;
+import com.br.minasfrango.data.realm.Cliente;
+import com.br.minasfrango.data.realm.Pedido;
 import io.realm.RealmResults;
 import io.realm.exceptions.RealmException;
 import io.realm.internal.IOException;
@@ -46,8 +46,17 @@ public class PedidoDAO extends GenericsDAO<Pedido> {
     public List<Pedido> findAll() {
         List<Pedido> pedidos = new ArrayList<>();
         RealmResults<Pedido> results = where().findAll();
-        results.forEach(item -> pedidos.add(transformaResultEmPedido(item)));
+        results.forEach(item->pedidos.add(convertRealmToDTO(item)));
         return pedidos;
+    }
+
+    public Pedido findById(long id) {
+
+        Pedido result = where().equalTo("id", id).findAll().first();
+        if (result != null) {
+            return convertRealmToDTO(result);
+        }
+        return null;
     }
 
     public Pedido pesquisarPedido(Cliente cliente) {
@@ -56,21 +65,11 @@ public class PedidoDAO extends GenericsDAO<Pedido> {
 
         if (results.size() > 0 && results != null) {
             results.first();
-            return transformaResultEmPedido(results.get(0));
+            return convertRealmToDTO(results.get(0));
 
         }
         return null;
 
-    }
-
-
-    public Pedido findById(long id) {
-
-        Pedido result = where().equalTo("id", id).findAll().first();
-        if (result != null) {
-            return transformaResultEmPedido(result);
-        }
-        return null;
     }
 
     public List<Pedido> pesquisarPedidosPorCliente(Cliente cliente) {
@@ -78,7 +77,7 @@ public class PedidoDAO extends GenericsDAO<Pedido> {
         RealmResults<Pedido> results = where().equalTo("codigoCliente", cliente.getId()).findAll();
         if (results.size() > 0 && results != null) {
             for (Pedido auxPedido : results) {
-                pedidos.add(transformaResultEmPedido(auxPedido));
+                pedidos.add(convertRealmToDTO(auxPedido));
             }
 
         }
@@ -87,7 +86,7 @@ public class PedidoDAO extends GenericsDAO<Pedido> {
 
     }
 
-    private Pedido transformaResultEmPedido(Pedido pedidoToTransforme) {
+    private Pedido convertRealmToDTO(Pedido pedidoToTransforme) {
         Pedido pedido = new Pedido();
         pedido.setCodigoFuncionario(pedidoToTransforme.getCodigoFuncionario());
         pedido.setCodigoCliente(pedidoToTransforme.getCodigoCliente());

@@ -1,7 +1,7 @@
 package com.br.minasfrango.ui.mvp.login;
 
 import android.content.Context;
-import com.br.minasfrango.data.pojo.Funcionario;
+import com.br.minasfrango.data.realm.Funcionario;
 import com.br.minasfrango.network.service.LoginService;
 import retrofit2.Call;
 
