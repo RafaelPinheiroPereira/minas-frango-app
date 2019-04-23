@@ -1,4 +1,4 @@
-package com.br.minasfrango.listener;
+package com.br.minasfrango.ui.listener;
 
 import android.app.Activity;
 import android.os.Bundle;

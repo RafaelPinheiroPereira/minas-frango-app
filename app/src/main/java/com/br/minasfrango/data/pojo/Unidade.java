@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class Unidade extends RealmObject implements Serializable {
-		
-		@PrimaryKey
+
+    @PrimaryKey
 		private String id;
 		UnidadeProdutoID chavesUnidade;
 		private String nome;

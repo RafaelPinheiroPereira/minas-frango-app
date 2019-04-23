@@ -34,11 +34,11 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/txt_codigo_produto"
+                    android:id="@+id/txtProductIDDialog"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:text="Codigo Cliente"
+                    android:text="Codigo Produto"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -58,7 +58,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/txt_descricao_produto"
+                    android:id="@+id/txtNameProductDialog"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
@@ -82,7 +82,7 @@
                     android:textStyle="bold" />
 
                 <Spinner
-                    android:id="@+id/spinner_unidade_produto"
+                    android:id="@+id/spnUnitDialog"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/background_dark"
@@ -102,7 +102,7 @@
                     android:layout_height="wrap_content">
 
                     <EditText
-                        android:id="@+id/edt_quantidade_produto"
+                        android:id="@+id/edtQTDProductDialog"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="QUANTIDADE"
@@ -125,7 +125,7 @@
                     <com.br.minasfrango.util.CurrencyEditText
 
 
-                        android:id="@+id/edt_preco"
+                        android:id="@+id/cetPriceDialog"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="PREÇO"
@@ -154,7 +154,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/button_cancelar_edicao"
+                    android:id="@+id/btnCancelDialog"
                     app:backgroundTint="@color/brand_red"
                     android:text="CANCELAR"
                     android:textColor="#fff"
@@ -166,7 +166,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    android:id="@+id/button_confirmar_edicao"
+                    android:id="@+id/btnSaveDialog"
                     app:backgroundTint="@color/fab"
                     android:text="ALTERAR"
                     android:textSize="14sp"

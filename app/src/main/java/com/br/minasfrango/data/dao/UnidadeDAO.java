@@ -3,72 +3,59 @@ package com.br.minasfrango.data.dao;
 import com.br.minasfrango.data.pojo.Produto;
 import com.br.minasfrango.data.pojo.Unidade;
 import io.realm.Realm;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by 04717299302 on 28/12/2016.
  */
+public class UnidadeDAO extends GenericsDAO<Unidade> {
 
-public class UnidadeDAO {
-		Realm realm;
-		RealmResults<Unidade> result;
-		
-		public static UnidadeDAO getInstace() {
-				return new UnidadeDAO();
-		}
-		
-		public UnidadeDAO() {
-				realm = Realm.getDefaultInstance();
-		}
-		
-		public ArrayList<String> carregaUnidadesProduto(Produto produto) {
-				ArrayList<String> strUnidades = new ArrayList<String>();
-				RealmQuery<Unidade> query = realm.where(Unidade.class);
-				
-				query.equalTo("chavesUnidade.idProduto", produto.getId());
-				result = query.findAll();
-				
-				if (result != null) {
-						for (int i = 0; i < result.size(); i++) {
-								Unidade unidade = new Unidade(result.get(i).getId(),
-												result.get(i).getChavesUnidade(),
-												result.get(i).getNome(),
-												result.get(i).getUnidadePadrao());
-								
-								if (!unidade.getUnidadePadrao().equals("S")) {
-										strUnidades.add(unidade.getId().split("-")[0]);
-								}
-						}
-				}
-				return strUnidades;
-				
-		}
-		
-		public String carregaUnidadePadraoProduto(Produto produto) {
-				String[] unidadePadrao =null;
-				RealmQuery<Unidade> query = realm.where(Unidade.class);
-				query.equalTo("chavesUnidade.idProduto", produto.getId());
-				result = query.findAll();
-				
-				if (result != null) {
-						for (int i = 0; i < result.size(); i++) {
-								Unidade unidade = new Unidade();
-								unidade.setId(result.get(i).getId());
-								unidade.setUnidadePadrao(result.get(i).getUnidadePadrao());
-								if(unidade.getUnidadePadrao().equals("S")){
-										unidadePadrao= unidade.getId().split("-");
-										break;
-								}
-								
-								
-								
-						}
-						
-				}
-				return unidadePadrao[0];
-				
-				
-		}
+    Realm realm;
+
+    RealmResults<Unidade> result;
+
+    Class<Unidade> type;
+
+    public static UnidadeDAO getInstace(Class<Unidade> type) {
+        return new UnidadeDAO(type);
+    }
+
+    public UnidadeDAO(Class<Unidade> type) {
+        super(type);
+    }
+
+    public Unidade findUnityPattenByProduct(Produto product) {
+        Unidade unity =
+                where()
+                        .equalTo("chavesUnidade.idProduto", product.getId())
+                        .and()
+                        .equalTo("unidadePadrao", "S")
+                        .findFirst();
+        return convertRealmToDTO(unity);
+    }
+
+    public List<String> findUnitysOfProductsToString(Produto product) {
+        ArrayList<String> strUnidades = new ArrayList<String>();
+        RealmResults<Unidade> results =
+                where()
+                        .equalTo("chavesUnidade.idProduto", product.getId())
+                        .and()
+                        .notEqualTo("unidadePadrao", "S")
+                        .findAll();
+        results.forEach(item->strUnidades.add(convertRealmToDTO(item).getNome()));
+        return strUnidades;
+    }
+
+    public List<Unidade> getAll() {
+        List<Unidade> unidades = new ArrayList<>();
+        where().findAll().forEach(item->unidades.add(convertRealmToDTO(item)));
+        return unidades;
+    }
+
+    private Unidade convertRealmToDTO(Unidade unity) {
+        return new Unidade(
+                unity.getId(), unity.getChavesUnidade(), unity.getNome(), unity.getUnidadePadrao());
+    }
 }

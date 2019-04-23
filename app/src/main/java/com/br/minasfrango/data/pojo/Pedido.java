@@ -27,9 +27,7 @@ public class Pedido extends RealmObject implements Serializable {
     private long codigoCliente;
 
     private long codigoFuncionario;
-
     private RealmList<ItemPedido> itens;
-
     @Ignore
     private List<ItemPedido> mItemPedidos;
     private double valorTotal;
@@ -48,4 +46,11 @@ public class Pedido extends RealmObject implements Serializable {
         getItens().forEach(item->itemPedidos.add(itemPedidoDAO.searchItem(item)));
         return itemPedidos;
     }
+
+    public static RealmList<ItemPedido> dtoToRealList(List<ItemPedido> itemPedidos) {
+        RealmList<ItemPedido> realmList = new RealmList<>();
+        itemPedidos.forEach(item->realmList.add(item));
+        return realmList;
+    }
+
 }

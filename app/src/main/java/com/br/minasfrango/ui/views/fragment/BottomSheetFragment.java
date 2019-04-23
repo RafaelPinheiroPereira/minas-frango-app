@@ -1,4 +1,4 @@
-package com.br.minasfrango.views.fragment;
+package com.br.minasfrango.ui.views.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

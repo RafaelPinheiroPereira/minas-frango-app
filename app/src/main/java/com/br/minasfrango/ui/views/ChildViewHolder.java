@@ -1,4 +1,4 @@
-package com.br.minasfrango.views;
+package com.br.minasfrango.ui.views;
 
 import android.view.View;
 import androidx.recyclerview.widget.RecyclerView;

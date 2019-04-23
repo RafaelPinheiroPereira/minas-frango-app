@@ -3,8 +3,9 @@ package com.br.minasfrango.ui.abstracts;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class AbstractActivity {
+public class AbstractActivity extends AppCompatActivity {
 
     public static void navigateToActivity(Context context,Intent intent) {
          context.startActivity(intent);

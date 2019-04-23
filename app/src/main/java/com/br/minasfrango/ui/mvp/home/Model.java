@@ -39,7 +39,7 @@ public class Model implements IModel {
 
     @Override
     public List<Cliente> getAllClients() {
-        return mClientDAO.loadAll();
+        return mClientDAO.getAll();
     }
 
     @Override

@@ -5,7 +5,6 @@ import com.br.minasfrango.data.pojo.Funcionario;
 import com.br.minasfrango.data.pojo.Localidade;
 import com.br.minasfrango.data.pojo.Pedido;
 import com.br.minasfrango.data.pojo.Rota;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import java.util.ArrayList;
@@ -24,7 +23,8 @@ public class ClientDAO extends GenericsDAO<Cliente> {
     public ClientDAO(final Class<Cliente> type) {
         super(type);
     }
-    public List<Cliente> loadAll() {
+
+    public List<Cliente> getAll() {
         ArrayList<Cliente> clientes = new ArrayList<>();
         where().sort("nome").findAll().forEach(item -> clientes.add(transformaResultEmCliente(item)));
         return clientes;

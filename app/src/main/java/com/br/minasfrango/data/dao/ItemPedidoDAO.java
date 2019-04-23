@@ -33,9 +33,7 @@ public class ItemPedidoDAO extends GenericsDAO<ItemPedido> {
         } else {
             idItemPedidoId = 1;
         }
-
         itemPedido.getChavesItemPedido().setId(idItemPedidoId);
-
         long id;
         if (realm.where(ItemPedido.class).max("id") != null) {
             id = (long) (realm.where(ItemPedido.class).max("id").intValue() + 1);
@@ -45,7 +43,6 @@ public class ItemPedidoDAO extends GenericsDAO<ItemPedido> {
 
         try {
             itemPedido.setId(id);
-
             realm.beginTransaction();
             realm.copyToRealm(itemPedido);
             realm.commitTransaction();

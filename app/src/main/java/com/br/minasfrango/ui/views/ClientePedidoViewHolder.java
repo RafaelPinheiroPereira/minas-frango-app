@@ -1,4 +1,4 @@
-package com.br.minasfrango.views;
+package com.br.minasfrango.ui.views;
 
 import android.view.View;
 import android.view.animation.RotateAnimation;
@@ -23,8 +23,6 @@ public class ClientePedidoViewHolder extends ParentViewHolder   {
         mFantasia = itemView.findViewById(R.id.textViewNomeFantasia);
         mArrowExpandImageView = itemView.findViewById(R.id.imgExpand);
         enderecoTextView= itemView.findViewById(R.id.textViewEndereco);
-
-
     }
 
     public void bind(Cliente cliente) {

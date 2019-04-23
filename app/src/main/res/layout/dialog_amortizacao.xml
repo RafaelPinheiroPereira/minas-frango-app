@@ -88,7 +88,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/button_cancelar_edicao"
+                    android:id="@+id/btnCancelDialog"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Cancelar"
@@ -99,7 +99,7 @@
                     android:theme="@style/Button.Tinted" />
 
                 <Button
-                    android:id="@+id/button_confirmar_edicao"
+                    android:id="@+id/btnSaveDialog"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"

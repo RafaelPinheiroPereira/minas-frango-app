@@ -9,17 +9,15 @@
     <!-- NOTE: This list should be displayed in a list
     instead of nested layouts -->
     <LinearLayout
-        android:id="@+id/view_ll_bottom_sheet"
+        android:id="@+id/lnlViewSalesOrder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground"
-        android:onClick="visualizarPedido"
         android:orientation="horizontal"
         android:paddingBottom="8dp"
         android:paddingLeft="@dimen/card_margin"
         android:paddingRight="@dimen/card_margin"
-
         android:paddingTop="8dp">
 
         <ImageView
@@ -33,19 +31,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="VISUALIZAR PEDIDO"
+            android:text="Visualizar Pedido "
             android:textColor="@color/textColorPrimary"
             android:textSize="16sp" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/edit_ll_bottom_sheet"
+        android:id="@+id/lnlEditSalesOrder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground"
-        android:onClick="editarPedido"
         android:orientation="horizontal"
         android:paddingBottom="8dp"
         android:paddingLeft="@dimen/card_margin"
@@ -63,16 +60,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="EDITAR"
+            android:text="Editar Pedido"
             android:textColor="@color/textColorPrimary"
             android:textSize="16sp" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/delete_ll_bottom_sheet"
+        android:id="@+id/lnlDeleteSalesOrder"
         android:layout_width="match_parent"
-        android:onClick="deletarPedido"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground"
@@ -93,7 +89,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="CANCELAR PEDIDO"
+            android:text="Cancelar Pedido"
             android:textColor="@color/textColorPrimary"
             android:textSize="16sp" />
 

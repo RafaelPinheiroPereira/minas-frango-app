@@ -1,11 +1,10 @@
-package com.br.minasfrango.listener;
+package com.br.minasfrango.ui.listener;
 
 import android.app.Activity;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.DrawerBuilder;
 
 public interface IDrawer {
 

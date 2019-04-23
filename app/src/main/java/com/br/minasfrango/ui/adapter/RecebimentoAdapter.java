@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.br.minasfrango.R;
 import com.br.minasfrango.data.pojo.Recebimento;
-import com.br.minasfrango.listener.RecyclerViewOnClickListenerHack;
+import com.br.minasfrango.ui.listener.RecyclerViewOnClickListenerHack;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -66,7 +66,7 @@ public class RecebimentoAdapter extends RecyclerView.Adapter<RecebimentoAdapter.
             myViewHolder.saldoTextView.setTextColor(Color.GREEN);
         }
         myViewHolder.saldoTextView.setText((NumberFormat.getCurrencyInstance(new Locale("pt","BR")).format(saldo)));
-        myViewHolder.qtdTextView.setText(String.valueOf(position+1)+"/"+String.valueOf(mList.size()));
+        myViewHolder.qtdTextView.setText((position + 1) + "/" + mList.size());
 
         myViewHolder.mCheckBox.setChecked(mList.get(position).isCheck());
 

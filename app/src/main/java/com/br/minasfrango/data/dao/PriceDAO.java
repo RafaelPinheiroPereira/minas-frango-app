@@ -3,6 +3,8 @@ package com.br.minasfrango.data.dao;
 import com.br.minasfrango.data.pojo.Preco;
 import com.br.minasfrango.data.pojo.Produto;
 import io.realm.RealmResults;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -10,8 +12,6 @@ import io.realm.RealmResults;
  */
 
 public class PriceDAO extends GenericsDAO<Preco> {
-
-
 
 
     public static PriceDAO getInstace(final Class<Preco> type) {
@@ -41,22 +41,14 @@ public class PriceDAO extends GenericsDAO<Preco> {
         return preco;
     }
 
-    public Preco carregaPrecoUnidadeProduto(Produto produto, String unidade) {
-        Preco preco = new Preco();
-        preco.setValor(0);
+    public Preco findPriceByPriceID(long idPriceID) {
+        return idPriceID == 0 ? new Preco() : where().equalTo("chavesPreco.id", idPriceID).findFirst();
 
-        RealmResults<Preco> result = where().equalTo("chavesPreco.idProduto", produto.getId())
-                .equalTo("chavesPreco.unidadeProduto", unidade).findAll();
+    }
 
-        if (result != null && result.size() > 0) {
-            for (Preco aux : result) {
-                if (aux.getValor() != 0) {
-                    return aux;
-                }
-
-            }
-        }
-
+    public List<Preco> getAll() {
+        List<Preco> preco = new ArrayList<>();
+        where().findAll().forEach(item->preco.add(item));
         return preco;
     }
 }

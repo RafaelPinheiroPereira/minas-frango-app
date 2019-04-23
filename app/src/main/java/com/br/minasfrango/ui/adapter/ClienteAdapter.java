@@ -13,7 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.br.minasfrango.R;
 import com.br.minasfrango.data.pojo.Cliente;
-import com.br.minasfrango.listener.RecyclerViewOnClickListenerHack;
+import com.br.minasfrango.ui.listener.RecyclerViewOnClickListenerHack;
 import java.util.ArrayList;
 import java.util.List;
 

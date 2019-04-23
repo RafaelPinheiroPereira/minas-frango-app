@@ -4,8 +4,8 @@
     android:id="@+id/cl_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -32,25 +32,26 @@
 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="5dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="5dp">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                 android:padding="5dp">
+                android:padding="5dp">
 
 
                 <Spinner
-                    android:id="@+id/spinner_forma_pagamento"
+                    android:id="@+id/spnFormaPagamento"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
+
                 <View
                     android:id="@+id/divider6"
                     android:layout_width="match_parent"
                     android:layout_height="4dp"
                     android:background="?android:attr/listDivider" />
-
 
 
                 <LinearLayout
@@ -64,27 +65,26 @@
                         android:layout_width="110dp"
                         android:layout_height="wrap_content">
 
-                    <AutoCompleteTextView
-                        android:id="@+id/auto_txt_codigo"
-                        android:layout_width="110dp"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:layout_gravity="center_vertical"
-                        android:completionThreshold="1"
-                        android:hint="COD.PRODUTO"
-                        android:inputType="number"
-                        android:maxLength="5"
-                        android:textSize="18sp" />
+                        <AutoCompleteTextView
+                            android:id="@+id/actCodigoProduto"
+                            android:layout_width="110dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:completionThreshold="1"
+                            android:hint="COD.PRODUTO"
+                            android:inputType="number|textMultiLine"
+                            android:maxLength="5"
+                            android:padding="10dp"
+                            android:textSize="18sp" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <Spinner
-                        android:id="@+id/spn_produtos"
+                        android:id="@+id/spnProducts"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
                         android:gravity="center_vertical"
-                        android:padding="5dp"
-                        />
+                        android:padding="5dp" />
 
                 </LinearLayout>
 
@@ -97,90 +97,91 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="110dp"
                         android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/edtQTD"
-                        android:layout_width="110dp"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:hint="QUANTIDADE."
-                        android:inputType="number"
-                        android:maxLength="6"
-                        android:layout_gravity="center_vertical"
-                        android:textSize="18sp" />
+
+                        <EditText
+                            android:id="@+id/edtQTDProducts"
+                            android:layout_width="110dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:digits="0123456789."
+                            android:hint="QUANTIDADE."
+                            android:inputType="number|textMultiLine"
+                            android:maxLength="6"
+                            android:padding="10dp"
+                            android:textSize="18sp" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <Spinner
-                        android:id="@+id/spinner_unidade"
+                        android:id="@+id/spnUnitys"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="10dp"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
                         android:gravity="center_vertical"
                         android:padding="5dp" />
 
                 </LinearLayout>
 
-                 <LinearLayout
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:layout_marginTop="10dp"
-                     android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
 
-                     <com.google.android.material.textfield.TextInputLayout
-                         android:layout_width="110dp"
-                         android:layout_height="wrap_content">
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content">
 
-                         <EditText
-                             android:id="@+id/edtBicos"
-                             android:layout_width="110dp"
-                             android:layout_height="wrap_content"
-                             android:layout_gravity="center_vertical"
-                             android:hint="QTD.BICOS"
-                             android:text="0"
-                             android:inputType="number"
-                             android:padding="10dp"
-                             android:textSize="18sp" />
-                     </com.google.android.material.textfield.TextInputLayout>
+                        <EditText
+                            android:id="@+id/edtQTDBicos"
+                            android:layout_width="110dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:digits="0123456789."
+                            android:hint="QTD.BICOS"
+                            android:inputType="number|textMultiLine"
+                            android:padding="10dp"
+                            android:text="0"
+                            android:textSize="18sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                     <com.google.android.material.textfield.TextInputLayout
-                         android:layout_width="80dp"
-                         android:layout_height="wrap_content">
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content">
 
-                         <com.br.minasfrango.util.CurrencyEditText
+                        <com.br.minasfrango.util.CurrencyEditText
 
-                             android:id="@+id/txt_preco_unitario"
-                             android:layout_width="80dp"
-                             android:layout_height="wrap_content"
-                             android:hint="PREÇO"
-                             android:layout_gravity="center_vertical"
-                             android:inputType="numberDecimal"
-                             android:lines="1"
-                             android:maxLength="9"
-                             android:textColor="@android:color/black"
-                             android:textSize="18sp"
-                             app:groupDivider="."
-                             app:locale="en_US"
-                             app:monetaryDivider=","
-                             app:showSymbol="false">
+                            android:id="@+id/cetPrecoUnitario"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:digits="0123456789."
+                            android:hint="PREÇO"
+                            android:inputType="numberDecimal|textMultiLine"
+                            android:lines="1"
+                            android:maxLength="9"
+                            android:textColor="@android:color/black"
+                            android:textSize="18sp"
+                            app:groupDivider="."
+                            app:locale="en_US"
+                            app:monetaryDivider=","
+                            app:showSymbol="false">
 
-                             <requestFocus />
-                         </com.br.minasfrango.util.CurrencyEditText>
-                     </com.google.android.material.textfield.TextInputLayout>
+                            <requestFocus />
+                        </com.br.minasfrango.util.CurrencyEditText>
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                     <TextView
-                         android:id="@+id/txt_valor_total"
-                         android:layout_width="match_parent"
-                         android:layout_height="wrap_content"
-                         android:layout_gravity="center_vertical"
-                         android:gravity="right"
-                         android:padding="5dp"
-                         android:layout_marginRight="10dp"
-                         android:textColor="@color/textColorPrimary"
-                         android:textSize="18sp" />
-                   </LinearLayout>
-
-
-
+                    <TextView
+                        android:id="@+id/txtAmountProducts"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="10dp"
+                        android:gravity="right"
+                        android:padding="5dp"
+                        android:textColor="@color/textColorPrimary"
+                        android:textSize="18sp" />
+                </LinearLayout>
 
 
             </LinearLayout>
@@ -195,56 +196,53 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="ITENS DO PEDIDO"
-                    android:textSize="18sp"
                     android:layout_marginLeft="5dp"
+                    android:text="ITENS DO PEDIDO"
                     android:textColor="@android:color/background_dark"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/button_add"
+                    android:id="@+id/btnAddItem"
+                    style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:text="ADICIONAR ITEM"
                     app:backgroundTint="@color/primary_dark"
-                    style="@style/Widget.MaterialComponents.Button"
-                    app:icon="@mipmap/add_circle_white_36dp"
-                    />
+                    app:icon="@mipmap/add_circle_white_36dp" />
 
             </LinearLayout>
 
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/card_recycler_itens"
+                android:id="@+id/rcvItens"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="vertical"
                 android:layout_marginLeft="6dp"
                 android:layout_marginRight="8dp"
-                 />
+                android:scrollbars="vertical" />
 
             <TextView
-                android:id="@+id/txt_valor_total_pedido"
+                android:id="@+id/txtAmountSale"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:layout_marginTop="15dp"
                 android:layout_marginRight="10dp"
+                android:layout_marginTop="15dp"
                 android:text="TOTAL:"
-                android:textSize="18sp"
                 android:textColor="@color/textColorPrimary"
-              />
+                android:textSize="18sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="right"
                 android:layout_marginTop="10dp"
+                android:gravity="right"
                 android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_confirmar_pedido"
+                    android:id="@+id/btnConfirmSale"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

@@ -1,6 +1,5 @@
 package com.br.minasfrango.ui.activity;
 
-import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -13,18 +12,15 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,411 +30,253 @@ import androidx.core.app.NavUtils;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnItemSelected;
 import com.br.minasfrango.R;
-import com.br.minasfrango.ui.adapter.ItemPedidoAdapter;
-import com.br.minasfrango.data.dao.ClientDAO;
-import com.br.minasfrango.data.dao.ItemPedidoDAO;
-import com.br.minasfrango.data.dao.PedidoDAO;
-import com.br.minasfrango.data.dao.PriceDAO;
-import com.br.minasfrango.data.dao.ProductoDAO;
-import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
-import com.br.minasfrango.data.dao.UnidadeDAO;
-import com.br.minasfrango.data.pojo.Cliente;
 import com.br.minasfrango.data.pojo.ItemPedido;
 import com.br.minasfrango.data.pojo.ItemPedidoID;
-import com.br.minasfrango.data.pojo.Pedido;
-import com.br.minasfrango.data.pojo.Preco;
 import com.br.minasfrango.data.pojo.Produto;
 import com.br.minasfrango.data.pojo.TipoRecebimento;
-import com.br.minasfrango.listener.RecyclerViewOnClickListenerHack;
+import com.br.minasfrango.data.pojo.Unidade;
+import com.br.minasfrango.ui.abstracts.AbstractActivity;
+import com.br.minasfrango.ui.adapter.ItemPedidoAdapter;
+import com.br.minasfrango.ui.mvp.sales.ISalesMVP;
+import com.br.minasfrango.ui.mvp.sales.ISalesMVP.IView;
+import com.br.minasfrango.ui.mvp.sales.Presenter;
+import com.br.minasfrango.util.AlertDialogUpdateItemSaleOrder;
 import com.br.minasfrango.util.CurrencyEditText;
+import com.br.minasfrango.util.DateUtils;
 import com.br.minasfrango.util.FormatacaoMoeda;
-import com.br.minasfrango.util.SessionManager;
 import io.realm.RealmList;
-import io.realm.exceptions.RealmException;
-import java.text.NumberFormat;
+import java.math.BigDecimal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
-public class VendasActivity extends AppCompatActivity
-        implements RecyclerViewOnClickListenerHack, AdapterView.OnItemSelectedListener,
-        AdapterView.OnItemClickListener, View.OnClickListener {
+public class VendasActivity extends AppCompatActivity implements IView {
 
-    Toolbar mToolbar;
+    /*POSICAO INICIAL DO SPINNER FORMA DE PAGAMENTOS == "Formas de Pagamento"*/
+    private static final int INITIAL_POSITION = 0;
 
-    Cliente cliente;
-
-    SearchView searchView;
-
-    RecyclerView rcItemPedido;
-
-    EditText edtQuantidade, edtBicos;
-
-    CurrencyEditText cetPrecoUnitario;
-
-    Spinner spnUnidade;
-
-    Paint p = new Paint();
-
-    Button btnAddItem;
-
-    Spinner spnFormaPagamento, spnProduto;
-
+    @BindView(R.id.actCodigoProduto)
     AutoCompleteTextView actCodigoProduto;
-
-    Button btnConfirmar;
-
-    TextView txtValorTotalProduto, txtValorTotal;
-
-    LinearLayoutManager layoutManager;
-
-    ProductoDAO produtoDAO;
-
-    ClientDAO mClientDAO;
-
-    PriceDAO precoDAO;
-
-    UnidadeDAO unidadeDAO;
-
-    TipoRecebimentoDAO tipoRecebimentoDAO;
-
-    PedidoDAO pedidoDAO;
-
-    ItemPedidoDAO itemPedidoDAO;
-
-    ArrayList<Produto> produtos;
-
-    ArrayAdapter<String> adapterFormaPagamento;
-
-    ArrayList<ItemPedido> itens = new ArrayList<>();
-
-    List<ItemPedido> itensTemp = new ArrayList<>();
-
-
-    ItemPedidoAdapter adapterItemPedidoAdapter;
-
 
     ArrayAdapter<String> adaptadorCodigoProduto;
 
     ArrayAdapter<String> adaptadorDescricaoProduto;
 
-    ArrayList<String> descricoesProdutos;
+    ArrayAdapter<String> adapterFormaPagamento;
+
+    ItemPedidoAdapter adapterItemPedidoAdapter;
 
     ArrayAdapter<String> adapterUnidade;
 
+    @BindView(R.id.btnAddItem)
+    Button btnAddItem;
 
-    Produto produtoSelecionado;
+    @BindView(R.id.btnConfirmSale)
+    Button btnConfirmSale;
 
-    Preco preco;
+    @BindView(R.id.cetPrecoUnitario)
+    CurrencyEditText cetPrecoUnitario;
 
+    @BindView(R.id.edtQTDBicos)
+    EditText edtQTDBicos;
 
-    String formaPagamento;
+    @BindView(R.id.edtQTDProducts)
+    EditText edtQTDProducts;
 
-    Pedido pedidoRealizado;
+    ISalesMVP.IPresenter mPresenter;
 
-    double quantidadeAtual = 0;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
 
-    double valorTotal = 0;
+    Paint p = new Paint();
 
-    private String codigoUnidade;
+    @BindView(R.id.rcvItens)
+    RecyclerView rcvItens;
 
-    private TipoRecebimentoDAO mTipoRecebimentoDAO;
+    SearchView searchView;
+
+    @BindView(R.id.spnFormaPagamento)
+    Spinner spnFormaPagamento;
+
+    @BindView(R.id.spnProducts)
+    Spinner spnProducts;
+
+    @BindView(R.id.spnUnitys)
+    Spinner spnUnitys;
+
+    @BindView(R.id.txtAmountProducts)
+    TextView txtAmountProducts;
+
+    @BindView(R.id.txtAmountSale)
+    TextView txtAmountSale;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vendas);
-
-        getParams();
+        mPresenter = new Presenter(this);
+        ButterKnife.bind(this);
         initViews();
-
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        //Instanciando os DAOS necessarios
-        produtoDAO = ProductoDAO.getInstace(Produto.class);
-        pedidoDAO = PedidoDAO.getInstace(Pedido.class);
-        mClientDAO = ClientDAO.getInstace(Cliente.class);
-        tipoRecebimentoDAO = TipoRecebimentoDAO.getInstace();
-        unidadeDAO = UnidadeDAO.getInstace();
-        precoDAO = PriceDAO.getInstace(Preco.class);
-        itemPedidoDAO = ItemPedidoDAO.getInstace(ItemPedido.class);
-        mTipoRecebimentoDAO = TipoRecebimentoDAO.getInstace();
-
-        //Seta todos os adaptadores necessarios
+        mPresenter.getParams(getIntent().getExtras());
+        // Seta todos os adaptadores necessarios
         setAdapters();
-
-        //Todos os listeners da Activity
-        listeners();
-
-        //Edição de Pedido
-        if (pedidoRealizado != null) {
+        // Edição de PedidoActivity
+        if (mPresenter.getOrderSale() != null) {
             try {
-                loadDetailsSale();
+                mPresenter.loadDetailsSale();
+
             } catch (Throwable throwable) {
 
                 throwable.printStackTrace();
             }
         } else {
-            //Carrega a lista de itens vazio
+            // Carrega a lista de itens vazio
             initSwipe();
         }
 
+        edtQTDProducts.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
 
+                        mPresenter.updateTxtAmountProducts();
+                    }
 
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
 
-    }
-
-    private void listeners() {
-        actCodigoProduto.setOnItemClickListener(this);
-        spnProduto.setOnItemSelectedListener(this);
-        actCodigoProduto.setOnClickListener(this);
-        btnConfirmar.setOnClickListener(this);
-        btnAddItem.setOnClickListener(this);
-        spnFormaPagamento.setOnItemSelectedListener(this);
-
-        spnFormaPagamento.setSelection(0);
-        formaPagamento = adapterFormaPagamento.getItem(0);
-
-        spnUnidade.setSelection(0);
-
-        spnFormaPagamento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                formaPagamento = (String) parent.getAdapter().getItem(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        spnUnidade.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                codigoUnidade = (String) parent.getAdapter().getItem(position);
-                preco = precoDAO.carregaPrecoUnidadeProduto(produtoSelecionado, codigoUnidade);
-                cetPrecoUnitario.setText(String.valueOf(preco.getValor()));
-                quantidadeAtual = Integer.parseInt(edtQuantidade.getText().toString());
-                if (quantidadeAtual >= 0) {
-                    Double preco = cetPrecoUnitario.getCurrencyDouble();
-                    valorTotal = Integer.parseInt(edtQuantidade.getText().toString()) * preco;
-                    txtValorTotal.setText(NumberFormat.getCurrencyInstance().format(valorTotal));
-                }
-                txtValorTotal.setText(NumberFormat.getCurrencyInstance().format(valorTotal));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
         });
 
+        cetPrecoUnitario.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                    }
 
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
 
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        mPresenter.updateTxtAmountProducts();
+                    }
+        });
     }
 
-    private void setAdapters() {
+    @OnClick(R.id.btnAddItem)
+    public void btnAddItemOnClicked(View view) {
 
-        adapterFormaPagamento = new ArrayAdapter<String>(VendasActivity.this, android.R.layout.simple_list_item_1,
-                loadTipoRecebimentos());
-
-        produtos = produtoDAO.getAll();
-
-        ArrayList<String> codigosProdutos = loadProductById(produtos);
-        adaptadorCodigoProduto = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line,
-                codigosProdutos);
-
-        loadProductByDescription(produtos);
-
-        adaptadorDescricaoProduto = new ArrayAdapter(this,
-                android.R.layout.simple_list_item_1, descricoesProdutos);
-        spnProduto.setAdapter(adaptadorDescricaoProduto);
-
-        spnFormaPagamento.setAdapter(adapterFormaPagamento);
-        adapterItemPedidoAdapter = new ItemPedidoAdapter(this, itensTemp, txtValorTotalProduto);
-
-        actCodigoProduto.setAdapter(adaptadorCodigoProduto);
-
-        rcItemPedido.setAdapter(adapterItemPedidoAdapter);
-
-
-    }
-
-    private void loadDetailsSale() throws Throwable {
-
-        TipoRecebimento tipoRecebimento = mTipoRecebimentoDAO.findById(pedidoRealizado.getTipoRecebimento());
-        int position = adapterFormaPagamento.getPosition(tipoRecebimento.getNome());
-        spnFormaPagamento.setSelection(position);
-
-        for (ItemPedido aux : pedidoRealizado.realmListToList()) {
-            ItemPedido itensAux = new ItemPedido();
-            itensAux.setId(aux.getId());
-            itensAux.setQuantidade(aux.getQuantidade());
-            itensAux.setValorUnitario(aux.getValorUnitario());
-            itensAux.setChavesItemPedido(aux.getChavesItemPedido());
-            itensAux.setDescricao(aux.getDescricao());
-            itensAux.setValorTotal(aux.getValorTotal());
-            itens.add(itensAux);
-
-
-        }
-        itensTemp.addAll(itens);
-
-        adapterItemPedidoAdapter.notifyDataSetChanged();
-
-        initSwipe();
-        txtValorTotalProduto.setText(
-                NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(pedidoRealizado.getValorTotal()));
-
-    }
-
-    private ArrayList<String> loadTipoRecebimentos() {
-        ArrayList<String> strTiposRecebimentos = new ArrayList<String>();
-        List<TipoRecebimento> tiposRecebimento = tipoRecebimentoDAO.findTipoRecebimentoByCliente(cliente);
-        strTiposRecebimentos.add("FORMAS DE PAGAMENTO");
-        for (TipoRecebimento tipoRecebimento : tiposRecebimento) {
-            strTiposRecebimentos.add(tipoRecebimento.getNome());
-        }
-        return strTiposRecebimentos;
-
-    }
-
-    private void addItem(ItemPedido itemPedido) {
-
-        adapterItemPedidoAdapter.addListItem(itemPedido, (itensTemp.size() + 1));
-        txtValorTotalProduto
-                .setText("TOTAL: " + NumberFormat.getCurrencyInstance(new Locale("pt", "BR"))
-                        .format(calculaValorTotalPedido(itensTemp)));
-
-    }
-
-    private void loadProductByDescription(ArrayList<Produto> produtos) {
-        descricoesProdutos = new ArrayList<String>();
-        for (Produto produto : produtos) {
-            descricoesProdutos.add(produto.getNome());
-        }
-
-    }
-
-    private ArrayList<String> loadProductById(ArrayList<Produto> produtos) {
-
-        ArrayList<String> codigosProdutos = new ArrayList<>();
-
-        for (Produto produto : produtos) {
-            codigosProdutos.add(String.valueOf(produto.getId()));
-        }
-        return codigosProdutos;
-
-    }
-
-    private void initViews() {
-        //Toolbar
-        mToolbar = findViewById(R.id.toolbar);
-        mToolbar.setTitle("VENDAS");
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        actCodigoProduto = findViewById(R.id.auto_txt_codigo);
-        spnProduto = findViewById(R.id.spn_produtos);
-        rcItemPedido = findViewById(R.id.card_recycler_itens);
-        btnConfirmar = findViewById(R.id.btn_confirmar_pedido);
-        txtValorTotal = findViewById(R.id.txt_valor_total);
-        edtBicos = findViewById(R.id.edtBicos);
-        edtQuantidade = findViewById(R.id.edtQTD);
-        cetPrecoUnitario = findViewById(R.id.txt_preco_unitario);
-        spnFormaPagamento = findViewById(R.id.spinner_forma_pagamento);
-        spnUnidade = findViewById(R.id.spinner_unidade);
-        btnAddItem = findViewById(R.id.button_add);
-
-        txtValorTotalProduto = findViewById(R.id.txt_valor_total_pedido);
-        txtValorTotalProduto.setText("VALOR TOTAL: 00,00");
-
-        layoutManager = new LinearLayoutManager(VendasActivity.this);
-        layoutManager.setReverseLayout(true);
-        layoutManager.setStackFromEnd(true);
-
-        //Configurando os recycle views
-        rcItemPedido.setLayoutManager(layoutManager);
-
-
-    }
-
-    private void confirmaPedido() {
-
-        try {
-            Double valorTotalPedido;
-
-            Pedido pedido = new Pedido();
-
-            RealmList<ItemPedido> itensPedidos = new RealmList<ItemPedido>();
-
-            int codigoFormaPagamento = tipoRecebimentoDAO.codigoFormaPagamento(formaPagamento);
-
-            SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
-            String strData = formatador.format(new Date(System.currentTimeMillis()));
+        if (mPresenter.validateFieldsBeforeAddItem()) {
+            mPresenter.setItemPedido(getItemPedido());
+            ItemPedidoID itemPedidoID = null;
             try {
-                pedido.setDataPedido(formatador.parse(strData));
+                itemPedidoID = getItemPedidoID();
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+            mPresenter.getItemPedido().setChavesItemPedido(itemPedidoID);
+            if (!mPresenter.getItens().contains(mPresenter.getItemPedido())) {
+                mPresenter.getItens().add(mPresenter.getItemPedido());
+                mPresenter.updateRecyclerItens();
 
-            for (int i = 0; i < itens.size(); i++) {
-                ItemPedido aux = new ItemPedido();
-                ItemPedidoID itemPedidoID = itens.get(i).getChavesItemPedido();
-                itemPedidoID.setDataVenda(pedido.getDataPedido());
-                aux.setDescricao(itens.get(i).getDescricao());
-                aux.setValorTotal(itens.get(i).getValorTotal());
-                aux.setId(itens.get(i).getId());
-                aux.setChavesItemPedido(itemPedidoID);
-                aux.setQuantidade(itens.get(i).getQuantidade());
-                aux.setValorUnitario(itens.get(i).getValorUnitario());
-                itensPedidos.add(aux);
+            } else {
+                AbstractActivity.showToast(mPresenter.getContext(), "O produto já existe na lista!");
             }
-            SessionManager session = new SessionManager(getApplicationContext());
-            if (session.checkLogin()) {
-                finish();
+    }
+    }
+
+    @OnClick(R.id.btnConfirmSale)
+    public void btnConfirmSaleOnClicked(View view) {
+
+        if (mPresenter.getItens().size() > 0
+                && !mPresenter.getTipoRecebimento().equals("Formas de Pagamento")) {
+            // Realiza Update do Pedido
+            if (mPresenter.getOrderSale() != null) {
+                mPresenter.getOrderSale().setValorTotal(mPresenter.calculeTotalOrderSale());
+                mPresenter.getOrderSale().setItens((RealmList<ItemPedido>) mPresenter.getItens());
+                mPresenter.getOrderSale().setTipoRecebimento(mPresenter.getTipoRecebimentoID());
+                mPresenter.updateSaleOrder(mPresenter.getOrderSale());
+                AbstractActivity.showToast(mPresenter.getContext(), "Pedido Alterado com Sucesso!");
+                NavUtils.navigateUpFromSameTask(this);
+            } else {
+                // Salva o Pedido
+                try {
+                    mPresenter.saveOrderSale();
+
+                    AbstractActivity.showToast(mPresenter.getContext(), "Pedido Salvo!");
+                    NavUtils.navigateUpFromSameTask(this);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
-            pedido.setCodigoFuncionario(session.getUserID());
-            pedido.setItens(itensPedidos);
-            pedido.setCodigoCliente(cliente.getId());
-            pedido.setValorTotal(calculaValorTotalPedido(itens));
 
-            pedido.setTipoRecebimento(codigoFormaPagamento);
-            pedidoDAO = PedidoDAO.getInstace(Pedido.class);
-
-            long idVenda = pedidoDAO.addPedido(pedido);
-
-            for (ItemPedido itemPedido : itensPedidos) {
-                ItemPedidoID itemPedidoID = itemPedido.getChavesItemPedido();
-                itemPedidoID.setIdVenda(idVenda);
-                itemPedido.setChavesItemPedido(itemPedidoID);
-
-            }
-
-            pedido.setItens(itensPedidos);
-
-            pedidoDAO.updatePedido(pedido);
-
-            //alert de confimacao
-
-            Toast.makeText(VendasActivity.this, "PEDIDO REALIZADO COM SUCESSO!", Toast.LENGTH_LONG).show();
-            NavUtils.navigateUpFromSameTask(this);
-        } catch (RealmException ex) {
-
-            System.out.println("Erro ao inserir:" + ex.getMessage());
+        } else if (mPresenter.getTipoRecebimento().equals("Formas de Pagamento")) {
+            AbstractActivity.showToast(mPresenter.getContext(), "Forma de Pagamento Inválida!");
+        } else {
+            AbstractActivity.showToast(
+                    mPresenter.getContext(), " No mímimo um item deve ser adicionado!");
         }
+    }
 
+    @Override
+    public void dissmiss() {
+        mPresenter.getAlertDialog().dismiss();
+    }
 
+    @Override
+    public void loadDetailsSale() throws Throwable {
+        TipoRecebimento tipoRecebimento = mPresenter.loadTipoRecebimentoById();
+        spnFormaPagamento.setSelection(adapterFormaPagamento.getPosition(tipoRecebimento.getNome()));
+        mPresenter.setTipoRecebimento(tipoRecebimento.getNome());
+        mPresenter.setItens(mPresenter.getOrderSale().realmListToList());
+        mPresenter.updateRecyclerItens();
+        initSwipe();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.info_vendas_menu, menu);
+
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) menu.findItem(R.id.action_vendas_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+
+        // listening to search query text change
+        searchView.setOnQueryTextListener(
+                new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextChange(String query) {
+                        // filter recycler view when text is changed
+                        // adapterItemPedidoAdapter.getFilter().filter(query);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        // filter recycler view when query submitted
+                        //  adapterItemPedidoAdapter.getFilter().filter(query);
+                        return false;
+                    }
+        });
+        return true;
     }
 
     @Override
@@ -446,7 +284,6 @@ public class VendasActivity extends AppCompatActivity
         int id = item.getItemId();
 
         switch (id) {
-
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 break;
@@ -458,528 +295,293 @@ public class VendasActivity extends AppCompatActivity
     }
 
     @Override
-    public void onClickListener(View view, int position) {
+    public void refreshSelectedProductViews() {
+        mPresenter.setSpinnerProductSelected();
+        mPresenter.setSpinnerUnityPatternOfProductSelected();
+        mPresenter.setQtdProdutos(new BigDecimal("1"));
+        mPresenter.setPrice(mPresenter.loadPriceByProduct());
+        cetPrecoUnitario.setText(String.valueOf(mPresenter.getPrice().getValor()));
+        mPresenter.updateTxtAmountProducts();
+        updateActCodigoProduto();
     }
 
     @Override
-    public void onLongPressClickListener(View view, int position) {
+    public void setSpinnerProductSelected() {
+        spnProducts.setSelection(
+                adaptadorDescricaoProduto.getPosition(mPresenter.getProductSelected().getNome()));
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+    public void setSpinnerUnityPatternOfProductSelected() {
+        Unidade unityPattern = mPresenter.loadUnityByProduct();
 
-        String descricaoProduto = (String) parent.getAdapter().getItem(position);
-        for (Produto aux : produtos) {
-            if (aux.getNome().equals(descricaoProduto)) {
-                actCodigoProduto.setText(String.valueOf(aux.getId()));
-                for (int i = 0; i < descricoesProdutos.size(); i++) {
-                    if (descricoesProdutos.get(i).equals(aux.getNome())) {
-                        produtoSelecionado = aux;
-                        showADDProduto();
-                        break;
-                    }
-                }
-            }
+        spnUnitys.setSelection(adapterUnidade.getPosition(unityPattern.getId().split("-")[0]));
+        mPresenter.setUnitSelected(unityPattern);
+    }
+
+    @OnItemSelected(R.id.spnFormaPagamento)
+    public void setSpnFormaPagamentoOnSelected(int position) {
+        mPresenter.setTipoRecebimento(adapterFormaPagamento.getItem(position));
+    }
+
+    @OnItemSelected(R.id.spnProducts)
+    public void setSpnProductsOnSelected(int position) {
+        // OBTENHO O NOME DO PRODUTO SELECIONADO
+        String productName = adaptadorDescricaoProduto.getItem(position);
+        mPresenter.setProductSelected(mPresenter.loadProductByName(productName));
+        mPresenter.refreshSelectedProductViews();
+    }
+
+    @OnItemSelected(R.id.spnUnitys)
+    public void setSpnUnityOnSelected(int position) {
+        // setar o preco de acordo com aquela unidade  no presenter
+        // Setar o edit text do preco com o preco daquela unidade
+        mPresenter.setPrice(mPresenter.loadPriceOfUnityByProduct(adapterUnidade.getItem(position)));
+        cetPrecoUnitario.setText(String.valueOf(mPresenter.getPrice().getValor()));
+        mPresenter.setQtdProdutos(new BigDecimal(edtQTDProducts.getText().toString()));
+        txtAmountProducts.setText(
+                FormatacaoMoeda.convertDoubleToString(
+                        this.mPresenter.getTotalProductValue().doubleValue()));
+    }
+
+    @Override
+    public void showOnUpdateDialog(final int position) {
+
+        AlertDialogUpdateItemSaleOrder alertDialogUpdateItemSaleOrder =
+                new AlertDialogUpdateItemSaleOrder(mPresenter);
+        AlertDialog alertDialog = alertDialogUpdateItemSaleOrder.builder(position);
+        alertDialog.show();
+        mPresenter.setAlertDialog(alertDialog);
+    }
+
+    @Override
+    public void updateActCodigoProduto() {
+        actCodigoProduto.setText(String.valueOf((int) mPresenter.getProductSelected().getId()));
+    }
+
+    @Override
+    public void updateRecyclerItens() {
+        adapterItemPedidoAdapter.notifyDataSetChanged();
+        mPresenter.setTotalOrderSale(new BigDecimal(mPresenter.calculeTotalOrderSale()));
+        mPresenter.updateTxtAmountOrderSale();
+    }
+
+    @Override
+    public void updateTxtAmountOrderSale() {
+        txtAmountSale.setText(
+                FormatacaoMoeda.convertDoubleToString(mPresenter.calculeTotalOrderSale().doubleValue()));
+    }
+
+    @Override
+    public void updateTxtAmountProducts() {
+
+        mPresenter
+                .getPrice()
+                .setValor(
+                        cetPrecoUnitario.getCurrencyDouble());
+        mPresenter.setQtdProdutos(
+                new BigDecimal(
+                        edtQTDProducts.getText().toString().isEmpty()
+                                ? "0"
+                                : edtQTDProducts.getText().toString()));
+        txtAmountProducts.setText(
+                FormatacaoMoeda.convertDoubleToString(mPresenter.getTotalProductValue().doubleValue()));
+    }
+
+    @Override
+    public boolean validateFieldsBeforeAddItem() {
+        if (TextUtils.isEmpty(edtQTDProducts.getText().toString())) {
+            edtQTDProducts.setError("Quantidade Obrigatória!");
+            edtQTDProducts.requestFocus();
+            return false;
         }
-
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-
-            case R.id.btn_confirmar_pedido:
-
-                if (itensTemp.size() > 0 && !formaPagamento.equals("FORMAS DE PAGAMENTO")) {
-                    if (pedidoRealizado != null) {
-                        updatePedido();
-                    } else {
-                        confirmaPedido();
-                    }
-
-                } else if (formaPagamento.equals("FORMAS DE PAGAMENTO")) {
-                    Toast.makeText(VendasActivity.this, "FORMA DE PAGAMENTO INVÁLIDA!", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(VendasActivity.this, " NO MÍNIMO UM ITEM DEVE SER ADICIONADO!",
-                            Toast.LENGTH_LONG).show();
-                }
-
-                break;
-
-            case R.id.auto_txt_codigo:
-
-                break;
-
-            case R.id.button_add:
-
-                if (validateFieldsForAddItem(edtQuantidade,edtBicos)) {
-
-                    ItemPedido itemPedido = getItemPedido();
-                    ItemPedidoID itemPedidoID = getItemPedidoID();
-
-                    itemPedido.setChavesItemPedido(itemPedidoID);
-
-                    if (!itensTemp.contains(itemPedido)) {
-                        addItem(itemPedido);
-                    } else {
-                        Toast.makeText(VendasActivity.this,
-                                "O PRODUTO JÁ EXISTE NA LISTA", Toast.LENGTH_LONG)
-                                .show();
-                    }
-
-                    //vai somente na hora de salvar
-       /* itemPedido.setChavesItemPedido(itemPedidoID);
-        long id = itemPedidoDAO.addItemPedido(itemPedido);
-        itemPedido.setId(id);*/
-                }
-
-                break;
+        if (Integer.parseInt(edtQTDProducts.getText().toString()) <= 0) {
+            edtQTDProducts.setError("Quantidade mínima de 1 item!");
+            edtQTDProducts.requestFocus();
+            return false;
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.info_vendas_menu, menu);
-
-        // Associate searchable configuration with the SearchView
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchView = (SearchView) menu.findItem(R.id.action_vendas_search)
-                .getActionView();
-        searchView.setSearchableInfo(searchManager
-                .getSearchableInfo(getComponentName()));
-        searchView.setMaxWidth(Integer.MAX_VALUE);
-
-        // listening to search query text change
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextChange(String query) {
-                // filter recycler view when text is changed
-                adapterItemPedidoAdapter.getFilter().filter(query);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // filter recycler view when query submitted
-                adapterItemPedidoAdapter.getFilter().filter(query);
-                return false;
-            }
-        });
+        if (TextUtils.isEmpty(edtQTDBicos.getText().toString())) {
+            edtQTDBicos.setError("Quantidade de Bicos Obrigatória!");
+            edtQTDBicos.requestFocus();
+            return false;
+        }
+        if (Integer.parseInt(edtQTDBicos.getText().toString()) <= 0) {
+            edtQTDBicos.setError("Quantidade mínima de 1 bico!");
+            edtQTDBicos.requestFocus();
+            return false;
+        }
         return true;
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-        //Quando chama o auto complete deve setar no spinner de descricao do produto
-        String codigoProduto = (String) parent.getAdapter().getItem(position);
-        spnProduto.setSelection(adaptadorDescricaoProduto.getPosition(codigoProduto));
-
-        //setaSpinner(codigoProduto);
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
+    @NonNull
+    private ItemPedido getItemPedido() {
+        ItemPedido itemPedido = new ItemPedido();
+        itemPedido.setQuantidade(mPresenter.getQtdProdutos().intValue());
+        itemPedido.setValorUnitario(mPresenter.getPrice().getValor());
+        itemPedido.setDescricao(mPresenter.getProductSelected().getNome());
+        itemPedido.setBicos(Integer.parseInt(edtQTDBicos.getText().toString()));
+        itemPedido.setValorTotal(mPresenter.getTotalProductValue().doubleValue());
+        return itemPedido;
     }
 
     @NonNull
-    private ItemPedidoID getItemPedidoID() {
+    private ItemPedidoID getItemPedidoID() throws ParseException {
         ItemPedidoID itemPedidoID = new ItemPedidoID();
-
-        itemPedidoID.setIdProduto(produtoSelecionado.getId());
-        itemPedidoID.setIdUnidade(codigoUnidade);
-
-        SimpleDateFormat formatador = new SimpleDateFormat("yyyy/MM/dd");
-        String strData = formatador.format(new Date(System.currentTimeMillis()));
-        try {
-            itemPedidoID.setDataVenda(formatador.parse(strData));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        //Nao sei o significado
+        itemPedidoID.setIdProduto(mPresenter.getProductSelected().getId());
+        itemPedidoID.setIdUnidade(mPresenter.getUnitSelected().getId());
+        itemPedidoID.setDataVenda(DateUtils.formatDateDDMMYYYY(new Date(System.currentTimeMillis())));
+        // Nao sei o significado
         itemPedidoID.setVendaMae("N");
         itemPedidoID.setNucleoCodigo(1);
         itemPedidoID.setTipoVenda("?");
         return itemPedidoID;
     }
 
-    @NonNull
-    private ItemPedido getItemPedido() {
-        ItemPedido itemPedido = new ItemPedido();
-        itemPedido.setQuantidade(Integer.parseInt(edtQuantidade.getText().toString()));
-        itemPedido.setValorUnitario(cetPrecoUnitario.getCurrencyDouble());
-        itemPedido.setDescricao(produtoSelecionado.getNome());
-        itemPedido.setBicos(Integer.parseInt(edtBicos.getText().toString()));
-        try {
-            itemPedido.setValorTotal(
-                    NumberFormat.getCurrencyInstance().parse(txtValorTotal.getText().toString())
-                            .doubleValue());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return itemPedido;
-    }
-
-    private boolean validateFieldsForAddItem(final EditText edtQTD,final EditText edtBicos) {
-
-        if (TextUtils.isEmpty(edtQTD.getText().toString())) {
-            edtQTD.setError("Quantidade Obrigatória!");
-            edtQTD.requestFocus();
-            return false;
-        }
-        if (Integer.parseInt(edtQTD.getText().toString()) <= 0) {
-            edtQTD.setError("Quantidade mínima de 1 item!");
-            edtQTD.requestFocus();
-            return false;
-        }
-        if (TextUtils.isEmpty(edtBicos.getText().toString())) {
-            edtBicos.setError("Quantidade de Bicos Obrigatória!");
-            edtBicos.requestFocus();
-            return false;
-        }
-        if (Integer.parseInt(edtBicos.getText().toString()) <= 0) {
-            edtBicos.setError("Quantidade mínima de 1 bico!");
-            edtBicos.requestFocus();
-            return false;
-        }
-        return true;
-    }
-
-    private void updatePedido() {
-        RealmList<ItemPedido> itensPedidos = new RealmList<ItemPedido>();
-        for (int i = 0; i < itens.size(); i++) {
-            ItemPedido aux = new ItemPedido();
-            aux.setDescricao(itens.get(i).getDescricao());
-            aux.setValorTotal(itens.get(i).getValorTotal());
-            aux.setId(itens.get(i).getId());
-            aux.setChavesItemPedido(itens.get(i).getChavesItemPedido());
-            aux.setQuantidade(itens.get(i).getQuantidade());
-            aux.setValorUnitario(itens.get(i).getValorUnitario());
-            itensPedidos.add(aux);
-        }
-        for (ItemPedido itemPedido : itensPedidos) {
-            ItemPedidoID itemPedidoID = itemPedido.getChavesItemPedido();
-            itemPedidoID.setIdVenda(pedidoRealizado.getId());
-            itemPedido.setChavesItemPedido(itemPedidoID);
-
-        }
-        int codigoFormaPagamento = tipoRecebimentoDAO.codigoFormaPagamento(formaPagamento);
-        pedidoRealizado.setValorTotal(calculaValorTotalPedido(itens));
-        pedidoRealizado.setItens(itensPedidos);
-        pedidoRealizado.setTipoRecebimento(codigoFormaPagamento);
-        pedidoDAO.updatePedido(pedidoRealizado);
-        //alert de confimacao
-
-        Toast.makeText(VendasActivity.this, "Pedido Alterado com Sucesso!", Toast.LENGTH_LONG).show();
-        NavUtils.navigateUpFromSameTask(this);
-    }
-
-    private void getParams() {
-        Bundle args = getIntent().getExtras();
-        long idPedido = args.getLong("keyPedido");
-        if (idPedido == 0) {
-            pedidoRealizado = null;
-            cliente = (Cliente) args.getSerializable("keyCliente");
-        } else {
-
-            pedidoRealizado = pedidoDAO.findById(idPedido);
-            cliente = mClientDAO.findById("id",pedidoRealizado.getCodigoCliente());
-
-
-        }
-
-    }
-
-    @SuppressLint("NewApi")
-    private double calculaValorTotalPedido(List<ItemPedido> itens) {
-        Double valorTotalPedido = 0.0;
-        for (int i = 0; i < itens.size(); i++) {
-
-            valorTotalPedido += itens.get(i).getValorTotal();
-
-
-        }
-        //return itens.stream().mapToDouble(ItemPedido::getValorTotal).sum();
-        return valorTotalPedido;
-    }
-
     private void initSwipe() {
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0,
-                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
+                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
-                    RecyclerView.ViewHolder target) {
-                return false;
-            }
+                    @Override
+                    public void onChildDraw(
+                            Canvas c,
+                            RecyclerView recyclerView,
+                            RecyclerView.ViewHolder viewHolder,
+                            float dX,
+                            float dY,
+                            int actionState,
+                            boolean isCurrentlyActive) {
 
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getAdapterPosition();
+                        Bitmap icon;
+                        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
 
-                if (direction == ItemTouchHelper.LEFT) {
-                    adapterItemPedidoAdapter.removeListItem(position);
-                    txtValorTotalProduto.setText(
-                            "TOTAL: " + FormatacaoMoeda.convertDoubleToString(calculaValorTotalPedido(itensTemp)));
+                            View itemView = viewHolder.itemView;
+                            float height = (float) itemView.getBottom() - (float) itemView.getTop();
+                            float width = height / 3;
 
-                } else {
-
-                    updateDialog(itensTemp.get(position), position, txtValorTotal, txtValorTotalProduto);
-//
-                }
-            }
-
-            @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX,
-                    float dY, int actionState, boolean isCurrentlyActive) {
-
-                Bitmap icon;
-                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-
-                    View itemView = viewHolder.itemView;
-                    float height = (float) itemView.getBottom() - (float) itemView.getTop();
-                    float width = height / 3;
-
-                    if (dX > 0) {
-                        p.setColor(Color.parseColor("#388E3C"));
-                        RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX,
-                                (float) itemView.getBottom());
-                        c.drawRect(background, p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_edit_white_36);
-                        RectF icon_dest = new RectF((float) itemView.getLeft() + width,
-                                (float) itemView.getTop() + width, (float) itemView.getLeft() + 2 * width,
-                                (float) itemView.getBottom() - width);
-                        c.drawBitmap(icon, null, icon_dest, p);
-                    } else {
-                        p.setColor(Color.parseColor("#D32F2F"));
-                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),
-                                (float) itemView.getRight(), (float) itemView.getBottom());
-                        c.drawRect(background, p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_delete_white_36dp);
-                        RectF icon_dest = new RectF((float) itemView.getRight() - 2 * width,
-                                (float) itemView.getTop() + width, (float) itemView.getRight() - width,
-                                (float) itemView.getBottom() - width);
-                        c.drawBitmap(icon, null, icon_dest, p);
+                            if (dX > 0) {
+                                p.setColor(Color.parseColor("#388E3C"));
+                                RectF background =
+                                        new RectF(
+                                                (float) itemView.getLeft(),
+                                                (float) itemView.getTop(),
+                                                dX,
+                                                (float) itemView.getBottom());
+                                c.drawRect(background, p);
+                                icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_edit_white_36);
+                                RectF icon_dest =
+                                        new RectF(
+                                                (float) itemView.getLeft() + width,
+                                                (float) itemView.getTop() + width,
+                                                (float) itemView.getLeft() + 2 * width,
+                                                (float) itemView.getBottom() - width);
+                                c.drawBitmap(icon, null, icon_dest, p);
+                            } else {
+                                p.setColor(Color.parseColor("#D32F2F"));
+                                RectF background =
+                                        new RectF(
+                                                (float) itemView.getRight() + dX,
+                                                (float) itemView.getTop(),
+                                                (float) itemView.getRight(),
+                                                (float) itemView.getBottom());
+                                c.drawRect(background, p);
+                                icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_delete_white_36dp);
+                                RectF icon_dest =
+                                        new RectF(
+                                                (float) itemView.getRight() - 2 * width,
+                                                (float) itemView.getTop() + width,
+                                                (float) itemView.getRight() - width,
+                                                (float) itemView.getBottom() - width);
+                                c.drawBitmap(icon, null, icon_dest, p);
+                            }
+                        }
+                        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
                     }
-                }
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-            }
+
+                    @Override
+                    public boolean onMove(
+                            RecyclerView recyclerView,
+                            RecyclerView.ViewHolder viewHolder,
+                            RecyclerView.ViewHolder target) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                        int position = viewHolder.getAdapterPosition();
+
+                        if (direction == ItemTouchHelper.LEFT) {
+                            mPresenter.getItens().remove(position);
+                            mPresenter.updateRecyclerItens();
+                        } else {
+                            mPresenter.setItemPedido(mPresenter.getItens().get(position));
+                            mPresenter.showOnUpdateDialog(position);
+                        }
+                    }
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(rcItemPedido);
+        itemTouchHelper.attachToRecyclerView(rcvItens);
     }
 
-    private void setaSpinner(String codigoProduto) {
+    private void initViews() {
+        // Toolbar
 
-        for (Produto aux : produtos) {
-            if (aux.getId() == Integer.parseInt(codigoProduto)) {
-
-                for (int i = 0; i < descricoesProdutos.size(); i++) {
-                    if (descricoesProdutos.get(i).equals(aux.getNome())) {
-                        spnProduto.setSelection(i);
-                        produtoSelecionado = aux;
-                        showADDProduto();
-                        break;
-                    }
-                }
-            }
-        }
-
-
+        mToolbar.setTitle("Vendas");
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        txtAmountSale.setText("Valor Total do Produto:R$ 00,00");
+        edtQTDProducts.setText("1");
+        LinearLayoutManager layoutManager;
+        layoutManager = new LinearLayoutManager(VendasActivity.this);
+        // Configurando os recycle views
+        rcvItens.setLayoutManager(layoutManager);
     }
 
-    private void showADDProduto() {
+    private void setAdapters() {
 
-        edtQuantidade.setText("1");
-        quantidadeAtual = 1;
+        List<TipoRecebimento> tipoRecebimentos =
+                mPresenter.loadTipoRecebimentosByClient(mPresenter.getClient());
+        adapterFormaPagamento =
+                new ArrayAdapter<>(
+                        VendasActivity.this,
+                        android.R.layout.simple_list_item_1,
+                        mPresenter.convertTipoRecebimentoInString(tipoRecebimentos));
 
-        preco = precoDAO.carregaPrecoProduto(produtoSelecionado);
-        ArrayList<String> unidades = new ArrayList<String>();
-        ArrayList<String> todasUnidades = new ArrayList<String>();
-        String unidadePadrao = "";
-        unidadePadrao = unidadeDAO.carregaUnidadePadraoProduto(produtoSelecionado);
-        unidades.add(unidadePadrao);
-        todasUnidades = unidadeDAO.carregaUnidadesProduto(produtoSelecionado);
-        unidades.addAll(todasUnidades);
-        adapterUnidade = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, unidades);
-        //mClientAdapter da unidade
-        spnUnidade.setAdapter(adapterUnidade);
-        codigoUnidade = adapterUnidade.getItem(0);
-        //unidade clicada seta o preco
+        List<Produto> produtos = mPresenter.loadAllProducts();
 
-        txtValorTotal.setText(
-                FormatacaoMoeda.convertDoubleToString(quantidadeAtual * preco.getValor()));
+        adaptadorCodigoProduto =
+                new ArrayAdapter<>(
+                        mPresenter.getContext(),
+                        android.R.layout.simple_list_item_1,
+                        mPresenter.loadAllProductsID(produtos));
 
-        // valorTotal = quantidadeAtual * preco.getValor();
-        cetPrecoUnitario.setText(String.valueOf(preco.getValor()));
-        edtQuantidade.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                txtValorTotal
-                        .setText(NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(valorTotal));
-            }
+        adaptadorDescricaoProduto =
+                new ArrayAdapter(
+                        this, android.R.layout.simple_list_item_1, mPresenter.loadAllProductsByName(produtos));
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        adapterItemPedidoAdapter = new ItemPedidoAdapter(mPresenter);
 
-            }
+        List<Unidade> unitys = mPresenter.loadAllUnitys();
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+        adapterUnidade =
+                new ArrayAdapter<>(
+                        mPresenter.getContext(),
+                        android.R.layout.simple_spinner_item,
+                        mPresenter.loadAllUnitysToString(unitys));
 
-                quantidadeAtual = Double.parseDouble(s.toString().equals("") ? "0" : s.toString());
-                if (quantidadeAtual > 0) {
-                    valorTotal = quantidadeAtual *
-                            cetPrecoUnitario.getCurrencyDouble();
+        actCodigoProduto.setAdapter(adaptadorCodigoProduto);
+        spnProducts.setAdapter(adaptadorDescricaoProduto);
+        spnFormaPagamento.setAdapter(adapterFormaPagamento);
+        rcvItens.setAdapter(adapterItemPedidoAdapter);
+        spnUnitys.setAdapter(adapterUnidade);
 
-                    txtValorTotal
-                            .setText(FormatacaoMoeda.convertDoubleToString(valorTotal));
-
-                }
-            }
+        spnProducts.setSelection(INITIAL_POSITION);
+        spnFormaPagamento.setSelection(INITIAL_POSITION);
+        actCodigoProduto.setOnItemClickListener(
+                (adapterView, view, i, l)->{
+                    Long idProduct = Long.parseLong((String) adapterView.getItemAtPosition(i));
+                    // Seto o produto selecionado no presenter
+                    mPresenter.setProductSelected(mPresenter.loadProductById(idProduct));
+                    mPresenter.refreshSelectedProductViews();
         });
-
-        cetPrecoUnitario.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                if (quantidadeAtual > 0) {
-                    Double preco = cetPrecoUnitario.getCurrencyDouble();
-                    valorTotal = Integer.parseInt(edtQuantidade.getText().toString()) * preco;
-                    txtValorTotal
-                            .setText(FormatacaoMoeda.convertDoubleToString(valorTotal));
-                }
-                txtValorTotal.setText(FormatacaoMoeda.convertDoubleToString(valorTotal));
-            }
-        });
-
     }
-
-    private void updateDialog(final ItemPedido itemPedido, final int position, final TextView txtValorTotal,
-            final TextView valorTotalProduto) {
-
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(VendasActivity.this);
-        LayoutInflater inflater = (LayoutInflater) VendasActivity.this
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View dialogView = inflater.inflate(R.layout.dialog_edit_item_pedido, null);
-        dialogBuilder.setView(dialogView);
-
-        dialogBuilder.setTitle("DADOS DO ITEM");
-
-        TextView idProdutoTextView, descricaoProdutoTextView;
-        final EditText edtQuantidade;
-        final CurrencyEditText cetPreco;
-        Spinner spnUnidade ;
-        Button btnCancelar, btnSave;
-
-        idProdutoTextView = dialogView.findViewById(R.id.txt_codigo_produto);
-        descricaoProdutoTextView = dialogView.findViewById(R.id.txt_descricao_produto);
-        edtQuantidade = dialogView.findViewById(R.id.edt_quantidade_produto);
-        cetPreco = dialogView.findViewById(R.id.edt_preco);
-        spnUnidade = dialogView.findViewById(R.id.spinner_unidade_produto);
-        btnCancelar = dialogView.findViewById(R.id.button_cancelar_edicao);
-        btnSave = dialogView.findViewById(R.id.button_confirmar_edicao);
-
-
-        ArrayList<String> unidades = new ArrayList<String>();
-        ArrayList<String> todasUnidades = new ArrayList<String>();
-        String unidadePadrao = "";
-
-
-        idProdutoTextView.setText(String.valueOf(itemPedido.getChavesItemPedido().getIdProduto()));
-        descricaoProdutoTextView.setText(itemPedido.getDescricao());
-
-        cetPreco.setText(NumberFormat.getCurrencyInstance().format(itemPedido.getValorUnitario()));
-        edtQuantidade.setText(String.valueOf(itemPedido.getQuantidade()));
-
-        precoDAO = PriceDAO.getInstace(Preco.class);
-        final Produto produto = new Produto();
-        produto.setId((long) itemPedido.getChavesItemPedido().getIdProduto());
-        produto.setNome(itemPedido.getDescricao());
-        unidadePadrao = unidadeDAO.carregaUnidadePadraoProduto(produto);
-        unidades.add(unidadePadrao);
-        todasUnidades = unidadeDAO.carregaUnidadesProduto(produto);
-        unidades.addAll(todasUnidades);
-        adapterUnidade = new ArrayAdapter<String>(VendasActivity.this, android.R.layout.simple_spinner_item,
-                unidades);
-        //mClientAdapter da unidade
-        spnUnidade.setAdapter(adapterUnidade);
-
-        spnUnidade.setSelection(adapterUnidade.getPosition(itemPedido.getChavesItemPedido().getIdUnidade()));
-
-
-        spnUnidade.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                codigoUnidade = (String) parent.getAdapter().getItem(position);
-                preco = precoDAO.carregaPrecoUnidadeProduto(produto, codigoUnidade);
-                //Preciso descomentar assim que conseguir pegar o preco pela de acordo com a unidade
-              //  cetPreco.setText(String.valueOf(preco.getValor()));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        final AlertDialog b = dialogBuilder.create();
-        b.show();
-
-        btnCancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                b.dismiss();
-                adapterItemPedidoAdapter.notifyDataSetChanged();
-            }
-        });
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //chama o edit no item pedido dao e chama edit na lista de itens
-
-                itemPedido.setQuantidade(Integer.parseInt(edtQuantidade.getText().toString()));
-                itemPedido.setValorUnitario(cetPreco.getCurrencyDouble());
-
-                valorTotal = 0.0;
-                int quantidadeAtual = Integer.parseInt(edtQuantidade.getText().toString());
-                if (quantidadeAtual >= 0) {
-                    Double preco = cetPreco.getCurrencyDouble();
-                    valorTotal = (quantidadeAtual * preco);
-                    txtValorTotal
-                            .setText(FormatacaoMoeda.convertDoubleToString(valorTotal));
-
-                }
-
-                itemPedido.setValorTotal(valorTotal);
-                itemPedido.setDescricao(produto.getNome());
-                itemPedido.getChavesItemPedido().setIdUnidade(codigoUnidade);
-
-                adapterItemPedidoAdapter.updateListItem(itemPedido, position);
-                valorTotalProduto.setText(
-                        "TOTAL: " + FormatacaoMoeda.convertDoubleToString(calculaValorTotalPedido(itensTemp)));
-
-                b.dismiss();
-                Toast.makeText(VendasActivity.this, "Item alterado com sucesso", Toast.LENGTH_LONG).show();
-            }
-        });
-        b.show();
-
-    }
-
-
 }
-

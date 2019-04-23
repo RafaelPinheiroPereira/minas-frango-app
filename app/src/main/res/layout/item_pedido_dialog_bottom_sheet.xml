@@ -9,12 +9,12 @@
     <!-- NOTE: This list should be displayed in a list
     instead of nested layouts -->
     <LinearLayout
-        android:id="@+id/view_ll_bottom_sheet"
+        android:id="@+id/lnlViewSalesOrder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground"
-        android:onClick="visualizarPedido"
+
         android:orientation="horizontal"
         android:paddingBottom="8dp"
         android:paddingLeft="@dimen/card_margin"
@@ -25,12 +25,12 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/edit_ll_bottom_sheet"
+        android:id="@+id/lnlEditSalesOrder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground"
-        android:onClick="editarPedido"
+
         android:orientation="horizontal"
         android:paddingBottom="8dp"
         android:paddingLeft="@dimen/card_margin"
@@ -55,9 +55,9 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/delete_ll_bottom_sheet"
+        android:id="@+id/lnlDeleteSalesOrder"
         android:layout_width="match_parent"
-        android:onClick="deletarPedido"
+
         android:layout_height="wrap_content"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground"

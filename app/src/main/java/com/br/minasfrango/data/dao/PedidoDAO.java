@@ -22,8 +22,8 @@ public class PedidoDAO extends GenericsDAO<Pedido> {
 
     public long addPedido(Pedido pedido) {
         long id;
-        if (realm.where(Pedido.class).max("id") != null) {
-            id = (long) (realm.where(Pedido.class).max("id").intValue() + 1);
+        if (where().max("id") != null) {
+            id = (long) (where().max("id").intValue() + 1);
         } else {
             id = 1;
         }

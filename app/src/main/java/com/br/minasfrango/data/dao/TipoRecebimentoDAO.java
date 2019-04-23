@@ -1,7 +1,6 @@
 package com.br.minasfrango.data.dao;
 
 import com.br.minasfrango.data.pojo.Cliente;
-import com.br.minasfrango.data.pojo.Rota;
 import com.br.minasfrango.data.pojo.TipoRecebimento;
 import io.realm.Realm;
 import io.realm.RealmQuery;
@@ -58,20 +57,12 @@ public class TipoRecebimentoDAO {
     }
 
 
-    public int codigoFormaPagamento(String descricaoFormaPagamento) {
-
-        RealmQuery<TipoRecebimento> formaPagamentoRealmQuery = realm.where(TipoRecebimento.class);
-        RealmResults<TipoRecebimento> result = formaPagamentoRealmQuery.equalTo("nome", descricaoFormaPagamento)
-                .findAll();
-        int codigo = 0;
-        if (result != null) {
-
-            for (TipoRecebimento tipoRecebimento : result) {
-                codigo = (int) tipoRecebimento.getId();
-            }
-        }
-        return codigo;
-
+    public ArrayList<String> carregaFormaPagamentoAmortizacao() throws Throwable {
+        ArrayList<String> formas = new ArrayList<String>();
+        RealmResults<TipoRecebimento> results = where().equalTo("id", 1).findAll();
+        Optional.ofNullable(results).orElseThrow(NullPointerException::new);
+        results.forEach(item->formas.add(String.valueOf(item.getNome())));
+        return formas;
     }
 
     public TipoRecebimento findById(long id) throws Throwable {
@@ -83,11 +74,16 @@ public class TipoRecebimentoDAO {
         return new TipoRecebimento(result.getId(), result.getNome());
     }
 
-    public ArrayList<String> carregaFormaPagamentoAmortizacao() throws Throwable {
-        ArrayList<String> formas = new ArrayList<String>();
-        RealmResults<TipoRecebimento> results = where().equalTo("id", 1).findAll();
-        Optional.ofNullable(results).orElseThrow(NullPointerException::new);
-        results.forEach(item-> formas.add(String.valueOf(item.getNome())));
-        return formas;
+    public int codigoFormaPagamento(String descricaoFormaPagamento) {
+
+        RealmQuery<TipoRecebimento> formaPagamentoRealmQuery = realm.where(TipoRecebimento.class);
+        TipoRecebimento result = formaPagamentoRealmQuery.equalTo("nome", descricaoFormaPagamento)
+                .findFirst();
+        int codigo = 0;
+        if (result != null) {
+            codigo = (int) result.getId();
+        }
+        return codigo;
+
     }
 }

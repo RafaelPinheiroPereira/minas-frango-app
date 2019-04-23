@@ -3,9 +3,6 @@ package com.br.minasfrango.data.dao;
 import io.realm.Realm;
 import io.realm.RealmModel;
 import io.realm.RealmQuery;
-import io.realm.Sort;
-import java.io.Serializable;
-import java.util.List;
 
 public class GenericsDAO<T extends RealmModel> implements IGenericsDAO<T> {
 
@@ -35,9 +32,9 @@ public class GenericsDAO<T extends RealmModel> implements IGenericsDAO<T> {
     }
 
     @Override
-    public T findById(final String searchParams, final Long id) {
+    public T findById(final Long id) {
 
-        return where().equalTo(searchParams, id).findFirst();
+        return where().equalTo("id", id).findFirst();
 
     }
 

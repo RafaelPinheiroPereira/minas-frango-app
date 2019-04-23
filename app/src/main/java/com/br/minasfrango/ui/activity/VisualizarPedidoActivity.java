@@ -9,7 +9,6 @@ import androidx.core.app.NavUtils;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.br.minasfrango.R;
-import com.br.minasfrango.ui.adapter.ItensPedidoVisualizarAdapter;
 import com.br.minasfrango.data.dao.ClientDAO;
 import com.br.minasfrango.data.dao.ItemPedidoDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
@@ -18,6 +17,7 @@ import com.br.minasfrango.data.pojo.Cliente;
 import com.br.minasfrango.data.pojo.ItemPedido;
 import com.br.minasfrango.data.pojo.Pedido;
 import com.br.minasfrango.data.pojo.TipoRecebimento;
+import com.br.minasfrango.ui.adapter.ItensPedidoVisualizarAdapter;
 import java.text.DateFormat;
 import java.util.List;
 
@@ -61,7 +61,7 @@ public class VisualizarPedidoActivity extends AppCompatActivity {
 
         Pedido pedido= getParams();
 
-        Cliente cliente = mClientDAO.findById("id",pedido.getCodigoCliente());
+        Cliente cliente = mClientDAO.findById(pedido.getCodigoCliente());
         TipoRecebimento tipoRecebimento= null;
         try {
             tipoRecebimento = mTipoRecebimentoDAO.findById(pedido.getTipoRecebimento());

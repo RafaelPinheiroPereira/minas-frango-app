@@ -1,25 +1,40 @@
 package com.br.minasfrango;
 
-import com.br.minasfrango.util.FormatacaoMoeda;
-import java.text.ParseException;
-import org.junit.Test;
-
 import static org.junit.Assert.*;
+
+import com.br.minasfrango.data.dao.PriceDAO;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import org.junit.*;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-public class ExampleUnitTest {
-		@Test
-		public void addition_isCorrect() {
-			try {
-				FormatacaoMoeda.converteStringDoubleValorMoeda("12.346,34");
-				assertEquals(0,0);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
 
-		}
+public class ExampleUnitTest {
+
+    PriceDAO priceDAO;
+
+    private Realm realm;
+
+    //Aprender a usar realm no test e talvez acabar com a super classe
+
+		@Test
+        public void loadAllPrices() {
+
+            assertTrue(priceDAO.getAll().size() > 0);
+
+
+        }
+
+    @Before
+    public void setUp() throws Exception {
+        RealmConfiguration config =
+                new RealmConfiguration.Builder().inMemory().name("test-realm").build();
+        realm = Realm.getInstance(config);
+
+
+    }
 }

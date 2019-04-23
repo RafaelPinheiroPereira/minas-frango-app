@@ -190,7 +190,6 @@ public class DataImport extends AsyncTask<Void, Void, Boolean> {
                 realm.beginTransaction();
                 for (Unidade aux : unidades) {
                     aux.setId(aux.getChavesUnidade().getIdUnidade() + "-" + aux.getChavesUnidade().getIdProduto());
-
                     realm.copyToRealmOrUpdate(aux);
                 }
                 realm.commitTransaction();

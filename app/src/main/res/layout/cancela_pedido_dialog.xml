@@ -10,23 +10,29 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
+        style="@style/TextInputLayout"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorPrimary">
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/TextInputLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/motivo_cancelamento_edt"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtCancelingMotive"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:hint="MOTIVO CANCELAMENTO*"
-            android:inputType="text"
-            android:lines="15"
-            android:maxLength="300"
-            android:padding="15dp"
-            android:textColor="@android:color/black"
-            android:textSize="18sp">
-
-            <requestFocus />
-        </EditText>
+            android:layout_margin="10dp"
+            android:hint="Motivo*"
+            android:inputType="textMultiLine"
+            android:maxLength="200"
+            android:maxLines="5"
+            android:padding="10dp"
+            android:textColor="@android:color/black" />
     </com.google.android.material.textfield.TextInputLayout>
     <TextView
         android:layout_width="match_parent"
@@ -34,7 +40,7 @@
         android:textSize="18sp"
         android:padding="10dp"
         android:textColor="@color/textColorPrimary"
-        android:text="DESEJA REALMENTE CANCELAR ESTE PEDIDO?"/>
+        android:text="Deseja realmente cancelar este pedido?" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -46,9 +52,9 @@
         <com.google.android.material.button.MaterialButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/nao_button"
+            android:id="@+id/btnNo"
 
-            android:text="NÃO"
+            android:text="Não"
             android:textColor="#fff"
             android:textSize="14sp"
             app:backgroundTint="@color/fab"
@@ -59,9 +65,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:id="@+id/sim_button"
+            android:id="@+id/btnOk"
             app:backgroundTint="@color/brand_red"
-            android:text="SIM"
+            android:text="Sim"
             android:textSize="14sp"
             android:textColor="#fff"
             style="@style/Widget.MaterialComponents.Button"

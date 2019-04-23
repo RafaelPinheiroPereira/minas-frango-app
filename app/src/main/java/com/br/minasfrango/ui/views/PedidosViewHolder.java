@@ -1,4 +1,4 @@
-package com.br.minasfrango.views;
+package com.br.minasfrango.ui.views;
 
 import android.graphics.Color;
 import android.view.View;
@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.br.minasfrango.R;
 import com.br.minasfrango.data.pojo.Pedido;
-import com.br.minasfrango.listener.ClickSubItemListener;
+import com.br.minasfrango.ui.listener.ClickSubItemListener;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 
