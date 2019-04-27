@@ -1,6 +1,7 @@
 package com.br.minasfrango.data.realm;
 
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 import java.io.Serializable;
 import java.util.Date;
@@ -28,6 +29,9 @@ public class Recebimento extends RealmObject implements Serializable {
 		private Date dataVencimento;
 
 		private boolean check=false;
+
+	@Ignore
+	private int orderSelected = 0;
 		
 		public Recebimento(long idFuncionario, long idCliente, long idVenda, Date dataVenda, double valorVenda,Date dataVencimento) {
 				this.idFuncionario = idFuncionario;

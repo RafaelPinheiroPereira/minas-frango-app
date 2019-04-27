@@ -1,316 +1,250 @@
 package com.br.minasfrango.ui.activity;
 
 import android.os.Bundle;
-import android.view.KeyEvent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
-import android.view.View.OnKeyListener;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
+import butterknife.OnClick;
+import butterknife.OnItemSelected;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.dao.RecebimentoDAO;
-import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
 import com.br.minasfrango.data.realm.Cliente;
-import com.br.minasfrango.data.realm.Recebimento;
+import com.br.minasfrango.ui.abstracts.AbstractActivity;
 import com.br.minasfrango.ui.adapter.RecebimentoAdapter;
-import com.br.minasfrango.ui.listener.RecyclerViewOnClickListenerHack;
+import com.br.minasfrango.ui.mvp.payments.IPaymentsMVP;
+import com.br.minasfrango.ui.mvp.payments.Presenter;
+import com.br.minasfrango.util.CurrencyEditText;
 import com.br.minasfrango.util.FormatacaoMoeda;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
-public class RecebimentoActivity extends AppCompatActivity
-        implements RecyclerViewOnClickListenerHack {
+public class RecebimentoActivity extends AppCompatActivity implements IPaymentsMVP.IView {
 
-    private Cliente cliente;
+    private static final int INITIAL_POSITION = 0;
 
-    Toolbar toolbar;
+    ArrayAdapter<String> adapterTipoRecebimento;
 
-    private RecyclerView recebimentosRecyclerView;
+    @BindView(R.id.btnConfirmAmortize)
+    Button btnConfirmAmortize;
 
-    RecebimentoDAO recebimentoDAO;
-
-    Switch amortizarSwitch;
-
-
-    TipoRecebimentoDAO tipoRecebimentoDAO;
-
-    List<Recebimento> recebimentos;
-
-    private ArrayAdapter<String> adapterTipoRecebimento;
-
+    @BindView(R.id.btnPrint)
     Button btnPrint;
 
-    Spinner spinnerFormaPagamento;
+    @BindView(R.id.edtValueAmortize)
+    CurrencyEditText edtValueAmortize;
 
-    EditText valorAmortizacaoEditText;
+    IPaymentsMVP.IPresenter mPresenter;
 
+    @BindView(R.id.rcvPayments)
+    RecyclerView rcvPayments;
+
+    @BindView(R.id.spnTipoRecebimento)
+    Spinner spnTipoRecebimento;
+
+    @BindView(R.id.swtcAmortize)
+    Switch swtcAmortize;
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
+    @BindView(R.id.txtClientID)
+    TextView txtClientID;
+
+    @BindView(R.id.txtCredit)
+    TextView txtCredit;
+
+    @BindView(R.id.txtEndereco)
+    TextView txtEndereco;
+
+    @BindView(R.id.txtFanstasyName)
+    TextView txtFantasyName;
+
+    @BindView(R.id.txtQTDOpenNotes)
+    TextView txtQTDOpenNotes;
     RecebimentoAdapter adapter;
 
-    int idTipoRecebimento;
-
-    Button confirmaAmortizacao;
-
+    @BindView(R.id.txtTotalDevido)
+    TextView txtTotalDevido;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recebimento);
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        cliente = getParams();
+        ButterKnife.bind(this);
         initView();
-    }
-
-    @Override
-    public void onClickListener(View view, int position) {
-        switch (view.getId()) {
-            case R.id.chk_recebimento:
-                Recebimento recebimento = adapter.getItem(position);
-                CheckBox checkBox = (CheckBox) view;
-                if (!checkBox.isChecked()) {
-                    retiraAmortizacaoRegistro(recebimento, position);
-                } else {
-
-                    Double numberValorAmortizado = FormatacaoMoeda
-                            .converteStringDoubleValorMoeda(valorAmortizacaoEditText.getText().toString());
-                    if (verificaSaldo(recebimentos, numberValorAmortizado) && (numberValorAmortizado <= recebimento
-                            .getValorVenda())) {
-
-                        simularAmortizacaoRegistro(new BigDecimal(numberValorAmortizado),
-                                adapter.getItem(position),
-                                position);
-
-                    } else if (!verificaSaldo(recebimentos, numberValorAmortizado)) {
-
-                        Toast.makeText(RecebimentoActivity.this, "Saldo Insuficiente!", Toast.LENGTH_LONG).show();
-                        retiraAmortizacaoRegistro(adapter.getItem(position), position);
-                    }  else if(numberValorAmortizado > recebimento
-                            .getValorVenda()){
-                        valorAmortizacaoEditText.setError("Recebimento superior ao devido!");
-                        checkBox.setChecked(false);
-                    }
-                    if (numberValorAmortizado == 0) {
-                        valorAmortizacaoEditText.setError("Valor deve ser maior que zero!");
-                        retiraAmortizacaoRegistro(adapter.getItem(position), position);
-                    }
-
-
-                }
-                break;
-        }
-    }
-
-    @Override
-    public void onLongPressClickListener(final View view, final int position) {
-
-    }
-
-    private void initView() {
-
-        TextView codigoClienteTextView;
-        TextView nomeFantasiaTextView;
-        TextView enderecoTextView;
-
-        codigoClienteTextView = findViewById(R.id.txtClientID);
-        nomeFantasiaTextView = findViewById(R.id.txtFanstasyName);
-        enderecoTextView = findViewById(R.id.txtEndereco);
-
-        valorAmortizacaoEditText = findViewById(R.id.edt_amortizacao);
-        spinnerFormaPagamento = findViewById(R.id.spinner_tipo_recebimento);
-        confirmaAmortizacao = findViewById(R.id.btn_confirmar_amortizacao);
-
-        codigoClienteTextView.setText(String.valueOf(cliente.getId()));
-        enderecoTextView.setText(cliente.getEndereco());
-        nomeFantasiaTextView.setText(cliente.getRazaoSocial());
-
-        btnPrint = findViewById(R.id.btn_imprimir_recibo);
-        amortizarSwitch = findViewById(R.id.amortizar_switch);
-
-        toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("RECEBIMENTOS");
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        recebimentosRecyclerView = findViewById(R.id.recycleview_recebimentos);
-
-
-    }
-
-    private Cliente getParams() {
-        Bundle args = getIntent().getExtras();
-        Cliente cliente = (Cliente) args.getSerializable("keyCliente");
-        return cliente;
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        recebimentoDAO = RecebimentoDAO.getInstace(Recebimento.class);
-        recebimentos = recebimentoDAO.findReceiptsByClient(cliente);
+        mPresenter = new Presenter(this);
+        mPresenter.getParams();
+        mPresenter.setClientViews();
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(RecebimentoActivity.this);
-        recebimentosRecyclerView.setLayoutManager(layoutManager);
-        adapter = new RecebimentoAdapter(RecebimentoActivity.this, recebimentos);
-        adapter.setRecyclerViewOnClickListenerHack(this);
-        recebimentosRecyclerView.setAdapter(adapter);
-        btnPrint.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        // Inicia
 
-        tipoRecebimentoDAO = TipoRecebimentoDAO.getInstace();
-        ArrayList<String> tiposRecebimentos = null;
+        swtcAmortize.setChecked(false);
+        mPresenter.getRecebimentos().addAll(mPresenter.loadReceiptsByClient());
+        txtQTDOpenNotes.setText("Notas Abertas: " + mPresenter.getRecebimentos().size());
+        txtCredit.setText(FormatacaoMoeda.convertDoubleToString(mPresenter.getCredit().doubleValue()));
+        txtTotalDevido.setText(FormatacaoMoeda.convertDoubleToString(mPresenter.getValueTotalDevido().doubleValue()));
+        adapter = new RecebimentoAdapter(mPresenter);
+        rcvPayments.setAdapter(adapter);
+
         try {
-            tiposRecebimentos = tipoRecebimentoDAO.carregaFormaPagamentoAmortizacao();
+            adapterTipoRecebimento =
+                    new ArrayAdapter<>(
+                            RecebimentoActivity.this,
+                            android.R.layout.simple_spinner_item,
+                            mPresenter.loadTipoRecebimentosAVista());
         } catch (Throwable throwable) {
-            throwable.printStackTrace();
+            RecebimentoActivity.this.runOnUiThread(
+                    ()->{
+                        AbstractActivity.showToast(
+                                RecebimentoActivity.this, throwable.getMessage());
+                    });
         }
 
-        adapterTipoRecebimento = new ArrayAdapter<String>(RecebimentoActivity.this,
-                android.R.layout.simple_spinner_item, tiposRecebimentos);
-        spinnerFormaPagamento.setAdapter(adapterTipoRecebimento);
-        spinnerFormaPagamento.setSelection(0);
+        spnTipoRecebimento.setAdapter(adapterTipoRecebimento);
+        spnTipoRecebimento.setSelection(INITIAL_POSITION);
+        edtValueAmortize.setText("00,00");
 
-        valorAmortizacaoEditText.setText("0,00");
-        spinnerFormaPagamento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        edtValueAmortize.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void afterTextChanged(final Editable s) {
+                        mPresenter.setCredit(
+                                new BigDecimal(
+                                        s.toString().isEmpty()
+                                                ? 0
+                                                : edtValueAmortize.getCurrencyDouble()));
 
-                idTipoRecebimento = tipoRecebimentoDAO
-                        .codigoFormaPagamento((String) parent.getAdapter().getItem(position));
+                        mPresenter.getRecebimentos().clear();
+                        mPresenter.getRecebimentos().addAll(mPresenter.loadReceiptsByClient());
+                        mPresenter.updateRecycleView();
+                        if (mPresenter.totalValueOfDebtISLessTranCreditOrEquals()) {
+                            if (mPresenter.creditValueIsGranThenZero()) {
+                                /*Se o tipo da quitacao for automatica e o valor de credito for
+                                 * maior do que zero entao calcula automaticamente a amortizacao*/
+                                if (mPresenter.isTypeOfAmortizationIsAutomatic()) {
+                                    mPresenter.calculateAmortizationAutomatic();
+                                }
 
+                            } else {
+                                AbstractActivity.showToast(
+                                        mPresenter.getContext(), "Saldo Insuficiente!");
+                            }
 
-            }
+                        } else {
+                            // Devo informar que o valor recebido eh maior do que o devido
+                            edtValueAmortize.setError("Recebimento superior ao Valor Devido");
+                        }
+                    }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+                    @Override
+                    public void beforeTextChanged(
+                            final CharSequence s,
+                            final int start,
+                            final int count,
+                            final int after) {
+                    }
 
-            }
-        });
-
-        amortizarSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(final CompoundButton compoundButton, final boolean b) {
-                if (b) {
-                    simularAmortizacaoTodosRegistros(valorAmortizacaoEditText.getText().toString(), recebimentos);
-                }else{
-                    valorAmortizacaoEditText.setText("0,00");
-                    simularAmortizacaoTodosRegistros(valorAmortizacaoEditText.getText().toString(), recebimentos);
-                }
-            }
-        });
-
-        valorAmortizacaoEditText.setOnKeyListener(new OnKeyListener() {
-            @Override
-            public boolean onKey(final View view, final int i, final KeyEvent keyEvent) {
-                if (KeyEvent.KEYCODE_DEL == keyEvent.getKeyCode()) {
-
-                    amortizarSwitch.setChecked(false);
-                    return false;
-                }
-
-                return false;
-            }
-        });
-        confirmaAmortizacao.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                simularAmortizacaoTodosRegistros(valorAmortizacaoEditText.getText().toString(), recebimentos);
-            }
-        });
-
+                    @Override
+                    public void onTextChanged(
+                            final CharSequence s,
+                            final int start,
+                            final int before,
+                            final int count) {
+                    }
+                });
     }
 
-
-    private void retiraAmortizacaoRegistro(Recebimento recebimento, int position) {
-        Recebimento entityToUpdate = recebimentoDAO.findByID(recebimento.getId());
-        adapter.updateRetiraAmortizacao(entityToUpdate, position);
-        adapter.notifyDataSetChanged();
-
+    @Override
+    public void getParams() {
+        Bundle args = getIntent().getExtras();
+        Cliente cliente = (Cliente) args.getSerializable("keyCliente");
+        mPresenter.setCliente(cliente);
     }
 
+    @OnClick(R.id.btnConfirmAmortize)
+    public void setBtnConfirmAmortizeClicked(View view) {
+        // Salva o recebimento
+    }
 
-    private BigDecimal simularAmortizacaoRegistro(BigDecimal valorAmortizado, Recebimento recebimento,
-            int position) {
-        BigDecimal saldo = null;
-        saldo = valorAmortizado;
-        if (saldo.compareTo(new BigDecimal(0.000)) > 0) {
+    @Override
+    public void setClientViews() {
+        txtClientID.setText(String.valueOf(mPresenter.getCliente().getId()));
+        txtEndereco.setText(mPresenter.getCliente().getEndereco());
+        txtFantasyName.setText(mPresenter.getCliente().getNome());
+    }
 
-            BigDecimal valBigVenda = new BigDecimal(recebimento.getValorVenda());
-            saldo = valorAmortizado.subtract(valBigVenda);
-            if (saldo.compareTo(new BigDecimal(0.000)) >= 0) {
-                recebimento.setValorAmortizado(recebimento.getValorVenda());
+    @OnCheckedChanged(R.id.swtcAmortize)
+    public void setOnSwtcAmortize(CompoundButton compoundButton, boolean b) {
 
+        // Se o valor devido eh maior ou igual ao credito
+        if (mPresenter.totalValueOfDebtISLessTranCreditOrEquals()) {
+
+            if (b) {
+                mPresenter.getRecebimentos().clear();
+                mPresenter.getRecebimentos().addAll(mPresenter.loadReceiptsByClient());
+                mPresenter.updateRecycleView();
+                mPresenter.setTypeOfAmortizationIsAutomatic(true);
+                mPresenter.setCredit(new BigDecimal(edtValueAmortize.getCurrencyDouble()));
+                mPresenter.calculateAmortizationAutomatic();
+                compoundButton.setText("Quitação Automática de Notas");
             } else {
-                recebimento.setValorAmortizado(valorAmortizado.doubleValue());
-
-            }
-            recebimento.setTipoRecebimento(idTipoRecebimento);
-            //  recebimentoDAO.updateRecebimento(recebimentos.get(i));
-            adapter.updateAmortizacao(recebimento, position);
-            adapter.notifyDataSetChanged();
-        }
-
-        return saldo;
-    }
-
-
-    private void simularAmortizacaoTodosRegistros(String valorAmortizacao, List<Recebimento> recebimentos) {
-
-        int i = 0;
-
-        BigDecimal valorTotalDevido = null;
-        BigDecimal bigValorAmortizado = null;
-        Double somaTotalDevida = 0.00;
-
-        for (Recebimento recebimento : recebimentos) {
-            somaTotalDevida += recebimento.getValorVenda();
-        }
-
-        Double numberValorAmortizado = FormatacaoMoeda.converteStringDoubleValorMoeda(valorAmortizacao);
-
-        if (numberValorAmortizado == 0) {
-            for (int k = 0; k < recebimentos.size(); k++) {
-                retiraAmortizacaoRegistro(recebimentos.get(k), k);
+                // REALIZA A QUITACAO MANUAL
+                mPresenter.getRecebimentos().addAll(mPresenter.loadReceiptsByClient());
+                mPresenter.updateRecycleView();
+                mPresenter.setTypeOfAmortizationIsAutomatic(false);
+                edtValueAmortize.setText("00,00");
+                compoundButton.setText("Quitação Manual de Notas");
             }
         } else {
-            bigValorAmortizado = BigDecimal.valueOf(numberValorAmortizado);
-            valorTotalDevido = BigDecimal.valueOf(somaTotalDevida);
-            if (bigValorAmortizado.compareTo(valorTotalDevido) <= 0) {
-                while (bigValorAmortizado.compareTo(new BigDecimal(0.000)) > 0) {
-                    bigValorAmortizado = simularAmortizacaoRegistro(bigValorAmortizado, recebimentos.get(i), i);
-                    i++;
-                }
-            } else {
-                valorAmortizacaoEditText.setError("Valor recebido superou o devido");
-            }
+            // Devo informar que o valor recebido eh maior do que o devido
+            edtValueAmortize.setError("Recebimento superior ao Valor Devido");
         }
-
-
     }
 
-    private boolean verificaSaldo(List<Recebimento> recebimentos, double valorAmortizado) {
-        Double valorTotalDevido = 0.0;
-        for (Recebimento aux : recebimentos) {
-            if (aux.isCheck()) {
-                valorTotalDevido += aux.getValorVenda();
-            }
-        }
-        return !(valorTotalDevido - valorAmortizado >= 0);
+    @OnItemSelected(R.id.spnTipoRecebimento)
+    public void setSpnTipoRecebimentoOnSelected(int position) {
+
+        mPresenter.setIdTipoRecebimento(
+                mPresenter.findIdTipoRecebimento(adapterTipoRecebimento.getItem(position)));
+    }
+
+    @Override
+    public void showInsuficentCredit(final String s) {
+        AbstractActivity.showToast(mPresenter.getContext(), s);
+    }
+
+    @Override
+    public void updateRecycleView() {
+
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void updateRecycleViewAlteredItem(final int position) {
+        adapter.notifyItemChanged(position);
+    }
+
+    private void initView() {
+        toolbar.setTitle("Recebimentos");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(RecebimentoActivity.this);
+        rcvPayments.setLayoutManager(layoutManager);
     }
 }

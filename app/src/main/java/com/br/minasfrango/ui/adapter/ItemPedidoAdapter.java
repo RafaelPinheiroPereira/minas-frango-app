@@ -20,17 +20,17 @@ public class ItemPedidoAdapter extends RecyclerView.Adapter<ItemPedidoAdapter.My
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView txtDescricao, idTextView, txtUnidade, txtQuantidade, txtValorTotal;
+        public TextView txtDescricao, txtValorUnitario, txtUnidade, txtQuantidade, txtValorTotal;
 
 
         public MyViewHolder(View itemView) {
             super(itemView);
 
-            txtDescricao = itemView.findViewById(R.id.textViewDescricaoItem);
-            idTextView = itemView.findViewById(R.id.textViewID);
-            txtUnidade = itemView.findViewById(R.id.textViewUnidade);
-            txtQuantidade = itemView.findViewById(R.id.textViewQTDItem);
-            txtValorTotal = itemView.findViewById(R.id.textValorTotal);
+            txtDescricao = itemView.findViewById(R.id.txtProductName);
+            txtUnidade = itemView.findViewById(R.id.txtUnit);
+            txtQuantidade = itemView.findViewById(R.id.txtQTDProducts);
+            txtValorTotal = itemView.findViewById(R.id.txt_valor_total_item);
+            txtValorUnitario = itemView.findViewById(R.id.txtValorUnitario);
 
 
         }
@@ -59,10 +59,11 @@ public class ItemPedidoAdapter extends RecyclerView.Adapter<ItemPedidoAdapter.My
     @Override
     public void onBindViewHolder(final ItemPedidoAdapter.MyViewHolder myViewHolder, int position) {
         final ItemPedido itemPedido = mPresenter.getItens().get(position);
-        myViewHolder.idTextView.setText(String.valueOf(itemPedido.getChavesItemPedido().getIdProduto()));
+
         myViewHolder.txtDescricao.setText((itemPedido.getDescricao()));
-        myViewHolder.txtUnidade.setText(itemPedido.getChavesItemPedido().getIdUnidade());
+        myViewHolder.txtUnidade.setText(itemPedido.getChavesItemPedido().getIdUnidade().split("-")[0]);
         myViewHolder.txtQuantidade.setText(String.valueOf(itemPedido.getQuantidade()));
+        myViewHolder.txtValorUnitario.setText(FormatacaoMoeda.convertDoubleToString(itemPedido.getValorUnitario()));
         myViewHolder.txtValorTotal
                 .setText(FormatacaoMoeda.convertDoubleToString(itemPedido.getValorTotal()));
 

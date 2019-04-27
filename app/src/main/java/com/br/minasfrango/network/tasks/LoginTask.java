@@ -36,14 +36,14 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... params) {
 
-        try {
+        /*try {
 
             return validateAcess(idUser, password);
         } catch (IOException e) {
             return e.getMessage();
-        }
+        }*/
 
-
+        return validateAcessOffLine(idUser, password);
     }
 
     @Override
@@ -90,6 +90,11 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
         }
 
         throw new IOException("Funcionário não cadastrado!");
+    }
+
+    private String validateAcessOffLine(String idUser, String password) {
+        mPresenter.createSession(idUser, password, "teste-off-line");
+        return "SUCESS";
     }
 }
 

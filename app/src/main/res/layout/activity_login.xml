@@ -27,18 +27,17 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             style="@style/TextInputLayout"
-            android:backgroundTint="@color/colorPrimary"
             android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtUser"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_margin="10dp"
+
             android:padding="10dp"
             android:inputType="number"
             android:hint="Matrícula"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/primary_text_light" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -50,34 +49,35 @@
             android:id="@+id/edtPassword"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_margin="10dp"
+
             android:padding="10dp"
             android:fontFamily="sans-serif"
             android:hint="Senha"
-
             android:inputType="textPassword"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/primary_text_light" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
-
 
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnLogin"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/lnLoginBox"
         android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="36dp"
-        android:layout_marginEnd="36dp"
-        android:layout_marginBottom="107dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignStart="@+id/lnLoginBox"
+
+        android:layout_marginBottom="131dp"
+        android:layout_marginRight="56dp"
+        android:layout_marginStart="31dp"
+        android:layout_marginTop="120dp"
         android:gravity="center_horizontal"
         android:text="@string/acessar"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        app:backgroundTint="@color/primary"  />
+        android:textColor="@android:color/primary_text_dark"
+        android:textSize="20sp"
+        app:backgroundTint="@color/primary_dark" />
 
 </RelativeLayout>
 

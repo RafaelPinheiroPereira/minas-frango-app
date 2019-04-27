@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,7 +17,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:background="@color/colorPrimary"
+            android:background="@color/colorPrimaryDark"
             android:elevation="0dp"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
@@ -38,10 +39,9 @@
             android:layout_gravity="left"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="5dp"
-            android:text="CLIENTE"
-            android:textColor="@android:color/background_dark"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:text="Cliente"
+            android:textColor="@android:color/primary_text_light"
+            android:textSize="18sp" />
 
 
         <ScrollView
@@ -69,7 +69,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="10dp"
                         android:text="Codigo Cliente"
-                        android:textSize="18sp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/txtFanstasyName"
@@ -78,7 +78,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="3dp"
                         android:text="Nome Fantasia"
-                        android:textSize="18sp" />
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
@@ -92,7 +92,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="3dp"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
 
                     <TextView
@@ -102,7 +102,7 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginTop="2dp"
                         android:text="Rua das Paparaubas, 14 - Renascença"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
                 </LinearLayout>
 
                 <View
@@ -121,17 +121,16 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="FORMAS DE PAGAMENTO"
-                        android:textColor="@android:color/background_dark"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:text="Formas de Pagamento"
+                        android:textColor="@android:color/primary_text_light"
+                        android:textSize="18sp" />
 
                     <Spinner
-                        android:id="@+id/spinner_tipo_recebimento"
+                        android:id="@+id/spnTipoRecebimento"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@android:color/background_dark"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:textStyle="bold" />
 
 
@@ -143,6 +142,7 @@
                     android:layout_height="3dp"
                     android:layout_marginTop="5dp"
                     android:background="?android:attr/listDivider" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -150,83 +150,144 @@
                     android:orientation="horizontal">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="120dp"
-                        android:layout_height="match_parent">
+                        style="@style/TextInputLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
 
+                        <com.br.minasfrango.util.CurrencyEditText
+                            android:id="@+id/edtValueAmortize"
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:digits="0123456789."
+                            android:hint="Valor Recebido"
+                            android:inputType="numberDecimal|textMultiLine"
+                            android:lines="1"
+                            android:maxLength="9"
+                            android:padding="10dp"
+                            android:textColor="@android:color/primary_text_light"
+                            android:textSize="18sp"
+                            app:groupDivider="."
+                            app:locale="en_US"
+                            app:monetaryDivider=","
+                            app:showSymbol="false">
 
-                    <com.br.minasfrango.util.FieldMoney
-                        android:id="@+id/edt_amortizacao"
-                        android:layout_width="120dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:padding="5dp"
-                        android:inputType="number"
-                        android:maxLength="10"
-                        android:hint="Valor Recebido"
-                        android:maxLines="1"
-                        android:layout_gravity="center_vertical"
-                        android:lines="1"
-                        android:textSize="18sp">
-
-                        <requestFocus />
-                    </com.br.minasfrango.util.FieldMoney>
+                            <requestFocus />
+                        </com.br.minasfrango.util.CurrencyEditText>
                     </com.google.android.material.textfield.TextInputLayout>
-                 <Switch
-                     android:layout_width="wrap_content"
-                     android:id="@+id/amortizar_switch"
-                     android:layout_marginLeft="15dp"
-                     android:text="CALCULAR"
-                     android:layout_gravity="center_vertical"
-                     android:textColor="@android:color/background_dark"
-                     android:textSize="18sp"
-                     android:textStyle="bold"
-                     android:padding="10dp"
-                     android:layout_height="wrap_content" />
+
+
+                    <Switch
+                        android:id="@+id/swtcAmortize"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="15dp"
+                        android:padding="10dp"
+                        android:text="Quitação Manual de Notas"
+                        android:textColor="@android:color/primary_text_light"
+                        android:textSize="18sp" />
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Crédito:"
+                        android:textColor="@android:color/primary_text_light"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/txtCredit"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:text="Rs 20,00"
+                        android:textAlignment="viewStart"
+                        android:textColor="@android:color/primary_text_light"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Saldo Devedor:"
+                        android:textColor="@android:color/primary_text_light"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/txtTotalDevido"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="right"
+                        android:text="20,00"
+                        android:textColor="@android:color/holo_red_dark"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/divider5"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:layout_marginTop="5dp"
+                    android:background="?android:attr/listDivider" />
 
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/txtQTDOpenNotes"
                     android:layout_gravity="left"
                     android:layout_marginTop="10dp"
-                    android:text="NOTAS ABERTAS"
-                    android:textColor="@android:color/background_dark"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:text="Notas Abertas"
+                    android:textColor="@android:color/primary_text_light"
+                    android:textSize="18sp" />
 
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycleview_recebimentos"
+                    android:id="@+id/rcvPayments"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:padding="10dp"></androidx.recyclerview.widget.RecyclerView>
+                    android:padding="10dp"
+                    tools:listitem="@layout/recebimento_item"></androidx.recyclerview.widget.RecyclerView>
 
 
-
-                <Button
-                    android:id="@+id/btn_confirmar_amortizacao"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnConfirmAmortize"
+                    style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="5dp"
-                    android:drawableLeft="@mipmap/icon_vender"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
                     android:gravity="center_vertical|center_horizontal"
-                    android:text="Amortizar"
-                    android:textSize="16sp"
-                    android:theme="@style/Button.Tinted" />
+                    android:text=" Amortizar"
+                    android:textColor="@color/white"
+                    app:backgroundTint="@color/primary_dark"
+                    app:icon="@mipmap/icon_vender"
+                    app:iconGravity="textStart"
+                    app:iconTint="@color/white" />
 
-                <Button
-                    android:id="@+id/btn_imprimir_recibo"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPrint"
+                    style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
-                    android:drawableLeft="@mipmap/icone_print"
-                    android:text="Gerar Recibo"
-
-                    android:textSize="16sp"
-                    android:theme="@style/Button.Tinted" />
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text=" Gerar Recibo"
+                    android:textColor="@color/white"
+                    android:visibility="gone"
+                    app:backgroundTint="@color/primary_dark"
+                    app:icon="@mipmap/icone_print"
+                    app:iconGravity="textStart"
+                    app:iconTint="@color/white" />
             </LinearLayout>
         </ScrollView>
 

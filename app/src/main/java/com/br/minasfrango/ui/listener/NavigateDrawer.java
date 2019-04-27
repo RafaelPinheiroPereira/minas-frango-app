@@ -1,6 +1,7 @@
 package com.br.minasfrango.ui.listener;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
 import androidx.appcompat.widget.Toolbar;
@@ -15,7 +16,7 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 public class NavigateDrawer implements IDrawer {
 
     Activity mActivity;
-    Drawer result;
+
 
 
     public NavigateDrawer(final Activity activity) {
@@ -42,7 +43,7 @@ public class NavigateDrawer implements IDrawer {
                 .withActivity(mActivity)
                 .withCompactStyle(false)
                 .withSavedInstance(savedInstanceState)
-                .withHeaderBackground(R.color.colorPrimary)
+                .withHeaderBackground(R.color.colorPrimaryDark)
                 .withSelectionSecondLineShown(false) // E-mail
                 .addProfiles(
                         new ProfileDrawerItem().withName(userName).withNameShown(true)
@@ -52,6 +53,7 @@ public class NavigateDrawer implements IDrawer {
                 .withAlternativeProfileHeaderSwitching(false)
                 .withProfileImagesClickable(true)
                 .withSelectionListEnabled(false)
+                .withTextColor(Color.WHITE)
                 .build();
     }
 

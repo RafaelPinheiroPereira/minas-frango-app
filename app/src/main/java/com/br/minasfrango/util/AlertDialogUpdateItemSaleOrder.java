@@ -14,7 +14,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.realm.ItemPedido;
 import com.br.minasfrango.data.realm.Unidade;
 import com.br.minasfrango.ui.mvp.sales.ISalesMVP;
 import java.math.BigDecimal;
@@ -38,8 +37,6 @@ public class AlertDialogUpdateItemSaleOrder {
     EditText edtQTDProductDialog;
 
     ISalesMVP.IPresenter mIPresenter;
-
-    ItemPedido mItemPedido;
 
     int position;
 

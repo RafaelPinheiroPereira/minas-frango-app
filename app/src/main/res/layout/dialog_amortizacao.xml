@@ -38,7 +38,7 @@
                     android:textStyle="bold" />
 
                 <Spinner
-                    android:id="@+id/spinner_tipo_recebimento"
+                    android:id="@+id/spnTipoRecebimento"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/background_dark"
@@ -64,7 +64,7 @@
                     <com.br.minasfrango.util.FieldMoney
 
 
-                        android:id="@+id/edt_amortizacao"
+                        android:id="@+id/edtValueAmortize"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"

@@ -7,149 +7,210 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.realm.Recebimento;
-import com.br.minasfrango.ui.listener.RecyclerViewOnClickListenerHack;
-import java.text.NumberFormat;
+import com.br.minasfrango.ui.mvp.payments.IPaymentsMVP;
+import com.br.minasfrango.util.FormatacaoMoeda;
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Locale;
 
-public class RecebimentoAdapter extends RecyclerView.Adapter<RecebimentoAdapter.MyViewHolder> {
+public class RecebimentoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private Context mContext;
+    public class Header extends RecyclerView.ViewHolder {
 
-    private List<Recebimento> mList;
+        public Header(@NonNull final View itemView) {
+            super(itemView);
+        }
+    }
 
     private LayoutInflater mLayoutInflater;
 
-    private RecyclerViewOnClickListenerHack mRecyclerViewOnClickListenerHack;
+    public class MyViewHolder extends RecyclerView.ViewHolder {
 
-    public RecebimentoAdapter(Context c, List<Recebimento> l) {
-        this.mContext = c;
-        this.mList = l;
-        this.mLayoutInflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        @BindView(R.id.chbRecebimento)
+        CheckBox chbRecebimento;
 
+        @BindView(R.id.txtAmortizationValue)
+        TextView txtAmortizationValue;
 
-    }
+        @BindView(R.id.txtDateVencimento)
+        TextView txtDateVencimento;
 
-    @Override
-    public RecebimentoAdapter.MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View v = mLayoutInflater.inflate(R.layout.recebimento_item, viewGroup, false);
-        RecebimentoAdapter.MyViewHolder mvh = new RecebimentoAdapter.MyViewHolder(v);
-        return mvh;
-    }
+        @BindView(R.id.txtOrderSelect)
+        TextView txtOrderSelect;
 
-    public Recebimento getItem(int position) {
-        return this.mList.get(position);
-    }
+        @BindView(R.id.txtQDT)
+        TextView txtQDT;
 
-    @Override
-    public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
-        SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
-        myViewHolder.idRecebimentoTextView.setText(String.valueOf(mList.get(position).getId()));
+        @BindView(R.id.txtRecebimentoID)
+        TextView txtRecebimentoID;
 
-        myViewHolder.dataVendaTextView.setText(String.valueOf(formatador.format(mList.get(position).getDataVenda())));
-        myViewHolder.dataVencimentoTextView
-                .setText(String.valueOf(formatador.format(mList.get(position).getDataVencimento())));
+        @BindView(R.id.txtSaldo)
+        TextView txtSaldo;
 
-        myViewHolder.valorVendaTextView
-                .setText((NumberFormat.getCurrencyInstance(new Locale("pt","BR")).format(mList.get(position).getValorVenda())));
+        @BindView(R.id.txtSalesDate)
+        TextView txtSalesDate;
 
-        myViewHolder.valorAmortizacao
-                .setText((NumberFormat.getCurrencyInstance(new Locale("pt","BR")).format(mList.get(position).getValorAmortizado())));
-        double saldo =  mList.get(position).getValorVenda()- mList.get(position).getValorAmortizado();
-        if (saldo > 0) {
-            myViewHolder.saldoTextView.setTextColor(Color.RED);
-        } else {
-            myViewHolder.saldoTextView.setTextColor(Color.GREEN);
+        @BindView(R.id.txtSalesValue)
+        TextView txtSalesValue;
+
+        public MyViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
         }
-        myViewHolder.saldoTextView.setText((NumberFormat.getCurrencyInstance(new Locale("pt","BR")).format(saldo)));
-        myViewHolder.qtdTextView.setText((position + 1) + "/" + mList.size());
+    }
 
-        myViewHolder.mCheckBox.setChecked(mList.get(position).isCheck());
+    private static final int ITEM_VIEW_TYPE_HEADER = 0;
 
+    private static final int ITEM_VIEW_TYPE_ITEM = 1;
 
+    IPaymentsMVP.IPresenter mPresenter;
 
+    public RecebimentoAdapter(IPaymentsMVP.IPresenter mPresenter) {
 
+        this.mPresenter = mPresenter;
+        this.mLayoutInflater =
+                (LayoutInflater)
+                        mPresenter.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public int getItemCount() {
-        return mList.size();
+        return mPresenter.getRecebimentos().size() + 1;
     }
 
-    public void setRecyclerViewOnClickListenerHack(RecyclerViewOnClickListenerHack r) {
-        mRecyclerViewOnClickListenerHack = r;
+    @Override
+    public int getItemViewType(int position) {
+        return isHeader(position) ? ITEM_VIEW_TYPE_HEADER : ITEM_VIEW_TYPE_ITEM;
     }
 
-    public void addListItem(Recebimento c, int position) {
-        mList.add(c);
-        notifyItemInserted(position);
+    public boolean isHeader(int position) {
+        return position == 0;
     }
 
-    public void updateAmortizacao(Recebimento c, int position) {
-        c.setCheck(true);
-        mList.set(position, c);
-        //notifyItemInserted(position);
-        notifyDataSetChanged();
-    }
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 
-    public void updateRetiraAmortizacao(Recebimento c, int position) {
-        c.setCheck(false);
-        mList.set(position, c);
-        notifyDataSetChanged();
-    }
+        if (isHeader(position)) {
+            return;
+        } else {
 
+            SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
+            ((MyViewHolder) viewHolder).txtRecebimentoID.setText(
+                    String.valueOf(mPresenter.getRecebimentos().get(position - 1).getId()));
 
-    public class MyViewHolder extends RecyclerView.ViewHolder
-             implements View.OnClickListener, View.OnLongClickListener {
+            ((MyViewHolder) viewHolder).txtSalesDate.setText(
+                    String.valueOf(
+                            formatador.format(
+                                    mPresenter
+                                            .getRecebimentos()
+                                            .get(position - 1)
+                                            .getDataVenda())));
+            ((MyViewHolder) viewHolder).txtDateVencimento.setText(
+                    String.valueOf(
+                            formatador.format(
+                                    mPresenter
+                                            .getRecebimentos()
+                                            .get(position - 1)
+                                            .getDataVencimento())));
 
-        CheckBox mCheckBox;
+            ((MyViewHolder) viewHolder).txtSalesValue.setText(
+                    (FormatacaoMoeda.convertDoubleToString(
+                            mPresenter.getRecebimentos().get(position - 1).getValorVenda())));
 
-        TextView idRecebimentoTextView,
-                saldoTextView,
-                qtdTextView, dataVendaTextView, valorVendaTextView, valorAmortizacao, dataVencimentoTextView;
+            ((MyViewHolder) viewHolder).txtAmortizationValue.setText(
+                    (FormatacaoMoeda.convertDoubleToString(
+                            mPresenter.getRecebimentos().get(position - 1).getValorAmortizado())));
 
+            if (mPresenter.getRecebimentos().get(position - 1).getValorVenda()
+                    - mPresenter.getRecebimentos().get(position - 1).getValorAmortizado()
+                    > 0) {
+                ((MyViewHolder) viewHolder).txtSaldo.setTextColor(Color.RED);
+            } else {
+                ((MyViewHolder) viewHolder).txtSaldo.setTextColor(Color.GREEN);
+            }
+            ((MyViewHolder) viewHolder).txtSaldo.setText(
+                    (FormatacaoMoeda.convertDoubleToString(
+                            mPresenter.getRecebimentos().get(position - 1).getValorVenda()
+                                    - mPresenter
+                                    .getRecebimentos()
+                                    .get(position - 1)
+                                    .getValorAmortizado())));
 
-        public MyViewHolder(View itemView) {
-            super(itemView);
+            ((MyViewHolder) viewHolder).txtOrderSelect.setText(
+                    String.valueOf(
+                            mPresenter.getRecebimentos().get(position - 1).getOrderSelected()));
+            ((MyViewHolder) viewHolder).txtQDT.setText((position) + "/" + mPresenter.getRecebimentos().size());
+            ((MyViewHolder) viewHolder).chbRecebimento.setChecked(
+                    mPresenter.getRecebimentos().get(position - 1).isCheck());
 
-            mCheckBox = itemView.findViewById(R.id.chk_recebimento);
-            idRecebimentoTextView = itemView.findViewById(R.id.txt_id_recebimento);
-            qtdTextView=itemView.findViewById(R.id.txt_qtd);
+            //        // Seta a cor do background
+            //        if (((MyViewHolder) viewHolder).chbRecebimento.isChecked()) {
+            //            ((MyViewHolder) viewHolder).chbRecebimento.setButtonTintList(
+            //
+            // ColorStateList.valueOf(mPresenter.getContext().getColor(R.color.accent)));
+            //        } else {
+            //            ((MyViewHolder) viewHolder).chbRecebimento.setButtonTintList(
+            //                    ColorStateList.valueOf(
+            //
+            // mPresenter.getContext().getColor(R.color.md_light_disabled)));
+            //        }
 
-            dataVendaTextView = itemView.findViewById(R.id.txt_data_venda);
-            valorVendaTextView = itemView.findViewById(R.id.txt_valor_venda);
-            valorAmortizacao = itemView.findViewById(R.id.txt_amortizado);
-            saldoTextView = itemView.findViewById(R.id.txt_saldo);
-            dataVencimentoTextView = itemView.findViewById(R.id.txt_data_vencimento);
+            // Quando o tipo de amortizacao eh automatico o checkbox deve ficar desabilitado
+            if (mPresenter.isTypeOfAmortizationIsAutomatic()) {
+                ((MyViewHolder) viewHolder).chbRecebimento.setClickable(false);
+            } else if (!mPresenter.isTypeOfAmortizationIsAutomatic()
+                    && !mPresenter.creditValueIsGranThenZero()) {
+                ((MyViewHolder) viewHolder).chbRecebimento.setClickable(false);
+            } else {
+                ((MyViewHolder) viewHolder).chbRecebimento.setClickable(true);
 
-            itemView.setOnClickListener(this);
-            itemView.setOnLongClickListener(this);
-            mCheckBox.setOnClickListener(this);
+                ((MyViewHolder) viewHolder).chbRecebimento.setOnClickListener(
+                        (view)->{
 
-
-        }
-
-
-
-
-        @Override
-        public void onClick(View v) {
-            if (mRecyclerViewOnClickListenerHack != null) {
-                mRecyclerViewOnClickListenerHack.onClickListener(v, getPosition());
+                            // Caso o valor do credito  seja maior do que zero
+                            if (mPresenter.creditValueIsGranThenZero())
+                            // O item ja estiver selecionado entao quer dizer que estou
+                            // desmarcando
+                            {
+                                if (mPresenter.getRecebimentos().get(position - 1).isCheck()) {
+                                    mPresenter.removeAmortization(position - 1);
+                                }
+                                // O item nao estiver selecionado entao quer dizer que estou
+                                // marcando
+                                else {
+                                    mPresenter.calculateAmortizationManually(position - 1);
+                                }
+                            }
+                            // Se o valor nao é maior do que zero eu quero desmarcar
+                            else {
+                                // Esta marcado entao quer dizer que ta desmarcando
+                                if (mPresenter.getRecebimentos().get(position - 1).isCheck()) {
+                                    mPresenter.removeAmortization(position - 1);
+                                }
+                                // Senao quer marcar porem nao ha saldo
+                                else {
+                                    ((MyViewHolder) viewHolder).chbRecebimento.setClickable(false);
+                                    this.mPresenter.showInsuficentCredit("Saldo Insuficiente");
+                                }
+                            }
+                        });
             }
         }
+    }
 
-        @Override
-        public boolean onLongClick(View v) {
-            if (mRecyclerViewOnClickListenerHack != null) {
-                mRecyclerViewOnClickListenerHack.onLongPressClickListener(v, getPosition());
-                return true;
-            }
-            return false;
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        View v;
+        if (viewType == ITEM_VIEW_TYPE_HEADER) {
+            View headerView = mLayoutInflater.inflate(R.layout.header_recebimento, viewGroup, false);
+            return new RecebimentoAdapter.Header(headerView);
+        } else {
+            v = mLayoutInflater.inflate(R.layout.recebimento_item, viewGroup, false);
+            RecebimentoAdapter.MyViewHolder mvh = new RecebimentoAdapter.MyViewHolder(v);
+            return mvh;
         }
     }
 }

@@ -137,7 +137,7 @@
                             android:textColor="@color/textColorSecondary"
                             android:textSize="14sp"
                             android:padding="5dp"
-                            android:text="N° PEDIDO"/>
+                            android:text="N° Pedido" />
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"

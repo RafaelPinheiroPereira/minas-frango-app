@@ -26,18 +26,16 @@ public class Presenter implements ILoginMVP.IPresenter {
     }
 
     @Override
-    public void createSession(final String idUser, final String password, final String nameEmployee) {
+    public void createSession(
+            final String idUser, final String password, final String nameEmployee) {
         this.mSessionManager = new SessionManager(getContext());
-        mSessionManager.createUserLoginSession(idUser,
-                password,
-                nameEmployee);
+        mSessionManager.createUserLoginSession(idUser, password, nameEmployee);
     }
 
     @Override
     public void doLogin(final String idUser, final String password) {
         mLoginTask = new LoginTask(this, this.view, idUser, password);
         mLoginTask.execute();
-
     }
 
     @Override
@@ -54,6 +52,4 @@ public class Presenter implements ILoginMVP.IPresenter {
     public boolean validateLogin() {
         return view.validateForm();
     }
-
-
 }

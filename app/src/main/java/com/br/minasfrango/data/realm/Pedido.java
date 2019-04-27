@@ -12,9 +12,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Data
 @NoArgsConstructor
@@ -40,8 +38,6 @@ public class Pedido extends RealmObject implements Serializable {
 
     private String motivoCancelamento;
 
-    @Setter
-    @Getter
     private long tipoRecebimento;
 
     private double valorTotal;

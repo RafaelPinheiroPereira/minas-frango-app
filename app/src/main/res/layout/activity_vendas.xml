@@ -18,7 +18,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="?attr/colorPrimaryDark"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </com.google.android.material.appbar.AppBarLayout>
@@ -63,6 +63,7 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="110dp"
+                        style="@style/TextInputLayout"
                         android:layout_height="wrap_content">
 
                         <AutoCompleteTextView
@@ -71,7 +72,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:completionThreshold="1"
-                            android:hint="COD.PRODUTO"
+                            android:hint="COD.Produto"
+                            android:textColor="@android:color/black"
                             android:inputType="number|textMultiLine"
                             android:maxLength="5"
                             android:padding="10dp"
@@ -96,15 +98,17 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="110dp"
+                        style="@style/TextInputLayout"
                         android:layout_height="wrap_content">
 
-                        <EditText
+                        <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edtQTDProducts"
                             android:layout_width="110dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:digits="0123456789."
-                            android:hint="QUANTIDADE."
+                            android:hint="Quantidade."
+                            android:textColor="@android:color/primary_text_light"
                             android:inputType="number|textMultiLine"
                             android:maxLength="6"
                             android:padding="10dp"
@@ -130,23 +134,26 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="110dp"
+                        style="@style/TextInputLayout"
                         android:layout_height="wrap_content">
 
-                        <EditText
+                        <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edtQTDBicos"
                             android:layout_width="110dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:digits="0123456789."
-                            android:hint="QTD.BICOS"
+                            android:hint="QTD.Bicos"
                             android:inputType="number|textMultiLine"
                             android:padding="10dp"
+                            android:textColor="@android:color/primary_text_light"
                             android:text="0"
                             android:textSize="18sp" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="80dp"
+                        style="@style/TextInputLayout"
                         android:layout_height="wrap_content">
 
                         <com.br.minasfrango.util.CurrencyEditText
@@ -156,14 +163,15 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:digits="0123456789."
-                            android:hint="PREÇO"
+                            android:hint="Preço"
                             android:inputType="numberDecimal|textMultiLine"
                             android:lines="1"
                             android:maxLength="9"
-                            android:textColor="@android:color/black"
+                            android:padding="10dp"
                             android:textSize="18sp"
                             app:groupDivider="."
                             app:locale="en_US"
+                            android:textColor="@android:color/primary_text_light"
                             app:monetaryDivider=","
                             app:showSymbol="false">
 
@@ -187,20 +195,11 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
-                    android:text="ITENS DO PEDIDO"
-                    android:textColor="@android:color/background_dark"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAddItem"
@@ -208,9 +207,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:text="ADICIONAR ITEM"
                     app:backgroundTint="@color/primary_dark"
-                    app:icon="@mipmap/add_circle_white_36dp" />
+                    android:text=" Adicionar"
+                    android:textColor="@color/white"
+                    app:icon="@mipmap/add_shopping_cart_white_48dp"
+                    app:iconGravity="textStart"
+                    app:iconTint="@color/white" />
 
             </LinearLayout>
 
@@ -220,6 +222,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="6dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="8dp"
                 android:scrollbars="vertical" />
 
@@ -230,7 +233,7 @@
                 android:layout_gravity="right"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="15dp"
-                android:text="TOTAL:"
+                android:text=""
                 android:textColor="@color/textColorPrimary"
                 android:textSize="18sp" />
 
@@ -246,10 +249,13 @@
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Salvar Pedido"
+                    android:layout_marginLeft="10dp"
                     android:textColor="#fff"
+                    android:text=" Salvar"
                     app:backgroundTint="@color/primary_dark"
-                    app:icon="@mipmap/icon_done" />
+                    app:icon="@mipmap/ic_save_white_48dp"
+
+                    app:iconGravity="textStart" />
 
             </LinearLayout>
 
