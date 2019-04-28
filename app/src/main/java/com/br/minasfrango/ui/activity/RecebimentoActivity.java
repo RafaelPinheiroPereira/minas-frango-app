@@ -1,5 +1,6 @@
 package com.br.minasfrango.ui.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -61,8 +62,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
     @BindView(R.id.txtClientID)
     TextView txtClientID;
 
-    @BindView(R.id.txtCredit)
-    TextView txtCredit;
+
 
     @BindView(R.id.txtEndereco)
     TextView txtEndereco;
@@ -72,6 +72,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
 
     @BindView(R.id.txtQTDOpenNotes)
     TextView txtQTDOpenNotes;
+
     RecebimentoAdapter adapter;
 
     @BindView(R.id.txtTotalDevido)
@@ -97,8 +98,10 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
         swtcAmortize.setChecked(false);
         mPresenter.getRecebimentos().addAll(mPresenter.loadReceiptsByClient());
         txtQTDOpenNotes.setText("Notas Abertas: " + mPresenter.getRecebimentos().size());
-        txtCredit.setText(FormatacaoMoeda.convertDoubleToString(mPresenter.getCredit().doubleValue()));
-        txtTotalDevido.setText(FormatacaoMoeda.convertDoubleToString(mPresenter.getValueTotalDevido().doubleValue()));
+
+        txtTotalDevido.setText(
+                FormatacaoMoeda.convertDoubleToString(
+                        mPresenter.getValueTotalDevido().doubleValue()));
         adapter = new RecebimentoAdapter(mPresenter);
         rcvPayments.setAdapter(adapter);
 
@@ -133,12 +136,13 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
                         mPresenter.getRecebimentos().clear();
                         mPresenter.getRecebimentos().addAll(mPresenter.loadReceiptsByClient());
                         mPresenter.updateRecycleView();
+
                         if (mPresenter.totalValueOfDebtISLessTranCreditOrEquals()) {
                             if (mPresenter.creditValueIsGranThenZero()) {
                                 /*Se o tipo da quitacao for automatica e o valor de credito for
                                  * maior do que zero entao calcula automaticamente a amortizacao*/
                                 if (mPresenter.isTypeOfAmortizationIsAutomatic()) {
-                                    mPresenter.calculateAmortizationAutomatic();
+                                    mPresenter.calcularAmortizacaoAutomatica();
                                 }
 
                             } else {
@@ -150,6 +154,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
                             // Devo informar que o valor recebido eh maior do que o devido
                             edtValueAmortize.setError("Recebimento superior ao Valor Devido");
                         }
+                        mPresenter.atualizarViewSaldoDevedor();
                     }
 
                     @Override
@@ -168,6 +173,19 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
                             final int count) {
                     }
                 });
+    }
+
+    @Override
+    public void atualizarViewSaldoDevedor() {
+
+        txtTotalDevido.setTextColor(
+                mPresenter.saldoDevidoEhMaiorQueZero() ? Color.RED : Color.GREEN);
+        txtTotalDevido.setText(
+                FormatacaoMoeda.convertDoubleToString(
+                        mPresenter
+                                .getValueTotalDevido()
+                                .subtract(mPresenter.getValorTotalAmortizado())
+                                .doubleValue()));
     }
 
     @Override
@@ -201,8 +219,9 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
                 mPresenter.updateRecycleView();
                 mPresenter.setTypeOfAmortizationIsAutomatic(true);
                 mPresenter.setCredit(new BigDecimal(edtValueAmortize.getCurrencyDouble()));
-                mPresenter.calculateAmortizationAutomatic();
+                mPresenter.calcularAmortizacaoAutomatica();
                 compoundButton.setText("Quitação Automática de Notas");
+                mPresenter.atualizarViewSaldoDevedor();
             } else {
                 // REALIZA A QUITACAO MANUAL
                 mPresenter.getRecebimentos().addAll(mPresenter.loadReceiptsByClient());
@@ -210,6 +229,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
                 mPresenter.setTypeOfAmortizationIsAutomatic(false);
                 edtValueAmortize.setText("00,00");
                 compoundButton.setText("Quitação Manual de Notas");
+                mPresenter.atualizarViewSaldoDevedor();
             }
         } else {
             // Devo informar que o valor recebido eh maior do que o devido

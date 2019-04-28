@@ -11,15 +11,28 @@ public interface IPaymentsMVP {
 
     interface IPresenter {
 
-        void calculateAmortizationAutomatic();
+        void atualizarViewSaldoDevedor();
 
-        void calculateAmortizationManually(final int position);
+        void calcularAmortizacaoAutomatica();
+
+        /**
+         * @param position do item selecionado na lista de notas abertas
+         */
+        void calcularArmotizacaoManual(final int position);
+
+        BigDecimal getValorTotalAmortizado();
 
         boolean creditValueIsGranThenZero();
 
         int findIdTipoRecebimento(String item);
 
         Cliente getCliente();
+
+        void processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(int i, Recebimento recebimento);
+
+        void processarOrdemDeSelecaoDaNotaAposRemocaoDaAmortizacao(int i, Recebimento recebimento);
+
+        void removerAmortizacao(int position);
 
         void setCliente(Cliente cliente);
 
@@ -51,7 +64,7 @@ public interface IPaymentsMVP {
 
         ArrayList<String> loadTipoRecebimentosAVista() throws Throwable;
 
-        void removeAmortization(int position);
+        boolean saldoDevidoEhMaiorQueZero();
 
         void setAutomaticNoteSelectionOrder();
 
@@ -71,7 +84,7 @@ public interface IPaymentsMVP {
 
         void calculateAmortizationAutomatic();
 
-        void calculateAmortizationManually(int position);
+        void calcularArmotizacaoManual(int position);
 
         boolean crediValueIsGranThenZero();
 
@@ -81,7 +94,13 @@ public interface IPaymentsMVP {
 
         ArrayList<String> loadTipoRecebimentosAVista() throws Throwable;
 
-        void removeAmortization(int position);
+        void processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(final int posicao, Recebimento recebimentoToUpdate);
+
+        void processarOrdemDeSelecaoDaNotaAposRemocaoDaAmortizacao(int posicao, Recebimento recebimentoToUpdate);
+
+        void removerAmortizacao(int position);
+
+        boolean saldoDevidoEhMaiorQueZero();
 
         void setAutomaticNoteSelectionOrder();
 
@@ -89,6 +108,8 @@ public interface IPaymentsMVP {
     }
 
     interface IView {
+
+        void atualizarViewSaldoDevedor();
 
         void getParams();
 

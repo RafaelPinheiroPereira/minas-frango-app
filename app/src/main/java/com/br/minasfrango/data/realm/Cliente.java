@@ -16,11 +16,17 @@ public class Cliente implements RealmModel, Serializable {
 
     private String bairro;
 
+    private String nome;
+    private String razaoSocial;
+
     private String cep;
 
     private String cidade;
 
     private String cpf;
+    private String referencia;
+
+    private String telefone;
 
     private String endereco;
 
@@ -29,15 +35,7 @@ public class Cliente implements RealmModel, Serializable {
 
     private Localidade localidade;
 
-    private String nome;
-
     private String numero;
-
-    private String razaoSocial;
-
-    private String referencia;
-
-    private String telefone;
 
     public static Cliente convertRealmToDTO(Cliente clienteToTransforme) {
         Funcionario funcionario =
@@ -45,7 +43,11 @@ public class Cliente implements RealmModel, Serializable {
                         clienteToTransforme.getLocalidade().getRota().getFuncionario().getId(),
                         clienteToTransforme.getLocalidade().getRota().getFuncionario().getSenha(),
                         clienteToTransforme.getLocalidade().getRota().getFuncionario().getNome(),
-                        clienteToTransforme.getLocalidade().getRota().getFuncionario().getTipoFuncionario());
+                        clienteToTransforme
+                                .getLocalidade()
+                                .getRota()
+                                .getFuncionario()
+                                .getTipoFuncionario());
         Rota rota =
                 new Rota(
                         clienteToTransforme.getLocalidade().getRota().getId(),

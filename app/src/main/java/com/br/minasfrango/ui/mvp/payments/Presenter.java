@@ -27,6 +27,8 @@ public class Presenter implements IPaymentsMVP.IPresenter {
 
     boolean typeOfAmortizationIsAutomatic = false;
 
+    BigDecimal valorTotalAmortizado;
+
     BigDecimal valueTotalDevido;
 
     IPaymentsMVP.IView view;
@@ -37,17 +39,29 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
-    public void calculateAmortizationAutomatic() {
-        this.mModel.calculateAmortizationAutomatic();
-
-
+    public void atualizarViewSaldoDevedor() {
+        this.view.atualizarViewSaldoDevedor();
     }
 
     @Override
-    public void calculateAmortizationManually(final int position) {
+    public void calcularAmortizacaoAutomatica() {
+        this.mModel.calculateAmortizationAutomatic();
+    }
 
-        this.mModel.calculateAmortizationManually(position);
+    @Override
+    public void calcularArmotizacaoManual(final int posicaoItem) {
 
+        this.mModel.calcularArmotizacaoManual(posicaoItem);
+    }
+
+    @Override
+    public BigDecimal getValorTotalAmortizado() {
+
+        return this.valorTotalAmortizado =
+                new BigDecimal(
+                        getRecebimentos().stream()
+                                .mapToDouble(Recebimento::getValorAmortizado)
+                                .sum());
     }
 
     @Override
@@ -63,6 +77,28 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     @Override
     public Cliente getCliente() {
         return mCliente;
+    }
+
+    @Override
+    public BigDecimal getValueTotalDevido() {
+        valueTotalDevido =
+                new BigDecimal(
+                        this.getRecebimentos().stream()
+                                .mapToDouble(Recebimento::getValorVenda)
+                                .sum());
+        return valueTotalDevido;
+    }
+
+    @Override
+    public void processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(
+            final int posicao, final Recebimento recebimento) {
+        this.mModel.processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(posicao, recebimento);
+    }
+
+    @Override
+    public void processarOrdemDeSelecaoDaNotaAposRemocaoDaAmortizacao(
+            final int posicao, final Recebimento recebimento) {
+        this.mModel.processarOrdemDeSelecaoDaNotaAposRemocaoDaAmortizacao(posicao, recebimento);
     }
 
     @Override
@@ -116,10 +152,8 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
-    public BigDecimal getValueTotalDevido() {
-        valueTotalDevido = new BigDecimal(
-                this.getRecebimentos().stream().mapToDouble(Recebimento::getValorVenda).sum());
-        return valueTotalDevido;
+    public void removerAmortizacao(final int position) {
+        this.mModel.removerAmortizacao(position);
     }
 
     @Override
@@ -144,9 +178,8 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
-    public void removeAmortization(final int position) {
-        this.mModel.removeAmortization(position);
-
+    public boolean saldoDevidoEhMaiorQueZero() {
+        return this.mModel.saldoDevidoEhMaiorQueZero();
     }
 
     @Override
@@ -178,6 +211,4 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     public void updateRecycleViewAlteredItem(final int position) {
         this.view.updateRecycleViewAlteredItem(position);
     }
-
-
 }

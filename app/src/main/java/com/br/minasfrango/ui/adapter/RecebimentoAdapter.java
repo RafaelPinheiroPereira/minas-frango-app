@@ -98,17 +98,20 @@ public class RecebimentoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         } else {
 
             SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
-            ((MyViewHolder) viewHolder).txtRecebimentoID.setText(
+            ((MyViewHolder) viewHolder)
+                    .txtRecebimentoID.setText(
                     String.valueOf(mPresenter.getRecebimentos().get(position - 1).getId()));
 
-            ((MyViewHolder) viewHolder).txtSalesDate.setText(
+            ((MyViewHolder) viewHolder)
+                    .txtSalesDate.setText(
                     String.valueOf(
                             formatador.format(
                                     mPresenter
                                             .getRecebimentos()
                                             .get(position - 1)
                                             .getDataVenda())));
-            ((MyViewHolder) viewHolder).txtDateVencimento.setText(
+            ((MyViewHolder) viewHolder)
+                    .txtDateVencimento.setText(
                     String.valueOf(
                             formatador.format(
                                     mPresenter
@@ -116,13 +119,21 @@ public class RecebimentoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                             .get(position - 1)
                                             .getDataVencimento())));
 
-            ((MyViewHolder) viewHolder).txtSalesValue.setText(
+            ((MyViewHolder) viewHolder)
+                    .txtSalesValue.setText(
                     (FormatacaoMoeda.convertDoubleToString(
-                            mPresenter.getRecebimentos().get(position - 1).getValorVenda())));
+                            mPresenter
+                                    .getRecebimentos()
+                                    .get(position - 1)
+                                    .getValorVenda())));
 
-            ((MyViewHolder) viewHolder).txtAmortizationValue.setText(
+            ((MyViewHolder) viewHolder)
+                    .txtAmortizationValue.setText(
                     (FormatacaoMoeda.convertDoubleToString(
-                            mPresenter.getRecebimentos().get(position - 1).getValorAmortizado())));
+                            mPresenter
+                                    .getRecebimentos()
+                                    .get(position - 1)
+                                    .getValorAmortizado())));
 
             if (mPresenter.getRecebimentos().get(position - 1).getValorVenda()
                     - mPresenter.getRecebimentos().get(position - 1).getValorAmortizado()
@@ -131,7 +142,8 @@ public class RecebimentoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             } else {
                 ((MyViewHolder) viewHolder).txtSaldo.setTextColor(Color.GREEN);
             }
-            ((MyViewHolder) viewHolder).txtSaldo.setText(
+            ((MyViewHolder) viewHolder)
+                    .txtSaldo.setText(
                     (FormatacaoMoeda.convertDoubleToString(
                             mPresenter.getRecebimentos().get(position - 1).getValorVenda()
                                     - mPresenter
@@ -139,35 +151,32 @@ public class RecebimentoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                     .get(position - 1)
                                     .getValorAmortizado())));
 
-            ((MyViewHolder) viewHolder).txtOrderSelect.setText(
+            ((MyViewHolder) viewHolder)
+                    .txtOrderSelect.setText(
                     String.valueOf(
-                            mPresenter.getRecebimentos().get(position - 1).getOrderSelected()));
-            ((MyViewHolder) viewHolder).txtQDT.setText((position) + "/" + mPresenter.getRecebimentos().size());
-            ((MyViewHolder) viewHolder).chbRecebimento.setChecked(
+                            mPresenter
+                                    .getRecebimentos()
+                                    .get(position - 1)
+                                    .getOrderSelected()));
+            ((MyViewHolder) viewHolder)
+                    .txtQDT.setText((position) + "/" + mPresenter.getRecebimentos().size());
+            ((MyViewHolder) viewHolder)
+                    .chbRecebimento.setChecked(
                     mPresenter.getRecebimentos().get(position - 1).isCheck());
-
-            //        // Seta a cor do background
-            //        if (((MyViewHolder) viewHolder).chbRecebimento.isChecked()) {
-            //            ((MyViewHolder) viewHolder).chbRecebimento.setButtonTintList(
-            //
-            // ColorStateList.valueOf(mPresenter.getContext().getColor(R.color.accent)));
-            //        } else {
-            //            ((MyViewHolder) viewHolder).chbRecebimento.setButtonTintList(
-            //                    ColorStateList.valueOf(
-            //
-            // mPresenter.getContext().getColor(R.color.md_light_disabled)));
-            //        }
 
             // Quando o tipo de amortizacao eh automatico o checkbox deve ficar desabilitado
             if (mPresenter.isTypeOfAmortizationIsAutomatic()) {
                 ((MyViewHolder) viewHolder).chbRecebimento.setClickable(false);
-            } else if (!mPresenter.isTypeOfAmortizationIsAutomatic()
+
+            } else if (!mPresenter.isTypeOfAmortizationIsAutomatic() && !mPresenter.getRecebimentos()
+                    .get(position - 1).isCheck()
                     && !mPresenter.creditValueIsGranThenZero()) {
                 ((MyViewHolder) viewHolder).chbRecebimento.setClickable(false);
             } else {
                 ((MyViewHolder) viewHolder).chbRecebimento.setClickable(true);
 
-                ((MyViewHolder) viewHolder).chbRecebimento.setOnClickListener(
+                ((MyViewHolder) viewHolder)
+                        .chbRecebimento.setOnClickListener(
                         (view)->{
 
                             // Caso o valor do credito  seja maior do que zero
@@ -175,25 +184,37 @@ public class RecebimentoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             // O item ja estiver selecionado entao quer dizer que estou
                             // desmarcando
                             {
-                                if (mPresenter.getRecebimentos().get(position - 1).isCheck()) {
-                                    mPresenter.removeAmortization(position - 1);
+                                if (mPresenter
+                                        .getRecebimentos()
+                                        .get(position - 1)
+                                        .isCheck()) {
+                                    mPresenter.removerAmortizacao(position - 1);
+
                                 }
                                 // O item nao estiver selecionado entao quer dizer que estou
                                 // marcando
                                 else {
-                                    mPresenter.calculateAmortizationManually(position - 1);
+                                    mPresenter.calcularArmotizacaoManual(position - 1);
+                                    mPresenter.processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(position - 1,
+                                            mPresenter.getRecebimentos().get(position - 1));
+
                                 }
                             }
                             // Se o valor nao é maior do que zero eu quero desmarcar
                             else {
                                 // Esta marcado entao quer dizer que ta desmarcando
-                                if (mPresenter.getRecebimentos().get(position - 1).isCheck()) {
-                                    mPresenter.removeAmortization(position - 1);
+                                if (mPresenter
+                                        .getRecebimentos()
+                                        .get(position - 1)
+                                        .isCheck()) {
+                                    mPresenter.removerAmortizacao(position - 1);
                                 }
                                 // Senao quer marcar porem nao ha saldo
                                 else {
-                                    ((MyViewHolder) viewHolder).chbRecebimento.setClickable(false);
-                                    this.mPresenter.showInsuficentCredit("Saldo Insuficiente");
+                                    ((MyViewHolder) viewHolder)
+                                            .chbRecebimento.setClickable(false);
+                                    this.mPresenter.showInsuficentCredit(
+                                            "Saldo Insuficiente");
                                 }
                             }
                         });
@@ -205,7 +226,8 @@ public class RecebimentoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View v;
         if (viewType == ITEM_VIEW_TYPE_HEADER) {
-            View headerView = mLayoutInflater.inflate(R.layout.header_recebimento, viewGroup, false);
+            View headerView =
+                    mLayoutInflater.inflate(R.layout.header_recebimento, viewGroup, false);
             return new RecebimentoAdapter.Header(headerView);
         } else {
             v = mLayoutInflater.inflate(R.layout.recebimento_item, viewGroup, false);
