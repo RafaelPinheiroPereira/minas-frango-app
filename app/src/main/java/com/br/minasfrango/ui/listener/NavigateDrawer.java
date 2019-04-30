@@ -17,29 +17,51 @@ public class NavigateDrawer implements IDrawer {
 
     Activity mActivity;
 
-
-
     public NavigateDrawer(final Activity activity) {
         mActivity = activity;
     }
 
     @Override
-    public Drawer builder(Activity activity, Toolbar toolbar, Bundle savedInstanceState,String userName) {
-        return  new DrawerBuilder()
+    public void addItemInDrawer(Drawer drawer) {
+        drawer.addItem(
+                new PrimaryDrawerItem().withName("HomeActivity")
+                        .withIcon(mActivity.getResources().getDrawable(R.mipmap.ic_home)));
+        drawer.addItem(
+                new PrimaryDrawerItem().withName("Pedidos")
+                        .withIcon(mActivity.getResources().getDrawable(R.mipmap.ic_cart)));
+        drawer.addItem(new PrimaryDrawerItem().withName("Clientes")
+                .withIcon(mActivity.getResources().getDrawable(R.drawable.ic_face_black_24dp)));
+        drawer.addItem(
+                new PrimaryDrawerItem().withName("Importar Dados")
+                        .withIcon(mActivity.getResources().getDrawable(R.drawable.ic_file_download_black_24dp)));
+        drawer.addItem(
+                new PrimaryDrawerItem().withName("Exportar Dados")
+                        .withIcon(mActivity.getResources().getDrawable(R.drawable.ic_file_upload_black_24dp)));
+        drawer.addItem(
+                new PrimaryDrawerItem().withName("Configurar Impressora").withIcon(R.mipmap.ic_print_black_36dp));
+        drawer.addItem(
+                new PrimaryDrawerItem().withName("Sair")
+                        .withIcon(mActivity.getResources().getDrawable(R.mipmap.ic_logout)));
+
+    }
+
+    @Override
+    public Drawer builder(Activity activity, Toolbar toolbar, Bundle savedInstanceState, String userName) {
+        return new DrawerBuilder()
                 .withActivity(activity)
                 .withToolbar(toolbar)
                 .withActionBarDrawerToggleAnimated(true)
                 .withDrawerGravity(Gravity.LEFT)
                 .withSavedInstance(savedInstanceState)
                 .withActionBarDrawerToggle(true)
-                .withAccountHeader(getAccountHeader(savedInstanceState,userName))
+                .withAccountHeader(getAccountHeader(savedInstanceState, userName))
                 .withTranslucentStatusBar(false)
                 .withSelectedItem(0).build();
     }
 
     @Override
-    public AccountHeader getAccountHeader(final Bundle savedInstanceState,String userName) {
-        return  new AccountHeaderBuilder()
+    public AccountHeader getAccountHeader(final Bundle savedInstanceState, String userName) {
+        return new AccountHeaderBuilder()
                 .withActivity(mActivity)
                 .withCompactStyle(false)
                 .withSavedInstance(savedInstanceState)
@@ -55,22 +77,5 @@ public class NavigateDrawer implements IDrawer {
                 .withSelectionListEnabled(false)
                 .withTextColor(Color.WHITE)
                 .build();
-    }
-
-    @Override
-    public void addItemInDrawer(Drawer drawer) {
-        drawer.addItem(
-                new PrimaryDrawerItem().withName("HomeActivity").withIcon(mActivity.getResources().getDrawable(R.mipmap.ic_home)));
-        drawer.addItem(
-                new PrimaryDrawerItem().withName("Pedidos").withIcon(mActivity.getResources().getDrawable(R.mipmap.ic_cart)));
-        drawer.addItem(new PrimaryDrawerItem().withName("Clientes")
-                .withIcon(mActivity.getResources().getDrawable(R.drawable.ic_face_black_24dp)));
-        drawer.addItem(
-                new PrimaryDrawerItem().withName("Importar Dados").withIcon(mActivity.getResources().getDrawable(R.drawable.ic_file_download_black_24dp)));
-        drawer.addItem(
-                new PrimaryDrawerItem().withName("Exportar Dados").withIcon(mActivity.getResources().getDrawable(R.drawable.ic_file_upload_black_24dp)));
-        drawer.addItem(
-                new PrimaryDrawerItem().withName("Sair").withIcon(mActivity.getResources().getDrawable(R.mipmap.ic_logout)));
-
     }
 }

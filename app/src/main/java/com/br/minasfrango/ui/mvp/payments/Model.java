@@ -4,9 +4,12 @@ import com.br.minasfrango.data.dao.RecebimentoDAO;
 import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
 import com.br.minasfrango.data.realm.Recebimento;
 import com.br.minasfrango.util.ConstantsUtil;
+import com.br.minasfrango.util.DateUtils;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -127,7 +130,7 @@ public class Model implements IPaymentsMVP.IModel {
 
     @Override
     public List<Recebimento> loadReceiptsByClient() {
-        return recebimentoDAO.findReceiptsByClient(mPresenter.getCliente());
+        return recebimentoDAO.pesquisarRecebimentoPorCliente(mPresenter.getCliente());
     }
 
     @Override
@@ -198,6 +201,23 @@ public class Model implements IPaymentsMVP.IModel {
     public boolean saldoDevidoEhMaiorQueZero() {
         return mPresenter.getValueTotalDevido().subtract(mPresenter.getValorTotalAmortizado())
                 .compareTo(new BigDecimal(0)) == ConstantsUtil.BIGGER;
+    }
+
+    @Override
+    public void salvarAmortizacao() {
+
+        mPresenter.getRecebimentos().forEach(item->{
+            if (item.isCheck()) {
+
+                try {
+                    item.setDataRecebimento(DateUtils.formatarDateddMMyyyyhhmm(new Date(System.currentTimeMillis())));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                recebimentoDAO.copyOrUpdate(item);
+            }
+        });
+
     }
 
     @Override

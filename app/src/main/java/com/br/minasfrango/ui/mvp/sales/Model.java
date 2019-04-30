@@ -21,7 +21,6 @@ import java.util.List;
 
 public class Model implements ISalesMVP.IModel {
 
-
     ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstace(ItemPedido.class);
 
     ClientDAO mClientDAO = ClientDAO.getInstace(Cliente.class);
@@ -43,7 +42,6 @@ public class Model implements ISalesMVP.IModel {
     UnidadeDAO unidadeDAO = UnidadeDAO.getInstace(Unidade.class);
 
     private com.br.minasfrango.ui.mvp.sales.Presenter mPresenter;
-
 
     public Model(com.br.minasfrango.ui.mvp.sales.Presenter presenter) {
         this.mPresenter = presenter;
@@ -72,10 +70,10 @@ public class Model implements ISalesMVP.IModel {
         return unityNames;
     }
 
-
     @Override
     public void copyOrUpdateSaleOrder(final Pedido pedido) {
         mPedidoDAO.copyOrUpdate(pedido);
+        mPresenter.setOrderSale(pedido);
     }
 
     @Override

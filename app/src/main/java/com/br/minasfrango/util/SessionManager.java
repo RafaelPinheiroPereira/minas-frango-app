@@ -22,6 +22,8 @@ public class SessionManager  {
 
     public static final String KEY_NOME = "nome";
 
+    public static final String KEY_ENDERECO_BLUETOOTH = "device_address";
+
     int PRIVATE_MODE = 0;
 
     Context context;
@@ -63,6 +65,11 @@ public class SessionManager  {
         return false;
     }
 
+    public String getEnderecoBluetooth() {
+        pref = this.context.getSharedPreferences(PREFER_NAME, 0);
+        return (pref.getString(KEY_ENDERECO_BLUETOOTH, ""));
+
+    }
 
     public void createUserLoginSession(String matricula, String senha, String nome) {
 
@@ -98,8 +105,11 @@ public class SessionManager  {
         return user;
     }
 
-
-
+    public void salvarEnderecoBluetooth(String endereco) {
+        editor.putString(KEY_ENDERECO_BLUETOOTH, endereco);
+        // commit changes
+        editor.commit();
+    }
     public int getUserID() {
         pref = this.context.getSharedPreferences(PREFER_NAME, 0);
         return Integer.parseInt(pref.getString(KEY_MATRICULA, ""));

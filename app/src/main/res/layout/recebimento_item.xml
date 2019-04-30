@@ -44,7 +44,7 @@
             android:textColor="@android:color/primary_text_light"
             android:textSize="12sp" />
         <TextView
-            android:id="@+id/txtRecebimentoID"
+            android:id="@+id/txtRecebimentoIDVenda"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:text="ID"

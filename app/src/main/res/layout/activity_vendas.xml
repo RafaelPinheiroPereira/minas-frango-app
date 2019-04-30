@@ -207,6 +207,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     app:backgroundTint="@color/primary_dark"
                     android:text=" Adicionar"
                     android:textColor="@color/white"
@@ -242,20 +243,35 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="right"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnConfirmSale"
+                    android:id="@+id/btnSalvarVenda"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:textColor="#fff"
                     android:text=" Salvar"
+                    android:layout_marginRight="10dp"
                     app:backgroundTint="@color/primary_dark"
                     app:icon="@mipmap/ic_save_white_48dp"
-
                     app:iconGravity="textStart" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnImprimir"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text=" Imprimir"
+                    android:textColor="#fff"
+                    android:visibility="invisible"
+                    app:backgroundTint="@color/primary_dark"
+                    app:icon="@mipmap/ic_print"
+                    app:iconGravity="textStart" />
+
 
             </LinearLayout>
 

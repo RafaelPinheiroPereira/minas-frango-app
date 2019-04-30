@@ -17,23 +17,25 @@ public class Cliente implements RealmModel, Serializable {
     private String bairro;
 
     private String nome;
+
     private String razaoSocial;
 
     private String cep;
 
-    private String cidade;
-
     private String cpf;
-    private String referencia;
-
-    private String telefone;
 
     private String endereco;
 
     @PrimaryKey
     private long id;
 
+    private String cidade;
+
     private Localidade localidade;
+
+    private String referencia;
+
+    private String telefone;
 
     private String numero;
 

@@ -1,5 +1,6 @@
 package com.br.minasfrango.ui.mvp.sales;
 
+import android.app.Activity;
 import android.content.Context;
 import androidx.appcompat.app.AlertDialog;
 import com.br.minasfrango.data.realm.Cliente;
@@ -11,6 +12,7 @@ import com.br.minasfrango.data.realm.TipoRecebimento;
 import com.br.minasfrango.data.realm.Unidade;
 import com.br.minasfrango.ui.mvp.sales.ISalesMVP.IView;
 import com.br.minasfrango.util.DateUtils;
+import com.br.minasfrango.util.ImpressoraUtil;
 import com.br.minasfrango.util.SessionManager;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -45,17 +47,44 @@ public class Presenter implements ISalesMVP.IPresenter {
 
     Unidade unitSelected;
 
+    ImpressoraUtil mImpressoraUtil;
+
+
+
+
+
+
     private AlertDialog mAlertDialog;
 
     public Presenter(final IView view) {
         mView = view;
         mModel = new Model(this);
+        mImpressoraUtil = new ImpressoraUtil((Activity) getContext());
     }
 
     @Override
     public Double calculeTotalOrderSale() {
         return getItens().stream().mapToDouble(ItemPedido::getValorTotal).sum();
     }
+
+    @Override
+    public void desabilitarBtnSalvar() {
+        this.mView.desabilitarBtnSalvar();
+    }
+
+    @Override
+    public void error(final String msg) {
+        this.mView.error(msg);
+    }
+
+    @Override
+    public void esperarPorConexao() {
+        if (this.mImpressoraUtil.esperarPorConexao()) {
+            this.mView.exibirBotaoImprimir();
+        }
+    }
+
+
 
     @Override
     public ArrayList<String> convertTipoRecebimentoInString(
@@ -133,6 +162,13 @@ public class Presenter implements ISalesMVP.IPresenter {
         this.mView.getParams();
 
     }
+
+    @Override
+    public void fecharConexaoAtiva() {
+        this.mImpressoraUtil.fecharConexaoAtiva();
+    }
+
+
 
     @Override
     public Pedido loadSaleOrder(final long keyPedido) {
@@ -286,28 +322,9 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
-    public void saveOrderSale() throws ParseException {
+    public void imprimirPedido() {
 
-        Pedido pedido = new Pedido();
-        pedido.setDataPedido(DateUtils.formatDateDDMMYYYY(new java.util.Date(System.currentTimeMillis())));
-        //Agora setar o id definitivo do item do pedido
-
-        getItens().forEach(item->this.mModel.addItemPedido(item));
-        SessionManager session = new SessionManager(getContext());
-        pedido.setCodigoFuncionario(session.getUserID());
-        pedido.setCodigoCliente(getClient().getId());
-        pedido.setValorTotal(calculeTotalOrderSale());
-        pedido.setTipoRecebimento(getTipoRecebimentoID());
-
-        //Salva o pedido e retorna o id salvo
-        long idSaleOrder = this.mModel.saveOrderSale(pedido);
-
-        //Seta a chave composta do item pedido com o id da venda
-        getItens().forEach(item->
-                item.getChavesItemPedido().setIdVenda(idSaleOrder)
-        );
-        pedido.setItens(Pedido.dtoToRealList(getItens()));
-        this.mModel.copyOrUpdateSaleOrder(pedido);
+        this.mImpressoraUtil.imprimirComprovantePedido(getOrderSale(), getClient());
     }
 
     @Override
@@ -354,5 +371,32 @@ public class Presenter implements ISalesMVP.IPresenter {
     @Override
     public boolean validateFieldsBeforeAddItem() {
         return this.mView.validateFieldsBeforeAddItem();
+    }
+
+    @Override
+    public void saveOrderSale() throws ParseException {
+
+        Pedido pedido = new Pedido();
+        pedido.setDataPedido(DateUtils.formatarDateddMMyyyyhhmm(new java.util.Date(System.currentTimeMillis())));
+        //Agora setar o id definitivo do item do pedido
+
+        getItens().forEach(item->this.mModel.addItemPedido(item));
+        SessionManager session = new SessionManager(getContext());
+        pedido.setCodigoFuncionario(session.getUserID());
+        pedido.setCodigoCliente(getClient().getId());
+        pedido.setValorTotal(calculeTotalOrderSale());
+        pedido.setTipoRecebimento(getTipoRecebimentoID());
+
+        //Salva o pedido e retorna o id salvo
+        long idSaleOrder = this.mModel.saveOrderSale(pedido);
+
+        //Seta a chave composta do item pedido com o id da venda
+        getItens().forEach(item->
+                item.getChavesItemPedido().setIdVenda(idSaleOrder)
+        );
+        pedido.setItens(Pedido.dtoToRealList(getItens()));
+        this.mModel.copyOrUpdateSaleOrder(pedido);
+
+
     }
 }

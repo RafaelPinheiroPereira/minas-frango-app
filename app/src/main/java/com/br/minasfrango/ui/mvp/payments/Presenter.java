@@ -55,6 +55,11 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
+    public void exibirBotaoGerarRecibo() {
+        this.view.exibirBotaoGerarRecibo();
+    }
+
+    @Override
     public BigDecimal getValorTotalAmortizado() {
 
         return this.valorTotalAmortizado =
@@ -154,6 +159,14 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     @Override
     public void removerAmortizacao(final int position) {
         this.mModel.removerAmortizacao(position);
+    }
+
+    @Override
+    public void salvarAmortizacao() {
+
+        this.mModel.salvarAmortizacao();
+
+
     }
 
     @Override

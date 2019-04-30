@@ -44,8 +44,8 @@ public class RecebimentoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         @BindView(R.id.txtQDT)
         TextView txtQDT;
 
-        @BindView(R.id.txtRecebimentoID)
-        TextView txtRecebimentoID;
+        @BindView(R.id.txtRecebimentoIDVenda)
+        TextView txtRecebimentoIDVenda;
 
         @BindView(R.id.txtSaldo)
         TextView txtSaldo;
@@ -99,8 +99,8 @@ public class RecebimentoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
             ((MyViewHolder) viewHolder)
-                    .txtRecebimentoID.setText(
-                    String.valueOf(mPresenter.getRecebimentos().get(position - 1).getId()));
+                    .txtRecebimentoIDVenda.setText(
+                    String.valueOf(mPresenter.getRecebimentos().get(position - 1).getIdVenda()));
 
             ((MyViewHolder) viewHolder)
                     .txtSalesDate.setText(

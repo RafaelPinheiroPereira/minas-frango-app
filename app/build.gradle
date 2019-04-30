@@ -80,6 +80,9 @@ dependencies {
     implementation 'com.github.mancj:MaterialSearchBar:0.8.2'
     implementation 'com.mikhaellopez:hfrecyclerview:1.1.1'
 
+    //Datecs Impressora
+    implementation files('libs/com.datecs.api.jar')
+
 
 }
 apply plugin: 'realm-android'

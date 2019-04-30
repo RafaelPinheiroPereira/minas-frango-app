@@ -19,45 +19,56 @@
             >
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="5dp">
+            android:padding="10dp">
 
 
 
 
             <TextView
                 android:id="@+id/descricao_text_view_item_visualizar"
-                android:layout_width="180dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:text="Descricao"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
                 android:textColor="@color/textColorPrimary"
-                android:textSize="18sp" />
+                android:textSize="12sp" />
             <TextView
                 android:id="@+id/qtd_text_view_item_visualizar"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:text="QTD."
                 android:gravity="center_vertical"
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/textColorPrimary"
-                android:textSize="18sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/unidade_txt_item_visualizar"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:text="Unidade"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
                 android:textColor="@color/textColorPrimary"
-                android:textSize="18sp" />
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/txtQTDBicos"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:text="Bicos"
+                android:textColor="@color/textColorPrimary"
+                android:textSize="12sp" />
             <TextView
                 android:id="@+id/valor_unitario_txt_item_visualizar"
                 android:layout_width="wrap_content"
@@ -67,18 +78,18 @@
                 android:padding="10dp"
                 android:text="R$ 12300,00"
                 android:textColor="@color/textColorPrimary"
-                android:textSize="18sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/valor_total_txt_item_visualizar"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
                 android:gravity="right|center_vertical"
                 android:padding="10dp"
                 android:text="R$ 12300,00"
                 android:textColor="@color/textColorPrimary"
-                android:textSize="18sp" />
+                android:textSize="12sp" />
         </LinearLayout>
 
 

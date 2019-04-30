@@ -7,6 +7,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class AbstractActivity extends AppCompatActivity {
 
+    public void errorMSG(Context context, String msg) {
+        runOnUiThread(()->Toast.makeText(context, msg, Toast.LENGTH_LONG).show());
+    }
+
     public static void navigateToActivity(Context context,Intent intent) {
          context.startActivity(intent);
     }

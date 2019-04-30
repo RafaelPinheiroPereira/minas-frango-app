@@ -36,7 +36,7 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... params) {
 
-        /*try {
+       /* try {
 
             return validateAcess(idUser, password);
         } catch (IOException e) {

@@ -34,7 +34,7 @@ public class Model implements IModel {
 
     @Override
     public List<Recebimento> findReceiptsByClient(final Cliente cliente) {
-        return mRecebimentoDAO.findReceiptsByClient(cliente);
+        return mRecebimentoDAO.pesquisarRecebimentoPorCliente(cliente);
     }
 
     @Override

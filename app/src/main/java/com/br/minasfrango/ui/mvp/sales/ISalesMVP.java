@@ -18,8 +18,13 @@ public interface ISalesMVP {
 
     interface IPresenter {
 
-
         Double calculeTotalOrderSale();
+
+        void desabilitarBtnSalvar();
+
+        void error(String msg);
+
+        void esperarPorConexao();
 
         ArrayList<String> convertTipoRecebimentoInString(List<TipoRecebimento> tiposRecebimentos);
 
@@ -30,6 +35,9 @@ public interface ISalesMVP {
         AlertDialog getAlertDialog();
 
         void getParams();
+
+        void fecharConexaoAtiva();
+
 
         void setAlertDialog(AlertDialog alertDialog);
 
@@ -50,6 +58,7 @@ public interface ISalesMVP {
         Pedido getOrderSale();
 
         void setOrderSale(final Pedido orderSale);
+
 
         Pedido loadSaleOrder(long keyPedido);
 
@@ -130,11 +139,19 @@ public interface ISalesMVP {
         void updateTxtAmountProducts();
 
         boolean validateFieldsBeforeAddItem();
+
+        void imprimirPedido();
     }
 
     interface IView {
 
+        void desabilitarBtnSalvar();
+
         void dissmiss();
+
+        void error(String msg);
+
+        void exibirBotaoImprimir();
 
         void getParams();
 
@@ -163,7 +180,6 @@ public interface ISalesMVP {
     interface IModel {
 
         long addItemPedido(ItemPedido item);
-
 
         ArrayList<String> convertTipoRecebimentoInString(List<TipoRecebimento> tiposRecebimentos);
 

@@ -20,6 +20,8 @@ public interface IPaymentsMVP {
          */
         void calcularArmotizacaoManual(final int position);
 
+        void exibirBotaoGerarRecibo();
+
         BigDecimal getValorTotalAmortizado();
 
         boolean creditValueIsGranThenZero();
@@ -33,6 +35,8 @@ public interface IPaymentsMVP {
         void processarOrdemDeSelecaoDaNotaAposRemocaoDaAmortizacao(int i, Recebimento recebimento);
 
         void removerAmortizacao(int position);
+
+        void salvarAmortizacao();
 
         void setCliente(Cliente cliente);
 
@@ -102,6 +106,8 @@ public interface IPaymentsMVP {
 
         boolean saldoDevidoEhMaiorQueZero();
 
+        void salvarAmortizacao();
+
         void setAutomaticNoteSelectionOrder();
 
         boolean totalValueOfDebtISLessTranCreditOrEquals();
@@ -110,6 +116,8 @@ public interface IPaymentsMVP {
     interface IView {
 
         void atualizarViewSaldoDevedor();
+
+        void exibirBotaoGerarRecibo();
 
         void getParams();
 

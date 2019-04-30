@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -79,8 +80,8 @@ public class VendasActivity extends AppCompatActivity implements IView {
     @BindView(R.id.btnAddItem)
     Button btnAddItem;
 
-    @BindView(R.id.btnConfirmSale)
-    Button btnConfirmSale;
+    @BindView(R.id.btnImprimir)
+    Button btnImprimir;
 
     @BindView(R.id.cetPrecoUnitario)
     CurrencyEditText cetPrecoUnitario;
@@ -117,6 +118,11 @@ public class VendasActivity extends AppCompatActivity implements IView {
 
     @BindView(R.id.txtAmountSale)
     TextView txtAmountSale;
+
+    @BindView(R.id.btnSalvarVenda)
+    Button btnSalvarVenda;
+
+    // Member variables
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,7 +216,13 @@ public class VendasActivity extends AppCompatActivity implements IView {
         }
     }
 
-    @OnClick(R.id.btnConfirmSale)
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.fecharConexaoAtiva();
+    }
+
+    @OnClick(R.id.btnSalvarVenda)
     public void btnConfirmSaleOnClicked(View view) {
 
         if (mPresenter.getItens().size() > 0
@@ -223,15 +235,13 @@ public class VendasActivity extends AppCompatActivity implements IView {
                 mPresenter.getOrderSale().setItens(Pedido.dtoToRealList(itensDTO));
                 mPresenter.getOrderSale().setValorTotal(mPresenter.calculeTotalOrderSale());
                 mPresenter.updateSaleOrder(mPresenter.getOrderSale());
-                AbstractActivity.showToast(mPresenter.getContext(), "Pedido Alterado com Sucesso!");
-                NavUtils.navigateUpFromSameTask(this);
+
             } else {
                 // Salva o Pedido
                 try {
                     mPresenter.saveOrderSale();
 
-                    AbstractActivity.showToast(mPresenter.getContext(), "Pedido Salvo!");
-                    NavUtils.navigateUpFromSameTask(this);
+
 
                 } catch (ParseException e) {
                     VendasActivity.this.runOnUiThread(
@@ -241,6 +251,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
                                             "Erro Formatacao Data Pedido: " + e.getMessage()));
                 }
             }
+            mPresenter.esperarPorConexao();
 
         } else if (mPresenter.getTipoRecebimento().equals("Formas de Pagamento")) {
             AbstractActivity.showToast(mPresenter.getContext(), "Forma de Pagamento Inválida!");
@@ -251,9 +262,19 @@ public class VendasActivity extends AppCompatActivity implements IView {
     }
 
     @Override
+    public void desabilitarBtnSalvar() {
+        btnSalvarVenda.setClickable(false);
+    }
+
+    @Override
     public void dissmiss() {
         mPresenter.getAlertDialog().dismiss();
         mPresenter.updateRecyclerItens();
+    }
+
+    @Override
+    public void error(final String text) {
+        runOnUiThread(()->Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show());
     }
 
     @Override
@@ -458,18 +479,10 @@ public class VendasActivity extends AppCompatActivity implements IView {
         return itemPedido;
     }
 
-    @NonNull
-    private ItemPedidoID getItemPedidoID() throws ParseException {
-        ItemPedidoID itemPedidoID = new ItemPedidoID();
-        itemPedidoID.setIdProduto(mPresenter.getProductSelected().getId());
-        itemPedidoID.setIdUnidade(mPresenter.getUnitSelected().getId());
-        itemPedidoID.setDataVenda(
-                DateUtils.formatDateDDMMYYYY(new Date(System.currentTimeMillis())));
-        // Nao sei o significado
-        itemPedidoID.setVendaMae("N");
-        itemPedidoID.setNucleoCodigo(1);
-        itemPedidoID.setTipoVenda("?");
-        return itemPedidoID;
+    @Override
+    public void exibirBotaoImprimir() {
+        btnImprimir.setVisibility(View.VISIBLE);
+
     }
 
     private void initSwipe() {
@@ -633,4 +646,26 @@ public class VendasActivity extends AppCompatActivity implements IView {
                     mPresenter.refreshSelectedProductViews();
                 });
     }
+
+    @OnClick(R.id.btnImprimir)
+    public void setBtnImprimirOnClicked() {
+        this.mPresenter.imprimirPedido();
+        this.mPresenter.desabilitarBtnSalvar();
+    }
+
+    @NonNull
+    private ItemPedidoID getItemPedidoID() throws ParseException {
+        ItemPedidoID itemPedidoID = new ItemPedidoID();
+        itemPedidoID.setIdProduto(mPresenter.getProductSelected().getId());
+        itemPedidoID.setIdUnidade(mPresenter.getUnitSelected().getId());
+        itemPedidoID.setDataVenda(
+                DateUtils.formatarDateddMMyyyyhhmm(new Date(System.currentTimeMillis())));
+        // Nao sei o significado
+        itemPedidoID.setVendaMae("N");
+        itemPedidoID.setNucleoCodigo(1);
+        itemPedidoID.setTipoVenda("?");
+        return itemPedidoID;
+    }
+
+
 }

@@ -36,19 +36,19 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
 
     ArrayAdapter<String> adapterTipoRecebimento;
 
-    @BindView(R.id.btnConfirmAmortize)
-    Button btnConfirmAmortize;
+    @BindView(R.id.btnImprimirRecebimento)
+    Button btnImprimirRecebimento;
 
-    @BindView(R.id.btnPrint)
-    Button btnPrint;
+    @BindView(R.id.btnSalvarRecebimento)
+    Button btnSalvarRecebimento;
 
     @BindView(R.id.edtValueAmortize)
     CurrencyEditText edtValueAmortize;
 
     IPaymentsMVP.IPresenter mPresenter;
 
-    @BindView(R.id.rcvPayments)
-    RecyclerView rcvPayments;
+    @BindView(R.id.rcvRecebimento)
+    RecyclerView rcvRecebimento;
 
     @BindView(R.id.spnTipoRecebimento)
     Spinner spnTipoRecebimento;
@@ -62,16 +62,14 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
     @BindView(R.id.txtClientID)
     TextView txtClientID;
 
-
-
     @BindView(R.id.txtEndereco)
     TextView txtEndereco;
 
     @BindView(R.id.txtFanstasyName)
     TextView txtFantasyName;
 
-    @BindView(R.id.txtQTDOpenNotes)
-    TextView txtQTDOpenNotes;
+    @BindView(R.id.txtQTDNotasAbertas)
+    TextView txtQTDNotasAbertas;
 
     RecebimentoAdapter adapter;
 
@@ -97,13 +95,13 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
 
         swtcAmortize.setChecked(false);
         mPresenter.getRecebimentos().addAll(mPresenter.loadReceiptsByClient());
-        txtQTDOpenNotes.setText("Notas Abertas: " + mPresenter.getRecebimentos().size());
+        txtQTDNotasAbertas.setText("Notas Abertas: " + mPresenter.getRecebimentos().size());
 
         txtTotalDevido.setText(
                 FormatacaoMoeda.convertDoubleToString(
                         mPresenter.getValueTotalDevido().doubleValue()));
         adapter = new RecebimentoAdapter(mPresenter);
-        rcvPayments.setAdapter(adapter);
+        rcvRecebimento.setAdapter(adapter);
 
         try {
             adapterTipoRecebimento =
@@ -188,6 +186,15 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
                                 .doubleValue()));
     }
 
+    @OnClick(R.id.btnSalvarRecebimento)
+
+    public void btnConfirmeAmortizeOnClicked() {
+        mPresenter.salvarAmortizacao();
+        mPresenter.exibirBotaoGerarRecibo();
+        mPresenter.updateRecycleView();
+
+    }
+
     @Override
     public void getParams() {
         Bundle args = getIntent().getExtras();
@@ -195,10 +202,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
         mPresenter.setCliente(cliente);
     }
 
-    @OnClick(R.id.btnConfirmAmortize)
-    public void setBtnConfirmAmortizeClicked(View view) {
-        // Salva o recebimento
-    }
+
 
     @Override
     public void setClientViews() {
@@ -245,6 +249,11 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
     }
 
     @Override
+    public void exibirBotaoGerarRecibo() {
+        btnImprimirRecebimento.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public void showInsuficentCredit(final String s) {
         AbstractActivity.showToast(mPresenter.getContext(), s);
     }
@@ -265,6 +274,6 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(RecebimentoActivity.this);
-        rcvPayments.setLayoutManager(layoutManager);
+        rcvRecebimento.setLayoutManager(layoutManager);
     }
 }

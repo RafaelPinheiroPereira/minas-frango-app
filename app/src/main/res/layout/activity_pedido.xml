@@ -16,7 +16,7 @@
         android:elevation="0dp"
         android:layout_height="56dp"
         android:layout_width="match_parent"
-        android:background="@color/colorPrimary"
+            android:background="@color/colorPrimaryDark"
         app:layout_scrollFlags="scroll|enterAlways"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"/>
 

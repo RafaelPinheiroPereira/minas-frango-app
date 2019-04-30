@@ -40,7 +40,6 @@ public class HomeActivity extends AppCompatActivity
         implements RecyclerViewOnClickListenerHack,
         IView {
 
-
     ClienteAdapter mClientAdapter;
 
     ArrayAdapter mRouteAdapter;
@@ -85,7 +84,6 @@ public class HomeActivity extends AppCompatActivity
         mClientAdapter.setRecyclerViewOnClickListenerHack(this);
     }
 
-
     @Override
     public void closerDrawer() {
 
@@ -122,7 +120,6 @@ public class HomeActivity extends AppCompatActivity
         getProgressDialog().show();
     }
 
-
     public ProgressDialog getProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
@@ -133,7 +130,6 @@ public class HomeActivity extends AppCompatActivity
         return mProgressDialog;
 
     }
-
 
     @Override
     public void onBackPressed() {
@@ -236,7 +232,13 @@ public class HomeActivity extends AppCompatActivity
                     case 5:
                         presenter.dataExport();
                         break;
+
                     case 6:
+                        AbstractActivity.navigateToActivity(presenter.getContext(),
+                                new Intent(presenter.getContext(), DeviceListActivity.class));
+                        break;
+
+                    case 7:
                         presenter.showDialogLogout();
                         break;
                 }
@@ -298,7 +300,6 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
-
     @Override
     public void showDialogClient(final Cliente cliente) {
 
@@ -308,7 +309,6 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
-
     @OnItemSelected(R.id.spnRoute)
     void onItemSelected(int position) {
         if (position != 0) {
@@ -317,7 +317,6 @@ public class HomeActivity extends AppCompatActivity
             spnRoute.setSelection(position);
         }
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -333,7 +332,6 @@ public class HomeActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
-
 
     private void initViews() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(HomeActivity.this);

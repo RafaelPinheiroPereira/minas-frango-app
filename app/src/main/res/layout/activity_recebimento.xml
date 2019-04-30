@@ -227,7 +227,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/txtQTDOpenNotes"
+                    android:id="@+id/txtQTDNotasAbertas"
                     android:layout_gravity="left"
                     android:layout_marginTop="10dp"
                     android:text="Notas Abertas"
@@ -236,7 +236,7 @@
 
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rcvPayments"
+                    android:id="@+id/rcvRecebimento"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:padding="10dp"
@@ -244,11 +244,10 @@
 
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnConfirmAmortize"
+                    android:id="@+id/btnSalvarRecebimento"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:gravity="center_vertical|center_horizontal"
                     android:text=" Amortizar"
@@ -259,11 +258,12 @@
                     app:iconTint="@color/white" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnPrint"
+                    android:id="@+id/btnImprimirRecebimento"
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
                     android:gravity="center_vertical|center_horizontal"
                     android:text=" Gerar Recibo"
                     android:textColor="@color/white"
@@ -276,12 +276,6 @@
         </ScrollView>
 
     </LinearLayout>
-
-    <Switch
-        android:id="@+id/switch1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Switch" />
 
 
 </LinearLayout>

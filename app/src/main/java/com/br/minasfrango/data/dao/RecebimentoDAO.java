@@ -33,12 +33,11 @@ public class RecebimentoDAO extends GenericsDAO<Recebimento> {
         return null;
     }
 
-
-    public ArrayList<Recebimento> findReceiptsByClient(Cliente cliente) {
+    public ArrayList<Recebimento> pesquisarRecebimentoPorCliente(Cliente cliente) {
         ArrayList<Recebimento> recebimentos = new ArrayList<Recebimento>();
 
         RealmResults<Recebimento> results = where().equalTo("idCliente", cliente.getId())
-                .findAll();
+                .and().isNull("dataRecebimento").findAll();
 
         if (results != null && results.size() > 0) {
 

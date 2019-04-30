@@ -40,16 +40,19 @@ public class ItensPedidoVisualizarAdapter extends RecyclerView.Adapter<ItensPedi
 
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull final ItemViewHolder itemViewHolder, final int position) {
-        final ItemPedido itemPedido = mItensPedido.get(position);
-        // itemViewHolder.idTextView.setText(String.valueOf(itemPedido.getChavesItemPedido().getIdProduto()));
-        itemViewHolder.descricaoTextView.setText((itemPedido.getDescricao()));
-        itemViewHolder.unidadeTextView.setText(itemPedido.getChavesItemPedido().getIdUnidade());
-        itemViewHolder.qtdTextView.setText(String.valueOf(itemPedido.getQuantidade()));
-        itemViewHolder.valorTextView.setText(NumberFormat.getCurrencyInstance().format(itemPedido.getValorTotal()));
-        itemViewHolder.vlrUnitarioTextView
-                .setText(NumberFormat.getCurrencyInstance().format(itemPedido.getValorUnitario()));
+    class ItemViewHolder extends RecyclerView.ViewHolder {
+
+        TextView txtQTDBicos, descricaoTextView, valorTextView, unidadeTextView, qtdTextView, vlrUnitarioTextView;
+
+        public ItemViewHolder(View itemView) {
+            super(itemView);
+            descricaoTextView = itemView.findViewById(R.id.descricao_text_view_item_visualizar);
+            txtQTDBicos = itemView.findViewById(R.id.txtQTDBicos);
+            valorTextView = itemView.findViewById(R.id.valor_total_txt_item_visualizar);
+            unidadeTextView = itemView.findViewById(R.id.unidade_txt_item_visualizar);
+            qtdTextView = itemView.findViewById(R.id.qtd_text_view_item_visualizar);
+            vlrUnitarioTextView = itemView.findViewById(R.id.valor_unitario_txt_item_visualizar);
+        }
 
 
     }
@@ -59,21 +62,17 @@ public class ItensPedidoVisualizarAdapter extends RecyclerView.Adapter<ItensPedi
         return mItensPedido.size();
     }
 
+    @Override
+    public void onBindViewHolder(@NonNull final ItemViewHolder itemViewHolder, final int position) {
+        final ItemPedido itemPedido = mItensPedido.get(position);
+        //itemViewHolder.txtQTDBicos.setText(String.valueOf(itemPedido.getChavesItemPedido().getIdProduto()));
+        itemViewHolder.descricaoTextView.setText((itemPedido.getDescricao()));
+        itemViewHolder.unidadeTextView.setText(itemPedido.getChavesItemPedido().getIdUnidade());
+        itemViewHolder.qtdTextView.setText(String.valueOf(itemPedido.getQuantidade()));
+        itemViewHolder.valorTextView.setText(NumberFormat.getCurrencyInstance().format(itemPedido.getValorTotal()));
+        itemViewHolder.vlrUnitarioTextView
+                .setText(NumberFormat.getCurrencyInstance().format(itemPedido.getValorUnitario()));
 
-    class ItemViewHolder extends RecyclerView.ViewHolder {
-
-        TextView idTextView, descricaoTextView, valorTextView, unidadeTextView, qtdTextView, vlrUnitarioTextView;
-
-        public ItemViewHolder(View itemView) {
-            super(itemView);
-            descricaoTextView = itemView.findViewById(R.id.descricao_text_view_item_visualizar);
-            // idTextView = itemView.findViewById(R.id.id_text_view_item_visualizar);
-            valorTextView = itemView.findViewById(R.id.valor_total_txt_item_visualizar);
-            unidadeTextView = itemView.findViewById(R.id.unidade_txt_item_visualizar);
-            qtdTextView = itemView.findViewById(R.id.qtd_text_view_item_visualizar);
-            vlrUnitarioTextView = itemView.findViewById(R.id.valor_unitario_txt_item_visualizar);
-        }
-
-
+        itemViewHolder.txtQTDBicos.setText(String.valueOf(itemPedido.getBicos()));
     }
 }
