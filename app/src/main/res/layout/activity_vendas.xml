@@ -252,10 +252,11 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:textColor="#fff"
-                    android:text=" Salvar"
+                    android:text="Salvar"
                     android:layout_marginRight="10dp"
                     app:backgroundTint="@color/primary_dark"
                     app:icon="@mipmap/ic_save_white_48dp"
+                    app:iconPadding="10dp"
                     app:iconGravity="textStart" />
 
                 <com.google.android.material.button.MaterialButton
@@ -265,12 +266,30 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:text=" Imprimir"
+                    android:text="Imprimir"
+                    app:iconPadding="10dp"
                     android:textColor="#fff"
                     android:visibility="invisible"
                     app:backgroundTint="@color/primary_dark"
                     app:icon="@mipmap/ic_print"
                     app:iconGravity="textStart" />
+
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnFotografar"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="Comprovante"
+                    android:textColor="#fff"
+                    android:visibility="invisible"
+                    app:backgroundTint="@color/primary_dark"
+                    app:icon="@mipmap/ic_photo_camera_black_48dp"
+                    app:iconGravity="textStart"
+                    app:iconPadding="10dp"
+                    app:iconTint="@color/white" />
 
 
             </LinearLayout>

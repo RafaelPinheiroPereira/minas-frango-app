@@ -1,6 +1,7 @@
 package com.br.minasfrango.ui.activity;
 
 import android.Manifest;
+import android.Manifest.permission;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import butterknife.BindView;
@@ -31,7 +31,10 @@ public class LoginActivity extends AppCompatActivity implements IView {
             Manifest.permission.BLUETOOTH,
             Manifest.permission.BLUETOOTH_ADMIN,
             Manifest.permission.BLUETOOTH_PRIVILEGED,
-            Manifest.permission.INTERNET
+            Manifest.permission.INTERNET,
+            permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
     };
 
     private static int REQUEST_STORAGE = 112;
@@ -78,9 +81,10 @@ public class LoginActivity extends AppCompatActivity implements IView {
             int requestCode, String[] permissions, int[] grantResults) {
 
         if (requestCode == REQUEST_STORAGE) {
+
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Permissão para acessar Arquivo de Dados concedida", Toast.LENGTH_LONG)
-                        .show();
+                AbstractActivity.showToast(
+                        presenter.getContext(), "Permissões necessárias concedidas");
 
             } else {
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -111,7 +115,8 @@ public class LoginActivity extends AppCompatActivity implements IView {
                     public void onAnimationEnd(Animation arg0) {
                         lnLoginBox.setVisibility(View.VISIBLE);
                         btnLogin.setVisibility(View.VISIBLE);
-                        Animation animFade = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.fade);
+                        Animation animFade =
+                                AnimationUtils.loadAnimation(LoginActivity.this, R.anim.fade);
                         lnLoginBox.startAnimation(animFade);
                         btnLogin.startAnimation(animFade);
                     }
@@ -123,7 +128,7 @@ public class LoginActivity extends AppCompatActivity implements IView {
                     @Override
                     public void onAnimationStart(Animation arg0) {
                     }
-        });
+                });
         imgLogo.startAnimation(animTranslate);
     }
 
@@ -163,12 +168,15 @@ public class LoginActivity extends AppCompatActivity implements IView {
                     != PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(
                         LoginActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    // Caso o usuário tenha negado a permissão anteriormente, e não tenha marcado o check
+                    // Caso o usuário tenha negado a permissão anteriormente, e não tenha marcado o
+                    // check
                     // "nunca mais mostre este alerta"
-                    // Podemos mostrar um alerta explicando para o usuário porque a permissão é importante.
+                    // Podemos mostrar um alerta explicando para o usuário porque a permissão é
+                    // importante.
                 } else {
                     // Solicita a permissao
-                    ActivityCompat.requestPermissions(LoginActivity.this, PERMISSIONS, REQUEST_STORAGE);
+                    ActivityCompat.requestPermissions(
+                            LoginActivity.this, PERMISSIONS, REQUEST_STORAGE);
                 }
             }
         } else {

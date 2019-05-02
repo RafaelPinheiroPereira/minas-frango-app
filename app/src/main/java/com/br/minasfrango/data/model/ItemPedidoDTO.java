@@ -1,4 +1,4 @@
-package com.br.minasfrango.data.dto;
+package com.br.minasfrango.data.model;
 
 import com.br.minasfrango.data.realm.ItemPedido;
 import java.io.Serializable;

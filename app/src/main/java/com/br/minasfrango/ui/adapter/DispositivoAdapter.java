@@ -7,7 +7,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.dto.Dispositivo;
+import com.br.minasfrango.data.model.Dispositivo;
 import com.br.minasfrango.ui.mvp.impressora.IImpressoraMVP.IPresenter;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class DispositivoAdapter extends BaseAdapter {
     }
 
     public void add(String nome, String enderecoBluetooth, int icone) {
-        Dispositivo impressora = new Dispositivo(nome, enderecoBluetooth, icone);
+        Dispositivo impressora = new Dispositivo(enderecoBluetooth, icone, nome);
         mDispositivos.add(impressora);
     }
 

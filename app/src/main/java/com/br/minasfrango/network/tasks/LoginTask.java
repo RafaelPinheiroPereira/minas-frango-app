@@ -15,7 +15,6 @@ import retrofit2.Response;
 
 public class LoginTask extends AsyncTask<Void, Void, String> {
 
-
     String idUser, password;
 
     IView mLoginView;
@@ -24,19 +23,17 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
 
     ProgressDialog progressDialog;
 
-    public LoginTask(IPresenter presenter, IView loginView, String idUser,
-            String password) {
+    public LoginTask(IPresenter presenter, IView loginView, String idUser, String password) {
         this.mPresenter = presenter;
         this.mLoginView = loginView;
         this.idUser = idUser;
         this.password = password;
-
     }
 
     @Override
     protected String doInBackground(Void... params) {
 
-       /* try {
+        /*try {
 
             return validateAcess(idUser, password);
         } catch (IOException e) {
@@ -51,14 +48,15 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
         super.onPostExecute(islogin);
         progressDialog.dismiss();
         if (islogin.equals("SUCESS")) {
-            mPresenter.getContext().startActivity(new Intent(mPresenter.getContext(), HomeActivity.class));
+            mPresenter
+                    .getContext()
+                    .startActivity(new Intent(mPresenter.getContext(), HomeActivity.class));
         } else if (islogin.equals("UNAUTHORIZED")) {
-            Toast.makeText(mPresenter.getContext(), "Matricula/Senha inválidos!", Toast.LENGTH_LONG).show();
+            Toast.makeText(mPresenter.getContext(), "Matricula/Senha inválidos!", Toast.LENGTH_LONG)
+                    .show();
         } else {
             Toast.makeText(mPresenter.getContext(), islogin, Toast.LENGTH_LONG).show();
         }
-
-
     }
 
     @Override
@@ -68,7 +66,6 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
         progressDialog.setTitle("Login");
         progressDialog.setMessage("Realizando Login...");
         progressDialog.show();
-
     }
 
     private String validateAcess(String idUser, String password) throws IOException {
@@ -76,17 +73,13 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
         Response<Funcionario> response = autenticaLoginCall.execute();
 
         switch (response.code()) {
-            case HttpConstant
-                    .OK:
+            case HttpConstant.OK:
                 Funcionario funcionario = response.body();
                 mPresenter.createSession(idUser, password, funcionario.getNome());
                 return "SUCESS";
 
-            case HttpConstant
-                    .UNAUTHORIZED:
+            case HttpConstant.UNAUTHORIZED:
                 return "UNAUTHORIZED";
-
-
         }
 
         throw new IOException("Funcionário não cadastrado!");
@@ -97,5 +90,3 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
         return "SUCESS";
     }
 }
-
-

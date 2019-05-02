@@ -1,5 +1,6 @@
 package com.br.minasfrango.ui.mvp.vieworder;
 
+import android.content.Context;
 import android.os.Bundle;
 import com.br.minasfrango.data.realm.Cliente;
 import com.br.minasfrango.data.realm.Pedido;
@@ -28,6 +29,17 @@ public interface IViewOrderMVP {
         void setTipoRecebimento(TipoRecebimento tipoRecebimento);
 
         void setDataView();
+
+        /**
+         * Metodos relacionados a impressao
+         */
+        void esperarPorConexao();
+
+        void fecharConexaoAtiva();
+
+        Context getContext();
+
+        void imprimirComprovante();
     }
 
     interface IModel {
@@ -40,6 +52,8 @@ public interface IViewOrderMVP {
     }
 
     interface IView {
+
+        void exibirBotaoGerarRecibo();
 
         void setDataView();
     }

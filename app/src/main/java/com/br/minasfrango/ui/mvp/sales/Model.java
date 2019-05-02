@@ -155,7 +155,7 @@ public class Model implements ISalesMVP.IModel {
     }
 
     @Override
-    public long saveOrderSale(final Pedido saleOrderToSave) {
+    public long salvarPedido(final Pedido saleOrderToSave) {
         return this.mPedidoDAO.addPedido(saleOrderToSave);
     }
 }

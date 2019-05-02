@@ -4,7 +4,7 @@ package
 import android.os.AsyncTask;
 import android.util.Log;
 import com.br.minasfrango.data.dao.RecebimentoDAO;
-import com.br.minasfrango.data.dto.RecebimentoDTO;
+import com.br.minasfrango.data.model.RecebimentoDTO;
 import com.br.minasfrango.data.realm.Cliente;
 import com.br.minasfrango.data.realm.Funcionario;
 import com.br.minasfrango.data.realm.Preco;

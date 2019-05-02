@@ -1,7 +1,9 @@
 package com.br.minasfrango.ui.activity;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -9,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -52,6 +55,8 @@ import com.br.minasfrango.util.AlertDialogUpdateItemSaleOrder;
 import com.br.minasfrango.util.CurrencyEditText;
 import com.br.minasfrango.util.DateUtils;
 import com.br.minasfrango.util.FormatacaoMoeda;
+import com.br.minasfrango.util.SessionManager;
+import com.hussain_chachuliya.customcamera.CustomCamera;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Date;
@@ -67,21 +72,13 @@ public class VendasActivity extends AppCompatActivity implements IView {
     @BindView(R.id.actCodigoProduto)
     AutoCompleteTextView actCodigoProduto;
 
-    ArrayAdapter<String> adaptadorCodigoProduto;
-
-    ArrayAdapter<String> adaptadorDescricaoProduto;
-
-    ArrayAdapter<String> adapterFormaPagamento;
-
-    ItemPedidoAdapter adapterItemPedidoAdapter;
-
-    ArrayAdapter<String> adapterUnidade;
-
     @BindView(R.id.btnAddItem)
     Button btnAddItem;
 
     @BindView(R.id.btnImprimir)
     Button btnImprimir;
+
+    ArrayAdapter<String> adaptadorCodigoProduto;
 
     @BindView(R.id.cetPrecoUnitario)
     CurrencyEditText cetPrecoUnitario;
@@ -122,7 +119,16 @@ public class VendasActivity extends AppCompatActivity implements IView {
     @BindView(R.id.btnSalvarVenda)
     Button btnSalvarVenda;
 
-    // Member variables
+    ArrayAdapter<String> adaptadorDescricaoProduto;
+
+    ArrayAdapter<String> adapterFormaPagamento;
+
+    ItemPedidoAdapter adapterItemPedidoAdapter;
+
+    ArrayAdapter<String> adapterUnidade;
+
+    @BindView(R.id.btnFotografar)
+    Button btnFotografar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +136,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
         setContentView(R.layout.activity_vendas);
         mPresenter = new Presenter(this);
         ButterKnife.bind(this);
-        initViews();
+        iniciarViews();
     }
 
     @Override
@@ -163,24 +169,20 @@ public class VendasActivity extends AppCompatActivity implements IView {
 
                     @Override
                     public void beforeTextChanged(
-                            CharSequence s, int start, int count, int after) {
-                    }
+                            CharSequence s, int start, int count, int after) {}
 
                     @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    }
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
                 });
 
         cetPrecoUnitario.addTextChangedListener(
                 new TextWatcher() {
                     @Override
-                    public void afterTextChanged(Editable s) {
-                    }
+                    public void afterTextChanged(Editable s) {}
 
                     @Override
                     public void beforeTextChanged(
-                            CharSequence s, int start, int count, int after) {
-                    }
+                            CharSequence s, int start, int count, int after) {}
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -189,17 +191,56 @@ public class VendasActivity extends AppCompatActivity implements IView {
                 });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CustomCamera.IMAGE_SAVE_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                mPresenter.atulizarViewPrecoPosFoto();
+                AbstractActivity.showToast(
+                        mPresenter.getContext(),
+                        "Imagem salva em :" + data.getStringExtra(CustomCamera.IMAGE_PATH));
+
+
+            } else {
+                AbstractActivity.showToast(mPresenter.getContext(), "Imagem não foi salva");
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.fecharConexaoAtiva();
+    }
+
+    @Override
+    public void atualizarViewsDoProdutoSelecionado() {
+        mPresenter.setSpinnerProductSelected();
+        mPresenter.setSpinnerUnityPatternOfProductSelected();
+        mPresenter.setQtdProdutos(new BigDecimal("1"));
+        mPresenter.setPrice(mPresenter.loadPriceByProduct());
+        cetPrecoUnitario.setText(String.valueOf(mPresenter.getPrice().getValor()));
+        mPresenter.updateTxtAmountProducts();
+        updateActCodigoProduto();
+    }
+
+    @Override
+    public void atulizarViewPrecoPosFoto() {
+        cetPrecoUnitario.setText("00,00");
+    }
+
     @OnClick(R.id.btnAddItem)
     public void btnAddItemOnClicked(View view) {
 
-        if (mPresenter.validateFieldsBeforeAddItem()) {
+        if (mPresenter.validarCamposAntesDeAdicionarItem()) {
             mPresenter.setItemPedido(getItemPedido());
             ItemPedidoID itemPedidoID = null;
             try {
                 itemPedidoID = getItemPedidoID();
             } catch (ParseException e) {
                 VendasActivity.this.runOnUiThread(
-                        ()->
+                        () ->
                                 AbstractActivity.showToast(
                                         mPresenter.getContext(),
                                         "Erro Formatação Data Pedido :" + e.getMessage()));
@@ -216,17 +257,14 @@ public class VendasActivity extends AppCompatActivity implements IView {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mPresenter.fecharConexaoAtiva();
-    }
-
     @OnClick(R.id.btnSalvarVenda)
     public void btnConfirmSaleOnClicked(View view) {
 
-        if (mPresenter.getItens().size() > 0
-                && !mPresenter.getTipoRecebimento().equals("Formas de Pagamento")) {
+        if ((mPresenter.getItens().size() > 0
+                && !mPresenter.getTipoRecebimento().equals("Formas de Pagamento"))
+                && (!new SessionManager(mPresenter.getContext())
+                .getEnderecoBluetooth()
+                .isEmpty())) {
             // Realiza Update do Pedido
             if (mPresenter.getOrderSale() != null) {
 
@@ -241,11 +279,9 @@ public class VendasActivity extends AppCompatActivity implements IView {
                 try {
                     mPresenter.saveOrderSale();
 
-
-
                 } catch (ParseException e) {
                     VendasActivity.this.runOnUiThread(
-                            ()->
+                            () ->
                                     AbstractActivity.showToast(
                                             mPresenter.getContext(),
                                             "Erro Formatacao Data Pedido: " + e.getMessage()));
@@ -255,15 +291,14 @@ public class VendasActivity extends AppCompatActivity implements IView {
 
         } else if (mPresenter.getTipoRecebimento().equals("Formas de Pagamento")) {
             AbstractActivity.showToast(mPresenter.getContext(), "Forma de Pagamento Inválida!");
+        } else if (new SessionManager(mPresenter.getContext()).getEnderecoBluetooth().isEmpty()) {
+            AbstractActivity.showToast(
+                    mPresenter.getContext(),
+                    "Dispositivo não conectado!\nHabilite no Menu : Configurar Impressora.");
         } else {
             AbstractActivity.showToast(
                     mPresenter.getContext(), " No mímimo um item deve ser adicionado!");
         }
-    }
-
-    @Override
-    public void desabilitarBtnSalvar() {
-        btnSalvarVenda.setClickable(false);
     }
 
     @Override
@@ -273,8 +308,19 @@ public class VendasActivity extends AppCompatActivity implements IView {
     }
 
     @Override
-    public void error(final String text) {
-        runOnUiThread(()->Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show());
+    public void carregarDadosDaVenda() throws Throwable {
+        TipoRecebimento tipoRecebimento = mPresenter.loadTipoRecebimentoById();
+        spnFormaPagamento.setSelection(
+                adapterFormaPagamento.getPosition(tipoRecebimento.getNome()));
+        mPresenter.setTipoRecebimento(tipoRecebimento.getNome());
+        mPresenter.setItens(mPresenter.getOrderSale().realmListToDTO());
+        mPresenter.updateRecyclerItens();
+        initSwipe();
+    }
+
+    @Override
+    public void desabilitarCliqueBotaoSalvarVenda() {
+        btnSalvarVenda.setClickable(false);
     }
 
     @Override
@@ -294,14 +340,9 @@ public class VendasActivity extends AppCompatActivity implements IView {
     }
 
     @Override
-    public void loadDetailsSale() throws Throwable {
-        TipoRecebimento tipoRecebimento = mPresenter.loadTipoRecebimentoById();
-        spnFormaPagamento.setSelection(
-                adapterFormaPagamento.getPosition(tipoRecebimento.getNome()));
-        mPresenter.setTipoRecebimento(tipoRecebimento.getNome());
-        mPresenter.setItens(mPresenter.getOrderSale().realmListToDTO());
-        mPresenter.updateRecyclerItens();
-        initSwipe();
+    public void error(final String text) {
+        runOnUiThread(
+                ()->Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show());
     }
 
     @Override
@@ -350,14 +391,8 @@ public class VendasActivity extends AppCompatActivity implements IView {
     }
 
     @Override
-    public void refreshSelectedProductViews() {
-        mPresenter.setSpinnerProductSelected();
-        mPresenter.setSpinnerUnityPatternOfProductSelected();
-        mPresenter.setQtdProdutos(new BigDecimal("1"));
-        mPresenter.setPrice(mPresenter.loadPriceByProduct());
-        cetPrecoUnitario.setText(String.valueOf(mPresenter.getPrice().getValor()));
-        mPresenter.updateTxtAmountProducts();
-        updateActCodigoProduto();
+    public void exibirBotaoFotografar() {
+        btnFotografar.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -369,14 +404,12 @@ public class VendasActivity extends AppCompatActivity implements IView {
     @Override
     public void setSpinnerUnityPatternOfProductSelected() {
         Unidade unityPattern = mPresenter.loadUnityByProduct();
-
         spnUnitys.setSelection(adapterUnidade.getPosition(unityPattern.getId().split("-")[0]));
         mPresenter.setUnitSelected(unityPattern);
     }
 
     @OnItemSelected(R.id.spnFormaPagamento)
     public void setSpnFormaPagamentoOnSelected(int position) {
-
         mPresenter.setTipoRecebimento(adapterFormaPagamento.getItem(position));
     }
 
@@ -443,46 +476,25 @@ public class VendasActivity extends AppCompatActivity implements IView {
                         mPresenter.getTotalProductValue().doubleValue()));
     }
 
-    @Override
-    public boolean validateFieldsBeforeAddItem() {
-        if (TextUtils.isEmpty(edtQTDProducts.getText().toString())) {
-            edtQTDProducts.setError("Quantidade Obrigatória!");
-            edtQTDProducts.requestFocus();
-            return false;
-        }
-        if (Integer.parseInt(edtQTDProducts.getText().toString()) <= 0) {
-            edtQTDProducts.setError("Quantidade mínima de 1 item!");
-            edtQTDProducts.requestFocus();
-            return false;
-        }
-        if (TextUtils.isEmpty(edtQTDBicos.getText().toString())) {
-            edtQTDBicos.setError("Quantidade de Bicos Obrigatória!");
-            edtQTDBicos.requestFocus();
-            return false;
-        }
-        if (Integer.parseInt(edtQTDBicos.getText().toString()) <= 0) {
-            edtQTDBicos.setError("Quantidade mínima de 1 bico!");
-            edtQTDBicos.requestFocus();
-            return false;
-        }
-        return true;
-    }
-
-    @NonNull
-    private ItemPedido getItemPedido() {
-        ItemPedido itemPedido = new ItemPedido();
-        itemPedido.setQuantidade(mPresenter.getQtdProdutos().intValue());
-        itemPedido.setValorUnitario(mPresenter.getPrice().getValor());
-        itemPedido.setDescricao(mPresenter.getProductSelected().getNome());
-        itemPedido.setBicos(Integer.parseInt(edtQTDBicos.getText().toString()));
-        itemPedido.setValorTotal(mPresenter.getTotalProductValue().doubleValue());
-        return itemPedido;
+    @OnClick(R.id.btnFotografar)
+    public void setBtnFotografarOnClicked(View view) {
+        CustomCamera.init()
+                .with((Activity) mPresenter.getContext())
+                .setRequiredMegaPixel(1.5f)
+                .setPath(
+                        Environment.getExternalStorageDirectory().getAbsolutePath()
+                                + "/Minas Frango/Imagens Vendas")
+                .setImageName(
+                        mPresenter.getOrderSale().getId()
+                                + DateUtils.formatarDateddMMyyyyParaString(
+                                mPresenter.getOrderSale().getDataPedido())
+                                + mPresenter.getClient().getNome())
+                .start();
     }
 
     @Override
     public void exibirBotaoImprimir() {
         btnImprimir.setVisibility(View.VISIBLE);
-
     }
 
     private void initSwipe() {
@@ -582,7 +594,50 @@ public class VendasActivity extends AppCompatActivity implements IView {
         itemTouchHelper.attachToRecyclerView(rcvItens);
     }
 
-    private void initViews() {
+    @OnClick(R.id.btnImprimir)
+    public void setBtnImprimirOnClicked() {
+        this.mPresenter.imprimirComprovante();
+        this.mPresenter.desabilitarBtnSalvar();
+        this.mPresenter.exibirBotaoFotografar();
+    }
+
+    @Override
+    public boolean validarCamposAntesDeAdicionarItem() {
+        if (TextUtils.isEmpty(edtQTDProducts.getText().toString())) {
+            edtQTDProducts.setError("Quantidade Obrigatória!");
+            edtQTDProducts.requestFocus();
+            return false;
+        }
+        if (Integer.parseInt(edtQTDProducts.getText().toString()) <= 0) {
+            edtQTDProducts.setError("Quantidade mínima de 1 item!");
+            edtQTDProducts.requestFocus();
+            return false;
+        }
+        if (TextUtils.isEmpty(edtQTDBicos.getText().toString())) {
+            edtQTDBicos.setError("Quantidade de Bicos Obrigatória!");
+            edtQTDBicos.requestFocus();
+            return false;
+        }
+        if (Integer.parseInt(edtQTDBicos.getText().toString()) <= 0) {
+            edtQTDBicos.setError("Quantidade mínima de 1 bico!");
+            edtQTDBicos.requestFocus();
+            return false;
+        }
+        return true;
+    }
+
+    @NonNull
+    private ItemPedido getItemPedido() {
+        ItemPedido itemPedido = new ItemPedido();
+        itemPedido.setQuantidade(mPresenter.getQtdProdutos().intValue());
+        itemPedido.setValorUnitario(mPresenter.getPrice().getValor());
+        itemPedido.setDescricao(mPresenter.getProductSelected().getNome());
+        itemPedido.setBicos(Integer.parseInt(edtQTDBicos.getText().toString()));
+        itemPedido.setValorTotal(mPresenter.getTotalProductValue().doubleValue());
+        return itemPedido;
+    }
+
+    private void iniciarViews() {
         // Toolbar
 
         mToolbar.setTitle("Vendas");
@@ -639,18 +694,12 @@ public class VendasActivity extends AppCompatActivity implements IView {
         spnProducts.setSelection(INITIAL_POSITION);
         spnFormaPagamento.setSelection(INITIAL_POSITION);
         actCodigoProduto.setOnItemClickListener(
-                (adapterView, view, i, l)->{
+                (adapterView, view, i, l) -> {
                     Long idProduct = Long.parseLong((String) adapterView.getItemAtPosition(i));
                     // Seto o produto selecionado no presenter
                     mPresenter.setProductSelected(mPresenter.loadProductById(idProduct));
                     mPresenter.refreshSelectedProductViews();
                 });
-    }
-
-    @OnClick(R.id.btnImprimir)
-    public void setBtnImprimirOnClicked() {
-        this.mPresenter.imprimirPedido();
-        this.mPresenter.desabilitarBtnSalvar();
     }
 
     @NonNull
@@ -666,6 +715,4 @@ public class VendasActivity extends AppCompatActivity implements IView {
         itemPedidoID.setTipoVenda("?");
         return itemPedidoID;
     }
-
-
 }

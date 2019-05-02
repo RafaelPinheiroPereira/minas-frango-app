@@ -15,8 +15,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="10dp">
 
 
             <LinearLayout
@@ -28,10 +28,9 @@
                     android:id="@+id/lb_id_produto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="CÓDIGO:"
-                    android:textColor="@android:color/background_dark"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:text="Código:"
+                    android:textColor="@android:color/primary_text_light"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/txtProductIDDialog"
@@ -39,7 +38,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:text="Codigo Produto"
-                    android:textSize="14sp" />
+                    android:textColor="@android:color/secondary_text_light"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -52,10 +52,9 @@
                     android:id="@+id/lb_descricao_produto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="DESCRIÇÃO:"
-                    android:textColor="@android:color/background_dark"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:text="Descrição:"
+                    android:textColor="@android:color/primary_text_light"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/txtNameProductDialog"
@@ -63,7 +62,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
                     android:text=""
-                    android:textSize="14sp"
+                    android:textColor="@android:color/secondary_text_light"
+                    android:textSize="18sp"
                     android:textStyle="normal" />
             </LinearLayout>
 
@@ -76,10 +76,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="UNIDADES:"
-                    android:textColor="@android:color/background_dark"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:text="Unidade:"
+                    android:textColor="@android:color/primary_text_light"
+                    android:textSize="18sp" />
 
                 <Spinner
                     android:id="@+id/spnUnitDialog"
@@ -95,21 +94,49 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:orientation="horizontal">
+                android:orientation="vertical">
+
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
+                    style="@style/TextInputLayout"
                     android:layout_height="wrap_content">
 
-                    <EditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edtQTDProductDialog"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="QUANTIDADE"
-                        android:inputType="number"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:layout_gravity="center_vertical"
+                        android:digits="0123456789."
+                        android:hint="Quantidade."
+                        android:inputType="number|textMultiLine"
+                        android:maxLength="6"
+                        android:padding="10dp"
+                        android:textColor="@android:color/primary_text_light"
+                        android:textSize="18sp" />
                 </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtQTDBicoDialog"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:digits="0123456789."
+                        android:hint="N° Bicos."
+                        android:inputType="number|textMultiLine"
+                        android:maxLength="6"
+                        android:padding="10dp"
+                        android:textColor="@android:color/primary_text_light"
+                        android:textSize="18sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
             </LinearLayout>
 
 
@@ -120,27 +147,33 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
+                    style="@style/TextInputLayout"
                     android:layout_height="wrap_content">
 
                     <com.br.minasfrango.util.CurrencyEditText
 
-
                         android:id="@+id/cetPriceDialog"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="PREÇO"
-                        android:inputType="numberDecimal"
+                        android:layout_gravity="center_vertical"
+                        android:digits="0123456789."
+                        android:hint="Preço"
+                        android:inputType="numberDecimal|textMultiLine"
                         android:lines="1"
                         android:maxLength="9"
-                        android:textColor="@android:color/black"
+                        android:padding="10dp"
                         android:textSize="18sp"
                         app:groupDivider="."
                         app:locale="en_US"
+                        android:textColor="@android:color/primary_text_light"
                         app:monetaryDivider=","
                         app:showSymbol="false">
+
                         <requestFocus />
                     </com.br.minasfrango.util.CurrencyEditText>
                 </com.google.android.material.textfield.TextInputLayout>
+
+
             </LinearLayout>
 
 
@@ -148,34 +181,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
-                android:padding="10dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="10dp">
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCancelDialog"
+                    style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/btnCancelDialog"
-                    app:backgroundTint="@color/brand_red"
                     android:text="CANCELAR"
                     android:textColor="#fff"
-                    android:textSize="14sp"
-                    style="@style/Widget.MaterialComponents.Button"
-                    app:icon="@mipmap/icon_cancel_24"/>
+                    android:textSize="18sp"
+                    app:backgroundTint="@color/brand_red"
+                    app:icon="@mipmap/icon_cancel_24" />
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSaveDialog"
+                    style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    android:id="@+id/btnSaveDialog"
-                    app:backgroundTint="@color/fab"
                     android:text="ALTERAR"
-                    android:textSize="14sp"
                     android:textColor="#fff"
-                    style="@style/Widget.MaterialComponents.Button"
-                    app:icon="@mipmap/icon_done"/>
-
-
-
+                    android:textSize="18sp"
+                    app:backgroundTint="@color/fab"
+                    app:icon="@mipmap/icon_done" />
 
 
             </LinearLayout>

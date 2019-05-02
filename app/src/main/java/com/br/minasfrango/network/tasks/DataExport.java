@@ -1,7 +1,7 @@
 package com.br.minasfrango.network.tasks;
 
 import android.os.AsyncTask;
-import com.br.minasfrango.data.dto.ListaPedido;
+import com.br.minasfrango.data.model.ListaPedido;
 import com.br.minasfrango.data.realm.Pedido;
 import com.br.minasfrango.network.RetrofitConfig;
 import com.br.minasfrango.network.service.ExportacaoService;

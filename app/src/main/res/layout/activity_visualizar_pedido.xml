@@ -4,8 +4,8 @@
     android:id="@+id/cl_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -27,67 +27,71 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="20dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="20dp">
+
                 <TextView
+                    android:id="@+id/txtClientName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
                     android:text="Lorem ipsum volutpat inceptos, suscipit ipsum.  "
                     android:textColor="@color/textColorPrimary"
-                    android:id="@+id/txtClientName" />
+                    android:textSize="18sp" />
+
                 <TextView
+                    android:id="@+id/txtAdress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
                     android:text="Lorem ipsum interdum faucibus nullam senectus, tempor habitant tempor. "
                     android:textColor="@color/textColorSecondary"
-                    android:id="@+id/txtAdress" />
+                    android:textSize="14sp" />
 
             </LinearLayout>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/textColorPrimary"
-                android:textSize="18sp"
                 android:padding="20dp"
                 android:text="Lista de Itens"
-                />
+                android:textColor="@color/textColorPrimary"
+                android:textSize="18sp" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcvItensViewOrder"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="5dp"
                 android:layout_marginTop="10dp"
-                android:id="@+id/rcvItensViewOrder"></androidx.recyclerview.widget.RecyclerView>
+                android:padding="5dp"></androidx.recyclerview.widget.RecyclerView>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/textColorPrimary"
-                android:textSize="18sp"
                 android:padding="20dp"
                 android:text="Mais Informações"
-                />
+                android:textColor="@color/textColorPrimary"
+                android:textSize="18sp" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="-4dp"
-                android:layout_marginLeft="3dp"
-                android:layout_marginStart="3dp"
-                android:layout_marginRight="3dp"
                 android:layout_marginEnd="3dp"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"
+                android:layout_marginStart="3dp"
+                android:padding="5dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="2dp"
-                app:cardUseCompatPadding="true"
-                android:padding="5dp">
+                app:cardUseCompatPadding="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -96,69 +100,75 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/textColorPrimary"
-                        android:textSize="14sp"
-                        android:padding="10dp"
-                        android:text="N° Pedido" />
+                        android:orientation="horizontal">
+
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="right"
-                            android:padding="5dp"
+                            android:padding="10dp"
+                            android:text="N° Pedido"
+                            android:textColor="@color/textColorPrimary"
+                            android:textSize="14sp" />
+
+                        <TextView
                             android:id="@+id/txtSaleOrderID"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:padding="5dp"
+                            android:text="N° PEDIDO"
                             android:textColor="@color/textColorSecondary"
-                            android:textSize="14sp"
-                            android:text="N° PEDIDO"/>
+                            android:textSize="14sp" />
                     </LinearLayout>
-
 
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/textColorPrimary"
-                            android:textSize="14sp"
                             android:padding="10dp"
-                            android:text="Data do Pedido" />
+                            android:text="Data do Pedido"
+                            android:textColor="@color/textColorPrimary"
+                            android:textSize="14sp" />
+
                         <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="right"
                             android:id="@+id/txtSaleOrderDate"
-                            android:textColor="@color/textColorSecondary"
-                            android:textSize="14sp"
-                            android:padding="5dp"
-                            android:text="N° Pedido" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/textColorPrimary"
-                            android:textSize="14sp"
-                            android:padding="10dp"
-                            android:text="Forma Pagamento" />
-                        <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="right"
-                            android:id="@+id/txtTipoRecebimento"
-                            android:textColor="@color/textColorSecondary"
-                            android:textSize="14sp"
                             android:padding="5dp"
-                            android:text="N° PEDIDO"/>
+                            android:text="N° Pedido"
+                            android:textColor="@color/textColorSecondary"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="Forma Pagamento"
+                            android:textColor="@color/textColorPrimary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/txtTipoRecebimento"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:padding="5dp"
+                            android:text="N° PEDIDO"
+                            android:textColor="@color/textColorSecondary"
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -215,6 +225,42 @@
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="10dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnImprimir"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text=" Imprimir"
+                    android:textColor="#fff"
+                    android:visibility="gone"
+                    app:backgroundTint="@color/primary_dark"
+                    app:icon="@mipmap/ic_print"
+                    app:iconGravity="textStart" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnFotografar"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text=" Comprovante"
+                    android:textColor="#fff"
+                    android:visibility="gone"
+                    app:backgroundTint="@color/primary_dark"
+                    app:icon="@mipmap/ic_photo_camera_black_48dp"
+                    app:iconGravity="textStart"
+                    app:iconTint="@color/white" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

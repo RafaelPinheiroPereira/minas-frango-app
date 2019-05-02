@@ -66,7 +66,6 @@ public class Model implements IPaymentsMVP.IModel {
     @Override
     public void calculateAmortizationAutomatic() {
 
-
         // Todos os checkboxs sao desabilitados
         // O funcionario nao pode selecionar nenhuma nota
         // Toda a quitacao e feita automatica
@@ -84,7 +83,8 @@ public class Model implements IPaymentsMVP.IModel {
 
                                 item.setValorAmortizado(item.getValorVenda());
                                 item.setCheck(true);
-                                item.setOrderSelected(mPresenter.getRecebimentos().lastIndexOf(item) + 1);
+                                item.setOrderSelected(
+                                        mPresenter.getRecebimentos().lastIndexOf(item) + 1);
                                 mPresenter
                                         .getRecebimentos()
                                         .set(mPresenter.getRecebimentos().indexOf(item), item);
@@ -106,16 +106,14 @@ public class Model implements IPaymentsMVP.IModel {
                                         .getRecebimentos()
                                         .set(mPresenter.getRecebimentos().lastIndexOf(item), item);
                                 item.setCheck(true);
-                                item.setOrderSelected(mPresenter.getRecebimentos().lastIndexOf(item) + 1);
+                                item.setOrderSelected(
+                                        mPresenter.getRecebimentos().lastIndexOf(item) + 1);
                                 mPresenter.setCredit(new BigDecimal(0));
                                 mPresenter.updateRecycleViewAlteredItem(
                                         mPresenter.getRecebimentos().lastIndexOf(item));
                                 mPresenter.updateRecycleView();
                             }
-
                         });
-
-
     }
 
     @Override
@@ -129,7 +127,7 @@ public class Model implements IPaymentsMVP.IModel {
     }
 
     @Override
-    public List<Recebimento> loadReceiptsByClient() {
+    public List<Recebimento> pesquisarRecebimentoPorCliente() {
         return recebimentoDAO.pesquisarRecebimentoPorCliente(mPresenter.getCliente());
     }
 
@@ -161,7 +159,7 @@ public class Model implements IPaymentsMVP.IModel {
         mPresenter
                 .getRecebimentos()
                 .forEach(
-                        item->{
+                        item-> {
                             if (item.getOrderSelected() > recebimentoToUpdate.getOrderSelected()) {
                                 item.setOrderSelected(item.getOrderSelected() - 1);
 
@@ -199,25 +197,32 @@ public class Model implements IPaymentsMVP.IModel {
 
     @Override
     public boolean saldoDevidoEhMaiorQueZero() {
-        return mPresenter.getValueTotalDevido().subtract(mPresenter.getValorTotalAmortizado())
-                .compareTo(new BigDecimal(0)) == ConstantsUtil.BIGGER;
+        return mPresenter
+                .getValueTotalDevido()
+                .subtract(mPresenter.getValorTotalAmortizado())
+                .compareTo(new BigDecimal(0))
+                == ConstantsUtil.BIGGER;
     }
 
     @Override
     public void salvarAmortizacao() {
 
-        mPresenter.getRecebimentos().forEach(item->{
-            if (item.isCheck()) {
+        mPresenter
+                .getRecebimentos()
+                .forEach(
+                        item->{
+                            if (item.isCheck()) {
 
-                try {
-                    item.setDataRecebimento(DateUtils.formatarDateddMMyyyyhhmm(new Date(System.currentTimeMillis())));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                recebimentoDAO.copyOrUpdate(item);
-            }
-        });
-
+                                try {
+                                    item.setDataRecebimento(
+                                            DateUtils.formatarDateddMMyyyyhhmm(
+                                                    new Date(System.currentTimeMillis())));
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                recebimentoDAO.copyOrUpdate(item);
+                            }
+                        });
     }
 
     @Override

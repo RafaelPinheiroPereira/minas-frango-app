@@ -30,6 +30,11 @@ public interface IPaymentsMVP {
 
         Cliente getCliente();
 
+        /**
+         * Metodos relacionados a impressao
+         */
+        void esperarPorConexao();
+
         void processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(int i, Recebimento recebimento);
 
         void processarOrdemDeSelecaoDaNotaAposRemocaoDaAmortizacao(int i, Recebimento recebimento);
@@ -64,7 +69,7 @@ public interface IPaymentsMVP {
 
         void setTypeOfAmortizationIsAutomatic(boolean typeOfAmortizationIsAutomatic);
 
-        List<Recebimento> loadReceiptsByClient();
+        void fecharConexaoAtiva();
 
         ArrayList<String> loadTipoRecebimentosAVista() throws Throwable;
 
@@ -82,6 +87,11 @@ public interface IPaymentsMVP {
 
         void updateRecycleViewAlteredItem(int position);
 
+        void imprimirComprovante();
+
+        void inabilitarBotaoSalvar();
+
+        List<Recebimento> pesquisarRecebimentoPorCliente();
     }
 
     interface IModel {
@@ -94,7 +104,7 @@ public interface IPaymentsMVP {
 
         int findIdTipoRecebimento(String item);
 
-        List<Recebimento> loadReceiptsByClient();
+        List<Recebimento> pesquisarRecebimentoPorCliente();
 
         ArrayList<String> loadTipoRecebimentosAVista() throws Throwable;
 
@@ -120,6 +130,8 @@ public interface IPaymentsMVP {
         void exibirBotaoGerarRecibo();
 
         void getParams();
+
+        void inabilitarBotaoSalvarAmortizacao();
 
         void setClientViews();
 

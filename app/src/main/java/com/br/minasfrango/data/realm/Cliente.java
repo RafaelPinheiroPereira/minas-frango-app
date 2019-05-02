@@ -6,12 +6,14 @@ import io.realm.annotations.RealmClass;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @RealmClass
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class Cliente implements RealmModel, Serializable {
 
     private String bairro;
@@ -20,18 +22,18 @@ public class Cliente implements RealmModel, Serializable {
 
     private String razaoSocial;
 
+    @PrimaryKey
+    private long id;
+
     private String cep;
 
     private String cpf;
 
+    private Localidade localidade;
+
     private String endereco;
 
-    @PrimaryKey
-    private long id;
-
     private String cidade;
-
-    private Localidade localidade;
 
     private String referencia;
 

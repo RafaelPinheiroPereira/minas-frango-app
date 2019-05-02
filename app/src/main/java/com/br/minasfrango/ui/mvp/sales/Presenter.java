@@ -49,10 +49,7 @@ public class Presenter implements ISalesMVP.IPresenter {
 
     ImpressoraUtil mImpressoraUtil;
 
-
-
-
-
+    int bicos;
 
     private AlertDialog mAlertDialog;
 
@@ -63,13 +60,29 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
+    public void atulizarViewPrecoPosFoto() {
+        this.mView.atulizarViewPrecoPosFoto();
+
+    }
+
+    @Override
+    public void desabilitarBtnSalvar() {
+        this.mView.desabilitarCliqueBotaoSalvarVenda();
+    }
+
+    @Override
+    public void exibirBotaoFotografar() {
+        this.mView.exibirBotaoFotografar();
+    }
+
+    @Override
     public Double calculeTotalOrderSale() {
         return getItens().stream().mapToDouble(ItemPedido::getValorTotal).sum();
     }
 
     @Override
-    public void desabilitarBtnSalvar() {
-        this.mView.desabilitarBtnSalvar();
+    public int getBicos() {
+        return bicos;
     }
 
     @Override
@@ -84,12 +97,15 @@ public class Presenter implements ISalesMVP.IPresenter {
         }
     }
 
-
-
     @Override
     public ArrayList<String> convertTipoRecebimentoInString(
             final List<TipoRecebimento> tiposRecebimentos) {
         return this.mModel.convertTipoRecebimentoInString(tiposRecebimentos);
+    }
+
+    @Override
+    public void setBicos(final int bicos) {
+        this.bicos = bicos;
     }
 
     @Override
@@ -133,11 +149,6 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
-    public ItemPedido getItemPedido() {
-        return itemPedido;
-    }
-
-    @Override
     public void setItemPedido(final ItemPedido itemPedido) {
         this.itemPedido = itemPedido;
     }
@@ -160,7 +171,6 @@ public class Presenter implements ISalesMVP.IPresenter {
     @Override
     public void getParams() {
         this.mView.getParams();
-
     }
 
     @Override
@@ -168,7 +178,10 @@ public class Presenter implements ISalesMVP.IPresenter {
         this.mImpressoraUtil.fecharConexaoAtiva();
     }
 
-
+    @Override
+    public ItemPedido getItemPedido() {
+        return itemPedido;
+    }
 
     @Override
     public Pedido loadSaleOrder(final long keyPedido) {
@@ -276,8 +289,9 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
-    public void loadDetailsSale() throws Throwable {
-        this.mView.loadDetailsSale();
+    public void imprimirComprovante() {
+
+        this.mImpressoraUtil.imprimirComprovantePedido(getOrderSale(), getClient());
     }
 
     @Override
@@ -317,14 +331,13 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
-    public void refreshSelectedProductViews() {
-        this.mView.refreshSelectedProductViews();
+    public void loadDetailsSale() throws Throwable {
+        this.mView.carregarDadosDaVenda();
     }
 
     @Override
-    public void imprimirPedido() {
-
-        this.mImpressoraUtil.imprimirComprovantePedido(getOrderSale(), getClient());
+    public void refreshSelectedProductViews() {
+        this.mView.atualizarViewsDoProdutoSelecionado();
     }
 
     @Override
@@ -355,7 +368,6 @@ public class Presenter implements ISalesMVP.IPresenter {
     @Override
     public void updateSaleOrder(final Pedido orderSale) {
         this.mModel.copyOrUpdateSaleOrder(orderSale);
-
     }
 
     @Override
@@ -369,16 +381,12 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
-    public boolean validateFieldsBeforeAddItem() {
-        return this.mView.validateFieldsBeforeAddItem();
-    }
-
-    @Override
     public void saveOrderSale() throws ParseException {
 
         Pedido pedido = new Pedido();
-        pedido.setDataPedido(DateUtils.formatarDateddMMyyyyhhmm(new java.util.Date(System.currentTimeMillis())));
-        //Agora setar o id definitivo do item do pedido
+        pedido.setDataPedido(
+                DateUtils.formatarDateddMMyyyyhhmm(new java.util.Date(System.currentTimeMillis())));
+        // Agora setar o id definitivo do item do pedido
 
         getItens().forEach(item->this.mModel.addItemPedido(item));
         SessionManager session = new SessionManager(getContext());
@@ -387,16 +395,17 @@ public class Presenter implements ISalesMVP.IPresenter {
         pedido.setValorTotal(calculeTotalOrderSale());
         pedido.setTipoRecebimento(getTipoRecebimentoID());
 
-        //Salva o pedido e retorna o id salvo
-        long idSaleOrder = this.mModel.saveOrderSale(pedido);
+        // Salva o pedido e retorna o id salvo
+        long idSaleOrder = this.mModel.salvarPedido(pedido);
 
-        //Seta a chave composta do item pedido com o id da venda
-        getItens().forEach(item->
-                item.getChavesItemPedido().setIdVenda(idSaleOrder)
-        );
+        // Seta a chave composta do item pedido com o id da venda
+        getItens().forEach(item->item.getChavesItemPedido().setIdVenda(idSaleOrder));
         pedido.setItens(Pedido.dtoToRealList(getItens()));
         this.mModel.copyOrUpdateSaleOrder(pedido);
+    }
 
-
+    @Override
+    public boolean validarCamposAntesDeAdicionarItem() {
+        return this.mView.validarCamposAntesDeAdicionarItem();
     }
 }

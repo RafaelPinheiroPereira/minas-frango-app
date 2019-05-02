@@ -1,6 +1,6 @@
 package com.br.minasfrango.network.service;
 
-import com.br.minasfrango.data.dto.RecebimentoDTO;
+import com.br.minasfrango.data.model.RecebimentoDTO;
 import com.br.minasfrango.data.realm.Cliente;
 import com.br.minasfrango.data.realm.Funcionario;
 import com.br.minasfrango.data.realm.Preco;

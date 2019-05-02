@@ -1,10 +1,13 @@
 package com.br.minasfrango.ui.mvp.vieworder;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import com.br.minasfrango.data.realm.Cliente;
 import com.br.minasfrango.data.realm.Pedido;
 import com.br.minasfrango.data.realm.TipoRecebimento;
 import com.br.minasfrango.ui.mvp.vieworder.IViewOrderMVP.IView;
+import com.br.minasfrango.util.ImpressoraUtil;
 
 public class Presenter implements IViewOrderMVP.IPresenter {
 
@@ -18,9 +21,12 @@ public class Presenter implements IViewOrderMVP.IPresenter {
 
     IViewOrderMVP.IView mView;
 
+    ImpressoraUtil mImpressoraUtil;
+
     public Presenter(final IView view) {
         mView = view;
         mModel = new Model(this);
+        mImpressoraUtil = new ImpressoraUtil((Activity) getContext());
     }
 
     @Override
@@ -72,5 +78,30 @@ public class Presenter implements IViewOrderMVP.IPresenter {
     @Override
     public void setDataView() {
         this.mView.setDataView();
+    }
+
+    /**
+     * Metodos relacionados a impressao
+     */
+    @Override
+    public void esperarPorConexao() {
+        if (this.mImpressoraUtil.esperarPorConexao()) {
+            this.mView.exibirBotaoGerarRecibo();
+        }
+    }
+
+    @Override
+    public void fecharConexaoAtiva() {
+        this.mImpressoraUtil.fecharConexaoAtiva();
+    }
+
+    @Override
+    public Context getContext() {
+        return (Context) this.mView;
+    }
+
+    @Override
+    public void imprimirComprovante() {
+        this.mImpressoraUtil.imprimirComprovantePedido(getPedido(), getCliente());
     }
 }

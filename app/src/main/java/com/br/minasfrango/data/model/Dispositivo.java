@@ -1,4 +1,4 @@
-package com.br.minasfrango.data.dto;
+package com.br.minasfrango.data.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -15,31 +15,45 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class Recebimento extends RealmObject implements Serializable {
-		
-		@PrimaryKey
-		private long id;
-		private long idFuncionario;
-		private long idCliente;
-		private long idVenda;
-		private Date dataVenda;
-		private double valorVenda;
-		private double valorAmortizado;
-		private Date dataRecebimento;
-		private long tipoRecebimento;
-		private Date dataVencimento;
 
-		private boolean check=false;
+    private boolean check = false;
 
-	@Ignore
-	private int orderSelected = 0;
-		
-		public Recebimento(long idFuncionario, long idCliente, long idVenda, Date dataVenda, double valorVenda,Date dataVencimento) {
-				this.idFuncionario = idFuncionario;
-				this.idCliente = idCliente;
-				this.idVenda = idVenda;
-				this.dataVenda = dataVenda;
-				this.valorVenda = valorVenda;
-				this.dataVencimento=dataVencimento;
-				
-		}
+    private Date dataRecebimento;
+
+    private Date dataVencimento;
+
+    private Date dataVenda;
+
+    @PrimaryKey
+    private long id;
+
+    private long idCliente;
+
+    private long idFuncionario;
+
+    private long idVenda;
+
+    @Ignore
+    private int orderSelected = 0;
+
+    private long tipoRecebimento;
+
+    private double valorAmortizado;
+
+    private double valorVenda;
+
+    public Recebimento(
+            long idFuncionario,
+            long idCliente,
+            long idVenda,
+            Date dataVenda,
+            double valorVenda,
+            Date dataVencimento) {
+        this.idFuncionario = idFuncionario;
+        this.idCliente = idCliente;
+        this.idVenda = idVenda;
+        this.dataVenda = dataVenda;
+        this.valorVenda = valorVenda;
+        this.dataVencimento = dataVencimento;
+    }
 }

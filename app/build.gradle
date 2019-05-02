@@ -83,6 +83,9 @@ dependencies {
     //Datecs Impressora
     implementation files('libs/com.datecs.api.jar')
 
+    //Lib da Camera
+    implementation 'com.github.aliwaris0572:CustomCamera:1.7'
+
 
 }
 apply plugin: 'realm-android'

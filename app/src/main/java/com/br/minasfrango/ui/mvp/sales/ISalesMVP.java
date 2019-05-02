@@ -18,6 +18,8 @@ public interface ISalesMVP {
 
     interface IPresenter {
 
+        void atulizarViewPrecoPosFoto();
+
         Double calculeTotalOrderSale();
 
         void desabilitarBtnSalvar();
@@ -27,6 +29,8 @@ public interface ISalesMVP {
         void esperarPorConexao();
 
         ArrayList<String> convertTipoRecebimentoInString(List<TipoRecebimento> tiposRecebimentos);
+
+        void exibirBotaoFotografar();
 
         void dissmis();
 
@@ -38,6 +42,7 @@ public interface ISalesMVP {
 
         void fecharConexaoAtiva();
 
+        int getBicos();
 
         void setAlertDialog(AlertDialog alertDialog);
 
@@ -47,7 +52,10 @@ public interface ISalesMVP {
 
         Context getContext();
 
+        void setBicos(int bicos);
+
         ItemPedido getItemPedido();
+
 
         void setItemPedido(ItemPedido itemPedido);
 
@@ -138,26 +146,30 @@ public interface ISalesMVP {
 
         void updateTxtAmountProducts();
 
-        boolean validateFieldsBeforeAddItem();
+        void imprimirComprovante();
 
-        void imprimirPedido();
+        boolean validarCamposAntesDeAdicionarItem();
     }
 
     interface IView {
 
-        void desabilitarBtnSalvar();
+        void atualizarViewsDoProdutoSelecionado();
+
+        void atulizarViewPrecoPosFoto();
 
         void dissmiss();
 
         void error(String msg);
 
+        void carregarDadosDaVenda() throws Throwable;
+
         void exibirBotaoImprimir();
 
         void getParams();
 
-        void loadDetailsSale() throws Throwable;
+        void desabilitarCliqueBotaoSalvarVenda();
 
-        void refreshSelectedProductViews();
+        void exibirBotaoFotografar();
 
         void setSpinnerProductSelected();
 
@@ -173,7 +185,7 @@ public interface ISalesMVP {
 
         void updateTxtAmountProducts();
 
-        boolean validateFieldsBeforeAddItem();
+        boolean validarCamposAntesDeAdicionarItem();
 
     }
 
@@ -218,6 +230,6 @@ public interface ISalesMVP {
         /**
          * @return saleOrderIdSaved
          */
-        long saveOrderSale(final Pedido saleOrderToSave);
+        long salvarPedido(final Pedido saleOrderToSave);
     }
 }

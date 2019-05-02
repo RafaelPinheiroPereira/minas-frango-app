@@ -21,7 +21,7 @@ import android.widget.ListView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.dto.Dispositivo;
+import com.br.minasfrango.data.model.Dispositivo;
 import com.br.minasfrango.ui.adapter.DispositivoAdapter;
 import com.br.minasfrango.ui.mvp.impressora.IImpressoraMVP;
 import com.br.minasfrango.ui.mvp.impressora.Presenter;

@@ -1,9 +1,11 @@
 package com.br.minasfrango.ui.mvp.payments;
 
+import android.app.Activity;
 import android.content.Context;
 import com.br.minasfrango.data.realm.Cliente;
 import com.br.minasfrango.data.realm.Recebimento;
 import com.br.minasfrango.ui.mvp.payments.IPaymentsMVP.IView;
+import com.br.minasfrango.util.ImpressoraUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,7 @@ public class Presenter implements IPaymentsMVP.IPresenter {
 
     IPaymentsMVP.IModel mModel;
 
+    ImpressoraUtil mImpressoraUtil;
     /**
      * Posicao da nota selecionada
      */
@@ -36,6 +39,7 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     public Presenter(final IView view) {
         this.view = view;
         this.mModel = new Model(this);
+        this.mImpressoraUtil = new ImpressoraUtil((Activity) getContext());
     }
 
     @Override
@@ -82,6 +86,16 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     @Override
     public Cliente getCliente() {
         return mCliente;
+    }
+
+    /**
+     * Metodos relacionados a impressao
+     */
+    @Override
+    public void esperarPorConexao() {
+        if (this.mImpressoraUtil.esperarPorConexao()) {
+            this.view.exibirBotaoGerarRecibo();
+        }
     }
 
     @Override
@@ -180,9 +194,9 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
-    public List<Recebimento> loadReceiptsByClient() {
+    public void fecharConexaoAtiva() {
+        this.mImpressoraUtil.fecharConexaoAtiva();
 
-        return this.mModel.loadReceiptsByClient();
     }
 
     @Override
@@ -223,5 +237,22 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     @Override
     public void updateRecycleViewAlteredItem(final int position) {
         this.view.updateRecycleViewAlteredItem(position);
+    }
+
+    @Override
+    public void imprimirComprovante() {
+        this.mImpressoraUtil.imprimirComprovanteRecebimento(getRecebimentos(), getCliente());
+
+    }
+
+    @Override
+    public void inabilitarBotaoSalvar() {
+        this.view.inabilitarBotaoSalvarAmortizacao();
+    }
+
+    @Override
+    public List<Recebimento> pesquisarRecebimentoPorCliente() {
+
+        return this.mModel.pesquisarRecebimentoPorCliente();
     }
 }
