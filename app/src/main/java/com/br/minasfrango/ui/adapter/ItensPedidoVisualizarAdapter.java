@@ -8,15 +8,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.realm.ItemPedido;
+import com.br.minasfrango.data.model.ItemPedido;
 import java.text.NumberFormat;
 import java.util.List;
 
-public class ItensPedidoVisualizarAdapter extends RecyclerView.Adapter<ItensPedidoVisualizarAdapter.ItemViewHolder> {
-
+public class ItensPedidoVisualizarAdapter
+        extends RecyclerView.Adapter<ItensPedidoVisualizarAdapter.ItemViewHolder> {
 
     private List<ItemPedido> mItensPedido;
-
 
     private LayoutInflater mLayoutInflater;
 
@@ -25,24 +24,16 @@ public class ItensPedidoVisualizarAdapter extends RecyclerView.Adapter<ItensPedi
         this.mItensPedido = l;
 
         this.mLayoutInflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-
-    }
-
-
-    @Override
-    public ItensPedidoVisualizarAdapter.ItemViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-
-        View v = mLayoutInflater.inflate(R.layout.item_pedido_visualizar, viewGroup, false);
-        ItensPedidoVisualizarAdapter.ItemViewHolder mvh = new ItensPedidoVisualizarAdapter.ItemViewHolder(v);
-        return mvh;
-
-
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder {
 
-        TextView txtQTDBicos, descricaoTextView, valorTextView, unidadeTextView, qtdTextView, vlrUnitarioTextView;
+        TextView txtQTDBicos,
+                descricaoTextView,
+                valorTextView,
+                unidadeTextView,
+                qtdTextView,
+                vlrUnitarioTextView;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
@@ -53,8 +44,6 @@ public class ItensPedidoVisualizarAdapter extends RecyclerView.Adapter<ItensPedi
             qtdTextView = itemView.findViewById(R.id.qtd_text_view_item_visualizar);
             vlrUnitarioTextView = itemView.findViewById(R.id.valor_unitario_txt_item_visualizar);
         }
-
-
     }
 
     @Override
@@ -65,14 +54,25 @@ public class ItensPedidoVisualizarAdapter extends RecyclerView.Adapter<ItensPedi
     @Override
     public void onBindViewHolder(@NonNull final ItemViewHolder itemViewHolder, final int position) {
         final ItemPedido itemPedido = mItensPedido.get(position);
-        //itemViewHolder.txtQTDBicos.setText(String.valueOf(itemPedido.getChavesItemPedido().getIdProduto()));
+        // itemViewHolder.txtQTDBicos.setText(String.valueOf(itemPedido.getChavesItemPedidoORM().getIdProduto()));
         itemViewHolder.descricaoTextView.setText((itemPedido.getDescricao()));
         itemViewHolder.unidadeTextView.setText(itemPedido.getChavesItemPedido().getIdUnidade());
         itemViewHolder.qtdTextView.setText(String.valueOf(itemPedido.getQuantidade()));
-        itemViewHolder.valorTextView.setText(NumberFormat.getCurrencyInstance().format(itemPedido.getValorTotal()));
-        itemViewHolder.vlrUnitarioTextView
-                .setText(NumberFormat.getCurrencyInstance().format(itemPedido.getValorUnitario()));
+        itemViewHolder.valorTextView.setText(
+                NumberFormat.getCurrencyInstance().format(itemPedido.getValorTotal()));
+        itemViewHolder.vlrUnitarioTextView.setText(
+                NumberFormat.getCurrencyInstance().format(itemPedido.getValorUnitario()));
 
         itemViewHolder.txtQTDBicos.setText(String.valueOf(itemPedido.getBicos()));
+    }
+
+    @Override
+    public ItensPedidoVisualizarAdapter.ItemViewHolder onCreateViewHolder(
+            ViewGroup viewGroup, int viewType) {
+
+        View v = mLayoutInflater.inflate(R.layout.item_pedido_visualizar, viewGroup, false);
+        ItensPedidoVisualizarAdapter.ItemViewHolder mvh =
+                new ItensPedidoVisualizarAdapter.ItemViewHolder(v);
+        return mvh;
     }
 }

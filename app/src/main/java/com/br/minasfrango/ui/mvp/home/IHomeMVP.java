@@ -2,17 +2,15 @@ package com.br.minasfrango.ui.mvp.home;
 
 import android.content.Context;
 import android.os.Bundle;
-import com.br.minasfrango.data.realm.Cliente;
-import com.br.minasfrango.data.realm.Pedido;
-import com.br.minasfrango.data.realm.Recebimento;
-import com.br.minasfrango.data.realm.Rota;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.Pedido;
+import com.br.minasfrango.data.model.Recebimento;
+import com.br.minasfrango.data.model.Rota;
 import java.util.List;
-
 
 public interface IHomeMVP {
 
     interface IPresenter {
-
 
         void closeDrawer();
 
@@ -20,13 +18,13 @@ public interface IHomeMVP {
 
         void dataImport();
 
-        List<Cliente> findClientsByRoute(Rota route);
+        List<Rota> obterTodasRotas();
 
-        List<Recebimento> findReceiptsByClient(Cliente cliente);
+        List<Cliente> obterTodosClientes();
 
-        List<Cliente> allClients();
+        List<Cliente> pesquisarClientePorRota(Rota rota);
 
-        List<Rota> allRoutes();
+        List<Recebimento> pesquisarRecebimentoPorCliente(Cliente cliente);
 
         void loadClientsAfterDataImport();
 
@@ -59,11 +57,9 @@ public interface IHomeMVP {
         void showDialogClient(final Cliente cliente);
 
         void showToast(String msg);
-
     }
 
     interface IView {
-
 
         void closerDrawer();
 
@@ -72,7 +68,6 @@ public interface IHomeMVP {
         void setDrawer(final Bundle savedInstanceState);
 
         void showDialogClient(final Cliente cliente);
-
 
         void onShowProgressDialog();
 
@@ -87,14 +82,14 @@ public interface IHomeMVP {
 
     interface IModel {
 
-        List<Cliente> findClientsByRoute(Rota rota);
+        List<Rota> obterTodasRotas();
 
-        List<Recebimento> findReceiptsByClient(Cliente cliente);
+        List<Cliente> obterTodosClientes();
 
-        List<Cliente> getAllClients();
+        List<Pedido> obterTodosPedidos();
 
-        List<Rota> getAllRoutes();
+        List<Cliente> pesquisarClientePorRota(Rota rota);
 
-        List<Pedido> getAllOrders();
+        List<Recebimento> pesquisarRecebimentoPorCliente(Cliente cliente);
     }
 }

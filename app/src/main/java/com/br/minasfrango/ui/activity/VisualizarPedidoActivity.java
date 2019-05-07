@@ -15,8 +15,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.realm.Cliente;
-import com.br.minasfrango.data.realm.Pedido;
 import com.br.minasfrango.ui.abstracts.AbstractActivity;
 import com.br.minasfrango.ui.adapter.ItensPedidoVisualizarAdapter;
 import com.br.minasfrango.ui.mvp.vieworder.IViewOrderMVP;
@@ -79,11 +77,8 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
         super.onStart();
 
         mPresenter = new Presenter(this);
-        mPresenter.setPedido(
-                Pedido.convertRealmToDTO(mPresenter.getSaleOrderParams(getIntent().getExtras())));
-        mPresenter.setCliente(
-                Cliente.convertRealmToDTO(
-                        mPresenter.findClientByID(mPresenter.getPedido().getCodigoCliente())));
+        mPresenter.setPedido(mPresenter.getSaleOrderParams(getIntent().getExtras()));
+        mPresenter.setCliente(mPresenter.findClientByID(mPresenter.getPedido().getCodigoCliente()));
         try {
             mPresenter.setTipoRecebimento(
                     mPresenter.findTipoRecebimentoByID(
@@ -134,7 +129,7 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
 
     @Override
     public void setDataView() {
-        mAdapter = new ItensPedidoVisualizarAdapter(this, mPresenter.getPedido().realmListToDTO());
+        mAdapter = new ItensPedidoVisualizarAdapter(this, mPresenter.getPedido().getItens());
         rcvItensViewOrder.setAdapter(mAdapter);
         rcvItensViewOrder.setLayoutManager(new LinearLayoutManager(this));
         txtTipoRecebimento.setText(mPresenter.getTipoRecebimento().getNome());

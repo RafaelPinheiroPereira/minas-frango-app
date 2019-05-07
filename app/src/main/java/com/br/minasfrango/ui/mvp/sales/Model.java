@@ -8,38 +8,44 @@ import com.br.minasfrango.data.dao.PriceDAO;
 import com.br.minasfrango.data.dao.ProductDAO;
 import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
 import com.br.minasfrango.data.dao.UnidadeDAO;
-import com.br.minasfrango.data.realm.Cliente;
-import com.br.minasfrango.data.realm.ItemPedido;
-import com.br.minasfrango.data.realm.Pedido;
-import com.br.minasfrango.data.realm.Preco;
-import com.br.minasfrango.data.realm.PrecoID;
-import com.br.minasfrango.data.realm.Produto;
-import com.br.minasfrango.data.realm.TipoRecebimento;
-import com.br.minasfrango.data.realm.Unidade;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.ItemPedido;
+import com.br.minasfrango.data.model.Pedido;
+import com.br.minasfrango.data.model.Preco;
+import com.br.minasfrango.data.model.Produto;
+import com.br.minasfrango.data.model.TipoRecebimento;
+import com.br.minasfrango.data.model.Unidade;
+import com.br.minasfrango.data.realm.ClienteORM;
+import com.br.minasfrango.data.realm.ItemPedidoORM;
+import com.br.minasfrango.data.realm.PedidoORM;
+import com.br.minasfrango.data.realm.PrecoIDORM;
+import com.br.minasfrango.data.realm.PrecoORM;
+import com.br.minasfrango.data.realm.ProdutoORM;
+import com.br.minasfrango.data.realm.UnidadeORM;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Model implements ISalesMVP.IModel {
 
-    ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstace(ItemPedido.class);
+    ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstace(ItemPedidoORM.class);
 
-    ClientDAO mClientDAO = ClientDAO.getInstace(Cliente.class);
+    ClientDAO mClientDAO = ClientDAO.getInstace(ClienteORM.class);
 
-    PedidoDAO mPedidoDAO = PedidoDAO.getInstace(Pedido.class);
+    PedidoDAO mPedidoDAO = PedidoDAO.getInstace(PedidoORM.class);
 
-    PrecoIDDAO mPrecoIDDAO = PrecoIDDAO.getInstance(PrecoID.class);
+    PrecoIDDAO mPrecoIDDAO = PrecoIDDAO.getInstance(PrecoIDORM.class);
 
-    PriceDAO mPriceDAO = PriceDAO.getInstace(Preco.class);
+    PriceDAO mPriceDAO = PriceDAO.getInstace(PrecoORM.class);
 
-    ProductDAO mProductDAO = ProductDAO.getInstace(Produto.class);
+    ProductDAO mProductDAO = ProductDAO.getInstace(ProdutoORM.class);
 
-    ProductDAO produtoDAO = ProductDAO.getInstace(Produto.class);
+    ProductDAO produtoDAO = ProductDAO.getInstace(ProdutoORM.class);
 
-    PedidoDAO saleDAO = PedidoDAO.getInstace(Pedido.class);
+    PedidoDAO saleDAO = PedidoDAO.getInstace(PedidoORM.class);
 
     TipoRecebimentoDAO tipoRecebimentoDAO = TipoRecebimentoDAO.getInstace();
 
-    UnidadeDAO unidadeDAO = UnidadeDAO.getInstace(Unidade.class);
+    UnidadeDAO unidadeDAO = UnidadeDAO.getInstace(UnidadeORM.class);
 
     private com.br.minasfrango.ui.mvp.sales.Presenter mPresenter;
 
@@ -61,9 +67,17 @@ public class Model implements ISalesMVP.IModel {
     }
 
     @Override
-    public ArrayList<String> convertUnitysToString(final List<Unidade> unitys) {
+    public Pedido buscarVendaPorId(final Long id) {
+        PedidoORM pedidoORM = saleDAO.findById(id);
+        Pedido pedido = new Pedido(pedidoORM);
+        pedido.setItens(Pedido.converterListItemPedidoRealmParaModel(pedidoORM));
+        return pedido;
+    }
+
+    @Override
+    public ArrayList<String> convertUnitysToString(final List<Unidade> unidades) {
         ArrayList<String> unityNames = new ArrayList<>();
-        unitys.forEach(item->{
+        unidades.forEach(item->{
             String[] unitID = item.getId().split("-");
             unityNames.add(unitID[0]);
         });
@@ -72,18 +86,15 @@ public class Model implements ISalesMVP.IModel {
 
     @Override
     public void copyOrUpdateSaleOrder(final Pedido pedido) {
-        mPedidoDAO.copyOrUpdate(pedido);
-        mPresenter.setOrderSale(pedido);
+        PedidoORM pedidoORM = new PedidoORM(pedido);
+        pedidoORM.setItens(PedidoORM.converterListModelParaListRealm(pedido.getItens()));
+        mPedidoDAO.copyOrUpdate(pedidoORM);
+        mPresenter.setOrdemVenda(pedido);
     }
 
     @Override
     public Cliente findClientById(final Long id) {
-        return this.mClientDAO.findById(id);
-    }
-
-    @Override
-    public Produto findProductById(final long id) {
-        return mProductDAO.findById(id);
+        return new Cliente(this.mClientDAO.findById(id));
     }
 
     @Override
@@ -92,18 +103,18 @@ public class Model implements ISalesMVP.IModel {
     }
 
     @Override
-    public Pedido findSalesById(final Long id) {
-        return saleDAO.findById(id);
+    public Produto findProductById(final long id) {
+        return new Produto(mProductDAO.findById(id));
     }
 
     @Override
     public TipoRecebimento findTipoRecebimentoById() throws Throwable {
-        return this.tipoRecebimentoDAO.findById(mPresenter.getOrderSale().getTipoRecebimento());
+        return this.tipoRecebimentoDAO.findById(mPresenter.getOrdemVenda().getTipoRecebimento());
     }
 
     @Override
-    public List<TipoRecebimento> findTipoRecebimentosByCliente(final Cliente client) {
-        return tipoRecebimentoDAO.findTipoRecebimentoByCliente(client);
+    public List<TipoRecebimento> findTipoRecebimentosByCliente(final Cliente cliente) {
+        return tipoRecebimentoDAO.findTipoRecebimentoByCliente(cliente);
     }
 
     @Override
@@ -134,10 +145,10 @@ public class Model implements ISalesMVP.IModel {
     }
 
     @Override
-    public ArrayList<String> loadAllProductsID(final List<Produto> products) {
+    public ArrayList<String> loadAllProductsID(final List<Produto> produtos) {
 
         ArrayList<String> productIds = new ArrayList<>();
-        products.forEach(item->productIds.add(String.valueOf(item.getId())));
+        produtos.forEach(item->productIds.add(String.valueOf(item.getId())));
         return productIds;
 
     }
@@ -155,7 +166,7 @@ public class Model implements ISalesMVP.IModel {
     }
 
     @Override
-    public long salvarPedido(final Pedido saleOrderToSave) {
+    public long salvarPedido(final PedidoORM saleOrderToSave) {
         return this.mPedidoDAO.addPedido(saleOrderToSave);
     }
 }

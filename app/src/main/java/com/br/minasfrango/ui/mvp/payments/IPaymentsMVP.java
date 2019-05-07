@@ -1,8 +1,8 @@
 package com.br.minasfrango.ui.mvp.payments;
 
 import android.content.Context;
-import com.br.minasfrango.data.realm.Cliente;
-import com.br.minasfrango.data.realm.Recebimento;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.Recebimento;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +35,11 @@ public interface IPaymentsMVP {
          */
         void esperarPorConexao();
 
-        void processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(int i, Recebimento recebimento);
+        void processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(
+                int i, Recebimento recebimento);
 
-        void processarOrdemDeSelecaoDaNotaAposRemocaoDaAmortizacao(int i, Recebimento recebimento);
+        void processarOrdemDeSelecaoDaNotaAposRemocaoDaAmortizacao(
+                int i, Recebimento recebimento);
 
         void removerAmortizacao(int position);
 
@@ -108,9 +110,11 @@ public interface IPaymentsMVP {
 
         ArrayList<String> loadTipoRecebimentosAVista() throws Throwable;
 
-        void processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(final int posicao, Recebimento recebimentoToUpdate);
+        void processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(
+                final int posicao, Recebimento recebimentoToUpdate);
 
-        void processarOrdemDeSelecaoDaNotaAposRemocaoDaAmortizacao(int posicao, Recebimento recebimentoToUpdate);
+        void processarOrdemDeSelecaoDaNotaAposRemocaoDaAmortizacao(
+                int posicao, Recebimento recebimentoToUpdate);
 
         void removerAmortizacao(int position);
 
@@ -141,6 +145,4 @@ public interface IPaymentsMVP {
 
         void updateRecycleViewAlteredItem(int position);
     }
-
-
 }

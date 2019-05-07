@@ -1,12 +1,12 @@
-package com.br.minasfrango.network.service;
+package com.br.minasfrango.network.servico;
 
-import com.br.minasfrango.data.model.RecebimentoDTO;
-import com.br.minasfrango.data.realm.Cliente;
-import com.br.minasfrango.data.realm.Funcionario;
-import com.br.minasfrango.data.realm.Preco;
-import com.br.minasfrango.data.realm.Produto;
-import com.br.minasfrango.data.realm.TipoRecebimento;
-import com.br.minasfrango.data.realm.Unidade;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.Funcionario;
+import com.br.minasfrango.data.model.Preco;
+import com.br.minasfrango.data.model.Produto;
+import com.br.minasfrango.data.model.Recebimento;
+import com.br.minasfrango.data.model.TipoRecebimento;
+import com.br.minasfrango.data.model.Unidade;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -29,5 +29,5 @@ public interface ImportacaoService {
 		Call<List<Preco>>importacaoPreco();
 		
 		@POST("importaRecebimento")
-		Call<List<RecebimentoDTO>>importacaoRecebimentos(@Body Funcionario funcionario);
+        Call<List<Recebimento>> importacaoRecebimentos(@Body Funcionario funcionario);
 }

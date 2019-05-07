@@ -1,4 +1,4 @@
-package com.br.minasfrango.network.service;
+package com.br.minasfrango.network.servico;
 
 import com.br.minasfrango.data.model.ListaPedido;
 import retrofit2.Call;

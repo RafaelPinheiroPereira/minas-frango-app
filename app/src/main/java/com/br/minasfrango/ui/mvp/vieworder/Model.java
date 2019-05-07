@@ -1,21 +1,19 @@
 package com.br.minasfrango.ui.mvp.vieworder;
 
 import com.br.minasfrango.data.dao.ClientDAO;
-import com.br.minasfrango.data.dao.ItemPedidoDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
 import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
-import com.br.minasfrango.data.realm.Cliente;
-import com.br.minasfrango.data.realm.ItemPedido;
-import com.br.minasfrango.data.realm.Pedido;
-import com.br.minasfrango.data.realm.TipoRecebimento;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.Pedido;
+import com.br.minasfrango.data.model.TipoRecebimento;
+import com.br.minasfrango.data.realm.ClienteORM;
+import com.br.minasfrango.data.realm.PedidoORM;
 
 public class Model implements IViewOrderMVP.IModel {
 
-    ClientDAO mClientDAO = ClientDAO.getInstace(Cliente.class);
+    ClientDAO mClientDAO = ClientDAO.getInstace(ClienteORM.class);
 
-    ItemPedidoDAO mItemPedidoDAO = ItemPedidoDAO.getInstace(ItemPedido.class);
-
-    PedidoDAO mPedidoDAO = PedidoDAO.getInstace(Pedido.class);
+    PedidoDAO mPedidoDAO = PedidoDAO.getInstace(PedidoORM.class);
 
     IViewOrderMVP.IPresenter mPresenter;
 
@@ -27,7 +25,7 @@ public class Model implements IViewOrderMVP.IModel {
 
     @Override
     public Cliente findClientByID(final long codigoCliente) {
-        return this.mClientDAO.findById(codigoCliente);
+        return new Cliente(this.mClientDAO.findById(codigoCliente));
     }
 
     @Override
@@ -37,6 +35,9 @@ public class Model implements IViewOrderMVP.IModel {
 
     @Override
     public Pedido findySaleOrderByID(final Long id) {
-        return mPedidoDAO.findById(id);
+        PedidoORM pedidoORM = mPedidoDAO.findById(id);
+        Pedido pedido = new Pedido(pedidoORM);
+        pedido.setItens(Pedido.converterListItemPedidoRealmParaModel(pedidoORM));
+        return pedido;
     }
 }

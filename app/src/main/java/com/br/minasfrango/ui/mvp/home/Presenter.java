@@ -3,13 +3,13 @@ package com.br.minasfrango.ui.mvp.home;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import com.br.minasfrango.data.realm.Cliente;
-import com.br.minasfrango.data.realm.Funcionario;
-import com.br.minasfrango.data.realm.Pedido;
-import com.br.minasfrango.data.realm.Recebimento;
-import com.br.minasfrango.data.realm.Rota;
-import com.br.minasfrango.network.tasks.DataExport;
-import com.br.minasfrango.network.tasks.DataImport;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.Funcionario;
+import com.br.minasfrango.data.model.Pedido;
+import com.br.minasfrango.data.model.Recebimento;
+import com.br.minasfrango.data.model.Rota;
+import com.br.minasfrango.network.tarefa.ExportacaoDeDados;
+import com.br.minasfrango.network.tarefa.ImportacaoDeDados;
 import com.br.minasfrango.ui.abstracts.AbstractActivity;
 import com.br.minasfrango.ui.activity.RecebimentoActivity;
 import com.br.minasfrango.ui.activity.VendasActivity;
@@ -21,14 +21,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
 public class Presenter implements IHomeMVP.IPresenter {
-
 
     SessionManager mSessionManager;
 
     private List<Cliente> clients = new ArrayList<>();
-    private List<Rota> routes=new ArrayList<>();
+
+    private List<Rota> routes = new ArrayList<>();
 
     private IModel model;
     private IView view;
@@ -37,7 +36,6 @@ public class Presenter implements IHomeMVP.IPresenter {
         this.view = view;
         this.model = new Model(this);
     }
-
 
     @Override
     public boolean checkLogin() {
@@ -52,35 +50,8 @@ public class Presenter implements IHomeMVP.IPresenter {
 
     @Override
     public void dataExport() {
-        List<Pedido> orders = this.model.getAllOrders();
-        new DataExport(this, orders).execute();
-
-    }
-
-    @Override
-    public List<Cliente> findClientsByRoute(final Rota route) {
-        clients.clear();
-        clients.addAll(model.findClientsByRoute(route));
-        return clients;
-    }
-
-    @Override
-    public List<Recebimento> findReceiptsByClient(final Cliente cliente) {
-        return model.findReceiptsByClient(cliente);
-    }
-
-    @Override
-    public List<Cliente> allClients() {
-        clients.clear();
-        clients.addAll(model.getAllClients());
-        return clients;
-    }
-
-    @Override
-    public List<Rota> allRoutes() {
-        routes.clear();
-        routes.addAll(model.getAllRoutes());
-        return routes;
+        List<Pedido> pedidos = this.model.obterTodosPedidos();
+        new ExportacaoDeDados(this, pedidos).execute();
     }
 
     @Override
@@ -88,23 +59,51 @@ public class Presenter implements IHomeMVP.IPresenter {
         Funcionario funcionario = new Funcionario();
         funcionario.setId(getUserId());
         funcionario.setNome(getUserName());
-        new DataImport(funcionario, this).execute();
-
-
+        new ImportacaoDeDados(funcionario, this).execute();
     }
 
     @Override
     public void loadClientsAfterDataImport() {
-            allClients();
-            this.view.loadClientsAfterDataImport();
-
+        obterTodosClientes();
+        this.view.loadClientsAfterDataImport();
     }
 
     @Override
     public void loadRoutesAfterDataImport() {
-        allRoutes();
+        obterTodasRotas();
         this.view.loadRoutesAfterDataImport();
+    }
 
+    @Override
+    public void navigateToReceiptsActivity(Cliente cliente) {
+        Intent intent = new Intent(getContext(), RecebimentoActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("keyCliente", cliente);
+        bundle.putString(
+                "dataVenda",
+                new SimpleDateFormat("dd/MM/yyyy").format(new Date(System.currentTimeMillis())));
+        intent.putExtras(bundle);
+        AbstractActivity.navigateToActivity(getContext(), intent);
+    }
+
+    @Override
+    public List<Rota> obterTodasRotas() {
+        routes.clear();
+        routes.addAll(model.obterTodasRotas());
+        return routes;
+    }
+
+    @Override
+    public List<Cliente> obterTodosClientes() {
+        clients.clear();
+        clients.addAll(model.obterTodosClientes());
+        return clients;
+    }
+
+    public List<Cliente> pesquisarClientePorRota(final Rota route) {
+        clients.clear();
+        clients.addAll(model.pesquisarClientePorRota(route));
+        return clients;
     }
 
     @Override
@@ -128,14 +127,8 @@ public class Presenter implements IHomeMVP.IPresenter {
     }
 
     @Override
-    public void navigateToReceiptsActivity(Cliente cliente) {
-        Intent intent = new Intent(getContext(), RecebimentoActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("keyCliente", cliente);
-        bundle.putString("dataVenda",
-                new SimpleDateFormat("dd/MM/yyyy").format(new Date(System.currentTimeMillis())));
-        intent.putExtras(bundle);
-        AbstractActivity.navigateToActivity(getContext(), intent);
+    public List<Recebimento> pesquisarRecebimentoPorCliente(final Cliente cliente) {
+        return model.pesquisarRecebimentoPorCliente(cliente);
     }
 
     @Override
@@ -147,7 +140,6 @@ public class Presenter implements IHomeMVP.IPresenter {
         params.putLong("keyPedido", 0);
         intent.putExtras(params);
         AbstractActivity.navigateToActivity(getContext(), intent);
-
     }
 
     @Override
@@ -173,7 +165,6 @@ public class Presenter implements IHomeMVP.IPresenter {
     @Override
     public void showDialogClient(final Cliente cliente) {
         this.view.showDialogClient(cliente);
-
     }
 
     @Override
@@ -185,6 +176,4 @@ public class Presenter implements IHomeMVP.IPresenter {
     public void setDrawer(final Bundle savedInstanceState) {
         this.view.setDrawer(savedInstanceState);
     }
-
-
 }

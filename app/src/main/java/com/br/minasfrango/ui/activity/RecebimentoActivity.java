@@ -21,7 +21,7 @@ import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.realm.Cliente;
+import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.ui.abstracts.AbstractActivity;
 import com.br.minasfrango.ui.adapter.RecebimentoAdapter;
 import com.br.minasfrango.ui.mvp.payments.IPaymentsMVP;
@@ -153,7 +153,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
 
                         } else {
                             // Devo informar que o valor recebido eh maior do que o devido
-                            edtValueAmortize.setError("Recebimento superior ao Valor Devido");
+                            edtValueAmortize.setError("RecebimentoORM superior ao Valor Devido");
                         }
                         mPresenter.atualizarViewSaldoDevedor();
                     }
@@ -282,7 +282,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
             }
         } else {
             // Devo informar que o valor recebido eh maior do que o devido
-            edtValueAmortize.setError("Recebimento superior ao Valor Devido");
+            edtValueAmortize.setError("RecebimentoORM superior ao Valor Devido");
         }
     }
 

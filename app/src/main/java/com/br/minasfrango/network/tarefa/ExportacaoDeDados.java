@@ -1,34 +1,33 @@
-package com.br.minasfrango.network.tasks;
+package com.br.minasfrango.network.tarefa;
 
 import android.os.AsyncTask;
 import com.br.minasfrango.data.model.ListaPedido;
-import com.br.minasfrango.data.realm.Pedido;
+import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.network.RetrofitConfig;
-import com.br.minasfrango.network.service.ExportacaoService;
+import com.br.minasfrango.network.servico.ExportacaoService;
 import com.br.minasfrango.ui.mvp.home.IHomeMVP;
 import java.io.IOException;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
-
-public class DataExport extends AsyncTask<Void, Void, Boolean> {
+public class ExportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
 
     IHomeMVP.IPresenter mHomePresenter;
 
-    List<Pedido> pedidoDTOS;
+    List<Pedido> mPedidos;
 
-    public DataExport(IHomeMVP.IPresenter homePresenter, List<Pedido> pedidoDTOS) {
+    public ExportacaoDeDados(IHomeMVP.IPresenter homePresenter, List<Pedido> pedidos) {
 
         this.mHomePresenter = homePresenter;
-        this.pedidoDTOS = pedidoDTOS;
+        this.mPedidos = pedidos;
     }
 
     @Override
     protected Boolean doInBackground(Void... voids) {
 
         //Aqui vem a chamada do service
-        return exportData(pedidoDTOS);
+        return exportData(mPedidos);
 
     }
 
@@ -47,10 +46,10 @@ public class DataExport extends AsyncTask<Void, Void, Boolean> {
         this.mHomePresenter.showProgressDialog();
     }
 
-    private boolean exportData(List<Pedido> pedidoDTOS) {
+    private boolean exportData(List<Pedido> pedidos) {
         ExportacaoService exportacaoService = new RetrofitConfig().getExportacaoService();
         ListaPedido listaPedido = new ListaPedido();
-        listaPedido.setMPedidos(pedidoDTOS);
+        listaPedido.setMPedidoORMS(pedidos);
         Call<Boolean> callExportacao = exportacaoService.exportacaoPedido(listaPedido);
         try {
             Response<Boolean> response = callExportacao.execute();

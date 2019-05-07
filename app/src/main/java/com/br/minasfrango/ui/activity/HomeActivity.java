@@ -22,8 +22,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnItemSelected;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.realm.Cliente;
-import com.br.minasfrango.data.realm.Rota;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.Rota;
 import com.br.minasfrango.ui.abstracts.AbstractActivity;
 import com.br.minasfrango.ui.adapter.ClienteAdapter;
 import com.br.minasfrango.ui.listener.IDrawer;
@@ -37,8 +37,7 @@ import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 public class HomeActivity extends AppCompatActivity
-        implements RecyclerViewOnClickListenerHack,
-        IView {
+        implements RecyclerViewOnClickListenerHack, IView {
 
     ClienteAdapter mClientAdapter;
 
@@ -69,7 +68,7 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
         presenter = new Presenter(this);
         ButterKnife.bind(this);
-        //Verifica se o user esta logado
+        // Verifica se o user esta logado
         if (presenter.checkLogin()) {
             finish();
         }
@@ -90,8 +89,6 @@ public class HomeActivity extends AppCompatActivity
         if (result != null && result.isDrawerOpen()) {
             result.closeDrawer();
         }
-
-
     }
 
     @Override
@@ -102,7 +99,6 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void loadRoutesAfterDataImport() {
         mRouteAdapter.notifyDataSetChanged();
-
     }
 
     @Override
@@ -128,12 +124,12 @@ public class HomeActivity extends AppCompatActivity
             mProgressDialog.setMessage("Carregando dados, Por favor aguarde...");
         }
         return mProgressDialog;
-
     }
 
     @Override
     public void onBackPressed() {
-        //handle the back press :D close the drawer first and if the drawer is closed close the activity
+        // handle the back press :D close the drawer first and if the drawer is closed close the
+        // activity
         if (result != null && result.isDrawerOpen()) {
             result.closeDrawer();
         } else {
@@ -145,26 +141,26 @@ public class HomeActivity extends AppCompatActivity
     public void onClickListener(View view, int position) {
 
         switch (view.getId()) {
-
             case R.id.btnVender:
                 presenter.navigateToSalesActivity(mClientAdapter.getItem(position));
                 break;
 
             case R.id.btnReceber:
-                if (presenter.findReceiptsByClient(mClientAdapter.getItem(position)).size() > 0) {
+                if (presenter
+                        .pesquisarRecebimentoPorCliente(mClientAdapter.getItem(position))
+                        .size()
+                        > 0) {
                     presenter.navigateToReceiptsActivity(mClientAdapter.getItem(position));
                 } else {
-                    AbstractActivity.showToast(presenter.getContext(), "Cliente sem notas em aberto!");
+                    AbstractActivity.showToast(
+                            presenter.getContext(), "ClienteORM sem notas em aberto!");
                 }
                 break;
             case R.id.imgInfo:
                 presenter.showDialogClient(mClientAdapter.getItem(position));
 
                 break;
-
-
         }
-
     }
 
     @Override
@@ -173,34 +169,47 @@ public class HomeActivity extends AppCompatActivity
 
         // Associate searchable configuration with the SearchView
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchView = (SearchView) menu.findItem(R.id.action_search)
-                .getActionView();
-        searchView.setSearchableInfo(searchManager
-                .getSearchableInfo(getComponentName()));
+        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setMaxWidth(Integer.MAX_VALUE);
 
         // listening to search query text change
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextChange(String query) {
-                // filter recycler view when text is changed
-                mClientAdapter.getFilter().filter(query);
-                return false;
-            }
+        searchView.setOnQueryTextListener(
+                new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextChange(String query) {
+                        // filter recycler view when text is changed
+                        mClientAdapter.getFilter().filter(query);
+                        return false;
+                    }
 
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // filter recycler view when query submitted
-                mClientAdapter.getFilter().filter(query);
-                return false;
-            }
-        });
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        // filter recycler view when query submitted
+                        mClientAdapter.getFilter().filter(query);
+                        return false;
+                    }
+                });
         return true;
     }
 
     @Override
     public void onLongPressClickListener(final View view, final int position) {
+    }
 
+    @Override
+    public void setAdapters() {
+
+        mClientAdapter = new ClienteAdapter(this, presenter.obterTodosClientes());
+
+        rvCliente.setAdapter(mClientAdapter);
+
+        mRouteAdapter =
+                new ArrayAdapter(
+                        this, android.R.layout.simple_list_item_1, presenter.obterTodasRotas());
+
+        spnRoute.setAdapter(mRouteAdapter);
+        spnRoute.setPrompt("Todas as Rotas");
     }
 
     @Override
@@ -209,59 +218,47 @@ public class HomeActivity extends AppCompatActivity
         navigateDrawer = new NavigateDrawer(this);
         result = navigateDrawer.builder(this, toolbar, savedInstanceState, presenter.getUserName());
 
-        result.setOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-            @Override
-            public boolean onItemClick(View view, int position,
-                    IDrawerItem drawerItem) {
-                switch (position) {
-                    case 1:
-                        AbstractActivity.navigateToActivity(presenter.getContext(),
-                                new Intent(presenter.getContext(), HomeActivity.class));
-                        break;
-                    case 2:
+        result.setOnDrawerItemClickListener(
+                new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        switch (position) {
+                            case 1:
+                                AbstractActivity.navigateToActivity(
+                                        presenter.getContext(),
+                                        new Intent(presenter.getContext(), HomeActivity.class));
+                                break;
+                            case 2:
+                                AbstractActivity.navigateToActivity(
+                                        presenter.getContext(),
+                                        new Intent(presenter.getContext(), PedidoActivity.class));
+                                break;
+                            case 3:
+                                break;
 
-                        AbstractActivity.navigateToActivity(presenter.getContext(),
-                                new Intent(presenter.getContext(), PedidoActivity.class));
-                        break;
-                    case 3:
-                        break;
+                            case 4:
+                                presenter.dataImport();
+                                break;
+                            case 5:
+                                presenter.dataExport();
+                                break;
 
-                    case 4:
-                        presenter.dataImport();
-                        break;
-                    case 5:
-                        presenter.dataExport();
-                        break;
+                            case 6:
+                                AbstractActivity.navigateToActivity(
+                                        presenter.getContext(),
+                                        new Intent(
+                                                presenter.getContext(), DeviceListActivity.class));
+                                break;
 
-                    case 6:
-                        AbstractActivity.navigateToActivity(presenter.getContext(),
-                                new Intent(presenter.getContext(), DeviceListActivity.class));
-                        break;
-
-                    case 7:
-                        presenter.showDialogLogout();
-                        break;
-                }
-                return true;
-            }
-        });
+                            case 7:
+                                presenter.showDialogLogout();
+                                break;
+                        }
+                        return true;
+                    }
+                });
 
         navigateDrawer.addItemInDrawer(result);
-    }
-
-    @Override
-    public void setAdapters() {
-
-        mClientAdapter = new ClienteAdapter(this,
-                presenter.allClients());
-
-        rvCliente.setAdapter(mClientAdapter);
-
-        mRouteAdapter = new ArrayAdapter(this,
-                android.R.layout.simple_list_item_1, presenter.allRoutes());
-
-        spnRoute.setAdapter(mRouteAdapter);
-        spnRoute.setPrompt("Todas as Rotas");
     }
 
     @Override
@@ -270,7 +267,8 @@ public class HomeActivity extends AppCompatActivity
         builder.setTitle("Realizar Logout");
         builder.setMessage("Deseja realmente sair do sistema?");
         String positiveText = "Sim";
-        builder.setPositiveButton(positiveText,
+        builder.setPositiveButton(
+                positiveText,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -278,14 +276,15 @@ public class HomeActivity extends AppCompatActivity
 
                         presenter.logout();
                         dialog.dismiss();
-                        //edtConfirmaEmail.setText("");
+                        // edtConfirmaEmail.setText("");
 
                         return;
                     }
                 });
 
         String negativeText = "Não";
-        builder.setNegativeButton(negativeText,
+        builder.setNegativeButton(
+                negativeText,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -297,7 +296,6 @@ public class HomeActivity extends AppCompatActivity
         AlertDialog dialog = builder.create();
         // display mProgressDialog
         dialog.show();
-
     }
 
     @Override
@@ -306,13 +304,12 @@ public class HomeActivity extends AppCompatActivity
         AlertDialogClient alertDialogClient = new AlertDialogClient(presenter);
         AlertDialog b = alertDialogClient.builder(cliente);
         b.show();
-
     }
 
     @OnItemSelected(R.id.spnRoute)
     void onItemSelected(int position) {
         if (position != 0) {
-            presenter.findClientsByRoute((Rota) mRouteAdapter.getItem(position));
+            presenter.pesquisarClientePorRota((Rota) mRouteAdapter.getItem(position));
             mClientAdapter.notifyDataSetChanged();
             spnRoute.setSelection(position);
         }
@@ -338,6 +335,5 @@ public class HomeActivity extends AppCompatActivity
         rvCliente.setLayoutManager(layoutManager);
         toolbar.setTitle("Trinity Mobile - Minas Frango");
         setSupportActionBar(toolbar);
-
     }
 }

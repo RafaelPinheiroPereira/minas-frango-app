@@ -6,7 +6,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.realm.Pedido;
+import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.ui.listener.ClickSubItemListener;
 import java.text.DateFormat;
 import java.text.NumberFormat;

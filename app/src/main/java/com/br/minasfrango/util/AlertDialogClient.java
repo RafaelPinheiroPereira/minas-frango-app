@@ -8,7 +8,7 @@ import androidx.appcompat.app.AlertDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.realm.Cliente;
+import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.ui.mvp.home.IHomeMVP;
 import com.br.minasfrango.ui.mvp.home.IHomeMVP.IPresenter;
 

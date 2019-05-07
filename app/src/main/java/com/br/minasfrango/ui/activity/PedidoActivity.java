@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.realm.Pedido;
+import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.ui.adapter.ExpandableRecyclerAdapter;
 import com.br.minasfrango.ui.adapter.PedidosAdapter;
 import com.br.minasfrango.ui.mvp.pedido.IPedidoMVP;
@@ -103,7 +103,7 @@ public class PedidoActivity extends AppCompatActivity implements IPedidoMVP.IVie
 
     protected void fillAdapter() {
 
-        mAdapter = new PedidosAdapter(presenter, presenter.getAllCientePedidos());
+        mAdapter = new PedidosAdapter(presenter, presenter.obterTodosClientePedido());
         recyclerView.setAdapter(mAdapter);
         mAdapter.setExpandCollapseListener(new ExpandableRecyclerAdapter.ExpandCollapseListener() {
             @Override

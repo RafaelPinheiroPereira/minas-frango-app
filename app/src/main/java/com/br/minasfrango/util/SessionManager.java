@@ -6,11 +6,10 @@ import android.content.SharedPreferences;
 import com.br.minasfrango.ui.activity.LoginActivity;
 import java.util.HashMap;
 
-
 /**
  * Created by 04717299302 on 26/08/2016.
  */
-public class SessionManager  {
+public class SessionManager {
 
     private static final String PREFER_NAME = "TrinityMobilePref";
 
@@ -39,11 +38,9 @@ public class SessionManager  {
     }
 
     /**
-     * Check login method will check user login status
-     * If false it will redirect user to login page
+     * Check login method will check user login status If false it will redirect user to login page
      * Else do anything
      */
-
     public boolean checkLogin() {
         // Check login status
         if (!this.isUserLoggedIn()) {
@@ -68,7 +65,6 @@ public class SessionManager  {
     public String getEnderecoBluetooth() {
         pref = this.context.getSharedPreferences(PREFER_NAME, 0);
         return (pref.getString(KEY_ENDERECO_BLUETOOTH, ""));
-
     }
 
     public void createUserLoginSession(String matricula, String senha, String nome) {
@@ -89,10 +85,9 @@ public class SessionManager  {
     /**
      * Get stored session data
      */
-
     public HashMap<String, String> getUserDetails() {
 
-        //Use hashmap to store user credentials
+        // Use hashmap to store user credentials
         HashMap<String, String> user = new HashMap<String, String>();
 
         user.put(KEY_MATRICULA, pref.getString(KEY_MATRICULA, null));
@@ -110,12 +105,11 @@ public class SessionManager  {
         // commit changes
         editor.commit();
     }
+
     public int getUserID() {
         pref = this.context.getSharedPreferences(PREFER_NAME, 0);
         return Integer.parseInt(pref.getString(KEY_MATRICULA, ""));
     }
-
-
 
     public String getUserName() {
         pref = this.context.getSharedPreferences(PREFER_NAME, 0);
@@ -128,10 +122,7 @@ public class SessionManager  {
         return pref.getBoolean(IS_USER_LOGIN, false);
     }
 
-    /**
-     * Clear session details
-     */
-
+    /** Clear session details */
     public void logout() {
 
         // Clearing all user data from Shared Preferences

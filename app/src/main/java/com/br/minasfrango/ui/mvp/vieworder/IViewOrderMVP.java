@@ -2,9 +2,9 @@ package com.br.minasfrango.ui.mvp.vieworder;
 
 import android.content.Context;
 import android.os.Bundle;
-import com.br.minasfrango.data.realm.Cliente;
-import com.br.minasfrango.data.realm.Pedido;
-import com.br.minasfrango.data.realm.TipoRecebimento;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.Pedido;
+import com.br.minasfrango.data.model.TipoRecebimento;
 
 public interface IViewOrderMVP {
 

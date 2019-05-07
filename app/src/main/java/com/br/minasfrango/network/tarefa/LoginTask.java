@@ -1,10 +1,10 @@
-package com.br.minasfrango.network.tasks;
+package com.br.minasfrango.network.tarefa;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
-import com.br.minasfrango.data.realm.Funcionario;
+import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.ui.activity.HomeActivity;
 import com.br.minasfrango.ui.mvp.login.ILoginMVP.IPresenter;
 import com.br.minasfrango.ui.mvp.login.ILoginMVP.IView;
@@ -33,14 +33,13 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... params) {
 
-        /*try {
+        try {
 
             return validateAcess(idUser, password);
         } catch (IOException e) {
             return e.getMessage();
-        }*/
-
-        return validateAcessOffLine(idUser, password);
+        }
+        // return validateAcessOffLine(idUser, password);
     }
 
     @Override

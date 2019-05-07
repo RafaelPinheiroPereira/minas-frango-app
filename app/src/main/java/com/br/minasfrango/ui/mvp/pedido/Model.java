@@ -2,18 +2,20 @@ package com.br.minasfrango.ui.mvp.pedido;
 
 import com.br.minasfrango.data.dao.ClientDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
-import com.br.minasfrango.data.realm.Cliente;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.Pedido;
+import com.br.minasfrango.data.realm.ClienteORM;
 import com.br.minasfrango.data.realm.ClientePedido;
-import com.br.minasfrango.data.realm.Pedido;
+import com.br.minasfrango.data.realm.PedidoORM;
 import com.br.minasfrango.ui.mvp.pedido.IPedidoMVP.IModel;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Model implements IModel {
 
-    private ClientDAO mClientDAO = ClientDAO.getInstace(Cliente.class);
+    private ClientDAO mClientDAO = ClientDAO.getInstace(ClienteORM.class);
 
-    private PedidoDAO mPedidoDAO = PedidoDAO.getInstace(Pedido.class);
+    private PedidoDAO mPedidoDAO = PedidoDAO.getInstace(PedidoORM.class);
 
     private Presenter mPresenter;
 
@@ -21,41 +23,37 @@ public class Model implements IModel {
         mPresenter = presenter;
     }
 
-
     @Override
-    public List<Pedido> allPedidos() {
-        return mPedidoDAO.findAll();
-    }
-
-    @Override
-    public void cancelOrder(String cancelingMotive) {
+    public void cancelarPedido(String motivoCancelamento) {
         mPresenter.getPedido().setCancelado(true);
-        mPresenter.getPedido().setMotivoCancelamento(cancelingMotive);
+        mPresenter.getPedido().setMotivoCancelamento(motivoCancelamento);
         mPedidoDAO.updatePedido(mPresenter.getPedido());
-    }
-
-    @Override
-    public List<Cliente> findClientByPedidos(final List<Pedido> pedidos) {
-        return mClientDAO.findClientByOrder(pedidos);
     }
 
     @Override
     public List<ClientePedido> getAllClientePedidos() {
         List<ClientePedido> clientePedidos = new ArrayList<>();
-        List<Cliente> clientes = findClientByPedidos(allPedidos());
+        List<Cliente> clientes = pesquisarClientePorPedido(todosPedidos());
 
-        clientes.forEach(cliente->{
-
-            List<Pedido> pedidos;
-            pedidos = mPedidoDAO.pesquisarPedidosPorCliente(cliente);
-            if (pedidos.size() > 0) {
-            }
-            clientePedidos.add(new ClientePedido(cliente, pedidos));
-
-        });
+        clientes.forEach(
+                cliente->{
+                    List<Pedido> pedidos;
+                    pedidos = mPedidoDAO.pesquisarPedidosPorCliente(cliente);
+                    if (pedidos.size() > 0) {
+                    }
+                    clientePedidos.add(new ClientePedido(cliente, pedidos));
+                });
 
         return clientePedidos;
     }
 
+    @Override
+    public List<Cliente> pesquisarClientePorPedido(final List<Pedido> pedido) {
+        return mClientDAO.pesquisarClientePorPedido(pedido);
+    }
 
+    @Override
+    public List<Pedido> todosPedidos() {
+        return mPedidoDAO.todos();
+    }
 }

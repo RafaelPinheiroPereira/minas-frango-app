@@ -2,7 +2,8 @@ package com.br.minasfrango.ui.mvp.payments;
 
 import com.br.minasfrango.data.dao.RecebimentoDAO;
 import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
-import com.br.minasfrango.data.realm.Recebimento;
+import com.br.minasfrango.data.model.Recebimento;
+import com.br.minasfrango.data.realm.RecebimentoORM;
 import com.br.minasfrango.util.ConstantsUtil;
 import com.br.minasfrango.util.DateUtils;
 import java.math.BigDecimal;
@@ -23,7 +24,7 @@ public class Model implements IPaymentsMVP.IModel {
 
     int position = 0;
 
-    RecebimentoDAO recebimentoDAO = RecebimentoDAO.getInstace(Recebimento.class);
+    RecebimentoDAO recebimentoDAO = RecebimentoDAO.getInstace(RecebimentoORM.class);
 
     public Model(final IPaymentsMVP.IPresenter presenter) {
         mPresenter = presenter;
@@ -67,7 +68,7 @@ public class Model implements IPaymentsMVP.IModel {
     public void calculateAmortizationAutomatic() {
 
         // Todos os checkboxs sao desabilitados
-        // O funcionario nao pode selecionar nenhuma nota
+        // O funcionarioORM nao pode selecionar nenhuma nota
         // Toda a quitacao e feita automatica
 
         mPresenter
@@ -220,7 +221,7 @@ public class Model implements IPaymentsMVP.IModel {
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
-                                recebimentoDAO.copyOrUpdate(item);
+                                recebimentoDAO.copyOrUpdate(new RecebimentoORM(item));
                             }
                         });
     }

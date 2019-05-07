@@ -39,13 +39,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.realm.Cliente;
-import com.br.minasfrango.data.realm.ItemPedido;
-import com.br.minasfrango.data.realm.ItemPedidoID;
-import com.br.minasfrango.data.realm.Pedido;
-import com.br.minasfrango.data.realm.Produto;
-import com.br.minasfrango.data.realm.TipoRecebimento;
-import com.br.minasfrango.data.realm.Unidade;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.ItemPedido;
+import com.br.minasfrango.data.model.ItemPedidoID;
+import com.br.minasfrango.data.model.Pedido;
+import com.br.minasfrango.data.model.Produto;
+import com.br.minasfrango.data.model.TipoRecebimento;
+import com.br.minasfrango.data.model.Unidade;
 import com.br.minasfrango.ui.abstracts.AbstractActivity;
 import com.br.minasfrango.ui.adapter.ItemPedidoAdapter;
 import com.br.minasfrango.ui.mvp.sales.ISalesMVP;
@@ -146,9 +146,9 @@ public class VendasActivity extends AppCompatActivity implements IView {
         // Seta todos os adaptadores necessarios
         setAdapters();
         // Edição de PedidoActivity
-        if (mPresenter.getOrderSale() != null) {
+        if (mPresenter.getOrdemVenda() != null) {
             try {
-                mPresenter.loadDetailsSale();
+                mPresenter.carregarDadosDaVenda();
 
             } catch (Throwable throwable) {
 
@@ -201,7 +201,6 @@ public class VendasActivity extends AppCompatActivity implements IView {
                         mPresenter.getContext(),
                         "Imagem salva em :" + data.getStringExtra(CustomCamera.IMAGE_PATH));
 
-
             } else {
                 AbstractActivity.showToast(mPresenter.getContext(), "Imagem não foi salva");
             }
@@ -243,7 +242,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
                         () ->
                                 AbstractActivity.showToast(
                                         mPresenter.getContext(),
-                                        "Erro Formatação Data Pedido :" + e.getMessage()));
+                                        "Erro Formatação Data PedidoORM :" + e.getMessage()));
             }
             mPresenter.getItemPedido().setChavesItemPedido(itemPedidoID);
             if (!mPresenter.getItens().contains(mPresenter.getItemPedido())) {
@@ -265,26 +264,28 @@ public class VendasActivity extends AppCompatActivity implements IView {
                 && (!new SessionManager(mPresenter.getContext())
                 .getEnderecoBluetooth()
                 .isEmpty())) {
-            // Realiza Update do Pedido
-            if (mPresenter.getOrderSale() != null) {
+            // Realiza Update do PedidoORM
+            if (mPresenter.getOrdemVenda() != null) {
 
                 List<ItemPedido> itensDTO = mPresenter.getItens();
-                mPresenter.getOrderSale().setTipoRecebimento(mPresenter.getTipoRecebimentoID());
-                mPresenter.getOrderSale().setItens(Pedido.dtoToRealList(itensDTO));
-                mPresenter.getOrderSale().setValorTotal(mPresenter.calculeTotalOrderSale());
-                mPresenter.updateSaleOrder(mPresenter.getOrderSale());
+                mPresenter.getOrdemVenda().setTipoRecebimento(mPresenter.getTipoRecebimentoID());
+                mPresenter
+                        .getOrdemVenda()
+                        .setItens((itensDTO));
+                mPresenter.getOrdemVenda().setValorTotal(mPresenter.calculeTotalOrderSale());
+                mPresenter.atualizarPedido(mPresenter.getOrdemVenda());
 
             } else {
-                // Salva o Pedido
+                // Salva o PedidoORM
                 try {
-                    mPresenter.saveOrderSale();
+                    mPresenter.salvarVenda();
 
                 } catch (ParseException e) {
                     VendasActivity.this.runOnUiThread(
                             () ->
                                     AbstractActivity.showToast(
                                             mPresenter.getContext(),
-                                            "Erro Formatacao Data Pedido: " + e.getMessage()));
+                                            "Erro Formatacao Data PedidoORM: " + e.getMessage()));
                 }
             }
             mPresenter.esperarPorConexao();
@@ -309,11 +310,11 @@ public class VendasActivity extends AppCompatActivity implements IView {
 
     @Override
     public void carregarDadosDaVenda() throws Throwable {
-        TipoRecebimento tipoRecebimento = mPresenter.loadTipoRecebimentoById();
+        TipoRecebimento tipoRecebimento = mPresenter.pesquisarTipoRecebimentoPorId();
         spnFormaPagamento.setSelection(
                 adapterFormaPagamento.getPosition(tipoRecebimento.getNome()));
         mPresenter.setTipoRecebimento(tipoRecebimento.getNome());
-        mPresenter.setItens(mPresenter.getOrderSale().realmListToDTO());
+        mPresenter.setItens(mPresenter.getOrdemVenda().getItens());
         mPresenter.updateRecyclerItens();
         initSwipe();
     }
@@ -324,25 +325,27 @@ public class VendasActivity extends AppCompatActivity implements IView {
     }
 
     @Override
+    public void error(final String text) {
+        runOnUiThread(
+                ()->Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show());
+    }
+
+    @Override
     public void getParams() {
 
         if (getIntent().getExtras().getLong("keyPedido") == 0) {
             mPresenter.setOrderSale(null);
-            mPresenter.setClient((Cliente) getIntent().getExtras().getSerializable("keyCliente"));
+            mPresenter.setClient(
+                    (Cliente) getIntent().getExtras().getSerializable("keyCliente"));
         } else {
 
-            Pedido pedido = mPresenter.loadSaleOrder(getIntent().getExtras().getLong("keyPedido"));
-            mPresenter.setOrderSale(Pedido.convertRealmToDTO(pedido));
+            Pedido pedido =
+                    mPresenter.buscarVendaPorId(getIntent().getExtras().getLong("keyPedido"));
+            mPresenter.setOrderSale(pedido);
             Cliente cliente =
-                    mPresenter.findClienteByID(mPresenter.getOrderSale().getCodigoCliente());
-            mPresenter.setClient(Cliente.convertRealmToDTO(cliente));
+                    mPresenter.pesquisarClientePorId(mPresenter.getOrdemVenda().getCodigoCliente());
+            mPresenter.setClient(cliente);
         }
-    }
-
-    @Override
-    public void error(final String text) {
-        runOnUiThread(
-                ()->Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show());
     }
 
     @Override
@@ -401,11 +404,20 @@ public class VendasActivity extends AppCompatActivity implements IView {
                 adaptadorDescricaoProduto.getPosition(mPresenter.getProductSelected().getNome()));
     }
 
-    @Override
-    public void setSpinnerUnityPatternOfProductSelected() {
-        Unidade unityPattern = mPresenter.loadUnityByProduct();
-        spnUnitys.setSelection(adapterUnidade.getPosition(unityPattern.getId().split("-")[0]));
-        mPresenter.setUnitSelected(unityPattern);
+    @OnClick(R.id.btnFotografar)
+    public void setBtnFotografarOnClicked(View view) {
+        CustomCamera.init()
+                .with((Activity) mPresenter.getContext())
+                .setRequiredMegaPixel(1.5f)
+                .setPath(
+                        Environment.getExternalStorageDirectory().getAbsolutePath()
+                                + "/Minas Frango/Imagens Vendas")
+                .setImageName(
+                        mPresenter.getOrdemVenda().getId()
+                                + DateUtils.formatarDateddMMyyyyParaString(
+                                mPresenter.getOrdemVenda().getDataPedido())
+                                + mPresenter.getClient().getNome())
+                .start();
     }
 
     @OnItemSelected(R.id.spnFormaPagamento)
@@ -476,20 +488,11 @@ public class VendasActivity extends AppCompatActivity implements IView {
                         mPresenter.getTotalProductValue().doubleValue()));
     }
 
-    @OnClick(R.id.btnFotografar)
-    public void setBtnFotografarOnClicked(View view) {
-        CustomCamera.init()
-                .with((Activity) mPresenter.getContext())
-                .setRequiredMegaPixel(1.5f)
-                .setPath(
-                        Environment.getExternalStorageDirectory().getAbsolutePath()
-                                + "/Minas Frango/Imagens Vendas")
-                .setImageName(
-                        mPresenter.getOrderSale().getId()
-                                + DateUtils.formatarDateddMMyyyyParaString(
-                                mPresenter.getOrderSale().getDataPedido())
-                                + mPresenter.getClient().getNome())
-                .start();
+    @Override
+    public void setSpinnerUnityPatternOfProductSelected() {
+        Unidade unidadePadrao = mPresenter.loadUnityByProduct();
+        spnUnitys.setSelection(adapterUnidade.getPosition(unidadePadrao.getId().split("-")[0]));
+        mPresenter.setUnidadeSelecionada(unidadePadrao);
     }
 
     @Override
@@ -651,15 +654,29 @@ public class VendasActivity extends AppCompatActivity implements IView {
         rcvItens.setLayoutManager(layoutManager);
     }
 
+    @NonNull
+    private ItemPedidoID getItemPedidoID() throws ParseException {
+        ItemPedidoID itemPedidoID = new ItemPedidoID();
+        itemPedidoID.setIdProduto(mPresenter.getProductSelected().getId());
+        itemPedidoID.setIdUnidade(mPresenter.getUnidadeSelecionada().getId());
+        itemPedidoID.setDataVenda(
+                DateUtils.formatarDateddMMyyyyhhmm(new Date(System.currentTimeMillis())));
+        // Nao sei o significado
+        itemPedidoID.setVendaMae("N");
+        itemPedidoID.setNucleoCodigo(1);
+        itemPedidoID.setTipoVenda("?");
+        return itemPedidoID;
+    }
+
     private void setAdapters() {
 
-        List<TipoRecebimento> tipoRecebimentos =
+        List<TipoRecebimento> recebimentos =
                 mPresenter.loadTipoRecebimentosByClient(mPresenter.getClient());
         adapterFormaPagamento =
                 new ArrayAdapter<>(
                         VendasActivity.this,
                         android.R.layout.simple_list_item_1,
-                        mPresenter.convertTipoRecebimentoInString(tipoRecebimentos));
+                        mPresenter.convertTipoRecebimentoInString(recebimentos));
 
         List<Produto> produtos = mPresenter.loadAllProducts();
 
@@ -677,13 +694,13 @@ public class VendasActivity extends AppCompatActivity implements IView {
 
         adapterItemPedidoAdapter = new ItemPedidoAdapter(mPresenter);
 
-        List<Unidade> unitys = mPresenter.loadAllUnitys();
+        List<Unidade> unidades = mPresenter.loadAllUnitys();
 
         adapterUnidade =
                 new ArrayAdapter<>(
                         mPresenter.getContext(),
                         android.R.layout.simple_spinner_item,
-                        mPresenter.loadAllUnitysToString(unitys));
+                        mPresenter.loadAllUnitysToString(unidades));
 
         actCodigoProduto.setAdapter(adaptadorCodigoProduto);
         spnProducts.setAdapter(adaptadorDescricaoProduto);
@@ -700,19 +717,5 @@ public class VendasActivity extends AppCompatActivity implements IView {
                     mPresenter.setProductSelected(mPresenter.loadProductById(idProduct));
                     mPresenter.refreshSelectedProductViews();
                 });
-    }
-
-    @NonNull
-    private ItemPedidoID getItemPedidoID() throws ParseException {
-        ItemPedidoID itemPedidoID = new ItemPedidoID();
-        itemPedidoID.setIdProduto(mPresenter.getProductSelected().getId());
-        itemPedidoID.setIdUnidade(mPresenter.getUnitSelected().getId());
-        itemPedidoID.setDataVenda(
-                DateUtils.formatarDateddMMyyyyhhmm(new Date(System.currentTimeMillis())));
-        // Nao sei o significado
-        itemPedidoID.setVendaMae("N");
-        itemPedidoID.setNucleoCodigo(1);
-        itemPedidoID.setTipoVenda("?");
-        return itemPedidoID;
     }
 }

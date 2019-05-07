@@ -1,5 +1,6 @@
 package com.br.minasfrango.data.realm;
 
+import com.br.minasfrango.data.model.TipoRecebimento;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import java.io.Serializable;
@@ -12,13 +13,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class Unidade extends RealmObject implements Serializable {
+public class TipoRecebimentoORM extends RealmObject implements Serializable {
 
     @PrimaryKey
-		private String id;
-		UnidadeProdutoID chavesUnidade;
-		private String nome;
-		private String unidadePadrao;
-		
-}
+    private long id;
 
+    private String nome;
+
+    public TipoRecebimentoORM(TipoRecebimento tipoRecebimento) {
+        this.id = tipoRecebimento.getId();
+        this.nome = tipoRecebimento.getNome();
+    }
+}

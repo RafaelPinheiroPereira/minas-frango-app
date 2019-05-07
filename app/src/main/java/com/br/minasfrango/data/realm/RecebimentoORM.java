@@ -1,5 +1,6 @@
 package com.br.minasfrango.data.realm;
 
+import com.br.minasfrango.data.model.Recebimento;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class Recebimento extends RealmObject implements Serializable {
+public class RecebimentoORM extends RealmObject implements Serializable {
 
     private boolean check = false;
 
@@ -42,7 +43,7 @@ public class Recebimento extends RealmObject implements Serializable {
 
     private double valorVenda;
 
-    public Recebimento(
+    public RecebimentoORM(
             long idFuncionario,
             long idCliente,
             long idVenda,
@@ -55,5 +56,20 @@ public class Recebimento extends RealmObject implements Serializable {
         this.dataVenda = dataVenda;
         this.valorVenda = valorVenda;
         this.dataVencimento = dataVencimento;
+    }
+
+    public RecebimentoORM(Recebimento recebimento) {
+        this.id = recebimento.getId();
+        this.check = recebimento.isCheck();
+        this.dataRecebimento = recebimento.getDataRecebimento();
+        this.dataVencimento = recebimento.getDataVencimento();
+        this.dataVenda = recebimento.getDataVenda();
+        this.idFuncionario = recebimento.getIdFuncionario();
+        this.idCliente = recebimento.getIdCliente();
+        this.tipoRecebimento = recebimento.getTipoRecebimento();
+        this.valorAmortizado = recebimento.getValorAmortizado();
+        this.valorVenda = recebimento.getValorVenda();
+        this.orderSelected = recebimento.getOrderSelected();
+        this.idVenda = recebimento.getIdVenda();
     }
 }

@@ -1,7 +1,6 @@
 package com.br.minasfrango.application;
 
 import android.app.Application;
-
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -13,7 +12,7 @@ public class MyApplication extends Application {
 				// The default Realm file is "default.realm" in Context.getFilesDir();
 				// we'll change it to "myrealm.realm"
 				Realm.init(this);
-				RealmConfiguration config = new RealmConfiguration.Builder().name("bdmobile.realm").build();
+			RealmConfiguration config = new RealmConfiguration.Builder().name("mobile.realm").build();
 				Realm.setDefaultConfiguration(config);
 		}
 }

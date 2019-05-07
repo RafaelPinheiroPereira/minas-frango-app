@@ -5,8 +5,8 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.realm.Cliente;
-import com.br.minasfrango.data.realm.Pedido;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.realm.PedidoORM;
 
 public class ClientePedidoViewHolder extends ParentViewHolder   {
 
@@ -29,8 +29,9 @@ public class ClientePedidoViewHolder extends ParentViewHolder   {
         mFantasia.setText(cliente.getNome());
         enderecoTextView.setText(cliente.getEndereco());
     }
-    public Pedido mPedido(){
-        return new Pedido();
+
+    public PedidoORM mPedido() {
+        return new PedidoORM();
     }
     @Override
     public void setExpanded(boolean expanded) {

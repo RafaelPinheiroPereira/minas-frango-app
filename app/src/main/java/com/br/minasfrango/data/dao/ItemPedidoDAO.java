@@ -1,50 +1,50 @@
 package com.br.minasfrango.data.dao;
 
-import com.br.minasfrango.data.realm.ItemPedido;
-import com.br.minasfrango.data.realm.ItemPedidoID;
-import com.br.minasfrango.data.realm.Pedido;
+import com.br.minasfrango.data.model.ItemPedido;
+import com.br.minasfrango.data.realm.ItemPedidoIDORM;
+import com.br.minasfrango.data.realm.ItemPedidoORM;
+import com.br.minasfrango.data.realm.PedidoORM;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.internal.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Created by 04717299302 on 13/01/2017.
  */
+public class ItemPedidoDAO extends GenericsDAO<ItemPedidoORM> {
 
-public class ItemPedidoDAO extends GenericsDAO<ItemPedido> {
-
-
-    public static ItemPedidoDAO getInstace(final Class<ItemPedido> type) {
+    public static ItemPedidoDAO getInstace(final Class<ItemPedidoORM> type) {
         return new ItemPedidoDAO(type);
     }
 
-    public ItemPedidoDAO(final Class<ItemPedido> type) {
+    public ItemPedidoDAO(final Class<ItemPedidoORM> type) {
         super(type);
     }
 
     public long addItemPedido(ItemPedido itemPedido) {
 
+        ItemPedidoORM itemPedidoORM = new ItemPedidoORM(itemPedido);
+
         long idItemPedidoId;
-        if (realm.where(ItemPedidoID.class).max("id") != null) {
-            idItemPedidoId = (long) (realm.where(ItemPedidoID.class).max("id").intValue() + 1);
+        if (realm.where(ItemPedidoIDORM.class).max("id") != null) {
+            idItemPedidoId = (long) (realm.where(ItemPedidoIDORM.class).max("id").intValue() + 1);
         } else {
             idItemPedidoId = 1;
         }
-        itemPedido.getChavesItemPedido().setId(idItemPedidoId);
+        itemPedidoORM.getChavesItemPedidoORM().setId(idItemPedidoId);
         long id;
-        if (realm.where(ItemPedido.class).max("id") != null) {
-            id = (long) (realm.where(ItemPedido.class).max("id").intValue() + 1);
+        if (realm.where(ItemPedidoORM.class).max("id") != null) {
+            id = (long) (realm.where(ItemPedidoORM.class).max("id").intValue() + 1);
         } else {
             id = 1;
         }
 
         try {
-            itemPedido.setId(id);
+            itemPedidoORM.setId(id);
             realm.beginTransaction();
-            realm.copyToRealm(itemPedido);
+            realm.copyToRealm(itemPedidoORM);
             realm.commitTransaction();
 
         } catch (IOException e) {
@@ -53,9 +53,22 @@ public class ItemPedidoDAO extends GenericsDAO<ItemPedido> {
         return id;
     }
 
-    public void removeItemPedido(ItemPedido itemPedido) {
+    public List<ItemPedido> allItensByPedido(PedidoORM pedidoORM) {
+        List<ItemPedido> itens = new ArrayList<>();
+        RealmResults<ItemPedidoORM> results =
+                where().equalTo("chavesItemPedidoORM.idVenda", Double.valueOf(pedidoORM.getId()))
+                        .findAll();
+        if (results.size() > 0 && results != null) {
+            results.forEach(item->itens.add(new ItemPedido(item)));
+            return itens;
+        }
+        return null;
+    }
 
-        RealmResults<ItemPedido> result = realm.where(ItemPedido.class).equalTo("id", itemPedido.getId()).findAll();
+    public void removeItemPedido(ItemPedidoORM itemPedidoORM) {
+
+        RealmResults<ItemPedidoORM> result =
+                realm.where(ItemPedidoORM.class).equalTo("id", itemPedidoORM.getId()).findAll();
 
         if (result.size() > 0 && result != null) {
             try {
@@ -68,51 +81,21 @@ public class ItemPedidoDAO extends GenericsDAO<ItemPedido> {
                 realm.cancelTransaction();
             }
         }
-
     }
 
     public ItemPedido searchItem(ItemPedido item) {
 
-        RealmQuery<ItemPedido> query = realm.where(ItemPedido.class);
-        RealmResults<ItemPedido> itemPedidoRealmResults = query.equalTo("id", item.getId()).findAll();
-        if (itemPedidoRealmResults.size() > 0 && itemPedidoRealmResults != null) {
-            return transformaResultItemPedido(itemPedidoRealmResults.first());
+        RealmQuery<ItemPedidoORM> query = realm.where(ItemPedidoORM.class);
+        ItemPedidoORM result = query.equalTo("id", item.getId()).findAll().first();
+        if (result != null) {
+            return new ItemPedido(result);
         }
         return null;
-
     }
 
-    public void updateItem(ItemPedido itemPedido) {
+    public void updateItem(ItemPedidoORM itemPedidoORM) {
         realm.beginTransaction();
-        realm.copyToRealmOrUpdate(itemPedido);
+        realm.copyToRealmOrUpdate(itemPedidoORM);
         realm.commitTransaction();
-    }
-
-    public List<ItemPedido> allItensByPedido(Pedido pedido) {
-        List<ItemPedido> itens = new ArrayList<>();
-        RealmResults<ItemPedido> results = where().equalTo("chavesItemPedido.idVenda", Double.valueOf(pedido.getId()))
-                .findAll();
-        if (results.size() > 0 && results != null) {
-            for (ItemPedido result : results) {
-                itens.add(transformaResultItemPedido(result));
-            }
-            return itens;
-        }
-        return null;
-    }
-
-    private ItemPedido transformaResultItemPedido(final ItemPedido result) {
-        ItemPedido itemPedido = new ItemPedido();
-        ItemPedidoID itemPedidoID = new ItemPedidoID();
-        itemPedidoID.setId(result.getChavesItemPedido().getId());
-        itemPedidoID.setIdUnidade(result.getChavesItemPedido().getIdUnidade());
-        itemPedidoID.setIdProduto(result.getChavesItemPedido().getIdProduto());
-        itemPedido.setChavesItemPedido(itemPedidoID);
-        itemPedido.setId(result.getId());
-        itemPedido.setDescricao(result.getDescricao());
-        itemPedido.setValorUnitario(result.getValorUnitario());
-        itemPedido.setQuantidade(result.getQuantidade());
-        itemPedido.setValorTotal(result.getValorTotal());
-        return itemPedido;
     }
 }

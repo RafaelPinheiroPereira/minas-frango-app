@@ -3,13 +3,14 @@ package com.br.minasfrango.ui.mvp.sales;
 import android.app.Activity;
 import android.content.Context;
 import androidx.appcompat.app.AlertDialog;
-import com.br.minasfrango.data.realm.Cliente;
-import com.br.minasfrango.data.realm.ItemPedido;
-import com.br.minasfrango.data.realm.Pedido;
-import com.br.minasfrango.data.realm.Preco;
-import com.br.minasfrango.data.realm.Produto;
-import com.br.minasfrango.data.realm.TipoRecebimento;
-import com.br.minasfrango.data.realm.Unidade;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.ItemPedido;
+import com.br.minasfrango.data.model.Pedido;
+import com.br.minasfrango.data.model.Preco;
+import com.br.minasfrango.data.model.Produto;
+import com.br.minasfrango.data.model.TipoRecebimento;
+import com.br.minasfrango.data.model.Unidade;
+import com.br.minasfrango.data.realm.PedidoORM;
 import com.br.minasfrango.ui.mvp.sales.ISalesMVP.IView;
 import com.br.minasfrango.util.DateUtils;
 import com.br.minasfrango.util.ImpressoraUtil;
@@ -31,7 +32,7 @@ public class Presenter implements ISalesMVP.IPresenter {
 
     ISalesMVP.IView mView;
 
-    Pedido orderSale;
+    Pedido ordemVenda;
 
     Preco price;
 
@@ -45,7 +46,7 @@ public class Presenter implements ISalesMVP.IPresenter {
 
     BigDecimal totalProductValue;
 
-    Unidade unitSelected;
+    Unidade unidadeSelecionada;
 
     ImpressoraUtil mImpressoraUtil;
 
@@ -62,7 +63,6 @@ public class Presenter implements ISalesMVP.IPresenter {
     @Override
     public void atulizarViewPrecoPosFoto() {
         this.mView.atulizarViewPrecoPosFoto();
-
     }
 
     @Override
@@ -114,8 +114,8 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
-    public Cliente findClienteByID(final long codigoCliente) {
-        return this.mModel.findClientById(codigoCliente);
+    public void atualizarPedido(final Pedido orderSale) {
+        this.mModel.copyOrUpdateSaleOrder(orderSale);
     }
 
     @Override
@@ -124,8 +124,13 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
-    public Pedido getOrderSale() {
-        return this.orderSale;
+    public Pedido buscarVendaPorId(final long keyPedido) {
+        return this.mModel.buscarVendaPorId(keyPedido);
+    }
+
+    @Override
+    public void carregarDadosDaVenda() throws Throwable {
+        this.mView.carregarDadosDaVenda();
     }
 
     @Override
@@ -148,7 +153,6 @@ public class Presenter implements ISalesMVP.IPresenter {
         return (Context) this.mView;
     }
 
-    @Override
     public void setItemPedido(final ItemPedido itemPedido) {
         this.itemPedido = itemPedido;
     }
@@ -164,8 +168,8 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
-    public void setOrderSale(Pedido orderSale) {
-        this.orderSale = orderSale;
+    public Pedido getOrdemVenda() {
+        return this.ordemVenda;
     }
 
     @Override
@@ -183,9 +187,8 @@ public class Presenter implements ISalesMVP.IPresenter {
         return itemPedido;
     }
 
-    @Override
-    public Pedido loadSaleOrder(final long keyPedido) {
-        return this.mModel.findSalesById(keyPedido);
+    public void setOrdemVenda(Pedido ordemVenda) {
+        this.ordemVenda = ordemVenda;
     }
 
     @Override
@@ -254,13 +257,13 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
-    public Unidade getUnitSelected() {
-        return unitSelected;
+    public Unidade getUnidadeSelecionada() {
+        return unidadeSelecionada;
     }
 
     @Override
-    public void setUnitSelected(final Unidade unitSelected) {
-        this.unitSelected = unitSelected;
+    public void setUnidadeSelecionada(final Unidade unidadeSelecionada) {
+        this.unidadeSelecionada = unidadeSelecionada;
     }
 
     @Override
@@ -269,8 +272,9 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
-    public ArrayList<String> loadAllProductsByName(final List<Produto> produtos) {
-        return this.mModel.loadAllProductsByName(produtos);
+    public void imprimirComprovante() {
+
+        this.mImpressoraUtil.imprimirComprovantePedido(getOrdemVenda(), getClient());
     }
 
     @Override
@@ -289,9 +293,8 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
-    public void imprimirComprovante() {
-
-        this.mImpressoraUtil.imprimirComprovantePedido(getOrderSale(), getClient());
+    public ArrayList<String> loadAllProductsByName(final List<Produto> produtoS) {
+        return this.mModel.loadAllProductsByName(produtoS);
     }
 
     @Override
@@ -316,8 +319,8 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
-    public TipoRecebimento loadTipoRecebimentoById() throws Throwable {
-        return this.mModel.findTipoRecebimentoById();
+    public Cliente pesquisarClientePorId(final long codigoCliente) {
+        return this.mModel.findClientById(codigoCliente);
     }
 
     @Override
@@ -331,8 +334,8 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
-    public void loadDetailsSale() throws Throwable {
-        this.mView.carregarDadosDaVenda();
+    public TipoRecebimento pesquisarTipoRecebimentoPorId() throws Throwable {
+        return this.mModel.findTipoRecebimentoById();
     }
 
     @Override
@@ -366,22 +369,7 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
-    public void updateSaleOrder(final Pedido orderSale) {
-        this.mModel.copyOrUpdateSaleOrder(orderSale);
-    }
-
-    @Override
-    public void updateTxtAmountOrderSale() {
-        this.mView.updateTxtAmountOrderSale();
-    }
-
-    @Override
-    public void updateTxtAmountProducts() {
-        this.mView.updateTxtAmountProducts();
-    }
-
-    @Override
-    public void saveOrderSale() throws ParseException {
+    public void salvarVenda() throws ParseException {
 
         Pedido pedido = new Pedido();
         pedido.setDataPedido(
@@ -395,13 +383,32 @@ public class Presenter implements ISalesMVP.IPresenter {
         pedido.setValorTotal(calculeTotalOrderSale());
         pedido.setTipoRecebimento(getTipoRecebimentoID());
 
-        // Salva o pedido e retorna o id salvo
-        long idSaleOrder = this.mModel.salvarPedido(pedido);
+        PedidoORM pedidoORM = new PedidoORM(pedido);
 
-        // Seta a chave composta do item pedido com o id da venda
+        // Salva o pedidoORM e retorna o id salvo
+        long idSaleOrder = this.mModel.salvarPedido(pedidoORM);
+
+        // Seta a chave composta do item pedidoORM com o id da venda
         getItens().forEach(item->item.getChavesItemPedido().setIdVenda(idSaleOrder));
-        pedido.setItens(Pedido.dtoToRealList(getItens()));
+        pedido.setItens(getItens());
+        pedido.setId(pedidoORM.getId());
+
         this.mModel.copyOrUpdateSaleOrder(pedido);
+    }
+
+    @Override
+    public void setOrderSale(final Pedido orderSale) {
+        this.ordemVenda = orderSale;
+    }
+
+    @Override
+    public void updateTxtAmountOrderSale() {
+        this.mView.updateTxtAmountOrderSale();
+    }
+
+    @Override
+    public void updateTxtAmountProducts() {
+        this.mView.updateTxtAmountProducts();
     }
 
     @Override

@@ -2,8 +2,8 @@ package com.br.minasfrango.ui.mvp.payments;
 
 import android.app.Activity;
 import android.content.Context;
-import com.br.minasfrango.data.realm.Cliente;
-import com.br.minasfrango.data.realm.Recebimento;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.Recebimento;
 import com.br.minasfrango.ui.mvp.payments.IPaymentsMVP.IView;
 import com.br.minasfrango.util.ImpressoraUtil;
 import java.math.BigDecimal;
@@ -26,7 +26,7 @@ public class Presenter implements IPaymentsMVP.IPresenter {
      */
     int positionOpenNotaSelect = -1;
 
-    List<Recebimento> recebimentos = new ArrayList<>();
+    List<Recebimento> mRecebimentos = new ArrayList<>();
 
     boolean typeOfAmortizationIsAutomatic = false;
 
@@ -167,7 +167,7 @@ public class Presenter implements IPaymentsMVP.IPresenter {
 
     @Override
     public List<Recebimento> getRecebimentos() {
-        return recebimentos;
+        return mRecebimentos;
     }
 
     @Override

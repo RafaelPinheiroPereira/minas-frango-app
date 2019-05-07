@@ -1,23 +1,23 @@
 package com.br.minasfrango.data.dao;
 
-import com.br.minasfrango.data.realm.Cliente;
-import com.br.minasfrango.data.realm.PrecoID;
-import com.br.minasfrango.data.realm.Produto;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.Produto;
+import com.br.minasfrango.data.realm.PrecoIDORM;
 import io.realm.RealmResults;
 
-public class PrecoIDDAO extends GenericsDAO<PrecoID> {
+public class PrecoIDDAO extends GenericsDAO<PrecoIDORM> {
 
-    public static PrecoIDDAO getInstance(Class<PrecoID> entity) {
+    public static PrecoIDDAO getInstance(Class<PrecoIDORM> entity) {
         return new PrecoIDDAO(entity);
     }
 
-    public PrecoIDDAO(final Class<PrecoID> entity) {
+    public PrecoIDDAO(final Class<PrecoIDORM> entity) {
         super(entity);
     }
 
     public long findPrecoIDByUnidadeAndProdutoAndCliente(Produto produto, String unidade, Cliente cLiente) {
 
-        RealmResults<PrecoID> result = where().equalTo("idProduto", produto.getId()).and()
+        RealmResults<PrecoIDORM> result = where().equalTo("idProduto", produto.getId()).and()
                 .equalTo("unidadeProduto", unidade).and()
                 .equalTo("idCliente", Double.parseDouble(String.valueOf(cLiente.getId()))).findAll();
 

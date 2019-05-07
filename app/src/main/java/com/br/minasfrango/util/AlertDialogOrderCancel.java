@@ -11,7 +11,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.realm.Pedido;
+import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.ui.mvp.pedido.IPedidoMVP;
 import com.br.minasfrango.ui.mvp.pedido.IPedidoMVP.IPresenter;
 
@@ -42,7 +42,7 @@ public class AlertDialogOrderCancel {
     @OnClick(R.id.btnOk)
     public void btnOkCliked(View view) {
         if (!TextUtils.isEmpty(edtCancelingMotive.getText().toString())) {
-            mPresenter.cancelPedido(edtCancelingMotive.getText().toString());
+            mPresenter.cancelarPedido(edtCancelingMotive.getText().toString());
         } else {
             edtCancelingMotive.setError("Motivo Obrigatório");
         }

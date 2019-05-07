@@ -3,9 +3,9 @@ package com.br.minasfrango.ui.mvp.vieworder;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import com.br.minasfrango.data.realm.Cliente;
-import com.br.minasfrango.data.realm.Pedido;
-import com.br.minasfrango.data.realm.TipoRecebimento;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.Pedido;
+import com.br.minasfrango.data.model.TipoRecebimento;
 import com.br.minasfrango.ui.mvp.vieworder.IViewOrderMVP.IView;
 import com.br.minasfrango.util.ImpressoraUtil;
 
@@ -44,7 +44,6 @@ public class Presenter implements IViewOrderMVP.IPresenter {
         return mCliente;
     }
 
-    @Override
     public void setCliente(final Cliente cliente) {
         mCliente = cliente;
     }
@@ -59,10 +58,14 @@ public class Presenter implements IViewOrderMVP.IPresenter {
         mPedido = pedido;
     }
 
+    /**
+     * Metodos relacionados a impressao
+     */
     @Override
-    public Pedido getSaleOrderParams(final Bundle extras) {
-        long id = extras.getLong("keyPedido");
-        return this.mModel.findySaleOrderByID(id);
+    public void esperarPorConexao() {
+        if (this.mImpressoraUtil.esperarPorConexao()) {
+            this.mView.exibirBotaoGerarRecibo();
+        }
     }
 
     @Override
@@ -70,7 +73,6 @@ public class Presenter implements IViewOrderMVP.IPresenter {
         return mTipoRecebimento;
     }
 
-    @Override
     public void setTipoRecebimento(final TipoRecebimento tipoRecebimento) {
         mTipoRecebimento = tipoRecebimento;
     }
@@ -80,14 +82,11 @@ public class Presenter implements IViewOrderMVP.IPresenter {
         this.mView.setDataView();
     }
 
-    /**
-     * Metodos relacionados a impressao
-     */
     @Override
-    public void esperarPorConexao() {
-        if (this.mImpressoraUtil.esperarPorConexao()) {
-            this.mView.exibirBotaoGerarRecibo();
-        }
+    public Pedido getSaleOrderParams(final Bundle extras) {
+        long id = extras.getLong("keyPedido");
+
+        return this.mModel.findySaleOrderByID(id);
     }
 
     @Override

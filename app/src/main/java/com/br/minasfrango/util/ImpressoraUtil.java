@@ -6,10 +6,10 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.realm.Cliente;
-import com.br.minasfrango.data.realm.ItemPedido;
-import com.br.minasfrango.data.realm.Pedido;
-import com.br.minasfrango.data.realm.Recebimento;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.ItemPedido;
+import com.br.minasfrango.data.model.Pedido;
+import com.br.minasfrango.data.model.Recebimento;
 import com.br.minasfrango.ui.abstracts.AbstractActivity;
 import com.br.minasfrango.ui.listener.IPrinterRunnable;
 import com.datecs.api.emsr.EMSR;
@@ -80,7 +80,8 @@ public class ImpressoraUtil {
 
         runTask(
                 (dialog, printer)->{
-                    StringBuffer textBuffer = configurarLayoutImpressaoPedido(pedido, cliente);
+                    StringBuffer textBuffer =
+                            configurarLayoutImpressaoPedido(pedido, cliente);
 
                     printer.reset();
                     printer.printTaggedText(textBuffer.toString());

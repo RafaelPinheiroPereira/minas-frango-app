@@ -4,9 +4,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import com.br.minasfrango.data.realm.Cliente;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.realm.ClientePedido;
-import com.br.minasfrango.data.realm.Pedido;
 import com.br.minasfrango.ui.abstracts.AbstractActivity;
 import com.br.minasfrango.ui.activity.VendasActivity;
 import com.br.minasfrango.ui.activity.VisualizarPedidoActivity;
@@ -30,20 +30,19 @@ public class Presenter implements IPedidoMVP.IPresenter {
     }
 
     @Override
-    public void cancelPedido(String cancelingMotive) {
+    public void cancelarPedido(String motivoCancelamento) {
 
-        this.mModel.cancelOrder(cancelingMotive);
+        this.mModel.cancelarPedido(motivoCancelamento);
         this.mView.dismiss();
     }
 
     @Override
     public void dismiss() {
         this.mView.dismiss();
-
     }
 
     @Override
-    public List<ClientePedido> getAllCientePedidos() {
+    public List<ClientePedido> obterTodosClientePedido() {
         return this.mModel.getAllClientePedidos();
     }
 
@@ -60,18 +59,11 @@ public class Presenter implements IPedidoMVP.IPresenter {
     @Override
     public void setDialog(final AlertDialog alertDialog) {
         this.mAlertDialog = alertDialog;
-
     }
 
     @Override
     public Pedido getPedido() {
         return this.mPedido;
-    }
-
-    @Override
-    public void setPedido(final Pedido pedidoSelecionado) {
-        this.mPedido = pedidoSelecionado;
-
     }
 
     @Override
@@ -85,10 +77,17 @@ public class Presenter implements IPedidoMVP.IPresenter {
             intent.putExtras(params);
             AbstractActivity.navigateToActivity(getContext(), intent);
         } else {
-            AbstractActivity.showToast(getContext(), "Pedido já foi cancelado!");
-
+            AbstractActivity.showToast(getContext(), "PedidoORM já foi cancelado!");
         }
+    }
 
+    @Override
+    public void onShowDialogDeleteOrderSalle(final Pedido pedido) {
+        if (!pedido.isCancelado()) {
+            this.mView.showDialogCanceling(pedido);
+        } else {
+            AbstractActivity.showToast(getContext(), "PedidoORM já foi cancelado!");
+        }
     }
 
     @Override
@@ -98,7 +97,6 @@ public class Presenter implements IPedidoMVP.IPresenter {
         params.putLong("keyPedido", pedido.getId());
         intent.putExtras(params);
         AbstractActivity.navigateToActivity(getContext(), intent);
-
     }
 
     @Override
@@ -107,15 +105,7 @@ public class Presenter implements IPedidoMVP.IPresenter {
     }
 
     @Override
-    public void onShowDialogDeleteOrderSalle(final Pedido pedido) {
-        if (!pedido.isCancelado()) {
-            this.mView.showDialogCanceling(pedido);
-        } else {
-            AbstractActivity.showToast(getContext(), "Pedido já foi cancelado!");
-
-        }
-
+    public void setPedido(final Pedido pedidoORMSelecionado) {
+        this.mPedido = pedidoORMSelecionado;
     }
-
-
 }

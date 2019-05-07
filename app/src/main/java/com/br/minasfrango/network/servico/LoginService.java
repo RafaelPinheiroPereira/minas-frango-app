@@ -1,6 +1,6 @@
-package com.br.minasfrango.network.service;
+package com.br.minasfrango.network.servico;
 
-import com.br.minasfrango.data.realm.Funcionario;
+import com.br.minasfrango.data.model.Funcionario;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;

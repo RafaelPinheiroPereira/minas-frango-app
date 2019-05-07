@@ -1,7 +1,8 @@
 package com.br.minasfrango.data.dao;
 
-import com.br.minasfrango.data.realm.Cliente;
-import com.br.minasfrango.data.realm.TipoRecebimento;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.TipoRecebimento;
+import com.br.minasfrango.data.realm.TipoRecebimentoORM;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
@@ -12,17 +13,11 @@ import java.util.Optional;
 /**
  * Created by 04717299302 on 16/01/2017.
  */
-
 public class TipoRecebimentoDAO {
-
 
     Realm realm;
 
-    RealmQuery<TipoRecebimento> query;
-
-    private RealmQuery<TipoRecebimento> where() {
-        return realm.where(TipoRecebimento.class);
-    }
+    RealmQuery<TipoRecebimentoORM> query;
 
     public static TipoRecebimentoDAO getInstace() {
         return new TipoRecebimentoDAO();
@@ -32,58 +27,52 @@ public class TipoRecebimentoDAO {
         realm = Realm.getDefaultInstance();
     }
 
-    public List<TipoRecebimento> findTipoRecebimentoByCliente(Cliente cliente) {
-        List<TipoRecebimento> tipoRecebimentos = new ArrayList<TipoRecebimento>();
-        query = realm.where(TipoRecebimento.class);
-        RealmResults<TipoRecebimento> results = query.findAll();
-
-        if (results != null && results.size() > 0) {
-
-            for (TipoRecebimento tipoRecebimento : results) {
-                tipoRecebimentos.add(transformaResultEmTipoRecebimento(tipoRecebimento));
-            }
-            return tipoRecebimentos;
-        }
-        return null;
-    }
-
-
-    private TipoRecebimento transformaResultEmTipoRecebimento(TipoRecebimento tipoRecebimentoToTransforme) {
-        TipoRecebimento tipoRecebimento = new TipoRecebimento();
-        tipoRecebimento.setId(tipoRecebimentoToTransforme.getId());
-        tipoRecebimento.setNome(tipoRecebimentoToTransforme.getNome());
-
-        return tipoRecebimento;
-    }
-
-
     public ArrayList<String> carregaFormaPagamentoAmortizacao() throws Throwable {
         ArrayList<String> formas = new ArrayList<String>();
-        RealmResults<TipoRecebimento> results = where().equalTo("id", 1).findAll();
+        RealmResults<TipoRecebimentoORM> results = where().equalTo("id", 1).findAll();
         Optional.ofNullable(results).orElseThrow(NullPointerException::new);
         results.forEach(item->formas.add(String.valueOf(item.getNome())));
         return formas;
     }
 
-    public TipoRecebimento findById(long id) throws Throwable {
-        TipoRecebimento result = where().equalTo("id", id).findAll().first();
-        return Optional.ofNullable(transformaResultToTipoRecebimento(result)).orElseThrow(Throwable::new);
-    }
-
-    private TipoRecebimento transformaResultToTipoRecebimento(TipoRecebimento result) {
-        return new TipoRecebimento(result.getId(), result.getNome());
-    }
-
     public int codigoFormaPagamento(String descricaoFormaPagamento) {
 
-        RealmQuery<TipoRecebimento> formaPagamentoRealmQuery = realm.where(TipoRecebimento.class);
-        TipoRecebimento result = formaPagamentoRealmQuery.equalTo("nome", descricaoFormaPagamento)
-                .findFirst();
+        RealmQuery<TipoRecebimentoORM> formaPagamentoRealmQuery =
+                realm.where(TipoRecebimentoORM.class);
+        TipoRecebimentoORM result =
+                formaPagamentoRealmQuery.equalTo("nome", descricaoFormaPagamento).findFirst();
         int codigo = 0;
         if (result != null) {
             codigo = (int) result.getId();
         }
         return codigo;
+    }
 
+    public TipoRecebimento findById(long id) throws Throwable {
+        TipoRecebimentoORM result = where().equalTo("id", id).findAll().first();
+        return Optional.ofNullable(new TipoRecebimento(result)).orElseThrow(Throwable::new);
+    }
+
+    public List<TipoRecebimento> findTipoRecebimentoByCliente(Cliente cliente) {
+        List<TipoRecebimento> tipoRecebimento = new ArrayList<TipoRecebimento>();
+        query = realm.where(TipoRecebimentoORM.class);
+        RealmResults<TipoRecebimentoORM> results = query.findAll();
+
+        if (results != null && results.size() > 0) {
+
+            for (TipoRecebimentoORM tipoRecebimentoORM : results) {
+                tipoRecebimento.add(new TipoRecebimento(tipoRecebimentoORM));
+            }
+            return tipoRecebimento;
+        }
+        return null;
+    }
+
+    private TipoRecebimentoORM transformaResultToTipoRecebimento(TipoRecebimentoORM result) {
+        return new TipoRecebimentoORM(result.getId(), result.getNome());
+    }
+
+    private RealmQuery<TipoRecebimentoORM> where() {
+        return realm.where(TipoRecebimentoORM.class);
     }
 }

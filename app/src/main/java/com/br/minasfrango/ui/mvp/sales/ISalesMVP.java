@@ -2,13 +2,14 @@ package com.br.minasfrango.ui.mvp.sales;
 
 import android.content.Context;
 import androidx.appcompat.app.AlertDialog;
-import com.br.minasfrango.data.realm.Cliente;
-import com.br.minasfrango.data.realm.ItemPedido;
-import com.br.minasfrango.data.realm.Pedido;
-import com.br.minasfrango.data.realm.Preco;
-import com.br.minasfrango.data.realm.Produto;
-import com.br.minasfrango.data.realm.TipoRecebimento;
-import com.br.minasfrango.data.realm.Unidade;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.ItemPedido;
+import com.br.minasfrango.data.model.Pedido;
+import com.br.minasfrango.data.model.Preco;
+import com.br.minasfrango.data.model.Produto;
+import com.br.minasfrango.data.model.TipoRecebimento;
+import com.br.minasfrango.data.model.Unidade;
+import com.br.minasfrango.data.realm.PedidoORM;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public interface ISalesMVP {
 
         void dissmis();
 
-        Cliente findClienteByID(long codigoCliente);
+        void atualizarPedido(Pedido orderSale);
 
         AlertDialog getAlertDialog();
 
@@ -63,12 +64,11 @@ public interface ISalesMVP {
 
         void setItens(List<ItemPedido> itens);
 
-        Pedido getOrderSale();
+        Pedido buscarVendaPorId(long keyPedido);
 
         void setOrderSale(final Pedido orderSale);
 
-
-        Pedido loadSaleOrder(long keyPedido);
+        void carregarDadosDaVenda() throws Throwable;
 
         Preco getPrice();
 
@@ -96,21 +96,21 @@ public interface ISalesMVP {
 
         void setTotalProductValue(BigDecimal totalProductValue);
 
-        Unidade getUnitSelected();
+        Pedido getOrdemVenda();
 
-        void setUnitSelected(Unidade unitSelected);
+        Unidade getUnidadeSelecionada();
 
         List<Produto> loadAllProducts();
 
         ArrayList<String> loadAllProductsByName(List<Produto> produtos);
 
-        ArrayList<String> loadAllProductsID(List<Produto> products);
+        void setUnidadeSelecionada(Unidade unidadeSelecionada);
 
         List<Unidade> loadAllUnitys();
 
-        ArrayList<String> loadAllUnitysToString(List<Unidade> unitys);
+        ArrayList<String> loadAllProductsID(List<Produto> produtos);
 
-        void loadDetailsSale() throws Throwable;
+        ArrayList<String> loadAllUnitysToString(List<Unidade> unidades);
 
         Preco loadPriceByProduct();
 
@@ -120,15 +120,15 @@ public interface ISalesMVP {
 
         Produto loadProductByName(String productName);
 
-        TipoRecebimento loadTipoRecebimentoById() throws Throwable;
+        List<TipoRecebimento> loadTipoRecebimentosByClient(Cliente cliente);
 
-        List<TipoRecebimento> loadTipoRecebimentosByClient(Cliente client);
+        Cliente pesquisarClientePorId(long codigoCliente);
 
         Unidade loadUnityByProduct();
 
         void refreshSelectedProductViews();
 
-        void saveOrderSale() throws ParseException;
+        TipoRecebimento pesquisarTipoRecebimentoPorId() throws Throwable;
 
         void setSpinnerProductSelected();
 
@@ -140,7 +140,7 @@ public interface ISalesMVP {
 
         void updateRecyclerItens();
 
-        void updateSaleOrder(Pedido orderSale);
+        void salvarVenda() throws ParseException;
 
         void updateTxtAmountOrderSale();
 
@@ -195,7 +195,7 @@ public interface ISalesMVP {
 
         ArrayList<String> convertTipoRecebimentoInString(List<TipoRecebimento> tiposRecebimentos);
 
-        ArrayList<String> convertUnitysToString(List<Unidade> unitys);
+        Pedido buscarVendaPorId(Long id);
 
         void copyOrUpdateSaleOrder(Pedido pedido);
 
@@ -205,11 +205,11 @@ public interface ISalesMVP {
 
         Produto findProductByName(String productName);
 
-        Pedido findSalesById(Long id);
+        ArrayList<String> convertUnitysToString(List<Unidade> unidades);
 
         TipoRecebimento findTipoRecebimentoById() throws Throwable;
 
-        List<TipoRecebimento> findTipoRecebimentosByCliente(Cliente client);
+        List<TipoRecebimento> findTipoRecebimentosByCliente(Cliente cliente);
 
         Unidade findUnityByProduct();
 
@@ -219,7 +219,7 @@ public interface ISalesMVP {
 
         int getTipoRecebimentoID();
 
-        ArrayList<String> loadAllProductsByName(List<Produto> produtos);
+        ArrayList<String> loadAllProductsByName(List<Produto> produto);
 
         ArrayList<String> loadAllProductsID(List<Produto> products);
 
@@ -230,6 +230,6 @@ public interface ISalesMVP {
         /**
          * @return saleOrderIdSaved
          */
-        long salvarPedido(final Pedido saleOrderToSave);
+        long salvarPedido(final PedidoORM saleOrderToSave);
     }
 }

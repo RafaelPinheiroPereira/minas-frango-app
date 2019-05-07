@@ -1,7 +1,8 @@
 package com.br.minasfrango.data.dao;
 
-import com.br.minasfrango.data.realm.Preco;
-import com.br.minasfrango.data.realm.Produto;
+import com.br.minasfrango.data.model.Preco;
+import com.br.minasfrango.data.model.Produto;
+import com.br.minasfrango.data.realm.PrecoORM;
 import io.realm.RealmResults;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +12,13 @@ import java.util.List;
  * Created by 04717299302 on 28/12/2016.
  */
 
-public class PriceDAO extends GenericsDAO<Preco> {
+public class PriceDAO extends GenericsDAO<PrecoORM> {
 
-
-    public static PriceDAO getInstace(final Class<Preco> type) {
+    public static PriceDAO getInstace(final Class<PrecoORM> type) {
         return new PriceDAO(type);
     }
 
-    public PriceDAO(final Class<Preco> type) {
+    public PriceDAO(final Class<PrecoORM> type) {
         super(type);
     }
 
@@ -27,13 +27,13 @@ public class PriceDAO extends GenericsDAO<Preco> {
         Preco preco = new Preco();
         preco.setValor(0.0);
 
-        RealmResults<Preco> result = where().equalTo("chavesPreco.idProduto", produto.getId())
-                .equalTo("chavesPreco.unidadeProduto", produto.getUnidade()).findAll();
+        RealmResults<PrecoORM> result = where().equalTo("chavesPrecoORM.idProduto", produto.getId())
+                .equalTo("chavesPrecoORM.unidadeProduto", produto.getUnidade()).findAll();
 
         if (result != null && result.size() > 0) {
-            for (Preco aux : result) {
+            for (PrecoORM aux : result) {
                 if (aux.getValor() != 0) {
-                    return aux;
+                    return new Preco(aux);
                 }
             }
         }
@@ -42,13 +42,13 @@ public class PriceDAO extends GenericsDAO<Preco> {
     }
 
     public Preco findPriceByPriceID(long idPriceID) {
-        return idPriceID == 0 ? new Preco() : where().equalTo("chavesPreco.id", idPriceID).findFirst();
+        return idPriceID == 0 ? new Preco() : new Preco(where().equalTo("chavesPrecoORM.id", idPriceID).findFirst());
 
     }
 
-    public List<Preco> getAll() {
-        List<Preco> preco = new ArrayList<>();
-        where().findAll().forEach(item->preco.add(item));
-        return preco;
+    public List<PrecoORM> getAll() {
+        List<PrecoORM> precoORM = new ArrayList<>();
+        where().findAll().forEach(item->precoORM.add(item));
+        return precoORM;
     }
 }

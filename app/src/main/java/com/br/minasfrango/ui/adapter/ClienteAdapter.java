@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.realm.Cliente;
+import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.ui.listener.RecyclerViewOnClickListenerHack;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +73,7 @@ public class ClienteAdapter
 
     }
 
-    private List<Cliente> clienteListFiltered;
+    private List<Cliente> mClienteListFiltered;
 
     private LayoutInflater mLayoutInflater;
 
@@ -84,14 +84,14 @@ public class ClienteAdapter
     public ClienteAdapter(Context c, List<Cliente> l) {
 
         this.mList = l;
-        this.clienteListFiltered = l;
+        this.mClienteListFiltered = l;
         this.mLayoutInflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 
     }
 
     public void addListItem(Cliente c, int position) {
-        clienteListFiltered.add(c);
+        mClienteListFiltered.add(c);
         notifyItemInserted(position);
     }
 
@@ -102,47 +102,47 @@ public class ClienteAdapter
             protected FilterResults performFiltering(CharSequence charSequence) {
                 String charString = charSequence.toString();
                 if (charString.isEmpty()) {
-                    clienteListFiltered = mList;
+                    mClienteListFiltered = mList;
                 } else {
                     List<Cliente> filteredList = new ArrayList<>();
-                    for (Cliente cliente : mList) {
+                    for (Cliente clienteORM : mList) {
 
-                        if (cliente.getNome().toLowerCase().contains(charString.toLowerCase())) {
-                            filteredList.add(cliente);
+                        if (clienteORM.getNome().toLowerCase().contains(charString.toLowerCase())) {
+                            filteredList.add(clienteORM);
                         }
                     }
 
-                    clienteListFiltered = filteredList;
+                    mClienteListFiltered = filteredList;
                 }
 
                 FilterResults filterResults = new FilterResults();
-                filterResults.values = clienteListFiltered;
+                filterResults.values = mClienteListFiltered;
                 return filterResults;
             }
 
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                clienteListFiltered = (ArrayList<Cliente>) filterResults.values;
+                mClienteListFiltered = (ArrayList<Cliente>) filterResults.values;
                 notifyDataSetChanged();
             }
         };
     }
 
     public Cliente getItem(int position) {
-        return this.clienteListFiltered.get(position);
+        return this.mClienteListFiltered.get(position);
     }
 
     @Override
     public int getItemCount() {
-        return clienteListFiltered.size();
+        return mClienteListFiltered.size();
     }
 
     @Override
     public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
 
-        myViewHolder.txtNameFantasy.setText(clienteListFiltered.get(position).getNome());
+        myViewHolder.txtNameFantasy.setText(mClienteListFiltered.get(position).getNome());
         myViewHolder.txtAdress.setText(
-                clienteListFiltered.get(position).getEndereco() != null ? clienteListFiltered.get(position)
+                mClienteListFiltered.get(position).getEndereco() != null ? mClienteListFiltered.get(position)
                         .getEndereco() : "");
 
     }
@@ -155,7 +155,7 @@ public class ClienteAdapter
     }
 
     public void removeListItem(int position) {
-        clienteListFiltered.remove(position);
+        mClienteListFiltered.remove(position);
         notifyItemRemoved(position);
     }
 

@@ -2,9 +2,9 @@ package com.br.minasfrango.ui.mvp.pedido;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import com.br.minasfrango.data.realm.Cliente;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.realm.ClientePedido;
-import com.br.minasfrango.data.realm.Pedido;
 import java.util.List;
 
 
@@ -13,11 +13,11 @@ public interface IPedidoMVP {
 
     interface IPresenter {
 
-        void cancelPedido(String cancelingMotive);
+        void cancelarPedido(String motivoCancelamento);
 
         void dismiss();
 
-        List<ClientePedido> getAllCientePedidos();
+        List<ClientePedido> obterTodosClientePedido();
 
         Context getContext();
 
@@ -49,11 +49,11 @@ public interface IPedidoMVP {
 
     interface IModel {
 
-        List<Pedido> allPedidos();
+        void cancelarPedido(String motivoCancelamento);
 
-        void cancelOrder(String cancelingMotive);
+        List<Cliente> pesquisarClientePorPedido(List<Pedido> pedido);
 
-        List<Cliente> findClientByPedidos(List<Pedido> pedidos);
+        List<Pedido> todosPedidos();
 
         List<ClientePedido> getAllClientePedidos();
 
