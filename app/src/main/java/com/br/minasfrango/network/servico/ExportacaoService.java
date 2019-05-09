@@ -8,6 +8,6 @@ import retrofit2.http.POST;
 public interface ExportacaoService {
 		
 		@POST("exportaPedido")
-        Call<Boolean> exportacaoPedido(@Body ListaPedido pedidoDTOS);
+        Call<Boolean> exportarPedido(@Body ListaPedido pedidoDTOS);
 		
 }

@@ -34,44 +34,38 @@ public class Presenter implements IHomeMVP.IPresenter {
 
     public Presenter(final IView view) {
         this.view = view;
-        this.model = new Model(this);
+        this.model = new Model();
     }
 
     @Override
-    public boolean checkLogin() {
-        this.mSessionManager = new SessionManager(getContext());
-        return mSessionManager.checkLogin();
+    public void esconderProgressDialog() {
+        this.view.onHideProgressDialog();
     }
 
     @Override
-    public void closeDrawer() {
-        this.view.closerDrawer();
+    public void exibirDialogClient(final Cliente cliente) {
+        this.view.showDialogClient(cliente);
     }
 
     @Override
-    public void dataExport() {
+    public void exibirDialogLogout() {
+        this.view.showDialogLogout();
+    }
+
+    @Override
+    public void exibirProgressDialog() {
+        this.view.onShowProgressDialog();
+    }
+
+    @Override
+    public void exibirToast(String msg) {
+        AbstractActivity.showToast(getContext(), msg);
+    }
+
+    @Override
+    public void exportarDados() {
         List<Pedido> pedidos = this.model.obterTodosPedidos();
         new ExportacaoDeDados(this, pedidos).execute();
-    }
-
-    @Override
-    public void dataImport() {
-        Funcionario funcionario = new Funcionario();
-        funcionario.setId(getUserId());
-        funcionario.setNome(getUserName());
-        new ImportacaoDeDados(funcionario, this).execute();
-    }
-
-    @Override
-    public void loadClientsAfterDataImport() {
-        obterTodosClientes();
-        this.view.loadClientsAfterDataImport();
-    }
-
-    @Override
-    public void loadRoutesAfterDataImport() {
-        obterTodasRotas();
-        this.view.loadRoutesAfterDataImport();
     }
 
     @Override
@@ -112,8 +106,8 @@ public class Presenter implements IHomeMVP.IPresenter {
     }
 
     @Override
-    public String getUserName() {
-        return this.mSessionManager.getUserName();
+    public void fecharDrawer() {
+        this.view.fecharDrawer();
     }
 
     @Override
@@ -148,28 +142,34 @@ public class Presenter implements IHomeMVP.IPresenter {
     }
 
     @Override
-    public void hideProgressDialog() {
-        this.view.onHideProgressDialog();
+    public String getNomeUsuario() {
+        return this.mSessionManager.getUserName();
     }
 
     @Override
-    public void showDialogLogout() {
-        this.view.showDialogLogout();
+    public void importarDados() {
+        Funcionario funcionario = new Funcionario();
+        funcionario.setId(getUserId());
+        funcionario.setNome(getNomeUsuario());
+        new ImportacaoDeDados(funcionario, this).execute();
     }
 
     @Override
-    public void showProgressDialog() {
-        this.view.onShowProgressDialog();
+    public void obterClientesAposImportarDados() {
+        obterTodosClientes();
+        this.view.obterClientesAposImportarDados();
     }
 
     @Override
-    public void showDialogClient(final Cliente cliente) {
-        this.view.showDialogClient(cliente);
+    public void obterRotasAposImportarDados() {
+        obterTodasRotas();
+        this.view.obterRotasAposImportarDados();
     }
 
     @Override
-    public void showToast(String msg) {
-        AbstractActivity.showToast(getContext(), msg);
+    public boolean verificarLogin() {
+        this.mSessionManager = new SessionManager(getContext());
+        return mSessionManager.checkLogin();
     }
 
     @Override

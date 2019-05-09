@@ -1,4 +1,4 @@
-package com.br.minasfrango.ui.mvp.sales;
+package com.br.minasfrango.ui.mvp.venda;
 
 import android.content.Context;
 import androidx.appcompat.app.AlertDialog;
@@ -19,9 +19,9 @@ public interface ISalesMVP {
 
     interface IPresenter {
 
-        void atulizarViewPrecoPosFoto();
+        void atualizarTxtValorTotalPoduto();
 
-        Double calculeTotalOrderSale();
+        void atualizarTxtValorTotalVenda();
 
         void desabilitarBtnSalvar();
 
@@ -29,7 +29,7 @@ public interface ISalesMVP {
 
         void esperarPorConexao();
 
-        ArrayList<String> convertTipoRecebimentoInString(List<TipoRecebimento> tiposRecebimentos);
+        void atualizarViewPrecoPosFoto();
 
         void exibirBotaoFotografar();
 
@@ -45,18 +45,19 @@ public interface ISalesMVP {
 
         int getBicos();
 
+        void atualizarViewsDoProdutoSelecionado();
+
         void setAlertDialog(AlertDialog alertDialog);
 
-        Cliente getClient();
+        Double calcularValorTotalVenda();
 
-        void setClient(final Cliente client);
+        ArrayList<String> converterTipoRecebimentoEmString(List<TipoRecebimento> tiposRecebimentos);
 
         Context getContext();
 
         void setBicos(int bicos);
 
         ItemPedido getItemPedido();
-
 
         void setItemPedido(ItemPedido itemPedido);
 
@@ -70,13 +71,13 @@ public interface ISalesMVP {
 
         void carregarDadosDaVenda() throws Throwable;
 
-        Preco getPrice();
+        Cliente getCliente();
 
-        void setPrice(final Preco price);
+        void setCliente(final Cliente cliente);
 
-        Produto getProductSelected();
+        Pedido getPedido();
 
-        void setProductSelected(final Produto productSelected);
+        Preco getPreco();
 
         BigDecimal getQtdProdutos();
 
@@ -88,51 +89,51 @@ public interface ISalesMVP {
 
         int getTipoRecebimentoID();
 
-        BigDecimal getTotalOrderSale();
+        void setPreco(final Preco preco);
 
-        void setTotalOrderSale(BigDecimal totalOrderSale);
+        Produto getProdutoSelecionado();
 
-        BigDecimal getTotalProductValue();
+        void setProdutoSelecionado(final Produto produtoSelecionado);
 
-        void setTotalProductValue(BigDecimal totalProductValue);
+        BigDecimal getValorTotalPedido();
 
-        Pedido getOrdemVenda();
+        void setValorTotalPedido(BigDecimal valorTotalPedido);
 
         Unidade getUnidadeSelecionada();
 
-        List<Produto> loadAllProducts();
+        BigDecimal getValorTotalProduto();
 
-        ArrayList<String> loadAllProductsByName(List<Produto> produtos);
+        void setValorTotalProduto(BigDecimal valorTotalProduto);
 
         void setUnidadeSelecionada(Unidade unidadeSelecionada);
 
-        List<Unidade> loadAllUnitys();
+        boolean localizacaoHabilitada();
 
-        ArrayList<String> loadAllProductsID(List<Produto> produtos);
+        ArrayList<String> obterIDProdutos(List<Produto> produtos);
 
-        ArrayList<String> loadAllUnitysToString(List<Unidade> unidades);
+        ArrayList<String> obterNomeDeTodosOsProdutos(List<Produto> produtos);
 
-        Preco loadPriceByProduct();
+        List<Unidade> obterTodasUnidades();
 
-        Preco loadPriceOfUnityByProduct(String unityID);
+        ArrayList<String> obterTodasUnidadesEmString(List<Unidade> unidades);
 
-        Produto loadProductById(long parseLong);
+        List<Produto> obterTodosProdutos();
 
-        Produto loadProductByName(String productName);
+        Preco pesquisarPrecoDaUnidadePorProduto(String unityID);
 
-        List<TipoRecebimento> loadTipoRecebimentosByClient(Cliente cliente);
+        Preco pesquisarPrecoPorProduto();
 
         Cliente pesquisarClientePorId(long codigoCliente);
 
-        Unidade loadUnityByProduct();
+        Produto pesquisarProdutoPorId(long parseLong);
 
-        void refreshSelectedProductViews();
+        Produto pesquisarProdutoPorNome(String productName);
 
         TipoRecebimento pesquisarTipoRecebimentoPorId() throws Throwable;
 
         void setSpinnerProductSelected();
 
-        void setSpinnerUnityPatternOfProductSelected();
+        List<TipoRecebimento> pesquisarTipoRecebimentosPorCliente(Cliente cliente);
 
         void showOnUpdateDialog(int position);
 
@@ -142,9 +143,9 @@ public interface ISalesMVP {
 
         void salvarVenda() throws ParseException;
 
-        void updateTxtAmountOrderSale();
+        Unidade pesquisarUnidadePorProduto();
 
-        void updateTxtAmountProducts();
+        void setSpinnerUnidadePadraoDoProdutoSelecionado();
 
         void imprimirComprovante();
 
@@ -173,7 +174,7 @@ public interface ISalesMVP {
 
         void setSpinnerProductSelected();
 
-        void setSpinnerUnityPatternOfProductSelected();
+        void setSpinnerUnidadePadraoDoProdutoSelecionado();
 
         void showOnUpdateDialog(int position);
 
@@ -186,32 +187,31 @@ public interface ISalesMVP {
         void updateTxtAmountProducts();
 
         boolean validarCamposAntesDeAdicionarItem();
-
     }
 
     interface IModel {
 
-        long addItemPedido(ItemPedido item);
+        long adicionarItemDoPedido(ItemPedido item);
 
-        ArrayList<String> convertTipoRecebimentoInString(List<TipoRecebimento> tiposRecebimentos);
+        Preco carregarPrecoDaUnidadePorProduto(String item);
 
         Pedido buscarVendaPorId(Long id);
 
         void copyOrUpdateSaleOrder(Pedido pedido);
 
-        Cliente findClientById(Long id);
+        Preco carregarPrecoPorProduto();
 
-        Produto findProductById(long id);
+        ArrayList<String> converterTipoRecebimentoEmString(List<TipoRecebimento> tiposRecebimentos);
 
-        Produto findProductByName(String productName);
+        ArrayList<String> converterUnidadesEmString(List<Unidade> unidades);
 
-        ArrayList<String> convertUnitysToString(List<Unidade> unidades);
+        ArrayList<String> obterNomeDeTodosOsProdutos(List<Produto> produto);
 
-        TipoRecebimento findTipoRecebimentoById() throws Throwable;
+        Cliente pesquisarClientePorID(Long id);
 
         List<TipoRecebimento> findTipoRecebimentosByCliente(Cliente cliente);
 
-        Unidade findUnityByProduct();
+        ArrayList<String> pesquisarNomeDeTodosProdutos(List<Produto> products);
 
         List<Produto> getAllProducts();
 
@@ -219,13 +219,13 @@ public interface ISalesMVP {
 
         int getTipoRecebimentoID();
 
-        ArrayList<String> loadAllProductsByName(List<Produto> produto);
+        Produto pesquisarProdutoPorID(long id);
 
-        ArrayList<String> loadAllProductsID(List<Produto> products);
+        Produto pesquisarProdutoPorNome(String productName);
 
-        Preco loadPriceByProduct();
+        TipoRecebimento pesquisarTipoRecebimentoPorID() throws Throwable;
 
-        Preco loadPriceOfUnityByProduct(String item);
+        Unidade pesquisarUnidadePorProduto();
 
         /**
          * @return saleOrderIdSaved

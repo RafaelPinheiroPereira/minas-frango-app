@@ -66,10 +66,11 @@ public class HomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        presenter = new Presenter(this);
+
         ButterKnife.bind(this);
         // Verifica se o user esta logado
-        if (presenter.checkLogin()) {
+        presenter = new Presenter(this);
+        if (presenter.verificarLogin()) {
             finish();
         }
         initViews();
@@ -84,7 +85,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void closerDrawer() {
+    public void fecharDrawer() {
 
         if (result != null && result.isDrawerOpen()) {
             result.closeDrawer();
@@ -92,12 +93,12 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void loadClientsAfterDataImport() {
+    public void obterClientesAposImportarDados() {
         mClientAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void loadRoutesAfterDataImport() {
+    public void obterRotasAposImportarDados() {
         mRouteAdapter.notifyDataSetChanged();
     }
 
@@ -157,7 +158,7 @@ public class HomeActivity extends AppCompatActivity
                 }
                 break;
             case R.id.imgInfo:
-                presenter.showDialogClient(mClientAdapter.getItem(position));
+                presenter.exibirDialogClient(mClientAdapter.getItem(position));
 
                 break;
         }
@@ -216,7 +217,7 @@ public class HomeActivity extends AppCompatActivity
     public void setDrawer(final Bundle savedInstanceState) {
 
         navigateDrawer = new NavigateDrawer(this);
-        result = navigateDrawer.builder(this, toolbar, savedInstanceState, presenter.getUserName());
+        result = navigateDrawer.builder(this, toolbar, savedInstanceState, presenter.getNomeUsuario());
 
         result.setOnDrawerItemClickListener(
                 new Drawer.OnDrawerItemClickListener() {
@@ -237,10 +238,10 @@ public class HomeActivity extends AppCompatActivity
                                 break;
 
                             case 4:
-                                presenter.dataImport();
+                                presenter.importarDados();
                                 break;
                             case 5:
-                                presenter.dataExport();
+                                presenter.exportarDados();
                                 break;
 
                             case 6:
@@ -251,7 +252,7 @@ public class HomeActivity extends AppCompatActivity
                                 break;
 
                             case 7:
-                                presenter.showDialogLogout();
+                                presenter.exibirDialogLogout();
                                 break;
                         }
                         return true;

@@ -48,9 +48,9 @@ import com.br.minasfrango.data.model.TipoRecebimento;
 import com.br.minasfrango.data.model.Unidade;
 import com.br.minasfrango.ui.abstracts.AbstractActivity;
 import com.br.minasfrango.ui.adapter.ItemPedidoAdapter;
-import com.br.minasfrango.ui.mvp.sales.ISalesMVP;
-import com.br.minasfrango.ui.mvp.sales.ISalesMVP.IView;
-import com.br.minasfrango.ui.mvp.sales.Presenter;
+import com.br.minasfrango.ui.mvp.venda.ISalesMVP;
+import com.br.minasfrango.ui.mvp.venda.ISalesMVP.IView;
+import com.br.minasfrango.ui.mvp.venda.Presenter;
 import com.br.minasfrango.util.AlertDialogUpdateItemSaleOrder;
 import com.br.minasfrango.util.CurrencyEditText;
 import com.br.minasfrango.util.DateUtils;
@@ -146,7 +146,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
         // Seta todos os adaptadores necessarios
         setAdapters();
         // Edição de PedidoActivity
-        if (mPresenter.getOrdemVenda() != null) {
+        if (mPresenter.getPedido() != null) {
             try {
                 mPresenter.carregarDadosDaVenda();
 
@@ -164,7 +164,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
                     @Override
                     public void afterTextChanged(Editable s) {
 
-                        mPresenter.updateTxtAmountProducts();
+                        mPresenter.atualizarTxtValorTotalPoduto();
                     }
 
                     @Override
@@ -186,7 +186,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        mPresenter.updateTxtAmountProducts();
+                        mPresenter.atualizarTxtValorTotalPoduto();
                     }
                 });
     }
@@ -196,7 +196,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CustomCamera.IMAGE_SAVE_REQUEST) {
             if (resultCode == RESULT_OK) {
-                mPresenter.atulizarViewPrecoPosFoto();
+                mPresenter.atualizarViewPrecoPosFoto();
                 AbstractActivity.showToast(
                         mPresenter.getContext(),
                         "Imagem salva em :" + data.getStringExtra(CustomCamera.IMAGE_PATH));
@@ -216,11 +216,11 @@ public class VendasActivity extends AppCompatActivity implements IView {
     @Override
     public void atualizarViewsDoProdutoSelecionado() {
         mPresenter.setSpinnerProductSelected();
-        mPresenter.setSpinnerUnityPatternOfProductSelected();
+        mPresenter.setSpinnerUnidadePadraoDoProdutoSelecionado();
         mPresenter.setQtdProdutos(new BigDecimal("1"));
-        mPresenter.setPrice(mPresenter.loadPriceByProduct());
-        cetPrecoUnitario.setText(String.valueOf(mPresenter.getPrice().getValor()));
-        mPresenter.updateTxtAmountProducts();
+        mPresenter.setPreco(mPresenter.pesquisarPrecoPorProduto());
+        cetPrecoUnitario.setText(String.valueOf(mPresenter.getPreco().getValor()));
+        mPresenter.atualizarTxtValorTotalPoduto();
         updateActCodigoProduto();
     }
 
@@ -259,21 +259,21 @@ public class VendasActivity extends AppCompatActivity implements IView {
     @OnClick(R.id.btnSalvarVenda)
     public void btnConfirmSaleOnClicked(View view) {
 
-        if ((mPresenter.getItens().size() > 0
+        if (!mPresenter.localizacaoHabilitada()) {
+            AbstractActivity.showToast(mPresenter.getContext(), "Por favor, habilite o seu gps!");
+        } else if ((mPresenter.getItens().size() > 0
                 && !mPresenter.getTipoRecebimento().equals("Formas de Pagamento"))
                 && (!new SessionManager(mPresenter.getContext())
                 .getEnderecoBluetooth()
                 .isEmpty())) {
             // Realiza Update do PedidoORM
-            if (mPresenter.getOrdemVenda() != null) {
+            if (mPresenter.getPedido() != null) {
 
                 List<ItemPedido> itensDTO = mPresenter.getItens();
-                mPresenter.getOrdemVenda().setTipoRecebimento(mPresenter.getTipoRecebimentoID());
-                mPresenter
-                        .getOrdemVenda()
-                        .setItens((itensDTO));
-                mPresenter.getOrdemVenda().setValorTotal(mPresenter.calculeTotalOrderSale());
-                mPresenter.atualizarPedido(mPresenter.getOrdemVenda());
+                mPresenter.getPedido().setTipoRecebimento(mPresenter.getTipoRecebimentoID());
+                mPresenter.getPedido().setItens((itensDTO));
+                mPresenter.getPedido().setValorTotal(mPresenter.calcularValorTotalVenda());
+                mPresenter.atualizarPedido(mPresenter.getPedido());
 
             } else {
                 // Salva o PedidoORM
@@ -314,7 +314,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
         spnFormaPagamento.setSelection(
                 adapterFormaPagamento.getPosition(tipoRecebimento.getNome()));
         mPresenter.setTipoRecebimento(tipoRecebimento.getNome());
-        mPresenter.setItens(mPresenter.getOrdemVenda().getItens());
+        mPresenter.setItens(mPresenter.getPedido().getItens());
         mPresenter.updateRecyclerItens();
         initSwipe();
     }
@@ -335,16 +335,15 @@ public class VendasActivity extends AppCompatActivity implements IView {
 
         if (getIntent().getExtras().getLong("keyPedido") == 0) {
             mPresenter.setOrderSale(null);
-            mPresenter.setClient(
-                    (Cliente) getIntent().getExtras().getSerializable("keyCliente"));
+            mPresenter.setCliente((Cliente) getIntent().getExtras().getSerializable("keyCliente"));
         } else {
 
             Pedido pedido =
                     mPresenter.buscarVendaPorId(getIntent().getExtras().getLong("keyPedido"));
             mPresenter.setOrderSale(pedido);
             Cliente cliente =
-                    mPresenter.pesquisarClientePorId(mPresenter.getOrdemVenda().getCodigoCliente());
-            mPresenter.setClient(cliente);
+                    mPresenter.pesquisarClientePorId(mPresenter.getPedido().getCodigoCliente());
+            mPresenter.setCliente(cliente);
         }
     }
 
@@ -398,12 +397,6 @@ public class VendasActivity extends AppCompatActivity implements IView {
         btnFotografar.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public void setSpinnerProductSelected() {
-        spnProducts.setSelection(
-                adaptadorDescricaoProduto.getPosition(mPresenter.getProductSelected().getNome()));
-    }
-
     @OnClick(R.id.btnFotografar)
     public void setBtnFotografarOnClicked(View view) {
         CustomCamera.init()
@@ -413,11 +406,17 @@ public class VendasActivity extends AppCompatActivity implements IView {
                         Environment.getExternalStorageDirectory().getAbsolutePath()
                                 + "/Minas Frango/Imagens Vendas")
                 .setImageName(
-                        mPresenter.getOrdemVenda().getId()
+                        mPresenter.getPedido().getId()
                                 + DateUtils.formatarDateddMMyyyyParaString(
-                                mPresenter.getOrdemVenda().getDataPedido())
-                                + mPresenter.getClient().getNome())
+                                mPresenter.getPedido().getDataPedido())
+                                + mPresenter.getCliente().getNome())
                 .start();
+    }
+
+    @Override
+    public void setSpinnerProductSelected() {
+        spnProducts.setSelection(
+                adaptadorDescricaoProduto.getPosition(mPresenter.getProdutoSelecionado().getNome()));
     }
 
     @OnItemSelected(R.id.spnFormaPagamento)
@@ -425,24 +424,19 @@ public class VendasActivity extends AppCompatActivity implements IView {
         mPresenter.setTipoRecebimento(adapterFormaPagamento.getItem(position));
     }
 
+    @Override
+    public void setSpinnerUnidadePadraoDoProdutoSelecionado() {
+        Unidade unidadePadrao = mPresenter.pesquisarUnidadePorProduto();
+        spnUnitys.setSelection(adapterUnidade.getPosition(unidadePadrao.getId().split("-")[0]));
+        mPresenter.setUnidadeSelecionada(unidadePadrao);
+    }
+
     @OnItemSelected(R.id.spnProducts)
     public void setSpnProductsOnSelected(int position) {
         // OBTENHO O NOME DO PRODUTO SELECIONADO
         String productName = adaptadorDescricaoProduto.getItem(position);
-        mPresenter.setProductSelected(mPresenter.loadProductByName(productName));
-        mPresenter.refreshSelectedProductViews();
-    }
-
-    @OnItemSelected(R.id.spnUnitys)
-    public void setSpnUnityOnSelected(int position) {
-        // setar o preco de acordo com aquela unidade  no presenter
-        // Setar o edit text do preco com o preco daquela unidade
-        mPresenter.setPrice(mPresenter.loadPriceOfUnityByProduct(adapterUnidade.getItem(position)));
-        cetPrecoUnitario.setText(String.valueOf(mPresenter.getPrice().getValor()));
-        mPresenter.setQtdProdutos(new BigDecimal(edtQTDProducts.getText().toString()));
-        txtAmountProducts.setText(
-                FormatacaoMoeda.convertDoubleToString(
-                        this.mPresenter.getTotalProductValue().doubleValue()));
+        mPresenter.setProdutoSelecionado(mPresenter.pesquisarProdutoPorNome(productName));
+        mPresenter.atualizarViewsDoProdutoSelecionado();
     }
 
     @Override
@@ -455,29 +449,41 @@ public class VendasActivity extends AppCompatActivity implements IView {
         mPresenter.setAlertDialog(alertDialog);
     }
 
+    @OnItemSelected(R.id.spnUnitys)
+    public void setSpnUnityOnSelected(int position) {
+        // setar o preco de acordo com aquela unidade  no presenter
+        // Setar o edit text do preco com o preco daquela unidade
+        mPresenter.setPreco(mPresenter.pesquisarPrecoDaUnidadePorProduto(adapterUnidade.getItem(position)));
+        cetPrecoUnitario.setText(String.valueOf(mPresenter.getPreco().getValor()));
+        mPresenter.setQtdProdutos(new BigDecimal(edtQTDProducts.getText().toString()));
+        txtAmountProducts.setText(
+                FormatacaoMoeda.convertDoubleToString(
+                        this.mPresenter.getValorTotalProduto().doubleValue()));
+    }
+
     @Override
     public void updateActCodigoProduto() {
-        actCodigoProduto.setText(String.valueOf((int) mPresenter.getProductSelected().getId()));
+        actCodigoProduto.setText(String.valueOf((int) mPresenter.getProdutoSelecionado().getId()));
     }
 
     @Override
     public void updateRecyclerItens() {
         adapterItemPedidoAdapter.notifyDataSetChanged();
-        mPresenter.setTotalOrderSale(new BigDecimal(mPresenter.calculeTotalOrderSale()));
-        mPresenter.updateTxtAmountOrderSale();
+        mPresenter.setValorTotalPedido(new BigDecimal(mPresenter.calcularValorTotalVenda()));
+        mPresenter.atualizarTxtValorTotalVenda();
     }
 
     @Override
     public void updateTxtAmountOrderSale() {
         txtAmountSale.setText(
                 FormatacaoMoeda.convertDoubleToString(
-                        mPresenter.calculeTotalOrderSale().doubleValue()));
+                        mPresenter.calcularValorTotalVenda().doubleValue()));
     }
 
     @Override
     public void updateTxtAmountProducts() {
 
-        mPresenter.getPrice().setValor(cetPrecoUnitario.getCurrencyDouble());
+        mPresenter.getPreco().setValor(cetPrecoUnitario.getCurrencyDouble());
         mPresenter.setQtdProdutos(
                 new BigDecimal(
                         edtQTDProducts.getText().toString().isEmpty()
@@ -485,14 +491,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
                                 : edtQTDProducts.getText().toString()));
         txtAmountProducts.setText(
                 FormatacaoMoeda.convertDoubleToString(
-                        mPresenter.getTotalProductValue().doubleValue()));
-    }
-
-    @Override
-    public void setSpinnerUnityPatternOfProductSelected() {
-        Unidade unidadePadrao = mPresenter.loadUnityByProduct();
-        spnUnitys.setSelection(adapterUnidade.getPosition(unidadePadrao.getId().split("-")[0]));
-        mPresenter.setUnidadeSelecionada(unidadePadrao);
+                        mPresenter.getValorTotalProduto().doubleValue()));
     }
 
     @Override
@@ -633,10 +632,10 @@ public class VendasActivity extends AppCompatActivity implements IView {
     private ItemPedido getItemPedido() {
         ItemPedido itemPedido = new ItemPedido();
         itemPedido.setQuantidade(mPresenter.getQtdProdutos().intValue());
-        itemPedido.setValorUnitario(mPresenter.getPrice().getValor());
-        itemPedido.setDescricao(mPresenter.getProductSelected().getNome());
+        itemPedido.setValorUnitario(mPresenter.getPreco().getValor());
+        itemPedido.setDescricao(mPresenter.getProdutoSelecionado().getNome());
         itemPedido.setBicos(Integer.parseInt(edtQTDBicos.getText().toString()));
-        itemPedido.setValorTotal(mPresenter.getTotalProductValue().doubleValue());
+        itemPedido.setValorTotal(mPresenter.getValorTotalProduto().doubleValue());
         return itemPedido;
     }
 
@@ -657,7 +656,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
     @NonNull
     private ItemPedidoID getItemPedidoID() throws ParseException {
         ItemPedidoID itemPedidoID = new ItemPedidoID();
-        itemPedidoID.setIdProduto(mPresenter.getProductSelected().getId());
+        itemPedidoID.setIdProduto(mPresenter.getProdutoSelecionado().getId());
         itemPedidoID.setIdUnidade(mPresenter.getUnidadeSelecionada().getId());
         itemPedidoID.setDataVenda(
                 DateUtils.formatarDateddMMyyyyhhmm(new Date(System.currentTimeMillis())));
@@ -671,36 +670,36 @@ public class VendasActivity extends AppCompatActivity implements IView {
     private void setAdapters() {
 
         List<TipoRecebimento> recebimentos =
-                mPresenter.loadTipoRecebimentosByClient(mPresenter.getClient());
+                mPresenter.pesquisarTipoRecebimentosPorCliente(mPresenter.getCliente());
         adapterFormaPagamento =
                 new ArrayAdapter<>(
                         VendasActivity.this,
                         android.R.layout.simple_list_item_1,
-                        mPresenter.convertTipoRecebimentoInString(recebimentos));
+                        mPresenter.converterTipoRecebimentoEmString(recebimentos));
 
-        List<Produto> produtos = mPresenter.loadAllProducts();
+        List<Produto> produtos = mPresenter.obterTodosProdutos();
 
         adaptadorCodigoProduto =
                 new ArrayAdapter<>(
                         mPresenter.getContext(),
                         android.R.layout.simple_list_item_1,
-                        mPresenter.loadAllProductsID(produtos));
+                        mPresenter.obterIDProdutos(produtos));
 
         adaptadorDescricaoProduto =
                 new ArrayAdapter(
                         this,
                         android.R.layout.simple_list_item_1,
-                        mPresenter.loadAllProductsByName(produtos));
+                        mPresenter.obterNomeDeTodosOsProdutos(produtos));
 
         adapterItemPedidoAdapter = new ItemPedidoAdapter(mPresenter);
 
-        List<Unidade> unidades = mPresenter.loadAllUnitys();
+        List<Unidade> unidades = mPresenter.obterTodasUnidades();
 
         adapterUnidade =
                 new ArrayAdapter<>(
                         mPresenter.getContext(),
                         android.R.layout.simple_spinner_item,
-                        mPresenter.loadAllUnitysToString(unidades));
+                        mPresenter.obterTodasUnidadesEmString(unidades));
 
         actCodigoProduto.setAdapter(adaptadorCodigoProduto);
         spnProducts.setAdapter(adaptadorDescricaoProduto);
@@ -714,8 +713,8 @@ public class VendasActivity extends AppCompatActivity implements IView {
                 (adapterView, view, i, l) -> {
                     Long idProduct = Long.parseLong((String) adapterView.getItemAtPosition(i));
                     // Seto o produto selecionado no presenter
-                    mPresenter.setProductSelected(mPresenter.loadProductById(idProduct));
-                    mPresenter.refreshSelectedProductViews();
+                    mPresenter.setProdutoSelecionado(mPresenter.pesquisarProdutoPorId(idProduct));
+                    mPresenter.atualizarViewsDoProdutoSelecionado();
                 });
     }
 }

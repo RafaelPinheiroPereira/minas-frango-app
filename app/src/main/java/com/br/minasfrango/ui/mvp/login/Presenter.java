@@ -21,19 +21,24 @@ public class Presenter implements ILoginMVP.IPresenter {
     }
 
     @Override
-    public Call<Funcionario> autenticateLogin(final String idUser, final String password) {
+    public Call<Funcionario> autenticarLogin(final String idUser, final String password) {
         return getLoginService().autenticaLogin(Long.parseLong(idUser), password);
     }
 
     @Override
-    public void createSession(
+    public void criarSessaoUsuario(
             final String idUser, final String password, final String nameEmployee) {
         this.mSessionManager = new SessionManager(getContext());
         mSessionManager.createUserLoginSession(idUser, password, nameEmployee);
     }
 
     @Override
-    public void doLogin(final String idUser, final String password) {
+    public void iniciarAnimacaoTela() {
+        this.view.iniciarAnimacaoTela();
+    }
+
+    @Override
+    public void realizarLogin(final String idUser, final String password) {
         mLoginTask = new LoginTask(this, this.view, idUser, password);
         mLoginTask.execute();
     }
@@ -49,7 +54,12 @@ public class Presenter implements ILoginMVP.IPresenter {
     }
 
     @Override
-    public boolean validateLogin() {
-        return view.validateForm();
+    public boolean validarLogin() {
+        return view.validarEntradaDados();
+    }
+
+    @Override
+    public void verificarPermissoes() {
+        this.view.verificarPermissoes();
     }
 }

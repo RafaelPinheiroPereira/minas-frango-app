@@ -1,4 +1,4 @@
-package com.br.minasfrango.ui.mvp.vieworder;
+package com.br.minasfrango.ui.mvp.pedido.visualizar;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,7 +6,7 @@ import android.os.Bundle;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.model.TipoRecebimento;
-import com.br.minasfrango.ui.mvp.vieworder.IViewOrderMVP.IView;
+import com.br.minasfrango.ui.mvp.pedido.visualizar.IViewOrderMVP.IView;
 import com.br.minasfrango.util.ImpressoraUtil;
 
 public class Presenter implements IViewOrderMVP.IPresenter {
@@ -30,13 +30,15 @@ public class Presenter implements IViewOrderMVP.IPresenter {
     }
 
     @Override
-    public Cliente findClientByID(final long codigoCliente) {
-        return this.mModel.findClientByID(codigoCliente);
+    public Pedido getVendaParams(final Bundle extras) {
+        long id = extras.getLong("keyPedido");
+
+        return this.mModel.pesquisarVendaPorId(id);
     }
 
     @Override
-    public TipoRecebimento findTipoRecebimentoByID(final long tipoRecebimento) throws Throwable {
-        return this.mModel.findTipoRecebimentoByID(tipoRecebimento);
+    public Cliente pesquisarClientePorID(final long codigoCliente) {
+        return this.mModel.pesquisarClientePorID(codigoCliente);
     }
 
     @Override
@@ -83,10 +85,8 @@ public class Presenter implements IViewOrderMVP.IPresenter {
     }
 
     @Override
-    public Pedido getSaleOrderParams(final Bundle extras) {
-        long id = extras.getLong("keyPedido");
-
-        return this.mModel.findySaleOrderByID(id);
+    public TipoRecebimento pesquisarTipoRecebimentoPorId(final long tipoRecebimento) throws Throwable {
+        return this.mModel.pesquisarTipoRecebimentoPorID(tipoRecebimento);
     }
 
     @Override

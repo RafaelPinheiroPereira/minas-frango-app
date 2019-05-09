@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.br.minasfrango.R;
 import com.br.minasfrango.data.model.ItemPedido;
-import com.br.minasfrango.ui.mvp.sales.ISalesMVP;
+import com.br.minasfrango.ui.mvp.venda.ISalesMVP;
 import com.br.minasfrango.util.FormatacaoMoeda;
 
 /**

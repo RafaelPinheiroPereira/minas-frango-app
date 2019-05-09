@@ -27,7 +27,7 @@ import com.br.minasfrango.ui.mvp.login.Presenter;
 
 public class LoginActivity extends AppCompatActivity implements IView {
 
-    private static String[] PERMISSIONS = {
+    private static String[] PERMISSOES = {
             Manifest.permission.BLUETOOTH,
             Manifest.permission.BLUETOOTH_ADMIN,
             Manifest.permission.BLUETOOTH_PRIVILEGED,
@@ -35,6 +35,8 @@ public class LoginActivity extends AppCompatActivity implements IView {
             permission.CAMERA,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
+            permission.ACCESS_FINE_LOCATION,
+            permission.ACCESS_COARSE_LOCATION,
     };
 
     private static int REQUEST_STORAGE = 112;
@@ -62,8 +64,6 @@ public class LoginActivity extends AppCompatActivity implements IView {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         initView();
-        verifyPermission();
-        loadAnimation();
         // Internet
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -74,6 +74,8 @@ public class LoginActivity extends AppCompatActivity implements IView {
         super.onStart();
         // Init
         presenter = new Presenter(this);
+        presenter.iniciarAnimacaoTela();
+        presenter.verificarPermissoes();
     }
 
     @Override
@@ -95,9 +97,10 @@ public class LoginActivity extends AppCompatActivity implements IView {
     @OnClick(R.id.btnLogin)
     public void btnSubmitClicked(View view) {
         // realizar login
-        if (presenter.validateLogin()) {
+        if (presenter.validarLogin()) {
             try {
-                presenter.doLogin(edtUser.getText().toString(), edtPassword.getText().toString());
+                presenter.realizarLogin(
+                        edtUser.getText().toString(), edtPassword.getText().toString());
             } catch (final Exception e) {
                 LoginActivity.this.runOnUiThread(
                         ()->AbstractActivity.showToast(presenter.getContext(), e.getMessage()));
@@ -106,7 +109,7 @@ public class LoginActivity extends AppCompatActivity implements IView {
     }
 
     @Override
-    public void loadAnimation() {
+    public void iniciarAnimacao() {
         Animation animTranslate = AnimationUtils.loadAnimation(this, R.anim.translate);
         animTranslate.setAnimationListener(
                 new Animation.AnimationListener() {
@@ -133,7 +136,12 @@ public class LoginActivity extends AppCompatActivity implements IView {
     }
 
     @Override
-    public boolean validateForm() {
+    public void iniciarAnimacaoTela() {
+        iniciarAnimacao();
+    }
+
+    @Override
+    public boolean validarEntradaDados() {
 
         if (TextUtils.isEmpty(edtUser.getText().toString())) {
             edtUser.setError("Matricula Obrigatória!");
@@ -149,6 +157,11 @@ public class LoginActivity extends AppCompatActivity implements IView {
         return true;
     }
 
+    @Override
+    public void verificarPermissoes() {
+        verificarPermissao();
+    }
+
     private void initView() {
 
         lnLoginBox.setVisibility(View.GONE);
@@ -159,7 +172,7 @@ public class LoginActivity extends AppCompatActivity implements IView {
         edtPassword.setText("1234");
     }
 
-    private void verifyPermission() {
+    private void verificarPermissao() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -176,7 +189,7 @@ public class LoginActivity extends AppCompatActivity implements IView {
                 } else {
                     // Solicita a permissao
                     ActivityCompat.requestPermissions(
-                            LoginActivity.this, PERMISSIONS, REQUEST_STORAGE);
+                            LoginActivity.this, PERMISSOES, REQUEST_STORAGE);
                 }
             }
         } else {

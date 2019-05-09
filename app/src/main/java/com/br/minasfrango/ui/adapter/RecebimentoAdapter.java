@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.br.minasfrango.R;
-import com.br.minasfrango.ui.mvp.payments.IPaymentsMVP;
+import com.br.minasfrango.ui.mvp.recebimento.IPaymentsMVP;
 import com.br.minasfrango.util.FormatacaoMoeda;
 import java.text.SimpleDateFormat;
 
@@ -165,12 +165,12 @@ public class RecebimentoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     mPresenter.getRecebimentos().get(position - 1).isCheck());
 
             // Quando o tipo de amortizacao eh automatico o checkbox deve ficar desabilitado
-            if (mPresenter.isTypeOfAmortizationIsAutomatic()) {
+            if (mPresenter.isAmortizacaoAutomatica()) {
                 ((MyViewHolder) viewHolder).chbRecebimento.setClickable(false);
 
-            } else if (!mPresenter.isTypeOfAmortizationIsAutomatic() && !mPresenter.getRecebimentos()
+            } else if (!mPresenter.isAmortizacaoAutomatica() && !mPresenter.getRecebimentos()
                     .get(position - 1).isCheck()
-                    && !mPresenter.creditValueIsGranThenZero()) {
+                    && !mPresenter.valorCreditoEhMaiorQueZero()) {
                 ((MyViewHolder) viewHolder).chbRecebimento.setClickable(false);
             } else {
                 ((MyViewHolder) viewHolder).chbRecebimento.setClickable(true);
@@ -180,7 +180,7 @@ public class RecebimentoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         (view)->{
 
                             // Caso o valor do credito  seja maior do que zero
-                            if (mPresenter.creditValueIsGranThenZero())
+                            if (mPresenter.valorCreditoEhMaiorQueZero())
                             // O item ja estiver selecionado entao quer dizer que estou
                             // desmarcando
                             {
@@ -213,7 +213,7 @@ public class RecebimentoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                 else {
                                     ((MyViewHolder) viewHolder)
                                             .chbRecebimento.setClickable(false);
-                                    this.mPresenter.showInsuficentCredit(
+                                    this.mPresenter.exibirMensagemDeSaldoInsuficiente(
                                             "Saldo Insuficiente");
                                 }
                             }

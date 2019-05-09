@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
-    android:padding="4dp">
+    android:padding="8dp">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -98,8 +98,8 @@
 
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
                     style="@style/TextInputLayout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -146,8 +146,8 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
                     style="@style/TextInputLayout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <com.br.minasfrango.util.CurrencyEditText
@@ -162,10 +162,10 @@
                         android:lines="1"
                         android:maxLength="9"
                         android:padding="10dp"
+                        android:textColor="@android:color/primary_text_light"
                         android:textSize="18sp"
                         app:groupDivider="."
                         app:locale="en_US"
-                        android:textColor="@android:color/primary_text_light"
                         app:monetaryDivider=","
                         app:showSymbol="false">
 
@@ -191,9 +191,10 @@
                     android:layout_height="wrap_content"
                     android:text="CANCELAR"
                     android:textColor="#fff"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     app:backgroundTint="@color/brand_red"
                     app:icon="@mipmap/icon_cancel_24" />
+
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSaveDialog"
@@ -203,7 +204,7 @@
                     android:layout_marginLeft="5dp"
                     android:text="ALTERAR"
                     android:textColor="#fff"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     app:backgroundTint="@color/fab"
                     app:icon="@mipmap/icon_done" />
 

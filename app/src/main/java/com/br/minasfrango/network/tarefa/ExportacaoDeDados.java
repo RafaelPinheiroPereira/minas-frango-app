@@ -35,22 +35,22 @@ public class ExportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
     protected void onPostExecute(Boolean aBoolean) {
         super.onPostExecute(aBoolean);
         if (aBoolean) {
-            this.mHomePresenter.hideProgressDialog();
-            this.mHomePresenter.showToast("Exportação realizada com sucesso!");
+            this.mHomePresenter.esconderProgressDialog();
+            this.mHomePresenter.exibirToast("Exportação realizada com sucesso!");
         }
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        this.mHomePresenter.showProgressDialog();
+        this.mHomePresenter.exibirProgressDialog();
     }
 
     private boolean exportData(List<Pedido> pedidos) {
         ExportacaoService exportacaoService = new RetrofitConfig().getExportacaoService();
         ListaPedido listaPedido = new ListaPedido();
         listaPedido.setMPedidoORMS(pedidos);
-        Call<Boolean> callExportacao = exportacaoService.exportacaoPedido(listaPedido);
+        Call<Boolean> callExportacao = exportacaoService.exportarPedido(listaPedido);
         try {
             Response<Boolean> response = callExportacao.execute();
             if (response.isSuccessful()) {

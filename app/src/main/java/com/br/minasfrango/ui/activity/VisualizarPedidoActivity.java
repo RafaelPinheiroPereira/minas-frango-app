@@ -17,9 +17,9 @@ import butterknife.OnClick;
 import com.br.minasfrango.R;
 import com.br.minasfrango.ui.abstracts.AbstractActivity;
 import com.br.minasfrango.ui.adapter.ItensPedidoVisualizarAdapter;
-import com.br.minasfrango.ui.mvp.vieworder.IViewOrderMVP;
-import com.br.minasfrango.ui.mvp.vieworder.IViewOrderMVP.IView;
-import com.br.minasfrango.ui.mvp.vieworder.Presenter;
+import com.br.minasfrango.ui.mvp.pedido.visualizar.IViewOrderMVP;
+import com.br.minasfrango.ui.mvp.pedido.visualizar.IViewOrderMVP.IView;
+import com.br.minasfrango.ui.mvp.pedido.visualizar.Presenter;
 import java.text.DateFormat;
 
 public class VisualizarPedidoActivity extends AppCompatActivity implements IView {
@@ -77,11 +77,11 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
         super.onStart();
 
         mPresenter = new Presenter(this);
-        mPresenter.setPedido(mPresenter.getSaleOrderParams(getIntent().getExtras()));
-        mPresenter.setCliente(mPresenter.findClientByID(mPresenter.getPedido().getCodigoCliente()));
+        mPresenter.setPedido(mPresenter.getVendaParams(getIntent().getExtras()));
+        mPresenter.setCliente(mPresenter.pesquisarClientePorID(mPresenter.getPedido().getCodigoCliente()));
         try {
             mPresenter.setTipoRecebimento(
-                    mPresenter.findTipoRecebimentoByID(
+                    mPresenter.pesquisarTipoRecebimentoPorId(
                             mPresenter.getPedido().getTipoRecebimento()));
         } catch (Throwable throwable) {
             VisualizarPedidoActivity.this.runOnUiThread(

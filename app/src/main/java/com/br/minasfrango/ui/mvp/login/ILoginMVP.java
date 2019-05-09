@@ -9,23 +9,31 @@ public interface ILoginMVP {
 
     interface IPresenter {
 
-        Call<Funcionario> autenticateLogin(String idUser, String password);
+        Call<Funcionario> autenticarLogin(String idUser, String password);
 
-        void createSession(String idUser, String password, String nameEmployee);
+        void criarSessaoUsuario(String idUser, String password, String nameEmployee);
 
-        void doLogin(String user, String password);
+        void iniciarAnimacaoTela();
+
+        void realizarLogin(String user, String password);
 
         Context getContext();
 
         LoginService getLoginService();
 
-        boolean validateLogin();
+        boolean validarLogin();
+
+        void verificarPermissoes();
     }
 
     interface IView {
 
-        void loadAnimation();
+        void iniciarAnimacao();
 
-        boolean validateForm();
+        void iniciarAnimacaoTela();
+
+        boolean validarEntradaDados();
+
+        void verificarPermissoes();
     }
 }

@@ -1,4 +1,4 @@
-package com.br.minasfrango.ui.mvp.vieworder;
+package com.br.minasfrango.ui.mvp.pedido.visualizar;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,9 +10,9 @@ public interface IViewOrderMVP {
 
     interface IPresenter {
 
-        Cliente findClientByID(long codigoCliente);
+        Pedido getVendaParams(final Bundle extras);
 
-        TipoRecebimento findTipoRecebimentoByID(long tipoRecebimento) throws Throwable;
+        Cliente pesquisarClientePorID(long codigoCliente);
 
         Cliente getCliente();
 
@@ -22,7 +22,7 @@ public interface IViewOrderMVP {
 
         void setPedido(Pedido pedido);
 
-        Pedido getSaleOrderParams(final Bundle extras);
+        TipoRecebimento pesquisarTipoRecebimentoPorId(long tipoRecebimento) throws Throwable;
 
         TipoRecebimento getTipoRecebimento();
 
@@ -44,11 +44,11 @@ public interface IViewOrderMVP {
 
     interface IModel {
 
-        Cliente findClientByID(long codigoCliente);
+        Cliente pesquisarClientePorID(long codigoCliente);
 
-        TipoRecebimento findTipoRecebimentoByID(long tipoRecebimento) throws Throwable;
+        TipoRecebimento pesquisarTipoRecebimentoPorID(long tipoRecebimento) throws Throwable;
 
-        Pedido findySaleOrderByID(Long id);
+        Pedido pesquisarVendaPorId(Long id);
     }
 
     interface IView {

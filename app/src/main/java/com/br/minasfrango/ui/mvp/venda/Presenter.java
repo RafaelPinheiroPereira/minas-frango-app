@@ -1,7 +1,10 @@
-package com.br.minasfrango.ui.mvp.sales;
+package com.br.minasfrango.ui.mvp.venda;
 
 import android.app.Activity;
 import android.content.Context;
+import android.location.LocationManager;
+import android.os.Build;
+import android.provider.Settings;
 import androidx.appcompat.app.AlertDialog;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.ItemPedido;
@@ -11,10 +14,11 @@ import com.br.minasfrango.data.model.Produto;
 import com.br.minasfrango.data.model.TipoRecebimento;
 import com.br.minasfrango.data.model.Unidade;
 import com.br.minasfrango.data.realm.PedidoORM;
-import com.br.minasfrango.ui.mvp.sales.ISalesMVP.IView;
+import com.br.minasfrango.ui.mvp.venda.ISalesMVP.IView;
 import com.br.minasfrango.util.DateUtils;
 import com.br.minasfrango.util.ImpressoraUtil;
 import com.br.minasfrango.util.SessionManager;
+import com.location.aravind.getlocation.GeoLocator;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -22,7 +26,7 @@ import java.util.List;
 
 public class Presenter implements ISalesMVP.IPresenter {
 
-    Cliente client;
+    Cliente cliente;
 
     ItemPedido itemPedido;
 
@@ -32,19 +36,19 @@ public class Presenter implements ISalesMVP.IPresenter {
 
     ISalesMVP.IView mView;
 
-    Pedido ordemVenda;
+    Pedido pedido;
 
-    Preco price;
+    Preco preco;
 
-    Produto productSelected;
+    Produto produtoSelecionado;
 
     BigDecimal qtdProdutos;
 
     String tipoRecebimento;
 
-    BigDecimal totalOrderSale;
+    BigDecimal valorTotalPedido;
 
-    BigDecimal totalProductValue;
+    BigDecimal valorTotalProduto;
 
     Unidade unidadeSelecionada;
 
@@ -61,8 +65,8 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
-    public void atulizarViewPrecoPosFoto() {
-        this.mView.atulizarViewPrecoPosFoto();
+    public void atualizarTxtValorTotalPoduto() {
+        this.mView.updateTxtAmountProducts();
     }
 
     @Override
@@ -76,13 +80,18 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
-    public Double calculeTotalOrderSale() {
-        return getItens().stream().mapToDouble(ItemPedido::getValorTotal).sum();
+    public void atualizarTxtValorTotalVenda() {
+        this.mView.updateTxtAmountOrderSale();
     }
 
     @Override
     public int getBicos() {
         return bicos;
+    }
+
+    @Override
+    public void atualizarViewPrecoPosFoto() {
+        this.mView.atulizarViewPrecoPosFoto();
     }
 
     @Override
@@ -98,9 +107,8 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
-    public ArrayList<String> convertTipoRecebimentoInString(
-            final List<TipoRecebimento> tiposRecebimentos) {
-        return this.mModel.convertTipoRecebimentoInString(tiposRecebimentos);
+    public void atualizarViewsDoProdutoSelecionado() {
+        this.mView.atualizarViewsDoProdutoSelecionado();
     }
 
     @Override
@@ -139,13 +147,14 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
-    public Cliente getClient() {
-        return client;
+    public Double calcularValorTotalVenda() {
+        return getItens().stream().mapToDouble(ItemPedido::getValorTotal).sum();
     }
 
     @Override
-    public void setClient(final Cliente client) {
-        this.client = client;
+    public ArrayList<String> converterTipoRecebimentoEmString(
+            final List<TipoRecebimento> tiposRecebimentos) {
+        return this.mModel.converterTipoRecebimentoEmString(tiposRecebimentos);
     }
 
     @Override
@@ -168,8 +177,8 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
-    public Pedido getOrdemVenda() {
-        return this.ordemVenda;
+    public Cliente getCliente() {
+        return cliente;
     }
 
     @Override
@@ -187,28 +196,28 @@ public class Presenter implements ISalesMVP.IPresenter {
         return itemPedido;
     }
 
-    public void setOrdemVenda(Pedido ordemVenda) {
-        this.ordemVenda = ordemVenda;
+    @Override
+    public void setCliente(final Cliente cliente) {
+        this.cliente = cliente;
     }
 
     @Override
-    public Preco getPrice() {
-        return price;
+    public Pedido getPedido() {
+        return this.pedido;
+    }
+
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
     }
 
     @Override
-    public void setPrice(final Preco price) {
-        this.price = price;
+    public Preco getPreco() {
+        return preco;
     }
 
     @Override
-    public Produto getProductSelected() {
-        return productSelected;
-    }
-
-    @Override
-    public void setProductSelected(final Produto productSelected) {
-        this.productSelected = productSelected;
+    public void setPreco(final Preco preco) {
+        this.preco = preco;
     }
 
     @Override
@@ -237,23 +246,23 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
-    public BigDecimal getTotalOrderSale() {
-        return totalOrderSale;
+    public Produto getProdutoSelecionado() {
+        return produtoSelecionado;
     }
 
     @Override
-    public void setTotalOrderSale(final BigDecimal totalOrderSale) {
-        this.totalOrderSale = totalOrderSale;
+    public void setProdutoSelecionado(final Produto produtoSelecionado) {
+        this.produtoSelecionado = produtoSelecionado;
     }
 
     @Override
-    public BigDecimal getTotalProductValue() {
-        return getQtdProdutos().multiply(new BigDecimal(getPrice().getValor()));
+    public BigDecimal getValorTotalPedido() {
+        return valorTotalPedido;
     }
 
     @Override
-    public void setTotalProductValue(final BigDecimal totalProductValue) {
-        this.totalProductValue = totalProductValue;
+    public void setValorTotalPedido(final BigDecimal valorTotalPedido) {
+        this.valorTotalPedido = valorTotalPedido;
     }
 
     @Override
@@ -267,80 +276,94 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
-    public List<Produto> loadAllProducts() {
-        return this.mModel.getAllProducts();
+    public BigDecimal getValorTotalProduto() {
+        return getQtdProdutos().multiply(new BigDecimal(getPreco().getValor()));
+    }
+
+    @Override
+    public void setValorTotalProduto(final BigDecimal valorTotalProduto) {
+        this.valorTotalProduto = valorTotalProduto;
     }
 
     @Override
     public void imprimirComprovante() {
 
-        this.mImpressoraUtil.imprimirComprovantePedido(getOrdemVenda(), getClient());
+        this.mImpressoraUtil.imprimirComprovantePedido(getPedido(), getCliente());
     }
 
     @Override
-    public ArrayList<String> loadAllProductsID(final List<Produto> products) {
-        return this.mModel.loadAllProductsID(products);
+    public boolean localizacaoHabilitada() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            // This is new method provided in API 28
+            LocationManager lm =
+                    (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+            return lm.isLocationEnabled();
+        } else {
+            // This is Deprecated in API 28
+            int mode =
+                    Settings.Secure.getInt(
+                            getContext().getContentResolver(),
+                            Settings.Secure.LOCATION_MODE,
+                            Settings.Secure.LOCATION_MODE_OFF);
+            return (mode != Settings.Secure.LOCATION_MODE_OFF);
+        }
     }
 
     @Override
-    public List<Unidade> loadAllUnitys() {
+    public ArrayList<String> obterIDProdutos(final List<Produto> products) {
+        return this.mModel.pesquisarNomeDeTodosProdutos(products);
+    }
+
+    @Override
+    public ArrayList<String> obterNomeDeTodosOsProdutos(final List<Produto> produtoS) {
+        return this.mModel.obterNomeDeTodosOsProdutos(produtoS);
+    }
+
+    @Override
+    public List<Unidade> obterTodasUnidades() {
         return this.mModel.getAllUnitys();
     }
 
     @Override
-    public ArrayList<String> loadAllUnitysToString(final List<Unidade> unitys) {
-        return this.mModel.convertUnitysToString(unitys);
+    public ArrayList<String> obterTodasUnidadesEmString(final List<Unidade> unitys) {
+        return this.mModel.converterUnidadesEmString(unitys);
     }
 
     @Override
-    public ArrayList<String> loadAllProductsByName(final List<Produto> produtoS) {
-        return this.mModel.loadAllProductsByName(produtoS);
-    }
-
-    @Override
-    public Preco loadPriceByProduct() {
-        return this.mModel.loadPriceByProduct();
-    }
-
-    @Override
-    public Preco loadPriceOfUnityByProduct(final String unityID) {
-
-        return this.mModel.loadPriceOfUnityByProduct(unityID);
-    }
-
-    @Override
-    public Produto loadProductById(final long id) {
-        return this.mModel.findProductById(id);
-    }
-
-    @Override
-    public Produto loadProductByName(final String productName) {
-        return this.mModel.findProductByName(productName);
+    public List<Produto> obterTodosProdutos() {
+        return this.mModel.getAllProducts();
     }
 
     @Override
     public Cliente pesquisarClientePorId(final long codigoCliente) {
-        return this.mModel.findClientById(codigoCliente);
+        return this.mModel.pesquisarClientePorID(codigoCliente);
     }
 
     @Override
-    public List<TipoRecebimento> loadTipoRecebimentosByClient(final Cliente client) {
-        return this.mModel.findTipoRecebimentosByCliente(client);
+    public Preco pesquisarPrecoDaUnidadePorProduto(final String unityID) {
+
+        return this.mModel.carregarPrecoDaUnidadePorProduto(unityID);
     }
 
     @Override
-    public Unidade loadUnityByProduct() {
-        return this.mModel.findUnityByProduct();
+    public Preco pesquisarPrecoPorProduto() {
+        return this.mModel.carregarPrecoPorProduto();
+    }
+
+    @Override
+    public Produto pesquisarProdutoPorId(final long id) {
+        return this.mModel.pesquisarProdutoPorID(id);
+    }
+
+    @Override
+    public Produto pesquisarProdutoPorNome(final String productName) {
+        return this.mModel.pesquisarProdutoPorNome(productName);
     }
 
     @Override
     public TipoRecebimento pesquisarTipoRecebimentoPorId() throws Throwable {
-        return this.mModel.findTipoRecebimentoById();
-    }
-
-    @Override
-    public void refreshSelectedProductViews() {
-        this.mView.atualizarViewsDoProdutoSelecionado();
+        return this.mModel.pesquisarTipoRecebimentoPorID();
     }
 
     @Override
@@ -349,8 +372,8 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
-    public void setSpinnerUnityPatternOfProductSelected() {
-        this.mView.setSpinnerUnityPatternOfProductSelected();
+    public List<TipoRecebimento> pesquisarTipoRecebimentosPorCliente(final Cliente client) {
+        return this.mModel.findTipoRecebimentosByCliente(client);
     }
 
     @Override
@@ -369,18 +392,26 @@ public class Presenter implements ISalesMVP.IPresenter {
     }
 
     @Override
+    public Unidade pesquisarUnidadePorProduto() {
+        return this.mModel.pesquisarUnidadePorProduto();
+    }
+
+    @Override
     public void salvarVenda() throws ParseException {
+
+        // Pega a geolocalizacao
+        GeoLocator geoLocator = new GeoLocator(getContext(), (Activity) getContext());
 
         Pedido pedido = new Pedido();
         pedido.setDataPedido(
                 DateUtils.formatarDateddMMyyyyhhmm(new java.util.Date(System.currentTimeMillis())));
         // Agora setar o id definitivo do item do pedido
 
-        getItens().forEach(item->this.mModel.addItemPedido(item));
+        getItens().forEach(item->this.mModel.adicionarItemDoPedido(item));
         SessionManager session = new SessionManager(getContext());
         pedido.setCodigoFuncionario(session.getUserID());
-        pedido.setCodigoCliente(getClient().getId());
-        pedido.setValorTotal(calculeTotalOrderSale());
+        pedido.setCodigoCliente(getCliente().getId());
+        pedido.setValorTotal(calcularValorTotalVenda());
         pedido.setTipoRecebimento(getTipoRecebimentoID());
 
         PedidoORM pedidoORM = new PedidoORM(pedido);
@@ -398,17 +429,12 @@ public class Presenter implements ISalesMVP.IPresenter {
 
     @Override
     public void setOrderSale(final Pedido orderSale) {
-        this.ordemVenda = orderSale;
+        this.pedido = orderSale;
     }
 
     @Override
-    public void updateTxtAmountOrderSale() {
-        this.mView.updateTxtAmountOrderSale();
-    }
-
-    @Override
-    public void updateTxtAmountProducts() {
-        this.mView.updateTxtAmountProducts();
+    public void setSpinnerUnidadePadraoDoProdutoSelecionado() {
+        this.mView.setSpinnerUnidadePadraoDoProdutoSelecionado();
     }
 
     @Override

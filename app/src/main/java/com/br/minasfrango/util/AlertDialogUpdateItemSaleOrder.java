@@ -15,7 +15,7 @@ import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import com.br.minasfrango.R;
 import com.br.minasfrango.data.model.Unidade;
-import com.br.minasfrango.ui.mvp.sales.ISalesMVP;
+import com.br.minasfrango.ui.mvp.venda.ISalesMVP;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -76,12 +76,12 @@ public class AlertDialogUpdateItemSaleOrder {
         edtQTDProductDialog.setText(String.valueOf(mIPresenter.getItemPedido().getQuantidade()));
         edtQTDBicoDialog.setText(String.valueOf(mIPresenter.getItemPedido().getBicos()));
 
-        List<Unidade> unidades = mIPresenter.loadAllUnitys();
+        List<Unidade> unidades = mIPresenter.obterTodasUnidades();
         adapterUnidade =
                 new ArrayAdapter<>(
                         mIPresenter.getContext(),
                         android.R.layout.simple_spinner_item,
-                        mIPresenter.loadAllUnitysToString(unidades));
+                        mIPresenter.obterTodasUnidadesEmString(unidades));
 
         spnUnitDialog.setAdapter(adapterUnidade);
         // Seta o spinner com a unidade do item e nao a padrao
@@ -113,7 +113,7 @@ public class AlertDialogUpdateItemSaleOrder {
                         Integer.parseInt(edtQTDProductDialog.getText().toString())
                                 * cetPriceDialog.getCurrencyDouble());
         mIPresenter.getItens().set(position, mIPresenter.getItemPedido());
-        mIPresenter.setTotalOrderSale(new BigDecimal(mIPresenter.calculeTotalOrderSale()));
+        mIPresenter.setValorTotalPedido(new BigDecimal(mIPresenter.calcularValorTotalVenda()));
         mIPresenter.updateRecyclerItens();
         mIPresenter.dissmis();
     }
@@ -128,7 +128,7 @@ public class AlertDialogUpdateItemSaleOrder {
                 .getItemPedido()
                 .setValorUnitario(
                         mIPresenter
-                                .loadPriceOfUnityByProduct(adapterUnidade.getItem(position))
+                                .pesquisarPrecoDaUnidadePorProduto(adapterUnidade.getItem(position))
                                 .getValor());
         cetPriceDialog.setText(String.valueOf(mIPresenter.getItemPedido().getValorUnitario()));
     }

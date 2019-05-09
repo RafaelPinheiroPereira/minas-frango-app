@@ -14,20 +14,22 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public interface ImportacaoService {
-		
-		@POST("importaCliente")
-		Call<List<Cliente>>importacaoCliente(@Body Funcionario funcionario);
-		
-		@GET("importaProduto")
-		Call<List<Produto>>importacaoProduto();
-		
-		@GET("importaFormaDePagamento")
-		Call<List<TipoRecebimento>>importacaoTipoRecebimento();
-		@GET("importaUnidade")
-		Call<List<Unidade>>importacaoUnidade();
-		@GET("importaPreco")
-		Call<List<Preco>>importacaoPreco();
-		
-		@POST("importaRecebimento")
-        Call<List<Recebimento>> importacaoRecebimentos(@Body Funcionario funcionario);
+
+    @POST("importaCliente")
+    Call<List<Cliente>> importarCliente(@Body Funcionario funcionario);
+
+    @GET("importaPreco")
+    Call<List<Preco>> importarPreco();
+
+    @GET("importaProduto")
+    Call<List<Produto>> importarProduto();
+
+    @POST("importaRecebimento")
+    Call<List<Recebimento>> importarRecebimentos(@Body Funcionario funcionario);
+
+    @GET("importaFormaDePagamento")
+    Call<List<TipoRecebimento>> importarTipoRecebimento();
+
+    @GET("importaUnidade")
+    Call<List<Unidade>> importarUnidade();
 }

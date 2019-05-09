@@ -7,9 +7,7 @@ import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.realm.ClientePedido;
 import java.util.List;
 
-
 public interface IPedidoMVP {
-
 
     interface IPresenter {
 
@@ -56,7 +54,5 @@ public interface IPedidoMVP {
         List<Pedido> todosPedidos();
 
         List<ClientePedido> getAllClientePedidos();
-
-
     }
 }

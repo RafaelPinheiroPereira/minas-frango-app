@@ -1,4 +1,4 @@
-package com.br.minasfrango.ui.mvp.payments;
+package com.br.minasfrango.ui.mvp.recebimento;
 
 import android.content.Context;
 import com.br.minasfrango.data.model.Cliente;
@@ -24,22 +24,18 @@ public interface IPaymentsMVP {
 
         BigDecimal getValorTotalAmortizado();
 
-        boolean creditValueIsGranThenZero();
+        void carregarDadosClienteView();
 
-        int findIdTipoRecebimento(String item);
+        ArrayList<String> carregarDescricaoTipoRecebimentosAVista() throws Throwable;
 
         Cliente getCliente();
 
-        /**
-         * Metodos relacionados a impressao
-         */
+        /** Metodos relacionados a impressao */
         void esperarPorConexao();
 
-        void processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(
-                int i, Recebimento recebimento);
+        void exibirMensagemDeSaldoInsuficiente(String s);
 
-        void processarOrdemDeSelecaoDaNotaAposRemocaoDaAmortizacao(
-                int i, Recebimento recebimento);
+        BigDecimal getValorCredito();
 
         void removerAmortizacao(int position);
 
@@ -49,9 +45,9 @@ public interface IPaymentsMVP {
 
         Context getContext();
 
-        BigDecimal getCredit();
+        void setValorCredito(BigDecimal valorCredito);
 
-        void setCredit(BigDecimal credit);
+        BigDecimal getValorTotalDevido();
 
         int getIdTipoRecebimento();
 
@@ -61,29 +57,27 @@ public interface IPaymentsMVP {
 
         int getPositionOpenNotaSelect();
 
-        void setPositionOpenNotaSelect(int positionOpenNotaSelect);
-
         List<Recebimento> getRecebimentos();
 
-        BigDecimal getValueTotalDevido();
+        boolean isAmortizacaoAutomatica();
 
-        boolean isTypeOfAmortizationIsAutomatic();
+        void setAmortizacaoAutomatica(boolean amortizacaoAutomatica);
 
-        void setTypeOfAmortizationIsAutomatic(boolean typeOfAmortizationIsAutomatic);
+        int pesquisarIdTipoRecebimento(String item);
 
         void fecharConexaoAtiva();
 
-        ArrayList<String> loadTipoRecebimentosAVista() throws Throwable;
+        void processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(int i, Recebimento recebimento);
 
         boolean saldoDevidoEhMaiorQueZero();
 
         void setAutomaticNoteSelectionOrder();
 
-        void setClientViews();
+        void processarOrdemDeSelecaoDaNotaAposRemocaoDaAmortizacao(int i, Recebimento recebimento);
 
-        void showInsuficentCredit(String s);
+        boolean valorCreditoEhMaiorQueZero();
 
-        boolean totalValueOfDebtISLessTranCreditOrEquals();
+        boolean valorTotalDebitoEhMenorOuIgualAoCredito();
 
         void updateRecycleView();
 
@@ -98,17 +92,17 @@ public interface IPaymentsMVP {
 
     interface IModel {
 
-        void calculateAmortizationAutomatic();
+        void calcularAmortizacaoAutomatica();
 
         void calcularArmotizacaoManual(int position);
 
-        boolean crediValueIsGranThenZero();
+        ArrayList<String> obterTipoRecebimentosAVista() throws Throwable;
 
-        int findIdTipoRecebimento(String item);
+        int pesquisarIdTipoRecebimento(String item);
 
         List<Recebimento> pesquisarRecebimentoPorCliente();
 
-        ArrayList<String> loadTipoRecebimentosAVista() throws Throwable;
+        boolean valorCreditoEhMaiorQueZero();
 
         void processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(
                 final int posicao, Recebimento recebimentoToUpdate);
@@ -139,7 +133,7 @@ public interface IPaymentsMVP {
 
         void setClientViews();
 
-        void showInsuficentCredit(String s);
+        void showCreditoInsuficiente(String s);
 
         void updateRecycleView();
 

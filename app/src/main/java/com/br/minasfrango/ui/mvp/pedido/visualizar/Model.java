@@ -1,4 +1,4 @@
-package com.br.minasfrango.ui.mvp.vieworder;
+package com.br.minasfrango.ui.mvp.pedido.visualizar;
 
 import com.br.minasfrango.data.dao.ClientDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
@@ -24,17 +24,17 @@ public class Model implements IViewOrderMVP.IModel {
     }
 
     @Override
-    public Cliente findClientByID(final long codigoCliente) {
+    public Cliente pesquisarClientePorID(final long codigoCliente) {
         return new Cliente(this.mClientDAO.findById(codigoCliente));
     }
 
     @Override
-    public TipoRecebimento findTipoRecebimentoByID(final long tipoRecebimento) throws Throwable {
+    public TipoRecebimento pesquisarTipoRecebimentoPorID(final long tipoRecebimento) throws Throwable {
         return this.mTipoRecebimentoDAO.findById(tipoRecebimento);
     }
 
     @Override
-    public Pedido findySaleOrderByID(final Long id) {
+    public Pedido pesquisarVendaPorId(final Long id) {
         PedidoORM pedidoORM = mPedidoDAO.findById(id);
         Pedido pedido = new Pedido(pedidoORM);
         pedido.setItens(Pedido.converterListItemPedidoRealmParaModel(pedidoORM));

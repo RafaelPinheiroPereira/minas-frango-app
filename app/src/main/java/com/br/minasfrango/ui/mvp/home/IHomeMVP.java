@@ -12,11 +12,11 @@ public interface IHomeMVP {
 
     interface IPresenter {
 
-        void closeDrawer();
+        void esconderProgressDialog();
 
-        void dataExport();
+        void exibirDialogClient(final Cliente cliente);
 
-        void dataImport();
+        void exibirDialogLogout();
 
         List<Rota> obterTodasRotas();
 
@@ -26,15 +26,15 @@ public interface IHomeMVP {
 
         List<Recebimento> pesquisarRecebimentoPorCliente(Cliente cliente);
 
-        void loadClientsAfterDataImport();
+        void exibirProgressDialog();
 
-        void loadRoutesAfterDataImport();
+        void exibirToast(String msg);
 
         Context getContext();
 
-        String getUserName();
+        void exportarDados();
 
-        boolean checkLogin();
+        void fecharDrawer();
 
         int getUserId();
 
@@ -42,26 +42,26 @@ public interface IHomeMVP {
 
         void setDrawer(final Bundle savedInstanceState);
 
-        void navigateToReceiptsActivity(Cliente client);
+        String getNomeUsuario();
 
-        void navigateToSalesActivity(Cliente client);
+        void importarDados();
 
         void setAdapters();
 
-        void hideProgressDialog();
+        void navigateToReceiptsActivity(Cliente cliente);
 
-        void showDialogLogout();
+        void navigateToSalesActivity(Cliente cliente);
 
-        void showProgressDialog();
+        void obterClientesAposImportarDados();
 
-        void showDialogClient(final Cliente cliente);
+        void obterRotasAposImportarDados();
 
-        void showToast(String msg);
+        boolean verificarLogin();
     }
 
     interface IView {
 
-        void closerDrawer();
+        void fecharDrawer();
 
         void setAdapters();
 
@@ -73,9 +73,9 @@ public interface IHomeMVP {
 
         void onHideProgressDialog();
 
-        void loadClientsAfterDataImport();
+        void obterClientesAposImportarDados();
 
-        void loadRoutesAfterDataImport();
+        void obterRotasAposImportarDados();
 
         void showDialogLogout();
     }

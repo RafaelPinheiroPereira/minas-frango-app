@@ -1,10 +1,10 @@
-package com.br.minasfrango.ui.mvp.payments;
+package com.br.minasfrango.ui.mvp.recebimento;
 
 import android.app.Activity;
 import android.content.Context;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Recebimento;
-import com.br.minasfrango.ui.mvp.payments.IPaymentsMVP.IView;
+import com.br.minasfrango.ui.mvp.recebimento.IPaymentsMVP.IView;
 import com.br.minasfrango.util.ImpressoraUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Presenter implements IPaymentsMVP.IPresenter {
 
-    BigDecimal credit = new BigDecimal(0);
+    boolean amortizacaoAutomatica = false;
 
     int idTipoRecebimento;
 
@@ -21,6 +21,7 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     IPaymentsMVP.IModel mModel;
 
     ImpressoraUtil mImpressoraUtil;
+
     /**
      * Posicao da nota selecionada
      */
@@ -28,11 +29,11 @@ public class Presenter implements IPaymentsMVP.IPresenter {
 
     List<Recebimento> mRecebimentos = new ArrayList<>();
 
-    boolean typeOfAmortizationIsAutomatic = false;
+    BigDecimal valorCredito = new BigDecimal(0);
 
     BigDecimal valorTotalAmortizado;
 
-    BigDecimal valueTotalDevido;
+    BigDecimal valorTotalDevido;
 
     IPaymentsMVP.IView view;
 
@@ -49,7 +50,7 @@ public class Presenter implements IPaymentsMVP.IPresenter {
 
     @Override
     public void calcularAmortizacaoAutomatica() {
-        this.mModel.calculateAmortizationAutomatic();
+        this.mModel.calcularAmortizacaoAutomatica();
     }
 
     @Override
@@ -74,13 +75,13 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
-    public boolean creditValueIsGranThenZero() {
-        return this.mModel.crediValueIsGranThenZero();
+    public void carregarDadosClienteView() {
+        this.view.setClientViews();
     }
 
     @Override
-    public int findIdTipoRecebimento(final String item) {
-        return this.mModel.findIdTipoRecebimento(item);
+    public ArrayList<String> carregarDescricaoTipoRecebimentosAVista() throws Throwable {
+        return this.mModel.obterTipoRecebimentosAVista();
     }
 
     @Override
@@ -88,9 +89,7 @@ public class Presenter implements IPaymentsMVP.IPresenter {
         return mCliente;
     }
 
-    /**
-     * Metodos relacionados a impressao
-     */
+    /** Metodos relacionados a impressao */
     @Override
     public void esperarPorConexao() {
         if (this.mImpressoraUtil.esperarPorConexao()) {
@@ -99,13 +98,8 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
-    public BigDecimal getValueTotalDevido() {
-        valueTotalDevido =
-                new BigDecimal(
-                        this.getRecebimentos().stream()
-                                .mapToDouble(Recebimento::getValorVenda)
-                                .sum());
-        return valueTotalDevido;
+    public void exibirMensagemDeSaldoInsuficiente(final String s) {
+        this.view.showCreditoInsuficiente(s);
     }
 
     @Override
@@ -131,13 +125,13 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
-    public BigDecimal getCredit() {
-        return this.credit;
+    public BigDecimal getValorCredito() {
+        return this.valorCredito;
     }
 
     @Override
-    public void setCredit(final BigDecimal credit) {
-        this.credit = credit;
+    public void setValorCredito(final BigDecimal valorCredito) {
+        this.valorCredito = valorCredito;
     }
 
     @Override
@@ -160,10 +154,7 @@ public class Presenter implements IPaymentsMVP.IPresenter {
         return positionOpenNotaSelect;
     }
 
-    @Override
-    public void setPositionOpenNotaSelect(final int positionOpenNotaSelect) {
-        this.positionOpenNotaSelect = positionOpenNotaSelect;
-    }
+
 
     @Override
     public List<Recebimento> getRecebimentos() {
@@ -179,29 +170,31 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     public void salvarAmortizacao() {
 
         this.mModel.salvarAmortizacao();
-
-
     }
 
     @Override
-    public boolean isTypeOfAmortizationIsAutomatic() {
-        return typeOfAmortizationIsAutomatic;
+    public BigDecimal getValorTotalDevido() {
+        valorTotalDevido =
+                new BigDecimal(
+                        this.getRecebimentos().stream()
+                                .mapToDouble(Recebimento::getValorVenda)
+                                .sum());
+        return valorTotalDevido;
     }
 
     @Override
-    public void setTypeOfAmortizationIsAutomatic(final boolean typeOfAmortizationIsAutomatic) {
-        this.typeOfAmortizationIsAutomatic = typeOfAmortizationIsAutomatic;
+    public boolean isAmortizacaoAutomatica() {
+        return amortizacaoAutomatica;
     }
 
     @Override
     public void fecharConexaoAtiva() {
         this.mImpressoraUtil.fecharConexaoAtiva();
-
     }
 
     @Override
-    public ArrayList<String> loadTipoRecebimentosAVista() throws Throwable {
-        return this.mModel.loadTipoRecebimentosAVista();
+    public void setAmortizacaoAutomatica(final boolean amortizacaoAutomatica) {
+        this.amortizacaoAutomatica = amortizacaoAutomatica;
     }
 
     @Override
@@ -215,17 +208,17 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
-    public void setClientViews() {
-        this.view.setClientViews();
+    public int pesquisarIdTipoRecebimento(final String item) {
+        return this.mModel.pesquisarIdTipoRecebimento(item);
     }
 
     @Override
-    public void showInsuficentCredit(final String s) {
-        this.view.showInsuficentCredit(s);
+    public boolean valorCreditoEhMaiorQueZero() {
+        return this.mModel.valorCreditoEhMaiorQueZero();
     }
 
     @Override
-    public boolean totalValueOfDebtISLessTranCreditOrEquals() {
+    public boolean valorTotalDebitoEhMenorOuIgualAoCredito() {
         return this.mModel.totalValueOfDebtISLessTranCreditOrEquals();
     }
 
@@ -242,7 +235,6 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     @Override
     public void imprimirComprovante() {
         this.mImpressoraUtil.imprimirComprovanteRecebimento(getRecebimentos(), getCliente());
-
     }
 
     @Override

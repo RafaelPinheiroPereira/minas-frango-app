@@ -86,6 +86,10 @@ dependencies {
     //Lib da Camera
     implementation 'com.github.aliwaris0572:CustomCamera:1.7'
 
+    //lib geolocalizacao
+
+    implementation 'com.github.AravindVijay7:GeoLocator-Android:1.0.2'
+
 
 }
 apply plugin: 'realm-android'

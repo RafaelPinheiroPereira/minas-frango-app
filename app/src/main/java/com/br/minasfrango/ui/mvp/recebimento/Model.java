@@ -1,4 +1,4 @@
-package com.br.minasfrango.ui.mvp.payments;
+package com.br.minasfrango.ui.mvp.recebimento;
 
 import com.br.minasfrango.data.dao.RecebimentoDAO;
 import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
@@ -22,8 +22,6 @@ public class Model implements IPaymentsMVP.IModel {
 
     TipoRecebimentoDAO mTipoRecebimentoDAO = TipoRecebimentoDAO.getInstace();
 
-    int position = 0;
-
     RecebimentoDAO recebimentoDAO = RecebimentoDAO.getInstace(RecebimentoORM.class);
 
     public Model(final IPaymentsMVP.IPresenter presenter) {
@@ -31,41 +29,7 @@ public class Model implements IPaymentsMVP.IModel {
     }
 
     @Override
-    public void calcularArmotizacaoManual(final int position) {
-
-        Recebimento recebimentoToUpdate = mPresenter.getRecebimentos().get(position);
-
-        if (creditValueIsGreaterThanZero()
-                && creditValueIsGreatherOrEqualThanSalesValueOfItem(recebimentoToUpdate)) {
-            recebimentoToUpdate.setValorAmortizado(recebimentoToUpdate.getValorVenda());
-            recebimentoToUpdate.setCheck(true);
-
-            mPresenter.getRecebimentos().set(position, recebimentoToUpdate);
-            mPresenter.setCredit(
-                    mPresenter
-                            .getCredit()
-                            .subtract(new BigDecimal(recebimentoToUpdate.getValorVenda())));
-
-            mPresenter.updateRecycleViewAlteredItem(mPresenter.getPositionOpenNotaSelect());
-
-            mPresenter.updateRecycleView();
-
-        } else if (creditValueIsGreaterThanZero()
-                && creditValueIsLessThanSalesValueOfItem(recebimentoToUpdate)) {
-            recebimentoToUpdate.setValorAmortizado(mPresenter.getCredit().doubleValue());
-            recebimentoToUpdate.setCheck(true);
-            mPresenter.getRecebimentos().set(position, recebimentoToUpdate);
-
-            mPresenter.updateRecycleViewAlteredItem(mPresenter.getPositionOpenNotaSelect());
-            mPresenter.setCredit(new BigDecimal(0));
-            mPresenter.updateRecycleView();
-        }
-        mPresenter.showInsuficentCredit("Saldo do  Credito: " + mPresenter.getCredit());
-        mPresenter.atualizarViewSaldoDevedor();
-    }
-
-    @Override
-    public void calculateAmortizationAutomatic() {
+    public void calcularAmortizacaoAutomatica() {
 
         // Todos os checkboxs sao desabilitados
         // O funcionarioORM nao pode selecionar nenhuma nota
@@ -91,9 +55,9 @@ public class Model implements IPaymentsMVP.IModel {
                                         .set(mPresenter.getRecebimentos().indexOf(item), item);
                                 mPresenter.updateRecycleViewAlteredItem(
                                         mPresenter.getRecebimentos().lastIndexOf(item));
-                                mPresenter.setCredit(
+                                mPresenter.setValorCredito(
                                         mPresenter
-                                                .getCredit()
+                                                .getValorCredito()
                                                 .subtract(new BigDecimal(item.getValorVenda())));
                                 mPresenter.updateRecycleView();
 
@@ -102,14 +66,14 @@ public class Model implements IPaymentsMVP.IModel {
                             // do item entao o valor amortizado do item recebe o valor do credito
                             else if ((creditValueIsGreaterThanZero())
                                     && creditValueIsLessThanSalesValueOfItem(item)) {
-                                item.setValorAmortizado(mPresenter.getCredit().doubleValue());
+                                item.setValorAmortizado(mPresenter.getValorCredito().doubleValue());
                                 mPresenter
                                         .getRecebimentos()
                                         .set(mPresenter.getRecebimentos().lastIndexOf(item), item);
                                 item.setCheck(true);
                                 item.setOrderSelected(
                                         mPresenter.getRecebimentos().lastIndexOf(item) + 1);
-                                mPresenter.setCredit(new BigDecimal(0));
+                                mPresenter.setValorCredito(new BigDecimal(0));
                                 mPresenter.updateRecycleViewAlteredItem(
                                         mPresenter.getRecebimentos().lastIndexOf(item));
                                 mPresenter.updateRecycleView();
@@ -118,39 +82,50 @@ public class Model implements IPaymentsMVP.IModel {
     }
 
     @Override
-    public boolean crediValueIsGranThenZero() {
-        return mPresenter.getCredit().compareTo(new BigDecimal(0)) == ConstantsUtil.BIGGER;
+    public void calcularArmotizacaoManual(final int position) {
+
+        Recebimento recebimentoToUpdate = mPresenter.getRecebimentos().get(position);
+
+        if (creditValueIsGreaterThanZero()
+                && creditValueIsGreatherOrEqualThanSalesValueOfItem(recebimentoToUpdate)) {
+            recebimentoToUpdate.setValorAmortizado(recebimentoToUpdate.getValorVenda());
+            recebimentoToUpdate.setCheck(true);
+            mPresenter.getRecebimentos().set(position, recebimentoToUpdate);
+            mPresenter.setValorCredito(
+                    mPresenter
+                            .getValorCredito()
+                            .subtract(new BigDecimal(recebimentoToUpdate.getValorVenda())));
+            mPresenter.updateRecycleViewAlteredItem(mPresenter.getPositionOpenNotaSelect());
+            mPresenter.updateRecycleView();
+
+        } else if (creditValueIsGreaterThanZero()
+                && creditValueIsLessThanSalesValueOfItem(recebimentoToUpdate)) {
+            recebimentoToUpdate.setValorAmortizado(mPresenter.getValorCredito().doubleValue());
+            recebimentoToUpdate.setCheck(true);
+            mPresenter.getRecebimentos().set(position, recebimentoToUpdate);
+
+            mPresenter.updateRecycleViewAlteredItem(mPresenter.getPositionOpenNotaSelect());
+            mPresenter.setValorCredito(new BigDecimal(0));
+            mPresenter.updateRecycleView();
+        }
+        mPresenter.exibirMensagemDeSaldoInsuficiente(
+                "Saldo do  Credito: " + mPresenter.getValorCredito());
+        mPresenter.atualizarViewSaldoDevedor();
     }
 
     @Override
-    public int findIdTipoRecebimento(final String item) {
+    public ArrayList<String> obterTipoRecebimentosAVista() throws Throwable {
+        return this.mTipoRecebimentoDAO.carregaFormaPagamentoAmortizacao();
+    }
+
+    @Override
+    public int pesquisarIdTipoRecebimento(final String item) {
         return mTipoRecebimentoDAO.codigoFormaPagamento(item);
     }
 
     @Override
     public List<Recebimento> pesquisarRecebimentoPorCliente() {
         return recebimentoDAO.pesquisarRecebimentoPorCliente(mPresenter.getCliente());
-    }
-
-    @Override
-    public ArrayList<String> loadTipoRecebimentosAVista() throws Throwable {
-        return this.mTipoRecebimentoDAO.carregaFormaPagamentoAmortizacao();
-    }
-
-    @Override
-    public void processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(
-            final int posicao, Recebimento recebimentoToUpdate) {
-        Recebimento recebimentoComMaiorValorDeSelecao =
-                mPresenter.getRecebimentos().stream()
-                        .max(Comparator.comparing(Recebimento::getOrderSelected))
-                        .get();
-        if (recebimentoComMaiorValorDeSelecao.getOrderSelected() == 0) {
-            recebimentoToUpdate.setOrderSelected(1);
-        } else {
-            recebimentoToUpdate.setOrderSelected(
-                    recebimentoComMaiorValorDeSelecao.getOrderSelected() + 1);
-        }
-        mPresenter.getRecebimentos().set(posicao, recebimentoToUpdate);
     }
 
     @Override
@@ -176,10 +151,26 @@ public class Model implements IPaymentsMVP.IModel {
     }
 
     @Override
+    public void processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(
+            final int posicao, Recebimento recebimentoToUpdate) {
+        Recebimento recebimentoComMaiorValorDeSelecao =
+                mPresenter.getRecebimentos().stream()
+                        .max(Comparator.comparing(Recebimento::getOrderSelected))
+                        .get();
+        if (recebimentoComMaiorValorDeSelecao.getOrderSelected() == 0) {
+            recebimentoToUpdate.setOrderSelected(1);
+        } else {
+            recebimentoToUpdate.setOrderSelected(
+                    recebimentoComMaiorValorDeSelecao.getOrderSelected() + 1);
+        }
+        mPresenter.getRecebimentos().set(posicao, recebimentoToUpdate);
+    }
+
+    @Override
     public void removerAmortizacao(final int position) {
 
         Recebimento recebimentoToUpdate = mPresenter.getRecebimentos().get(position);
-        BigDecimal valorCredito = mPresenter.getCredit();
+        BigDecimal valorCredito = mPresenter.getValorCredito();
         BigDecimal valorAmortizadoAnterior =
                 new BigDecimal(recebimentoToUpdate.getValorAmortizado());
 
@@ -189,9 +180,10 @@ public class Model implements IPaymentsMVP.IModel {
         mPresenter.processarOrdemDeSelecaoDaNotaAposRemocaoDaAmortizacao(
                 position, recebimentoToUpdate);
         mPresenter.updateRecycleViewAlteredItem(position);
-        mPresenter.setCredit(valorCredito.add(valorAmortizadoAnterior));
+        mPresenter.setValorCredito(valorCredito.add(valorAmortizadoAnterior));
         mPresenter.atualizarViewSaldoDevedor();
-        mPresenter.showInsuficentCredit("Saldo Crédito: " + mPresenter.getCredit());
+        mPresenter.exibirMensagemDeSaldoInsuficiente(
+                "Saldo Crédito: " + mPresenter.getValorCredito());
         mPresenter.atualizarViewSaldoDevedor();
         mPresenter.updateRecycleView();
     }
@@ -199,7 +191,7 @@ public class Model implements IPaymentsMVP.IModel {
     @Override
     public boolean saldoDevidoEhMaiorQueZero() {
         return mPresenter
-                .getValueTotalDevido()
+                .getValorTotalDevido()
                 .subtract(mPresenter.getValorTotalAmortizado())
                 .compareTo(new BigDecimal(0))
                 == ConstantsUtil.BIGGER;
@@ -211,7 +203,7 @@ public class Model implements IPaymentsMVP.IModel {
         mPresenter
                 .getRecebimentos()
                 .forEach(
-                        item->{
+                        item-> {
                             if (item.isCheck()) {
 
                                 try {
@@ -227,29 +219,35 @@ public class Model implements IPaymentsMVP.IModel {
     }
 
     @Override
-    public void setAutomaticNoteSelectionOrder() {}
-
-    @Override
     public boolean totalValueOfDebtISLessTranCreditOrEquals() {
-        return ((mPresenter.getCredit().compareTo(mPresenter.getValueTotalDevido())
+        return ((mPresenter.getValorCredito().compareTo(mPresenter.getValorTotalDevido())
                 == ConstantsUtil.SMALLER)
-                || (mPresenter.getCredit().compareTo(mPresenter.getValueTotalDevido())
+                || (mPresenter.getValorCredito().compareTo(mPresenter.getValorTotalDevido())
                 == ConstantsUtil.EQUAL));
     }
 
+    @Override
+    public void setAutomaticNoteSelectionOrder() {
+    }
+
+    @Override
+    public boolean valorCreditoEhMaiorQueZero() {
+        return mPresenter.getValorCredito().compareTo(new BigDecimal(0)) == ConstantsUtil.BIGGER;
+    }
+
     private boolean creditValueIsGreaterThanZero() {
-        return mPresenter.getCredit().compareTo(new BigDecimal(0)) == ConstantsUtil.BIGGER;
+        return mPresenter.getValorCredito().compareTo(new BigDecimal(0)) == ConstantsUtil.BIGGER;
     }
 
     private boolean creditValueIsGreatherOrEqualThanSalesValueOfItem(final Recebimento item) {
-        return mPresenter.getCredit().compareTo(new BigDecimal(item.getValorVenda()))
+        return mPresenter.getValorCredito().compareTo(new BigDecimal(item.getValorVenda()))
                 == ConstantsUtil.BIGGER
-                || mPresenter.getCredit().compareTo(new BigDecimal(item.getValorVenda()))
+                || mPresenter.getValorCredito().compareTo(new BigDecimal(item.getValorVenda()))
                 == ConstantsUtil.EQUAL;
     }
 
     private boolean creditValueIsLessThanSalesValueOfItem(final Recebimento item) {
-        return mPresenter.getCredit().compareTo(new BigDecimal(item.getValorVenda()))
+        return mPresenter.getValorCredito().compareTo(new BigDecimal(item.getValorVenda()))
                 == ConstantsUtil.SMALLER;
     }
 }

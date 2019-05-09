@@ -33,13 +33,13 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... params) {
 
-        try {
+        /*try {
 
-            return validateAcess(idUser, password);
+            return validarAcesso(idUser, password);
         } catch (IOException e) {
             return e.getMessage();
-        }
-        // return validateAcessOffLine(idUser, password);
+        }*/
+        return validarAcessoOffLine(idUser, password);
     }
 
     @Override
@@ -67,14 +67,14 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
         progressDialog.show();
     }
 
-    private String validateAcess(String idUser, String password) throws IOException {
-        Call<Funcionario> autenticaLoginCall = mPresenter.autenticateLogin(idUser, password);
+    private String validarAcesso(String idUser, String password) throws IOException {
+        Call<Funcionario> autenticaLoginCall = mPresenter.autenticarLogin(idUser, password);
         Response<Funcionario> response = autenticaLoginCall.execute();
 
         switch (response.code()) {
             case HttpConstant.OK:
                 Funcionario funcionario = response.body();
-                mPresenter.createSession(idUser, password, funcionario.getNome());
+                mPresenter.criarSessaoUsuario(idUser, password, funcionario.getNome());
                 return "SUCESS";
 
             case HttpConstant.UNAUTHORIZED:
@@ -84,8 +84,8 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
         throw new IOException("Funcionário não cadastrado!");
     }
 
-    private String validateAcessOffLine(String idUser, String password) {
-        mPresenter.createSession(idUser, password, "teste-off-line");
+    private String validarAcessoOffLine(String idUser, String password) {
+        mPresenter.criarSessaoUsuario(idUser, password, "teste-off-line");
         return "SUCESS";
     }
 }

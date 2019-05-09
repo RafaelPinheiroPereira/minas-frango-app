@@ -71,19 +71,19 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
 
         if (importou) {
 
-            this.mHomePresenter.hideProgressDialog();
-            this.mHomePresenter.showToast("Importação realizada com sucesso!");
-            this.mHomePresenter.loadClientsAfterDataImport();
-            this.mHomePresenter.loadRoutesAfterDataImport();
+            this.mHomePresenter.esconderProgressDialog();
+            this.mHomePresenter.exibirToast("Importação realizada com sucesso!");
+            this.mHomePresenter.obterClientesAposImportarDados();
+            this.mHomePresenter.obterRotasAposImportarDados();
 
-            this.mHomePresenter.closeDrawer();
+            this.mHomePresenter.fecharDrawer();
         }
     }
 
     @Override
     protected void onPreExecute() {
 
-        this.mHomePresenter.showProgressDialog();
+        this.mHomePresenter.exibirProgressDialog();
     }
 
     private boolean importarClientes() {
@@ -91,7 +91,7 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
         ImportacaoService importacaoService = new RetrofitConfig().getImportacaoService();
         Funcionario aux = new Funcionario();
         aux.setId(1);
-        Call<List<Cliente>> callCliente = importacaoService.importacaoCliente(aux);
+        Call<List<Cliente>> callCliente = importacaoService.importarCliente(aux);
         Response<List<Cliente>> responseCliente = null;
         try {
             responseCliente = callCliente.execute();
@@ -107,7 +107,7 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
 
             } else {
 
-                this.mHomePresenter.hideProgressDialog();
+                this.mHomePresenter.esconderProgressDialog();
             }
 
         } catch (IOException e) {
@@ -118,7 +118,7 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
 
     private boolean importarPrecos() {
         ImportacaoService importacaoService = new RetrofitConfig().getImportacaoService();
-        Call<List<Preco>> callPrecos = importacaoService.importacaoPreco();
+        Call<List<Preco>> callPrecos = importacaoService.importarPreco();
         try {
             Response<List<Preco>> responsePrecos = callPrecos.execute();
             if (responsePrecos.isSuccessful()) {
@@ -127,15 +127,13 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
                 realm.beginTransaction();
 
                 precos.forEach(
-                        preco->{
-
+                        preco-> {
                             PrecoID precoID =
                                     new PrecoID(
                                             preco.getChavesPreco().getId(),
                                             preco.getChavesPreco().getIdCliente(),
                                             preco.getChavesPreco().getIdProduto(),
-                                            preco.getChavesPreco().getUnidadeProduto()
-                                    );
+                                            preco.getChavesPreco().getUnidadeProduto());
                             preco.setChavesPreco(precoID);
                             preco.setId(
                                     preco.getChavesPreco().getId()
@@ -161,7 +159,7 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
 
     private boolean importarProdutos() {
         ImportacaoService importacaoService = new RetrofitConfig().getImportacaoService();
-        Call<List<Produto>> callProdutos = importacaoService.importacaoProduto();
+        Call<List<Produto>> callProdutos = importacaoService.importarProduto();
         try {
             Response<List<Produto>> responseProdutos = callProdutos.execute();
             if (responseProdutos.isSuccessful()) {
@@ -185,7 +183,7 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
         Funcionario funcionario = new Funcionario();
         funcionario.setId(1);
         Call<List<Recebimento>> callRecebimentos =
-                importacaoService.importacaoRecebimentos(funcionario);
+                importacaoService.importarRecebimentos(funcionario);
         try {
             Response<List<Recebimento>> responseRecebimentoDTO = callRecebimentos.execute();
             if (responseRecebimentoDTO.isSuccessful()) {
@@ -193,7 +191,7 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
                 Realm realm = Realm.getDefaultInstance();
                 realm.beginTransaction();
                 recebimentos.forEach(
-                        recebimento->{
+                        recebimento-> {
                             recebimento.setId(recebimento.getIdVenda());
                             realm.copyToRealmOrUpdate(new RecebimentoORM(recebimento));
                         });
@@ -211,14 +209,14 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
     private boolean importarTipoRecebimentos() {
         ImportacaoService importacaoService = new RetrofitConfig().getImportacaoService();
         Call<List<TipoRecebimento>> callTipoRecebimento =
-                importacaoService.importacaoTipoRecebimento();
+                importacaoService.importarTipoRecebimento();
         try {
             Response<List<TipoRecebimento>> responseTipoRecebimento = callTipoRecebimento.execute();
             List<TipoRecebimento> tipoRecebimentos = responseTipoRecebimento.body();
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
             tipoRecebimentos.forEach(
-                    tipoRecebimento->
+                    tipoRecebimento ->
                             realm.copyToRealmOrUpdate(new TipoRecebimentoORM(tipoRecebimento)));
             realm.commitTransaction();
             Log.d("Importacao Tipo", "Sucess");
@@ -231,7 +229,7 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
 
     private boolean importarUnidades() {
         ImportacaoService importacaoService = new RetrofitConfig().getImportacaoService();
-        Call<List<Unidade>> callUnidades = importacaoService.importacaoUnidade();
+        Call<List<Unidade>> callUnidades = importacaoService.importarUnidade();
         try {
             Response<List<Unidade>> responseUnidades = callUnidades.execute();
             if (responseUnidades.isSuccessful()) {
@@ -239,7 +237,7 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
                 Realm realm = Realm.getDefaultInstance();
                 realm.beginTransaction();
                 unidades.forEach(
-                        unidade->{
+                        unidade-> {
                             unidade.setId(
                                     unidade.getChavesUnidade().getIdUnidade()
                                             + "-"
