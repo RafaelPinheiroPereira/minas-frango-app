@@ -1,4 +1,4 @@
-package com.br.minasfrango.ui.mvp.pedido.visualizar;
+package com.br.minasfrango.ui.mvp.visualizar;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,7 +6,7 @@ import android.os.Bundle;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.model.TipoRecebimento;
-import com.br.minasfrango.ui.mvp.pedido.visualizar.IViewOrderMVP.IView;
+import com.br.minasfrango.ui.mvp.visualizar.IViewOrderMVP.IView;
 import com.br.minasfrango.util.ImpressoraUtil;
 
 public class Presenter implements IViewOrderMVP.IPresenter {

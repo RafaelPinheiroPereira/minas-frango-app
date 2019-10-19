@@ -33,7 +33,7 @@ public class ImpressoraUtil {
 
     Activity activity;
 
-    SessionManager mSessionManager;
+    ControleSessao mControleSessao;
 
     private BluetoothSocket mBtSocket;
 
@@ -45,14 +45,14 @@ public class ImpressoraUtil {
 
     public ImpressoraUtil(final Activity activity) {
         this.activity = activity;
-        mSessionManager = new SessionManager(this.activity);
+        mControleSessao = new ControleSessao(this.activity);
     }
 
     public synchronized boolean esperarPorConexao() {
 
         status(null);
         fecharConexaoAtiva();
-        String adress = mSessionManager.getEnderecoBluetooth();
+        String adress = mControleSessao.getEnderecoBluetooth();
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter.isEnabled()) {
             // Checa conexao
@@ -196,7 +196,7 @@ public class ImpressoraUtil {
     private StringBuffer configurarLayoutImpressaoPedido(
             final Pedido pedido, final Cliente cliente) {
         StringBuffer textBuffer = new StringBuffer();
-        textBuffer.append("{center}{b}MINAS FRANGOS ALIMENTOS");
+        textBuffer.append("{center}{b}MINAS FRANGOS ");
         textBuffer.append("{br}");
         textBuffer.append("{br}{reset}");
         textBuffer.append("{s}{center}COMPROVANTE DE VENDAS {br}");
@@ -217,7 +217,11 @@ public class ImpressoraUtil {
                 "{b}BICOS: "
                         + pedido.getItens().stream().mapToInt(ItemPedido::getBicos).sum()
                         + "{br}");
-        textBuffer.append("{br}VENDEDOR: " + new SessionManager(this.activity).getUserName());
+        textBuffer.append(
+                "{b}PESO: "
+                        + pedido.getItens().stream().mapToInt(ItemPedido::getQuantidade).sum() + " KG"
+                        + "{br}");
+        textBuffer.append("{br}VENDEDOR: " + new ControleSessao(this.activity).getUserName());
         textBuffer.append("{br}");
         textBuffer.append("{reset}{left}{w}{h}________________");
         textBuffer.append("{br}");
@@ -242,7 +246,7 @@ public class ImpressoraUtil {
                         recebimento.get().getDataRecebimento());
 
         StringBuffer textBuffer = new StringBuffer();
-        textBuffer.append("{center}{b}MINAS FRANGOS ALIMENTOS");
+        textBuffer.append("{center}{b}MINAS FRANGOS ");
         textBuffer.append("{br}");
         textBuffer.append("{br}{reset}");
         textBuffer.append("{s}{center}COMPROVANTE DE PAGAMENTOS {br}");
@@ -250,10 +254,10 @@ public class ImpressoraUtil {
         textBuffer.append("{b}CLIENTE: " + cliente.getNome() + "{br}");
         textBuffer.append(
                 "{b}VALOR: "
-                        + FormatacaoMoeda.convertDoubleToString(valorTotalAmortizado)
+                        + FormatacaoMoeda.converterParaDolar(valorTotalAmortizado)
                         + "{br}");
         textBuffer.append("{b}DATA/HORA: " + strDataRecebimento + "{br}");
-        textBuffer.append("{br}VENDEDOR: " + new SessionManager(this.activity).getUserName());
+        textBuffer.append("{br}VENDEDOR: " + new ControleSessao(this.activity).getUserName());
         textBuffer.append("{br}");
         textBuffer.append("{reset}{left}{w}{h}________________");
         textBuffer.append("{br}");

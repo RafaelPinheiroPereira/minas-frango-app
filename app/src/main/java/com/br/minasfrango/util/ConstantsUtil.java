@@ -8,5 +8,10 @@ public class ConstantsUtil {
 
     public static final int EQUAL = 0;
 
+    public static final String CAMINHO_IMAGEM_VENDAS = "Comprovantes-Vendas";
+
+    public static final String CAMINHO_IMAGEM_RECEBIMENTOS = "Comprovantes-Recebimentos";
+
+
 
 }

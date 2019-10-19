@@ -1,7 +1,6 @@
 package com.br.minasfrango.data.dao;
 
 import com.br.minasfrango.data.model.ItemPedido;
-import com.br.minasfrango.data.realm.ItemPedidoIDORM;
 import com.br.minasfrango.data.realm.ItemPedidoORM;
 import com.br.minasfrango.data.realm.PedidoORM;
 import io.realm.RealmQuery;
@@ -27,13 +26,7 @@ public class ItemPedidoDAO extends GenericsDAO<ItemPedidoORM> {
 
         ItemPedidoORM itemPedidoORM = new ItemPedidoORM(itemPedido);
 
-        long idItemPedidoId;
-        if (realm.where(ItemPedidoIDORM.class).max("id") != null) {
-            idItemPedidoId = (long) (realm.where(ItemPedidoIDORM.class).max("id").intValue() + 1);
-        } else {
-            idItemPedidoId = 1;
-        }
-        itemPedidoORM.getChavesItemPedidoORM().setId(idItemPedidoId);
+
         long id;
         if (realm.where(ItemPedidoORM.class).max("id") != null) {
             id = (long) (realm.where(ItemPedidoORM.class).max("id").intValue() + 1);
@@ -43,8 +36,10 @@ public class ItemPedidoDAO extends GenericsDAO<ItemPedidoORM> {
 
         try {
             itemPedidoORM.setId(id);
+            itemPedido.setId(id);
+            itemPedidoORM.setChavesItemPedidoORM(itemPedidoORM.getChavesItemPedidoORM());
             realm.beginTransaction();
-            realm.copyToRealm(itemPedidoORM);
+            realm.copyToRealmOrUpdate(itemPedidoORM);
             realm.commitTransaction();
 
         } catch (IOException e) {
@@ -59,7 +54,9 @@ public class ItemPedidoDAO extends GenericsDAO<ItemPedidoORM> {
                 where().equalTo("chavesItemPedidoORM.idVenda", Double.valueOf(pedidoORM.getId()))
                         .findAll();
         if (results.size() > 0 && results != null) {
-            results.forEach(item->itens.add(new ItemPedido(item)));
+
+            results.forEach(itemPedidoORM->itens.add(new ItemPedido(itemPedidoORM)));
+
             return itens;
         }
         return null;

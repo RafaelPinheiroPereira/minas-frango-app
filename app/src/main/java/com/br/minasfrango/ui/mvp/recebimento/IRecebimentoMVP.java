@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface IPaymentsMVP {
+public interface IRecebimentoMVP {
 
     interface IPresenter {
 
@@ -20,22 +20,26 @@ public interface IPaymentsMVP {
          */
         void calcularArmotizacaoManual(final int position);
 
+        void atualizarRecycleView();
+
         void exibirBotaoGerarRecibo();
 
         BigDecimal getValorTotalAmortizado();
 
-        void carregarDadosClienteView();
+        void configurarViewComDadosDoCliente();
 
-        ArrayList<String> carregarDescricaoTipoRecebimentosAVista() throws Throwable;
+        void desabilitarBotaoSalvar();
 
         Cliente getCliente();
 
-        /** Metodos relacionados a impressao */
+        boolean ehAmortizacaoAutomatica();
+
+        /**
+         * Metodos relacionados a impressao
+         */
         void esperarPorConexao();
 
-        void exibirMensagemDeSaldoInsuficiente(String s);
-
-        BigDecimal getValorCredito();
+        void exibirBotaoFotografar();
 
         void removerAmortizacao(int position);
 
@@ -45,64 +49,68 @@ public interface IPaymentsMVP {
 
         Context getContext();
 
-        void setValorCredito(BigDecimal valorCredito);
+        int findIdTipoRecebimento(String item);
 
-        BigDecimal getValorTotalDevido();
+        BigDecimal getCredit();
 
         int getIdTipoRecebimento();
 
         void setIdTipoRecebimento(int idTipoRecebimento);
 
-        void getParams();
+        void setCredit(BigDecimal credit);
 
         int getPositionOpenNotaSelect();
 
+        void getParametros();
+
         List<Recebimento> getRecebimentos();
 
-        boolean isAmortizacaoAutomatica();
+        BigDecimal getValueTotalDevido();
 
-        void setAmortizacaoAutomatica(boolean amortizacaoAutomatica);
+        List<Recebimento> obterRecebimentoPorCliente();
 
-        int pesquisarIdTipoRecebimento(String item);
+        ArrayList<String> obterTipoRecebimentos(long id) throws Throwable;
 
         void fecharConexaoAtiva();
 
-        void processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(int i, Recebimento recebimento);
+        void processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(
+                int i, Recebimento recebimento);
 
         boolean saldoDevidoEhMaiorQueZero();
 
         void setAutomaticNoteSelectionOrder();
 
-        void processarOrdemDeSelecaoDaNotaAposRemocaoDaAmortizacao(int i, Recebimento recebimento);
+        void processarOrdemDeSelecaoDaNotaAposRemocaoDaAmortizacao(
+                int i, Recebimento recebimento);
 
-        boolean valorCreditoEhMaiorQueZero();
+        void setPositionOpenNotaSelect(int positionOpenNotaSelect);
 
-        boolean valorTotalDebitoEhMenorOuIgualAoCredito();
+        void setTypeOfAmortizationIsAutomatic(boolean typeOfAmortizationIsAutomatic);
 
-        void updateRecycleView();
+        void showInsuficentCredit(String s);
 
         void updateRecycleViewAlteredItem(int position);
 
         void imprimirComprovante();
 
-        void inabilitarBotaoSalvar();
+        boolean valorDoCreditoEhMaiorDoQueZero();
 
-        List<Recebimento> pesquisarRecebimentoPorCliente();
+        boolean valorTotalDevidoEhMenorOuIgualAoCredito();
     }
 
     interface IModel {
 
-        void calcularAmortizacaoAutomatica();
+        void calculateAmortizationAutomatic();
 
         void calcularArmotizacaoManual(int position);
 
-        ArrayList<String> obterTipoRecebimentosAVista() throws Throwable;
+        boolean crediValueIsGranThenZero();
 
-        int pesquisarIdTipoRecebimento(String item);
+        int findIdTipoRecebimento(String item);
 
         List<Recebimento> pesquisarRecebimentoPorCliente();
 
-        boolean valorCreditoEhMaiorQueZero();
+        ArrayList<String> obterTipoRecebimentos(long id) throws Throwable;
 
         void processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(
                 final int posicao, Recebimento recebimentoToUpdate);
@@ -125,15 +133,17 @@ public interface IPaymentsMVP {
 
         void atualizarViewSaldoDevedor();
 
-        void exibirBotaoGerarRecibo();
+        void configurarViewComDadosDoCliente();
 
-        void getParams();
+        void exibirBotaoComprovante();
+
+        void exibirBotaoFotografar();
 
         void inabilitarBotaoSalvarAmortizacao();
 
-        void setClientViews();
+        void getParametros();
 
-        void showCreditoInsuficiente(String s);
+        void showInsuficentCredit(String s);
 
         void updateRecycleView();
 

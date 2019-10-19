@@ -5,7 +5,11 @@ import java.util.Locale;
 
 public class FormatacaoMoeda {
 
-    public static String convertDoubleToString(Double value) {
-        return NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(value);
+    public static String converterParaDolar(Double value) {
+        return NumberFormat.getCurrencyInstance(new Locale("en", "US")).format(value);
+    }
+
+    public static String converterParaReal(double doubleValue) {
+        return NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(doubleValue);
     }
 }

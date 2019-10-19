@@ -25,7 +25,10 @@ public class Model implements IModel {
 
     RouteDAO mRouteDAO = RouteDAO.getInstace(RotaORM.class);
 
-    public Model() {
+    private Presenter mPresenter;
+
+    public Model(final Presenter presenter) {
+        mPresenter = presenter;
     }
 
     @Override

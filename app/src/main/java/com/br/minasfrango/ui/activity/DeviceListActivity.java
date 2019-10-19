@@ -25,7 +25,7 @@ import com.br.minasfrango.data.model.Dispositivo;
 import com.br.minasfrango.ui.adapter.DispositivoAdapter;
 import com.br.minasfrango.ui.mvp.impressora.IImpressoraMVP;
 import com.br.minasfrango.ui.mvp.impressora.Presenter;
-import com.br.minasfrango.util.SessionManager;
+import com.br.minasfrango.util.ControleSessao;
 import java.util.Set;
 
 /**
@@ -58,7 +58,7 @@ public class DeviceListActivity extends Activity implements IImpressoraMVP.IView
 
     IImpressoraMVP.IPresenter mPresenter;
 
-    SessionManager mSessionManager;
+    ControleSessao mControleSessao;
 
     // Represents the local device Bluetooth adapter.
     private BluetoothAdapter mBtAdapter;
@@ -120,7 +120,7 @@ public class DeviceListActivity extends Activity implements IImpressoraMVP.IView
         setContentView(R.layout.device_list);
         ButterKnife.bind(this);
 
-        mSessionManager = new SessionManager(this);
+        mControleSessao = new ControleSessao(this);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
             setFinishOnTouchOutside(false);
@@ -210,7 +210,7 @@ public class DeviceListActivity extends Activity implements IImpressoraMVP.IView
 
     private void salvarEnderecoBluetoothPreferences(String address) {
 
-        mSessionManager.salvarEnderecoBluetooth(address);
+        mControleSessao.salvarEnderecoBluetooth(address);
 
         finish();
     }

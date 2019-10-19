@@ -15,7 +15,7 @@ import com.br.minasfrango.ui.activity.RecebimentoActivity;
 import com.br.minasfrango.ui.activity.VendasActivity;
 import com.br.minasfrango.ui.mvp.home.IHomeMVP.IModel;
 import com.br.minasfrango.ui.mvp.home.IHomeMVP.IView;
-import com.br.minasfrango.util.SessionManager;
+import com.br.minasfrango.util.ControleSessao;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,7 +23,7 @@ import java.util.List;
 
 public class Presenter implements IHomeMVP.IPresenter {
 
-    SessionManager mSessionManager;
+    ControleSessao mControleSessao;
 
     private List<Cliente> clients = new ArrayList<>();
 
@@ -34,7 +34,7 @@ public class Presenter implements IHomeMVP.IPresenter {
 
     public Presenter(final IView view) {
         this.view = view;
-        this.model = new Model();
+        this.model = new Model(this);
     }
 
     @Override
@@ -111,13 +111,13 @@ public class Presenter implements IHomeMVP.IPresenter {
     }
 
     @Override
-    public int getUserId() {
-        return this.mSessionManager.getUserID();
+    public String getNomeUsuario() {
+        return this.mControleSessao.getUserName();
     }
 
     @Override
-    public void logout() {
-        this.mSessionManager.logout();
+    public int getUserId() {
+        return this.mControleSessao.getIdUsuario();
     }
 
     @Override
@@ -142,16 +142,16 @@ public class Presenter implements IHomeMVP.IPresenter {
     }
 
     @Override
-    public String getNomeUsuario() {
-        return this.mSessionManager.getUserName();
-    }
-
-    @Override
     public void importarDados() {
         Funcionario funcionario = new Funcionario();
         funcionario.setId(getUserId());
         funcionario.setNome(getNomeUsuario());
         new ImportacaoDeDados(funcionario, this).execute();
+    }
+
+    @Override
+    public void logout() {
+        this.mControleSessao.logout();
     }
 
     @Override
@@ -168,8 +168,8 @@ public class Presenter implements IHomeMVP.IPresenter {
 
     @Override
     public boolean verificarLogin() {
-        this.mSessionManager = new SessionManager(getContext());
-        return mSessionManager.checkLogin();
+        this.mControleSessao = new ControleSessao(getContext());
+        return mControleSessao.checkLogin();
     }
 
     @Override

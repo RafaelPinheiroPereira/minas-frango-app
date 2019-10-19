@@ -1,4 +1,4 @@
-package com.br.minasfrango.ui.mvp.pedido.visualizar;
+package com.br.minasfrango.ui.mvp.visualizar;
 
 import android.content.Context;
 import android.os.Bundle;

@@ -2,6 +2,7 @@ package com.br.minasfrango.network.tarefa;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import com.br.minasfrango.data.dao.PrecoIDDAO;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.data.model.Preco;
@@ -11,6 +12,7 @@ import com.br.minasfrango.data.model.Recebimento;
 import com.br.minasfrango.data.model.TipoRecebimento;
 import com.br.minasfrango.data.model.Unidade;
 import com.br.minasfrango.data.realm.ClienteORM;
+import com.br.minasfrango.data.realm.PrecoIDORM;
 import com.br.minasfrango.data.realm.PrecoORM;
 import com.br.minasfrango.data.realm.ProdutoORM;
 import com.br.minasfrango.data.realm.RecebimentoORM;
@@ -127,13 +129,19 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
                 realm.beginTransaction();
 
                 precos.forEach(
-                        preco-> {
+                        preco->{
+
                             PrecoID precoID =
                                     new PrecoID(
                                             preco.getChavesPreco().getId(),
                                             preco.getChavesPreco().getIdCliente(),
                                             preco.getChavesPreco().getIdProduto(),
-                                            preco.getChavesPreco().getUnidadeProduto());
+                                            preco.getChavesPreco().getUnidadeProduto(),
+                                            preco.getChavesPreco().getDataPreco()
+                                    );
+
+
+
                             preco.setChavesPreco(precoID);
                             preco.setId(
                                     preco.getChavesPreco().getId()
@@ -142,12 +150,17 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
                                             + "-"
                                             + preco.getChavesPreco().getIdProduto()
                                             + "-"
-                                            + preco.getChavesPreco().getUnidadeProduto());
+                                            + preco.getChavesPreco().getUnidadeProduto() + "-" + preco
+                                            .getChavesPreco().getDataPreco());
                             realm.copyToRealmOrUpdate(new PrecoORM(preco));
                         });
 
                 realm.commitTransaction();
                 Log.d("Importacao Precos", "Sucess");
+
+                PrecoIDDAO precoIDDAO = PrecoIDDAO.getInstance(PrecoIDORM.class);
+
+
                 return true;
             }
         } catch (IOException e) {
@@ -191,7 +204,7 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
                 Realm realm = Realm.getDefaultInstance();
                 realm.beginTransaction();
                 recebimentos.forEach(
-                        recebimento-> {
+                        recebimento->{
                             recebimento.setId(recebimento.getIdVenda());
                             realm.copyToRealmOrUpdate(new RecebimentoORM(recebimento));
                         });
@@ -216,7 +229,7 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
             tipoRecebimentos.forEach(
-                    tipoRecebimento ->
+                    tipoRecebimento->
                             realm.copyToRealmOrUpdate(new TipoRecebimentoORM(tipoRecebimento)));
             realm.commitTransaction();
             Log.d("Importacao Tipo", "Sucess");
@@ -237,7 +250,7 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
                 Realm realm = Realm.getDefaultInstance();
                 realm.beginTransaction();
                 unidades.forEach(
-                        unidade-> {
+                        unidade->{
                             unidade.setId(
                                     unidade.getChavesUnidade().getIdUnidade()
                                             + "-"

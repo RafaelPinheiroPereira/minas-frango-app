@@ -15,13 +15,13 @@ public class PrecoIDDAO extends GenericsDAO<PrecoIDORM> {
         super(entity);
     }
 
-    public long findPrecoIDByUnidadeAndProdutoAndCliente(Produto produto, String unidade, Cliente cLiente) {
+    public String findPrecoIDByUnidadeAndProdutoAndCliente(Produto produto, String unidade, Cliente cLiente) {
 
         RealmResults<PrecoIDORM> result = where().equalTo("idProduto", produto.getId()).and()
                 .equalTo("unidadeProduto", unidade).and()
                 .equalTo("idCliente", Double.parseDouble(String.valueOf(cLiente.getId()))).findAll();
 
-        return result.size() == 0 ? 0 : result.first().getId();
+        return result.size() == 0 ? "" : result.first().getId();
 
     }
 

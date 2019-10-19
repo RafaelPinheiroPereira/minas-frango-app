@@ -5,8 +5,8 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
-public interface LoginService  {
+public interface ServicoLogin {
 
 	@GET("autenticacaoLogin")
-    Call<Funcionario> autenticaLogin(@Query("id") long id, @Query("senha") String senha);
+    Call<Funcionario> autenticarLogin(@Query("id") long id, @Query("senha") String senha);
 }

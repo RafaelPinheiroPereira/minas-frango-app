@@ -2,6 +2,7 @@ package com.br.minasfrango.ui.mvp.venda;
 
 import com.br.minasfrango.data.dao.ClientDAO;
 import com.br.minasfrango.data.dao.ItemPedidoDAO;
+import com.br.minasfrango.data.dao.ItemPedidoIDDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
 import com.br.minasfrango.data.dao.PrecoIDDAO;
 import com.br.minasfrango.data.dao.PriceDAO;
@@ -10,12 +11,14 @@ import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
 import com.br.minasfrango.data.dao.UnidadeDAO;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.ItemPedido;
+import com.br.minasfrango.data.model.ItemPedidoID;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.model.Preco;
 import com.br.minasfrango.data.model.Produto;
 import com.br.minasfrango.data.model.TipoRecebimento;
 import com.br.minasfrango.data.model.Unidade;
 import com.br.minasfrango.data.realm.ClienteORM;
+import com.br.minasfrango.data.realm.ItemPedidoIDORM;
 import com.br.minasfrango.data.realm.ItemPedidoORM;
 import com.br.minasfrango.data.realm.PedidoORM;
 import com.br.minasfrango.data.realm.PrecoIDORM;
@@ -25,7 +28,7 @@ import com.br.minasfrango.data.realm.UnidadeORM;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Model implements ISalesMVP.IModel {
+public class Model implements IVendaMVP.IModel {
 
     ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstace(ItemPedidoORM.class);
 
@@ -47,6 +50,8 @@ public class Model implements ISalesMVP.IModel {
 
     UnidadeDAO unidadeDAO = UnidadeDAO.getInstace(UnidadeORM.class);
 
+    ItemPedidoIDDAO mItemPedidoIDDAO = ItemPedidoIDDAO.getInstace(ItemPedidoIDORM.class);
+
     private com.br.minasfrango.ui.mvp.venda.Presenter mPresenter;
 
     public Model(com.br.minasfrango.ui.mvp.venda.Presenter presenter) {
@@ -54,23 +59,19 @@ public class Model implements ISalesMVP.IModel {
     }
 
     @Override
-    public long adicionarItemDoPedido(final ItemPedido item) {
+    public long addItemPedido(final ItemPedido item) {
         return this.itemPedidoDAO.addItemPedido(item);
     }
 
     @Override
-    public Preco carregarPrecoDaUnidadePorProduto(final String unityID) {
-        long id = mPrecoIDDAO.findPrecoIDByUnidadeAndProdutoAndCliente(mPresenter.getProdutoSelecionado(), unityID,
-                mPresenter.getCliente());
-        return this.mPriceDAO.findPriceByPriceID(id);
+    public void atualizarChaveItemPedido(final ItemPedidoID chavesItemPedido) {
+        this.mItemPedidoIDDAO.copyOrUpdate(new ItemPedidoIDORM(chavesItemPedido));
+
     }
 
     @Override
-    public Pedido buscarVendaPorId(final Long id) {
-        PedidoORM pedidoORM = saleDAO.findById(id);
-        Pedido pedido = new Pedido(pedidoORM);
-        pedido.setItens(Pedido.converterListItemPedidoRealmParaModel(pedidoORM));
-        return pedido;
+    public void atualizarItemPedido(final ItemPedido item) {
+        this.itemPedidoDAO.updateItem(new ItemPedidoORM(item));
     }
 
     @Override
@@ -79,21 +80,26 @@ public class Model implements ISalesMVP.IModel {
     }
 
     @Override
-    public ArrayList<String> converterTipoRecebimentoEmString(final List<TipoRecebimento> tiposRecebimentos) {
-        ArrayList<String> strTiposRecebimentos = new ArrayList<>();
-        strTiposRecebimentos.add("Formas de Pagamento");
-        tiposRecebimentos.forEach(item->strTiposRecebimentos.add(item.getNome()));
-        return strTiposRecebimentos;
+    public Preco carregarPrecoUnidadePorProduto(final String unityID) {
+        String id = mPrecoIDDAO.findPrecoIDByUnidadeAndProdutoAndCliente(mPresenter.getProdutoSelecionado(), unityID,
+                mPresenter.getCliente());
+        return this.mPriceDAO.findPriceByPriceID(id);
     }
 
     @Override
-    public ArrayList<String> converterUnidadesEmString(final List<Unidade> unidades) {
-        ArrayList<String> unityNames = new ArrayList<>();
-        unidades.forEach(item->{
-            String[] unitID = item.getId().split("-");
-            unityNames.add(unitID[0]);
-        });
-        return unityNames;
+    public ArrayList<String> carregarProdutoPorId(final List<Produto> produtos) {
+
+        ArrayList<String> productIds = new ArrayList<>();
+        produtos.forEach(item->productIds.add(String.valueOf(item.getId())));
+        return productIds;
+
+    }
+
+    @Override
+    public ArrayList<String> carregarProdutoPorNome(final List<Produto> produtos) {
+        ArrayList<String> productNames = new ArrayList<String>();
+        produtos.forEach(item->productNames.add(item.getNome()));
+        return productNames;
     }
 
     @Override
@@ -105,29 +111,42 @@ public class Model implements ISalesMVP.IModel {
     }
 
     @Override
-    public ArrayList<String> obterNomeDeTodosOsProdutos(final List<Produto> produtos) {
-        ArrayList<String> productNames = new ArrayList<String>();
-        produtos.forEach(item->productNames.add(item.getNome()));
-        return productNames;
+    public ArrayList<String> convertTipoRecebimentoInString(final List<TipoRecebimento> tiposRecebimentos) {
+        ArrayList<String> strTiposRecebimentos = new ArrayList<>();
+        strTiposRecebimentos.add("Formas de Pagamento");
+        tiposRecebimentos.forEach(item->strTiposRecebimentos.add(item.getNome()));
+        return strTiposRecebimentos;
     }
 
     @Override
-    public Cliente pesquisarClientePorID(final Long id) {
+    public ArrayList<String> converterUnidadeParaString(final List<Unidade> unidades) {
+        ArrayList<String> unityNames = new ArrayList<>();
+        unidades.forEach(item->{
+            String[] unitID = item.getId().split("-");
+            unityNames.add(unitID[0]);
+        });
+        return unityNames;
+    }
+
+    @Override
+    public void criarChaveItemPedido(final ItemPedidoID chavesItemPedido) {
+        this.mItemPedidoIDDAO.inserir(chavesItemPedido);
+
+    }
+
+    @Override
+    public Cliente pesquisarClientePorId(final Long id) {
         return new Cliente(this.mClientDAO.findById(id));
     }
 
     @Override
-    public List<TipoRecebimento> findTipoRecebimentosByCliente(final Cliente cliente) {
-        return tipoRecebimentoDAO.findTipoRecebimentoByCliente(cliente);
+    public Produto pesquisarProdutoPorId(final long id) {
+        return new Produto(mProductDAO.findById(id));
     }
 
     @Override
-    public ArrayList<String> pesquisarNomeDeTodosProdutos(final List<Produto> produtos) {
-
-        ArrayList<String> productIds = new ArrayList<>();
-        produtos.forEach(item->productIds.add(String.valueOf(item.getId())));
-        return productIds;
-
+    public Produto pesquisarProdutoPorNome(final String productName) {
+        return mProductDAO.findByName(productName);
     }
 
     @Override
@@ -146,23 +165,27 @@ public class Model implements ISalesMVP.IModel {
     }
 
     @Override
-    public Produto pesquisarProdutoPorID(final long id) {
-        return new Produto(mProductDAO.findById(id));
-    }
-
-    @Override
-    public Produto pesquisarProdutoPorNome(final String productName) {
-        return mProductDAO.findByName(productName);
-    }
-
-    @Override
-    public TipoRecebimento pesquisarTipoRecebimentoPorID() throws Throwable {
+    public TipoRecebimento pesquisarTipoRecebimentoPorId() throws Throwable {
         return this.tipoRecebimentoDAO.findById(mPresenter.getPedido().getTipoRecebimento());
+    }
+
+    @Override
+    public List<TipoRecebimento> pesquisarTipoRecebimentosPorCliente(final Cliente cliente) {
+        return tipoRecebimentoDAO.findTipoRecebimentoByCliente(cliente);
     }
 
     @Override
     public Unidade pesquisarUnidadePorProduto() {
         return this.unidadeDAO.findUnityPattenByProduct(mPresenter.getProdutoSelecionado());
+    }
+
+    @Override
+    public Pedido pesquisarVendaPorId(final Long id) {
+        PedidoORM pedidoORM = saleDAO.findById(id);
+
+        Pedido pedido = new Pedido(pedidoORM);
+        pedido.setItens(itemPedidoDAO.allItensByPedido(pedidoORM));
+        return pedido;
     }
 
     @Override

@@ -4,24 +4,23 @@ import android.app.Activity;
 import android.content.Context;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Recebimento;
-import com.br.minasfrango.ui.mvp.recebimento.IPaymentsMVP.IView;
+import com.br.minasfrango.ui.mvp.recebimento.IRecebimentoMVP.IView;
 import com.br.minasfrango.util.ImpressoraUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Presenter implements IPaymentsMVP.IPresenter {
+public class Presenter implements IRecebimentoMVP.IPresenter {
 
-    boolean amortizacaoAutomatica = false;
+    BigDecimal credit = new BigDecimal(0);
 
     int idTipoRecebimento;
 
     Cliente mCliente;
 
-    IPaymentsMVP.IModel mModel;
+    IRecebimentoMVP.IModel mModel;
 
     ImpressoraUtil mImpressoraUtil;
-
     /**
      * Posicao da nota selecionada
      */
@@ -29,13 +28,13 @@ public class Presenter implements IPaymentsMVP.IPresenter {
 
     List<Recebimento> mRecebimentos = new ArrayList<>();
 
-    BigDecimal valorCredito = new BigDecimal(0);
+    boolean typeOfAmortizationIsAutomatic = false;
 
     BigDecimal valorTotalAmortizado;
 
-    BigDecimal valorTotalDevido;
+    BigDecimal valueTotalDevido;
 
-    IPaymentsMVP.IView view;
+    IRecebimentoMVP.IView view;
 
     public Presenter(final IView view) {
         this.view = view;
@@ -49,8 +48,8 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
-    public void calcularAmortizacaoAutomatica() {
-        this.mModel.calcularAmortizacaoAutomatica();
+    public void atualizarRecycleView() {
+        this.view.updateRecycleView();
     }
 
     @Override
@@ -60,8 +59,13 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
-    public void exibirBotaoGerarRecibo() {
-        this.view.exibirBotaoGerarRecibo();
+    public void calcularAmortizacaoAutomatica() {
+        this.mModel.calculateAmortizationAutomatic();
+    }
+
+    @Override
+    public void configurarViewComDadosDoCliente() {
+        this.view.configurarViewComDadosDoCliente();
     }
 
     @Override
@@ -75,13 +79,13 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
-    public void carregarDadosClienteView() {
-        this.view.setClientViews();
+    public void desabilitarBotaoSalvar() {
+        this.view.inabilitarBotaoSalvarAmortizacao();
     }
 
     @Override
-    public ArrayList<String> carregarDescricaoTipoRecebimentosAVista() throws Throwable {
-        return this.mModel.obterTipoRecebimentosAVista();
+    public boolean ehAmortizacaoAutomatica() {
+        return typeOfAmortizationIsAutomatic;
     }
 
     @Override
@@ -89,17 +93,21 @@ public class Presenter implements IPaymentsMVP.IPresenter {
         return mCliente;
     }
 
-    /** Metodos relacionados a impressao */
+    /**
+     * Metodos relacionados a impressao
+     */
     @Override
     public void esperarPorConexao() {
         if (this.mImpressoraUtil.esperarPorConexao()) {
-            this.view.exibirBotaoGerarRecibo();
+            this.view.exibirBotaoComprovante();
+        } else {
+            fecharConexaoAtiva();
         }
     }
 
     @Override
-    public void exibirMensagemDeSaldoInsuficiente(final String s) {
-        this.view.showCreditoInsuficiente(s);
+    public void exibirBotaoFotografar() {
+        this.view.exibirBotaoFotografar();
     }
 
     @Override
@@ -125,13 +133,14 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
-    public BigDecimal getValorCredito() {
-        return this.valorCredito;
+    public void exibirBotaoGerarRecibo() {
+        this.view.exibirBotaoComprovante();
     }
 
     @Override
-    public void setValorCredito(final BigDecimal valorCredito) {
-        this.valorCredito = valorCredito;
+    public void fecharConexaoAtiva() {
+        this.mImpressoraUtil.fecharConexaoAtiva();
+
     }
 
     @Override
@@ -145,8 +154,8 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
-    public void getParams() {
-        this.view.getParams();
+    public int findIdTipoRecebimento(final String item) {
+        return this.mModel.findIdTipoRecebimento(item);
     }
 
     @Override
@@ -154,7 +163,10 @@ public class Presenter implements IPaymentsMVP.IPresenter {
         return positionOpenNotaSelect;
     }
 
-
+    @Override
+    public BigDecimal getCredit() {
+        return this.credit;
+    }
 
     @Override
     public List<Recebimento> getRecebimentos() {
@@ -167,34 +179,35 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
-    public void salvarAmortizacao() {
-
-        this.mModel.salvarAmortizacao();
+    public void setCredit(final BigDecimal credit) {
+        this.credit = credit;
     }
 
     @Override
-    public BigDecimal getValorTotalDevido() {
-        valorTotalDevido =
+    public void getParametros() {
+        this.view.getParametros();
+    }
+
+    @Override
+    public BigDecimal getValueTotalDevido() {
+        valueTotalDevido =
                 new BigDecimal(
                         this.getRecebimentos().stream()
                                 .mapToDouble(Recebimento::getValorVenda)
                                 .sum());
-        return valorTotalDevido;
+        return valueTotalDevido;
     }
 
     @Override
-    public boolean isAmortizacaoAutomatica() {
-        return amortizacaoAutomatica;
+    public void imprimirComprovante() {
+        this.mImpressoraUtil.imprimirComprovanteRecebimento(getRecebimentos(), getCliente());
+
     }
 
     @Override
-    public void fecharConexaoAtiva() {
-        this.mImpressoraUtil.fecharConexaoAtiva();
-    }
+    public List<Recebimento> obterRecebimentoPorCliente() {
 
-    @Override
-    public void setAmortizacaoAutomatica(final boolean amortizacaoAutomatica) {
-        this.amortizacaoAutomatica = amortizacaoAutomatica;
+        return this.mModel.pesquisarRecebimentoPorCliente();
     }
 
     @Override
@@ -208,23 +221,26 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
-    public int pesquisarIdTipoRecebimento(final String item) {
-        return this.mModel.pesquisarIdTipoRecebimento(item);
+    public ArrayList<String> obterTipoRecebimentos(long id) throws Throwable {
+        return this.mModel.obterTipoRecebimentos(id);
     }
 
     @Override
-    public boolean valorCreditoEhMaiorQueZero() {
-        return this.mModel.valorCreditoEhMaiorQueZero();
+    public void salvarAmortizacao() {
+
+        this.mModel.salvarAmortizacao();
+
+
     }
 
     @Override
-    public boolean valorTotalDebitoEhMenorOuIgualAoCredito() {
-        return this.mModel.totalValueOfDebtISLessTranCreditOrEquals();
+    public void setPositionOpenNotaSelect(final int positionOpenNotaSelect) {
+        this.positionOpenNotaSelect = positionOpenNotaSelect;
     }
 
     @Override
-    public void updateRecycleView() {
-        this.view.updateRecycleView();
+    public void setTypeOfAmortizationIsAutomatic(final boolean typeOfAmortizationIsAutomatic) {
+        this.typeOfAmortizationIsAutomatic = typeOfAmortizationIsAutomatic;
     }
 
     @Override
@@ -233,18 +249,17 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
-    public void imprimirComprovante() {
-        this.mImpressoraUtil.imprimirComprovanteRecebimento(getRecebimentos(), getCliente());
+    public void showInsuficentCredit(final String s) {
+        this.view.showInsuficentCredit(s);
     }
 
     @Override
-    public void inabilitarBotaoSalvar() {
-        this.view.inabilitarBotaoSalvarAmortizacao();
+    public boolean valorDoCreditoEhMaiorDoQueZero() {
+        return this.mModel.crediValueIsGranThenZero();
     }
 
     @Override
-    public List<Recebimento> pesquisarRecebimentoPorCliente() {
-
-        return this.mModel.pesquisarRecebimentoPorCliente();
+    public boolean valorTotalDevidoEhMenorOuIgualAoCredito() {
+        return this.mModel.totalValueOfDebtISLessTranCreditOrEquals();
     }
 }

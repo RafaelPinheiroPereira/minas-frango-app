@@ -157,6 +157,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:digits="0123456789."
+                        android:enabled="false"
                         android:hint="Preço"
                         android:inputType="numberDecimal|textMultiLine"
                         android:lines="1"
@@ -189,9 +190,11 @@
                     style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="CANCELAR"
+                    android:text="Cancelar"
                     android:textColor="#fff"
-                    android:textSize="14sp"
+
+                    android:textSize="12sp"
+
                     app:backgroundTint="@color/brand_red"
                     app:icon="@mipmap/icon_cancel_24" />
 
@@ -202,9 +205,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    android:text="ALTERAR"
+                    android:text="Alterar"
                     android:textColor="#fff"
-                    android:textSize="14sp"
+
+                    android:textSize="12sp"
+
                     app:backgroundTint="@color/fab"
                     app:icon="@mipmap/icon_done" />
 
