@@ -1,12 +1,15 @@
 package com.br.minasfrango.ui.mvp.vieworder;
 
 import com.br.minasfrango.data.dao.ClientDAO;
+import com.br.minasfrango.data.dao.ItemPedidoDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
 import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.model.TipoRecebimento;
 import com.br.minasfrango.data.realm.ClienteORM;
+import com.br.minasfrango.data.realm.ItemPedidoIDORM;
+import com.br.minasfrango.data.realm.ItemPedidoORM;
 import com.br.minasfrango.data.realm.PedidoORM;
 
 public class Model implements IViewOrderMVP.IModel {
@@ -15,9 +18,12 @@ public class Model implements IViewOrderMVP.IModel {
 
     PedidoDAO mPedidoDAO = PedidoDAO.getInstace(PedidoORM.class);
 
+    ItemPedidoDAO mItemPedidoDAO=ItemPedidoDAO.getInstace(ItemPedidoORM.class);
+
     IViewOrderMVP.IPresenter mPresenter;
 
     TipoRecebimentoDAO mTipoRecebimentoDAO = TipoRecebimentoDAO.getInstace();
+
 
     public Model(final Presenter presenter) {
         this.mPresenter = presenter;
@@ -37,7 +43,7 @@ public class Model implements IViewOrderMVP.IModel {
     public Pedido findySaleOrderByID(final Long id) {
         PedidoORM pedidoORM = mPedidoDAO.findById(id);
         Pedido pedido = new Pedido(pedidoORM);
-        pedido.setItens(Pedido.converterListItemPedidoRealmParaModel(pedidoORM));
+        pedido.setItens(mItemPedidoDAO.allItensByPedido(pedidoORM));
         return pedido;
     }
 }

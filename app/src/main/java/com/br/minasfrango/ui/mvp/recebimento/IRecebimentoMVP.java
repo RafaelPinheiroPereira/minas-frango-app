@@ -1,4 +1,4 @@
-package com.br.minasfrango.ui.mvp.payments;
+package com.br.minasfrango.ui.mvp.recebimento;
 
 import android.content.Context;
 import com.br.minasfrango.data.model.Cliente;
@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface IPaymentsMVP {
+public interface IRecebimentoMVP {
 
     interface IPresenter {
 
@@ -20,11 +20,13 @@ public interface IPaymentsMVP {
          */
         void calcularArmotizacaoManual(final int position);
 
+        void exibirBotaoFotografar();
+
         void exibirBotaoGerarRecibo();
 
         BigDecimal getValorTotalAmortizado();
 
-        boolean creditValueIsGranThenZero();
+        boolean valorDoCreditoEhMaiorDoQueZero();
 
         int findIdTipoRecebimento(String item);
 
@@ -57,7 +59,7 @@ public interface IPaymentsMVP {
 
         void setIdTipoRecebimento(int idTipoRecebimento);
 
-        void getParams();
+        void getParametros();
 
         int getPositionOpenNotaSelect();
 
@@ -67,33 +69,33 @@ public interface IPaymentsMVP {
 
         BigDecimal getValueTotalDevido();
 
-        boolean isTypeOfAmortizationIsAutomatic();
+        boolean ehAmortizacaoAutomatica();
 
         void setTypeOfAmortizationIsAutomatic(boolean typeOfAmortizationIsAutomatic);
 
         void fecharConexaoAtiva();
 
-        ArrayList<String> loadTipoRecebimentosAVista() throws Throwable;
+        ArrayList<String> obterTipoRecebimentos(long id) throws Throwable;
 
         boolean saldoDevidoEhMaiorQueZero();
 
         void setAutomaticNoteSelectionOrder();
 
-        void setClientViews();
+        void configurarViewComDadosDoCliente();
 
         void showInsuficentCredit(String s);
 
-        boolean totalValueOfDebtISLessTranCreditOrEquals();
+        boolean valorTotalDevidoEhMenorOuIgualAoCredito();
 
-        void updateRecycleView();
+        void atualizarRecycleView();
 
         void updateRecycleViewAlteredItem(int position);
 
         void imprimirComprovante();
 
-        void inabilitarBotaoSalvar();
+        void desabilitarBotaoSalvar();
 
-        List<Recebimento> pesquisarRecebimentoPorCliente();
+        List<Recebimento> obterRecebimentoPorCliente();
     }
 
     interface IModel {
@@ -108,7 +110,7 @@ public interface IPaymentsMVP {
 
         List<Recebimento> pesquisarRecebimentoPorCliente();
 
-        ArrayList<String> loadTipoRecebimentosAVista() throws Throwable;
+        ArrayList<String> obterTipoRecebimentos(long id) throws Throwable;
 
         void processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(
                 final int posicao, Recebimento recebimentoToUpdate);
@@ -131,13 +133,15 @@ public interface IPaymentsMVP {
 
         void atualizarViewSaldoDevedor();
 
-        void exibirBotaoGerarRecibo();
+        void exibirBotaoFotografar();
 
-        void getParams();
+        void exibirBotaoComprovante();
+
+        void getParametros();
 
         void inabilitarBotaoSalvarAmortizacao();
 
-        void setClientViews();
+        void configurarViewComDadosDoCliente();
 
         void showInsuficentCredit(String s);
 

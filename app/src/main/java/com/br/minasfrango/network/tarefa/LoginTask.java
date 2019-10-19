@@ -48,33 +48,33 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
         progressDialog.dismiss();
         if (islogin.equals("SUCESS")) {
             mPresenter
-                    .getContext()
-                    .startActivity(new Intent(mPresenter.getContext(), HomeActivity.class));
+                    .getContexto()
+                    .startActivity(new Intent(mPresenter.getContexto(), HomeActivity.class));
         } else if (islogin.equals("UNAUTHORIZED")) {
-            Toast.makeText(mPresenter.getContext(), "Matricula/Senha inválidos!", Toast.LENGTH_LONG)
+            Toast.makeText(mPresenter.getContexto(), "Matricula/Senha inválidos!", Toast.LENGTH_LONG)
                     .show();
         } else {
-            Toast.makeText(mPresenter.getContext(), islogin, Toast.LENGTH_LONG).show();
+            Toast.makeText(mPresenter.getContexto(), islogin, Toast.LENGTH_LONG).show();
         }
     }
 
     @Override
     protected void onPreExecute() {
 
-        progressDialog = new ProgressDialog(mPresenter.getContext());
+        progressDialog = new ProgressDialog(mPresenter.getContexto());
         progressDialog.setTitle("Login");
         progressDialog.setMessage("Realizando Login...");
         progressDialog.show();
     }
 
     private String validateAcess(String idUser, String password) throws IOException {
-        Call<Funcionario> autenticaLoginCall = mPresenter.autenticateLogin(idUser, password);
+        Call<Funcionario> autenticaLoginCall = mPresenter.autenticarLogin(idUser, password);
         Response<Funcionario> response = autenticaLoginCall.execute();
 
         switch (response.code()) {
             case HttpConstant.OK:
                 Funcionario funcionario = response.body();
-                mPresenter.createSession(idUser, password, funcionario.getNome());
+                mPresenter.criarSessao(idUser, password, funcionario.getNome());
                 return "SUCESS";
 
             case HttpConstant.UNAUTHORIZED:
@@ -85,7 +85,7 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
     }
 
     private String validateAcessOffLine(String idUser, String password) {
-        mPresenter.createSession(idUser, password, "teste-off-line");
+        mPresenter.criarSessao(idUser, password, "teste-off-line");
         return "SUCESS";
     }
 }

@@ -50,7 +50,7 @@ public class UnidadeDAO extends GenericsDAO<UnidadeORM> {
         return strUnidades;
     }
 
-    public List<Unidade> getAll() {
+    public List<Unidade>  getAll() {
         List<Unidade> unidade = new ArrayList<>();
         where().findAll().forEach(item->unidade.add(new Unidade(item)));
         return unidade;

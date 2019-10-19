@@ -1,16 +1,16 @@
-package com.br.minasfrango.ui.mvp.payments;
+package com.br.minasfrango.ui.mvp.recebimento;
 
 import android.app.Activity;
 import android.content.Context;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Recebimento;
-import com.br.minasfrango.ui.mvp.payments.IPaymentsMVP.IView;
+import com.br.minasfrango.ui.mvp.recebimento.IRecebimentoMVP.IView;
 import com.br.minasfrango.util.ImpressoraUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Presenter implements IPaymentsMVP.IPresenter {
+public class Presenter implements IRecebimentoMVP.IPresenter {
 
     BigDecimal credit = new BigDecimal(0);
 
@@ -18,7 +18,7 @@ public class Presenter implements IPaymentsMVP.IPresenter {
 
     Cliente mCliente;
 
-    IPaymentsMVP.IModel mModel;
+    IRecebimentoMVP.IModel mModel;
 
     ImpressoraUtil mImpressoraUtil;
     /**
@@ -34,7 +34,7 @@ public class Presenter implements IPaymentsMVP.IPresenter {
 
     BigDecimal valueTotalDevido;
 
-    IPaymentsMVP.IView view;
+    IRecebimentoMVP.IView view;
 
     public Presenter(final IView view) {
         this.view = view;
@@ -59,8 +59,13 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
+    public void exibirBotaoFotografar() {
+        this.view.exibirBotaoFotografar();
+    }
+
+    @Override
     public void exibirBotaoGerarRecibo() {
-        this.view.exibirBotaoGerarRecibo();
+        this.view.exibirBotaoComprovante();
     }
 
     @Override
@@ -74,7 +79,7 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
-    public boolean creditValueIsGranThenZero() {
+    public boolean valorDoCreditoEhMaiorDoQueZero() {
         return this.mModel.crediValueIsGranThenZero();
     }
 
@@ -94,8 +99,8 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     @Override
     public void esperarPorConexao() {
         if (this.mImpressoraUtil.esperarPorConexao()) {
-            this.view.exibirBotaoGerarRecibo();
-        }
+            this.view.exibirBotaoComprovante();
+        }else{fecharConexaoAtiva();}
     }
 
     @Override
@@ -151,8 +156,8 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
-    public void getParams() {
-        this.view.getParams();
+    public void getParametros() {
+        this.view.getParametros();
     }
 
     @Override
@@ -184,7 +189,7 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
-    public boolean isTypeOfAmortizationIsAutomatic() {
+    public boolean ehAmortizacaoAutomatica() {
         return typeOfAmortizationIsAutomatic;
     }
 
@@ -200,8 +205,8 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
-    public ArrayList<String> loadTipoRecebimentosAVista() throws Throwable {
-        return this.mModel.loadTipoRecebimentosAVista();
+    public ArrayList<String> obterTipoRecebimentos(long id) throws Throwable {
+        return this.mModel.obterTipoRecebimentos(id);
     }
 
     @Override
@@ -215,8 +220,8 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
-    public void setClientViews() {
-        this.view.setClientViews();
+    public void configurarViewComDadosDoCliente() {
+        this.view.configurarViewComDadosDoCliente();
     }
 
     @Override
@@ -225,12 +230,12 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
-    public boolean totalValueOfDebtISLessTranCreditOrEquals() {
+    public boolean valorTotalDevidoEhMenorOuIgualAoCredito() {
         return this.mModel.totalValueOfDebtISLessTranCreditOrEquals();
     }
 
     @Override
-    public void updateRecycleView() {
+    public void atualizarRecycleView() {
         this.view.updateRecycleView();
     }
 
@@ -246,12 +251,12 @@ public class Presenter implements IPaymentsMVP.IPresenter {
     }
 
     @Override
-    public void inabilitarBotaoSalvar() {
+    public void desabilitarBotaoSalvar() {
         this.view.inabilitarBotaoSalvarAmortizacao();
     }
 
     @Override
-    public List<Recebimento> pesquisarRecebimentoPorCliente() {
+    public List<Recebimento> obterRecebimentoPorCliente() {
 
         return this.mModel.pesquisarRecebimentoPorCliente();
     }

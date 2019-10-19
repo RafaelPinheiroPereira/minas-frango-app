@@ -101,7 +101,7 @@ public class PedidoActivity extends AppCompatActivity implements IPedidoMVP.IVie
 
     }
 
-    protected void fillAdapter() {
+    protected void  fillAdapter() {
 
         mAdapter = new PedidosAdapter(presenter, presenter.obterTodosClientePedido());
         recyclerView.setAdapter(mAdapter);

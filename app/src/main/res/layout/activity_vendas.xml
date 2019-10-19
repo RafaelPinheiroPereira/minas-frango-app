@@ -156,6 +156,9 @@
                         style="@style/TextInputLayout"
                         android:layout_height="wrap_content">
 
+
+
+
                         <com.br.minasfrango.util.CurrencyEditText
 
                             android:id="@+id/cetPrecoUnitario"
@@ -164,19 +167,22 @@
                             android:layout_gravity="center_vertical"
                             android:digits="0123456789."
                             android:hint="Preço"
+                            android:enabled="false"
                             android:inputType="numberDecimal|textMultiLine"
                             android:lines="1"
                             android:maxLength="9"
                             android:padding="10dp"
                             android:textSize="18sp"
                             app:groupDivider="."
+                            app:monetaryDivider=","
                             app:locale="en_US"
                             android:textColor="@android:color/primary_text_light"
-                            app:monetaryDivider=","
                             app:showSymbol="false">
 
                             <requestFocus />
                         </com.br.minasfrango.util.CurrencyEditText>
+
+
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <TextView

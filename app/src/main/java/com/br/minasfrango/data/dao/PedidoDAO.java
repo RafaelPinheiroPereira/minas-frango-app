@@ -31,7 +31,7 @@ public class PedidoDAO extends GenericsDAO<PedidoORM> {
             pedidoORM.setId(id);
 
             realm.beginTransaction();
-            realm.copyToRealmOrUpdate(pedidoORM);
+            realm.insert(pedidoORM);
             realm.commitTransaction();
 
         } catch (RealmException e) {

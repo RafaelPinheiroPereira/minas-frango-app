@@ -1,5 +1,6 @@
 package com.br.minasfrango.ui.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -24,18 +25,25 @@ import com.br.minasfrango.R;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.ui.abstracts.AbstractActivity;
 import com.br.minasfrango.ui.adapter.RecebimentoAdapter;
-import com.br.minasfrango.ui.mvp.payments.IPaymentsMVP;
-import com.br.minasfrango.ui.mvp.payments.Presenter;
+import com.br.minasfrango.ui.mvp.recebimento.IRecebimentoMVP;
+import com.br.minasfrango.ui.mvp.recebimento.Presenter;
+import com.br.minasfrango.util.CameraUtil;
+import com.br.minasfrango.util.ConstantsUtil;
+import com.br.minasfrango.util.ControleSessao;
 import com.br.minasfrango.util.CurrencyEditText;
+import com.br.minasfrango.util.DateUtils;
 import com.br.minasfrango.util.FormatacaoMoeda;
-import com.br.minasfrango.util.SessionManager;
+import com.hussain_chachuliya.customcamera.CustomCamera;
 import java.math.BigDecimal;
+import java.util.Date;
 
-public class RecebimentoActivity extends AppCompatActivity implements IPaymentsMVP.IView {
+public class RecebimentoActivity extends AppCompatActivity implements IRecebimentoMVP.IView {
 
-    private static final int INITIAL_POSITION = 0;
+    private static final int POSICAO_INICIAL = 0;
 
-    ArrayAdapter<String> adapterTipoRecebimento;
+    private static final long ID_TIPO_RECEBIMENTO_A_VISTA = 1;
+
+    ArrayAdapter<String> adaptadorTipoRecebimento;
 
     @BindView(R.id.btnImprimirRecebimento)
     Button btnImprimirRecebimento;
@@ -44,9 +52,9 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
     Button btnSalvarRecebimento;
 
     @BindView(R.id.edtValueAmortize)
-    CurrencyEditText edtValueAmortize;
+    CurrencyEditText cetValorAmortizar;
 
-    IPaymentsMVP.IPresenter mPresenter;
+    IRecebimentoMVP.IPresenter mPresenter;
 
     @BindView(R.id.rcvRecebimento)
     RecyclerView rcvRecebimento;
@@ -55,61 +63,68 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
     Spinner spnTipoRecebimento;
 
     @BindView(R.id.swtcAmortize)
-    Switch swtcAmortize;
+    Switch swtcAmortiza;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
     @BindView(R.id.txtClientID)
-    TextView txtClientID;
+    TextView txtIdCliente;
 
     @BindView(R.id.txtEndereco)
     TextView txtEndereco;
 
     @BindView(R.id.txtFanstasyName)
-    TextView txtFantasyName;
+    TextView txtNomeFantasia;
 
     @BindView(R.id.txtQTDNotasAbertas)
-    TextView txtQTDNotasAbertas;
+    TextView txtQuantidadeDeNotasAbertas;
 
     RecebimentoAdapter adapter;
 
     @BindView(R.id.txtTotalDevido)
-    TextView txtTotalDevido;
+    TextView txtValorTotalDevido;
+
+    @BindView(R.id.btnFotografar)
+    Button btnFotografar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_recebimento);
         ButterKnife.bind(this);
-        initView();
+
+        inicializarViews();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
         mPresenter = new Presenter(this);
-        mPresenter.getParams();
-        mPresenter.setClientViews();
 
-        // Inicia
+        mPresenter.getParametros();
+        mPresenter.configurarViewComDadosDoCliente();
 
-        swtcAmortize.setChecked(false);
-        mPresenter.getRecebimentos().addAll(mPresenter.pesquisarRecebimentoPorCliente());
-        txtQTDNotasAbertas.setText("Notas Abertas: " + mPresenter.getRecebimentos().size());
+        swtcAmortiza.setChecked(false);
 
-        txtTotalDevido.setText(
-                FormatacaoMoeda.convertDoubleToString(
+        mPresenter.getRecebimentos().addAll(mPresenter.obterRecebimentoPorCliente());
+
+        txtQuantidadeDeNotasAbertas.setText("Notas Abertas: " + mPresenter.getRecebimentos().size());
+
+        txtValorTotalDevido.setText(
+                FormatacaoMoeda.converterParaDolar(
                         mPresenter.getValueTotalDevido().doubleValue()));
         adapter = new RecebimentoAdapter(mPresenter);
         rcvRecebimento.setAdapter(adapter);
 
         try {
-            adapterTipoRecebimento =
+            adaptadorTipoRecebimento =
                     new ArrayAdapter<>(
                             RecebimentoActivity.this,
                             android.R.layout.simple_spinner_item,
-                            mPresenter.loadTipoRecebimentosAVista());
+                            mPresenter.obterTipoRecebimentos(ID_TIPO_RECEBIMENTO_A_VISTA));
         } catch (Throwable throwable) {
             RecebimentoActivity.this.runOnUiThread(
                     ()->{
@@ -118,11 +133,12 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
                     });
         }
 
-        spnTipoRecebimento.setAdapter(adapterTipoRecebimento);
-        spnTipoRecebimento.setSelection(INITIAL_POSITION);
-        edtValueAmortize.setText("00,00");
+        spnTipoRecebimento.setAdapter(adaptadorTipoRecebimento);
+        spnTipoRecebimento.setSelection(POSICAO_INICIAL);
 
-        edtValueAmortize.addTextChangedListener(
+        cetValorAmortizar.setText("00,00");
+
+        cetValorAmortizar.addTextChangedListener(
                 new TextWatcher() {
                     @Override
                     public void afterTextChanged(final Editable s) {
@@ -130,19 +146,17 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
                                 new BigDecimal(
                                         s.toString().isEmpty()
                                                 ? 0
-                                                : edtValueAmortize.getCurrencyDouble()));
+                                                : cetValorAmortizar.getCurrencyDouble()));
 
                         mPresenter.getRecebimentos().clear();
                         mPresenter
                                 .getRecebimentos()
-                                .addAll(mPresenter.pesquisarRecebimentoPorCliente());
-                        mPresenter.updateRecycleView();
+                                .addAll(mPresenter.obterRecebimentoPorCliente());
+                        mPresenter.atualizarRecycleView();
 
-                        if (mPresenter.totalValueOfDebtISLessTranCreditOrEquals()) {
-                            if (mPresenter.creditValueIsGranThenZero()) {
-                                /*Se o tipo da quitacao for automatica e o valor de credito for
-                                 * maior do que zero entao calcula automaticamente a amortizacao*/
-                                if (mPresenter.isTypeOfAmortizationIsAutomatic()) {
+                        if (mPresenter.valorTotalDevidoEhMenorOuIgualAoCredito()) {
+                            if (mPresenter.valorDoCreditoEhMaiorDoQueZero()) {
+                                if (mPresenter.ehAmortizacaoAutomatica()) {
                                     mPresenter.calcularAmortizacaoAutomatica();
                                 }
 
@@ -153,7 +167,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
 
                         } else {
                             // Devo informar que o valor recebido eh maior do que o devido
-                            edtValueAmortize.setError("RecebimentoORM superior ao Valor Devido");
+                            cetValorAmortizar.setError("RecebimentoORM superior ao Valor Devido");
                         }
                         mPresenter.atualizarViewSaldoDevedor();
                     }
@@ -179,15 +193,22 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
     @Override
     public void atualizarViewSaldoDevedor() {
 
-        txtTotalDevido.setTextColor(
+        txtValorTotalDevido.setTextColor(
                 mPresenter.saldoDevidoEhMaiorQueZero() ? Color.RED : Color.GREEN);
-        txtTotalDevido.setText(
-                FormatacaoMoeda.convertDoubleToString(
+        txtValorTotalDevido.setText(
+                FormatacaoMoeda.converterParaDolar(
                         mPresenter
                                 .getValueTotalDevido()
                                 .subtract(mPresenter.getValorTotalAmortizado())
                                 .doubleValue()));
     }
+
+    @Override
+    public void exibirBotaoFotografar() {
+        btnFotografar.setVisibility(View.VISIBLE);
+    }
+
+
 
     @Override
     protected void onDestroy() {
@@ -196,17 +217,17 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
     }
 
     @Override
-    public void getParams() {
+    public void getParametros() {
         Bundle args = getIntent().getExtras();
         Cliente cliente = (Cliente) args.getSerializable("keyCliente");
         mPresenter.setCliente(cliente);
     }
 
     @OnClick(R.id.btnSalvarRecebimento)
-    public void btnConfirmeAmortizeOnClicked() {
-        if (!new SessionManager(mPresenter.getContext()).getEnderecoBluetooth().isEmpty()) {
+    public void salvarRecebimento() {
+        if (!new ControleSessao(mPresenter.getContext()).getEnderecoBluetooth().isEmpty()) {
             mPresenter.salvarAmortizacao();
-            mPresenter.updateRecycleView();
+            mPresenter.atualizarRecycleView();
             mPresenter.esperarPorConexao();
         } else {
             AbstractActivity.showToast(
@@ -215,24 +236,36 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
         }
     }
 
-    @Override
-    public void setClientViews() {
-        txtClientID.setText(String.valueOf(mPresenter.getCliente().getId()));
-        txtEndereco.setText(mPresenter.getCliente().getEndereco());
-        txtFantasyName.setText(mPresenter.getCliente().getNome());
+    @OnClick(R.id.btnFotografar)
+    public void fotografarComprovante(View view) {
+
+        String nomeFoto=  mPresenter.getCliente().getId()
+                + DateUtils.formatarDateddMMyyyyhhmmParaString(
+                        new Date(System.currentTimeMillis())).replace("/","-")
+                + mPresenter.getCliente().getNome();
+        CameraUtil cameraUtil = new CameraUtil(mPresenter.getContext());
+        cameraUtil.inicializarCamera(ConstantsUtil.CAMINHO_IMAGEM_RECEBIMENTOS,nomeFoto);
+
     }
 
     @Override
-    public void exibirBotaoGerarRecibo() {
+    public void configurarViewComDadosDoCliente() {
+        txtIdCliente.setText(String.valueOf(mPresenter.getCliente().getId()));
+        txtEndereco.setText(mPresenter.getCliente().getEndereco());
+        txtNomeFantasia.setText(mPresenter.getCliente().getNome());
+    }
+
+    @Override
+    public void exibirBotaoComprovante() {
         btnImprimirRecebimento.setVisibility(View.VISIBLE);
-        mPresenter.inabilitarBotaoSalvar();
+        mPresenter.desabilitarBotaoSalvar();
     }
 
     @OnItemSelected(R.id.spnTipoRecebimento)
     public void setSpnTipoRecebimentoOnSelected(int position) {
 
         mPresenter.setIdTipoRecebimento(
-                mPresenter.findIdTipoRecebimento(adapterTipoRecebimento.getItem(position)));
+                mPresenter.findIdTipoRecebimento(adaptadorTipoRecebimento.getItem(position)));
     }
 
     @Override
@@ -241,8 +274,9 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
     }
 
     @OnClick(R.id.btnImprimirRecebimento)
-    public void setBtnImprimirRecebimentoOnClicked(View view) {
+    public void imprimirComprovante(View view) {
         this.mPresenter.imprimirComprovante();
+        this.mPresenter.exibirBotaoFotografar();
     }
 
     @Override
@@ -260,29 +294,29 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
     public void setOnSwtcAmortize(CompoundButton compoundButton, boolean b) {
 
         // Se o valor devido eh maior ou igual ao credito
-        if (mPresenter.totalValueOfDebtISLessTranCreditOrEquals()) {
+        if (mPresenter.valorTotalDevidoEhMenorOuIgualAoCredito()) {
 
             if (b) {
                 mPresenter.getRecebimentos().clear();
-                mPresenter.getRecebimentos().addAll(mPresenter.pesquisarRecebimentoPorCliente());
-                mPresenter.updateRecycleView();
+                mPresenter.getRecebimentos().addAll(mPresenter.obterRecebimentoPorCliente());
+                mPresenter.atualizarRecycleView();
                 mPresenter.setTypeOfAmortizationIsAutomatic(true);
-                mPresenter.setCredit(new BigDecimal(edtValueAmortize.getCurrencyDouble()));
+                mPresenter.setCredit(new BigDecimal(cetValorAmortizar.getCurrencyDouble()));
                 mPresenter.calcularAmortizacaoAutomatica();
                 compoundButton.setText("Quitação Automática de Notas");
                 mPresenter.atualizarViewSaldoDevedor();
             } else {
                 // REALIZA A QUITACAO MANUAL
-                mPresenter.getRecebimentos().addAll(mPresenter.pesquisarRecebimentoPorCliente());
-                mPresenter.updateRecycleView();
+                mPresenter.getRecebimentos().addAll(mPresenter.obterRecebimentoPorCliente());
+                mPresenter.atualizarRecycleView();
                 mPresenter.setTypeOfAmortizationIsAutomatic(false);
-                edtValueAmortize.setText("00,00");
+                cetValorAmortizar.setText("00,00");
                 compoundButton.setText("Quitação Manual de Notas");
                 mPresenter.atualizarViewSaldoDevedor();
             }
         } else {
             // Devo informar que o valor recebido eh maior do que o devido
-            edtValueAmortize.setError("RecebimentoORM superior ao Valor Devido");
+            cetValorAmortizar.setError("RecebimentoORM superior ao Valor Devido");
         }
     }
 
@@ -291,11 +325,30 @@ public class RecebimentoActivity extends AppCompatActivity implements IPaymentsM
         adapter.notifyItemChanged(position);
     }
 
-    private void initView() {
+    private void inicializarViews() {
         toolbar.setTitle("Recebimentos");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(RecebimentoActivity.this);
         rcvRecebimento.setLayoutManager(layoutManager);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CustomCamera.IMAGE_SAVE_REQUEST) {
+            if (resultCode == RESULT_OK) {
+
+                AbstractActivity.showToast(
+                        mPresenter.getContext(),
+                        "Imagem salva em :" + data.getStringExtra(CustomCamera.IMAGE_PATH));
+                this.finish();
+
+
+            } else {
+                AbstractActivity.showToast(mPresenter.getContext(), "Imagem não foi salva");
+            }
+
+        }
     }
 }

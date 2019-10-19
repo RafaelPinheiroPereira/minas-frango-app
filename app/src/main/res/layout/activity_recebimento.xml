@@ -273,6 +273,20 @@
                     app:icon="@mipmap/icone_print"
                     app:iconGravity="textStart"
                     app:iconTint="@color/white" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnFotografar"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="Comprovante"
+                    android:textColor="#fff"
+                    android:visibility="invisible"
+                    app:backgroundTint="@color/primary_dark"
+                    app:icon="@mipmap/ic_photo_camera_black_48dp"
+                    app:iconGravity="textStart"
+                    app:iconTint="@color/white" />
 
             </LinearLayout>
         </ScrollView>

@@ -41,8 +41,8 @@ public class PriceDAO extends GenericsDAO<PrecoORM> {
         return preco;
     }
 
-    public Preco findPriceByPriceID(long idPriceID) {
-        return idPriceID == 0 ? new Preco() : new Preco(where().equalTo("chavesPrecoORM.id", idPriceID).findFirst());
+    public Preco findPriceByPriceID(String idPriceID) {
+        return idPriceID == "" ? new Preco() : new Preco(where().like("chavesPrecoORM.id", idPriceID).findFirst());
 
     }
 

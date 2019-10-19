@@ -15,7 +15,7 @@ import com.br.minasfrango.ui.activity.RecebimentoActivity;
 import com.br.minasfrango.ui.activity.VendasActivity;
 import com.br.minasfrango.ui.mvp.home.IHomeMVP.IModel;
 import com.br.minasfrango.ui.mvp.home.IHomeMVP.IView;
-import com.br.minasfrango.util.SessionManager;
+import com.br.minasfrango.util.ControleSessao;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,7 +23,7 @@ import java.util.List;
 
 public class Presenter implements IHomeMVP.IPresenter {
 
-    SessionManager mSessionManager;
+    ControleSessao mControleSessao;
 
     private List<Cliente> clients = new ArrayList<>();
 
@@ -39,8 +39,8 @@ public class Presenter implements IHomeMVP.IPresenter {
 
     @Override
     public boolean checkLogin() {
-        this.mSessionManager = new SessionManager(getContext());
-        return mSessionManager.checkLogin();
+        this.mControleSessao = new ControleSessao(getContext());
+        return mControleSessao.checkLogin();
     }
 
     @Override
@@ -113,17 +113,17 @@ public class Presenter implements IHomeMVP.IPresenter {
 
     @Override
     public String getUserName() {
-        return this.mSessionManager.getUserName();
+        return this.mControleSessao.getUserName();
     }
 
     @Override
     public int getUserId() {
-        return this.mSessionManager.getUserID();
+        return this.mControleSessao.getIdUsuario();
     }
 
     @Override
     public void logout() {
-        this.mSessionManager.logout();
+        this.mControleSessao.logout();
     }
 
     @Override

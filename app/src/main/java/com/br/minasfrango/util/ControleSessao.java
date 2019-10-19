@@ -9,31 +9,31 @@ import java.util.HashMap;
 /**
  * Created by 04717299302 on 26/08/2016.
  */
-public class SessionManager {
+public class ControleSessao {
 
-    private static final String PREFER_NAME = "TrinityMobilePref";
+    private static final String PREFERENCIAS = "TrinityMobilePref";
 
-    private static final String IS_USER_LOGIN = "IsUserLoggedIn";
+    private static final String USUARIO_CONECTADO = "IsUserLoggedIn";
 
-    public static final String KEY_MATRICULA = "matricula";
+    public static final String CHAVE_MATRICULA = "matricula";
 
-    public static final String KEY_SENHA = "senha";
+    public static final String CHAVE_SENHA = "senha";
 
-    public static final String KEY_NOME = "nome";
+    public static final String CHAVE_NOME = "nome";
 
-    public static final String KEY_ENDERECO_BLUETOOTH = "device_address";
+    public static final String CHAVE_ENDERECO_BLUETOOTH = "device_address";
 
-    int PRIVATE_MODE = 0;
+    int MODO_PRIVADO = 0;
 
-    Context context;
+    Context contexto;
 
     SharedPreferences.Editor editor;
 
     SharedPreferences pref;
 
-    public SessionManager(Context context) {
-        this.context = context;
-        pref = context.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
+    public ControleSessao(Context contexto) {
+        this.contexto = contexto;
+        pref = contexto.getSharedPreferences(PREFERENCIAS, MODO_PRIVADO);
         editor = pref.edit();
     }
 
@@ -43,10 +43,10 @@ public class SessionManager {
      */
     public boolean checkLogin() {
         // Check login status
-        if (!this.isUserLoggedIn()) {
+        if (!this.usuarioConectado()) {
 
             // user is not logged in redirect him to Login Activity
-            Intent i = new Intent(context, LoginActivity.class);
+            Intent i = new Intent(contexto, LoginActivity.class);
 
             // Closing all the Activities from stack
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -55,7 +55,7 @@ public class SessionManager {
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
             // Staring Login Activity
-            context.startActivity(i);
+            contexto.startActivity(i);
 
             return true;
         }
@@ -63,20 +63,20 @@ public class SessionManager {
     }
 
     public String getEnderecoBluetooth() {
-        pref = this.context.getSharedPreferences(PREFER_NAME, 0);
-        return (pref.getString(KEY_ENDERECO_BLUETOOTH, ""));
+        pref = this.contexto.getSharedPreferences(PREFERENCIAS, 0);
+        return (pref.getString(CHAVE_ENDERECO_BLUETOOTH, ""));
     }
 
-    public void createUserLoginSession(String matricula, String senha, String nome) {
+    public void criarSessao(String matricula, String senha, String nome) {
 
-        editor.putBoolean(IS_USER_LOGIN, true);
+        editor.putBoolean(USUARIO_CONECTADO, true);
 
         // salva matricula
-        editor.putString(KEY_MATRICULA, matricula);
+        editor.putString(CHAVE_MATRICULA, matricula);
 
         // salva senha
-        editor.putString(KEY_SENHA, senha);
-        editor.putString(KEY_NOME, nome);
+        editor.putString(CHAVE_SENHA, senha);
+        editor.putString(CHAVE_NOME, nome);
 
         // commit changes
         editor.commit();
@@ -85,41 +85,41 @@ public class SessionManager {
     /**
      * Get stored session data
      */
-    public HashMap<String, String> getUserDetails() {
+    public HashMap<String, String> getDadosDoUsuario() {
 
         // Use hashmap to store user credentials
         HashMap<String, String> user = new HashMap<String, String>();
 
-        user.put(KEY_MATRICULA, pref.getString(KEY_MATRICULA, null));
+        user.put(CHAVE_MATRICULA, pref.getString(CHAVE_MATRICULA, null));
 
-        user.put(KEY_SENHA, pref.getString(KEY_SENHA, null));
+        user.put(CHAVE_SENHA, pref.getString(CHAVE_SENHA, null));
 
-        user.put(KEY_NOME, pref.getString(KEY_NOME, null));
+        user.put(CHAVE_NOME, pref.getString(CHAVE_NOME, null));
 
         // return user
         return user;
     }
 
     public void salvarEnderecoBluetooth(String endereco) {
-        editor.putString(KEY_ENDERECO_BLUETOOTH, endereco);
+        editor.putString(CHAVE_ENDERECO_BLUETOOTH, endereco);
         // commit changes
         editor.commit();
     }
 
-    public int getUserID() {
-        pref = this.context.getSharedPreferences(PREFER_NAME, 0);
-        return Integer.parseInt(pref.getString(KEY_MATRICULA, ""));
+    public int getIdUsuario() {
+        pref = this.contexto.getSharedPreferences(PREFERENCIAS, 0);
+        return Integer.parseInt(pref.getString(CHAVE_MATRICULA, ""));
     }
 
     public String getUserName() {
-        pref = this.context.getSharedPreferences(PREFER_NAME, 0);
-        return pref.getString(KEY_NOME, "");
+        pref = this.contexto.getSharedPreferences(PREFERENCIAS, 0);
+        return pref.getString(CHAVE_NOME, "");
     }
 
     // Check for login
 
-    public boolean isUserLoggedIn() {
-        return pref.getBoolean(IS_USER_LOGIN, false);
+    public boolean usuarioConectado() {
+        return pref.getBoolean(USUARIO_CONECTADO, false);
     }
 
     /** Clear session details */
@@ -130,7 +130,7 @@ public class SessionManager {
         editor.commit();
 
         // After logout redirect user to Login Activity
-        Intent i = new Intent(context, LoginActivity.class);
+        Intent i = new Intent(contexto, LoginActivity.class);
 
         // Closing all the Activities
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -139,6 +139,6 @@ public class SessionManager {
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         // Staring Login Activity
-        context.startActivity(i);
+        contexto.startActivity(i);
     }
 }

@@ -27,7 +27,7 @@ public class TipoRecebimentoDAO {
         realm = Realm.getDefaultInstance();
     }
 
-    public ArrayList<String> carregaFormaPagamentoAmortizacao() throws Throwable {
+    public ArrayList<String> pesquisarTipoRecebimentoPorId() throws Throwable {
         ArrayList<String> formas = new ArrayList<String>();
         RealmResults<TipoRecebimentoORM> results = where().equalTo("id", 1).findAll();
         Optional.ofNullable(results).orElseThrow(NullPointerException::new);

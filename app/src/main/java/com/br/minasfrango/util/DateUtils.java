@@ -16,7 +16,7 @@ public class DateUtils {
         return FORMATADOR_dd_MM_YYYY.format(dateToFormat);
     }
 
-    public static java.util.Date formatarDateddMMyyyyhhmm(java.util.Date dateToFormat)
+    public static java.util.Date formatarDateParaddMMyyyyhhmm(java.util.Date dateToFormat)
             throws ParseException {
 
         String strDate = FORMATADOR_dd_MM_YYYY_hh_mm.format(dateToFormat);

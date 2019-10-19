@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.br.minasfrango.R;
 import com.br.minasfrango.data.model.ItemPedido;
-import com.br.minasfrango.ui.mvp.sales.ISalesMVP;
+import com.br.minasfrango.ui.mvp.venda.IVendaMVP;
 import com.br.minasfrango.util.FormatacaoMoeda;
 
 /**
@@ -40,10 +40,10 @@ public class ItemPedidoAdapter extends RecyclerView.Adapter<ItemPedidoAdapter.My
 
     private LayoutInflater mLayoutInflater;
 
-    private ISalesMVP.IPresenter mPresenter;
+    private IVendaMVP.IPresenter mPresenter;
 
 
-    public ItemPedidoAdapter(ISalesMVP.IPresenter presenter) {
+    public ItemPedidoAdapter(IVendaMVP.IPresenter presenter) {
         this.mPresenter = presenter;
         this.mLayoutInflater = (LayoutInflater) presenter.getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -63,9 +63,9 @@ public class ItemPedidoAdapter extends RecyclerView.Adapter<ItemPedidoAdapter.My
         myViewHolder.txtDescricao.setText((itemPedido.getDescricao()));
         myViewHolder.txtUnidade.setText(itemPedido.getChavesItemPedido().getIdUnidade().split("-")[0]);
         myViewHolder.txtQuantidade.setText(String.valueOf(itemPedido.getQuantidade()));
-        myViewHolder.txtValorUnitario.setText(FormatacaoMoeda.convertDoubleToString(itemPedido.getValorUnitario()));
+        myViewHolder.txtValorUnitario.setText(FormatacaoMoeda.converterParaReal(itemPedido.getValorUnitario()));
         myViewHolder.txtValorTotal
-                .setText(FormatacaoMoeda.convertDoubleToString(itemPedido.getValorTotal()));
+                .setText(FormatacaoMoeda.converterParaReal(itemPedido.getValorTotal()));
 
     }
 

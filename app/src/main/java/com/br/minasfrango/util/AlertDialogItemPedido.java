@@ -15,11 +15,11 @@ import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import com.br.minasfrango.R;
 import com.br.minasfrango.data.model.Unidade;
-import com.br.minasfrango.ui.mvp.sales.ISalesMVP;
+import com.br.minasfrango.ui.mvp.venda.IVendaMVP;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class AlertDialogUpdateItemSaleOrder {
+public class AlertDialogItemPedido {
 
     ArrayAdapter<String> adapterUnidade;
 
@@ -38,7 +38,7 @@ public class AlertDialogUpdateItemSaleOrder {
     @BindView(R.id.edtQTDBicoDialog)
     EditText edtQTDBicoDialog;
 
-    ISalesMVP.IPresenter mIPresenter;
+    IVendaMVP.IPresenter mIPresenter;
 
     int position;
 
@@ -51,7 +51,7 @@ public class AlertDialogUpdateItemSaleOrder {
     @BindView(R.id.txtProductIDDialog)
     TextView txtProductIDDialog;
 
-    public AlertDialogUpdateItemSaleOrder(final ISalesMVP.IPresenter IPresenter) {
+    public AlertDialogItemPedido(final IVendaMVP.IPresenter IPresenter) {
         mIPresenter = IPresenter;
     }
 
@@ -71,17 +71,17 @@ public class AlertDialogUpdateItemSaleOrder {
                 String.valueOf(mIPresenter.getItemPedido().getChavesItemPedido().getIdProduto()));
         txtNameProductDialog.setText(mIPresenter.getItemPedido().getDescricao());
         cetPriceDialog.setText(
-                FormatacaoMoeda.convertDoubleToString(
+                FormatacaoMoeda.converterParaDolar(
                         mIPresenter.getItemPedido().getValorUnitario()));
         edtQTDProductDialog.setText(String.valueOf(mIPresenter.getItemPedido().getQuantidade()));
         edtQTDBicoDialog.setText(String.valueOf(mIPresenter.getItemPedido().getBicos()));
 
-        List<Unidade> unidades = mIPresenter.loadAllUnitys();
+        List<Unidade> unidades = mIPresenter.carregarUnidades();
         adapterUnidade =
                 new ArrayAdapter<>(
                         mIPresenter.getContext(),
                         android.R.layout.simple_spinner_item,
-                        mIPresenter.loadAllUnitysToString(unidades));
+                        mIPresenter.carregarUnidadesEmString(unidades));
 
         spnUnitDialog.setAdapter(adapterUnidade);
         // Seta o spinner com a unidade do item e nao a padrao
@@ -113,8 +113,8 @@ public class AlertDialogUpdateItemSaleOrder {
                         Integer.parseInt(edtQTDProductDialog.getText().toString())
                                 * cetPriceDialog.getCurrencyDouble());
         mIPresenter.getItens().set(position, mIPresenter.getItemPedido());
-        mIPresenter.setTotalOrderSale(new BigDecimal(mIPresenter.calculeTotalOrderSale()));
-        mIPresenter.updateRecyclerItens();
+        mIPresenter.setTotalDaVenda(new BigDecimal(mIPresenter.calcularTotalDaVenda()));
+        mIPresenter.atualizarRecyclerItens();
         mIPresenter.dissmis();
     }
 
@@ -128,8 +128,8 @@ public class AlertDialogUpdateItemSaleOrder {
                 .getItemPedido()
                 .setValorUnitario(
                         mIPresenter
-                                .loadPriceOfUnityByProduct(adapterUnidade.getItem(position))
+                                .pesquisarPrecoDaUnidadePorProduto(adapterUnidade.getItem(position))
                                 .getValor());
-        cetPriceDialog.setText(String.valueOf(mIPresenter.getItemPedido().getValorUnitario()));
+        cetPriceDialog.setText(FormatacaoMoeda.converterParaDolar(mIPresenter.getItemPedido().getValorUnitario()));
     }
 }

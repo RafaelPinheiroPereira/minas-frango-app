@@ -2,30 +2,30 @@ package com.br.minasfrango.ui.mvp.login;
 
 import android.content.Context;
 import com.br.minasfrango.data.model.Funcionario;
-import com.br.minasfrango.network.servico.LoginService;
+import com.br.minasfrango.network.servico.ServicoLogin;
 import retrofit2.Call;
 
 public interface ILoginMVP {
 
     interface IPresenter {
 
-        Call<Funcionario> autenticateLogin(String idUser, String password);
+        Call<Funcionario> autenticarLogin(String idUser, String password);
 
-        void createSession(String idUser, String password, String nameEmployee);
+        void criarSessao(String idUser, String password, String nameEmployee);
 
-        void doLogin(String user, String password);
+        void realizarLogin(String user, String password);
 
-        Context getContext();
+        Context getContexto();
 
-        LoginService getLoginService();
+        ServicoLogin getServicoLogin();
 
-        boolean validateLogin();
+        boolean loginValidado();
     }
 
     interface IView {
 
-        void loadAnimation();
+        void carregarAnimacaoInicializacao();
 
-        boolean validateForm();
+        boolean validarForm();
     }
 }

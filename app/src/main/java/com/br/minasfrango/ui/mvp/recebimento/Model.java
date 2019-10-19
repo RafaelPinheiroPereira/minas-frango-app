@@ -1,4 +1,4 @@
-package com.br.minasfrango.ui.mvp.payments;
+package com.br.minasfrango.ui.mvp.recebimento;
 
 import com.br.minasfrango.data.dao.RecebimentoDAO;
 import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
@@ -16,9 +16,9 @@ import java.util.List;
 /**
  *
  */
-public class Model implements IPaymentsMVP.IModel {
+public class Model implements IRecebimentoMVP.IModel {
 
-    IPaymentsMVP.IPresenter mPresenter;
+    IRecebimentoMVP.IPresenter mPresenter;
 
     TipoRecebimentoDAO mTipoRecebimentoDAO = TipoRecebimentoDAO.getInstace();
 
@@ -26,7 +26,7 @@ public class Model implements IPaymentsMVP.IModel {
 
     RecebimentoDAO recebimentoDAO = RecebimentoDAO.getInstace(RecebimentoORM.class);
 
-    public Model(final IPaymentsMVP.IPresenter presenter) {
+    public Model(final IRecebimentoMVP.IPresenter presenter) {
         mPresenter = presenter;
     }
 
@@ -48,7 +48,7 @@ public class Model implements IPaymentsMVP.IModel {
 
             mPresenter.updateRecycleViewAlteredItem(mPresenter.getPositionOpenNotaSelect());
 
-            mPresenter.updateRecycleView();
+            mPresenter.atualizarRecycleView();
 
         } else if (creditValueIsGreaterThanZero()
                 && creditValueIsLessThanSalesValueOfItem(recebimentoToUpdate)) {
@@ -58,7 +58,7 @@ public class Model implements IPaymentsMVP.IModel {
 
             mPresenter.updateRecycleViewAlteredItem(mPresenter.getPositionOpenNotaSelect());
             mPresenter.setCredit(new BigDecimal(0));
-            mPresenter.updateRecycleView();
+            mPresenter.atualizarRecycleView();
         }
         mPresenter.showInsuficentCredit("Saldo do  Credito: " + mPresenter.getCredit());
         mPresenter.atualizarViewSaldoDevedor();
@@ -95,7 +95,7 @@ public class Model implements IPaymentsMVP.IModel {
                                         mPresenter
                                                 .getCredit()
                                                 .subtract(new BigDecimal(item.getValorVenda())));
-                                mPresenter.updateRecycleView();
+                                mPresenter.atualizarRecycleView();
 
                             } // Se o valor de credito for maior do que zero e for menor do que o
                             // valor devido
@@ -112,7 +112,7 @@ public class Model implements IPaymentsMVP.IModel {
                                 mPresenter.setCredit(new BigDecimal(0));
                                 mPresenter.updateRecycleViewAlteredItem(
                                         mPresenter.getRecebimentos().lastIndexOf(item));
-                                mPresenter.updateRecycleView();
+                                mPresenter.atualizarRecycleView();
                             }
                         });
     }
@@ -133,8 +133,8 @@ public class Model implements IPaymentsMVP.IModel {
     }
 
     @Override
-    public ArrayList<String> loadTipoRecebimentosAVista() throws Throwable {
-        return this.mTipoRecebimentoDAO.carregaFormaPagamentoAmortizacao();
+    public ArrayList<String> obterTipoRecebimentos(long id) throws Throwable {
+        return this.mTipoRecebimentoDAO.pesquisarTipoRecebimentoPorId();
     }
 
     @Override
@@ -193,7 +193,7 @@ public class Model implements IPaymentsMVP.IModel {
         mPresenter.atualizarViewSaldoDevedor();
         mPresenter.showInsuficentCredit("Saldo Crédito: " + mPresenter.getCredit());
         mPresenter.atualizarViewSaldoDevedor();
-        mPresenter.updateRecycleView();
+        mPresenter.atualizarRecycleView();
     }
 
     @Override
@@ -216,7 +216,7 @@ public class Model implements IPaymentsMVP.IModel {
 
                                 try {
                                     item.setDataRecebimento(
-                                            DateUtils.formatarDateddMMyyyyhhmm(
+                                            DateUtils.formatarDateParaddMMyyyyhhmm(
                                                     new Date(System.currentTimeMillis())));
                                 } catch (ParseException e) {
                                     e.printStackTrace();

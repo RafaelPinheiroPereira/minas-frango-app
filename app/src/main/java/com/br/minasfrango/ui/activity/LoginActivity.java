@@ -2,6 +2,7 @@ package com.br.minasfrango.ui.activity;
 
 import android.Manifest;
 import android.Manifest.permission;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,10 +44,10 @@ public class LoginActivity extends AppCompatActivity implements IView {
     Button btnLogin;
 
     @BindView(R.id.edtPassword)
-    EditText edtPassword;
+    EditText edtSenha;
 
     @BindView(R.id.edtUser)
-    EditText edtUser;
+    EditText edtMatricula;
 
     @BindView(R.id.imgLogo)
     ImageView imgLogo;
@@ -62,8 +63,8 @@ public class LoginActivity extends AppCompatActivity implements IView {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         initView();
-        verifyPermission();
-        loadAnimation();
+        concederPermissoes();
+        carregarAnimacaoInicializacao();
         // Internet
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -84,7 +85,7 @@ public class LoginActivity extends AppCompatActivity implements IView {
 
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 AbstractActivity.showToast(
-                        presenter.getContext(), "Permissões necessárias concedidas");
+                        presenter.getContexto(), "Permissões necessárias concedidas");
 
             } else {
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -95,18 +96,19 @@ public class LoginActivity extends AppCompatActivity implements IView {
     @OnClick(R.id.btnLogin)
     public void btnSubmitClicked(View view) {
         // realizar login
-        if (presenter.validateLogin()) {
+        if (presenter.loginValidado()) {
             try {
-                presenter.doLogin(edtUser.getText().toString(), edtPassword.getText().toString());
+                presenter.realizarLogin(edtMatricula.getText().toString(), edtSenha.getText().toString());
+
             } catch (final Exception e) {
                 LoginActivity.this.runOnUiThread(
-                        ()->AbstractActivity.showToast(presenter.getContext(), e.getMessage()));
+                        ()->AbstractActivity.showToast(presenter.getContexto(), e.getMessage()));
             }
         }
     }
 
     @Override
-    public void loadAnimation() {
+    public void carregarAnimacaoInicializacao() {
         Animation animTranslate = AnimationUtils.loadAnimation(this, R.anim.translate);
         animTranslate.setAnimationListener(
                 new Animation.AnimationListener() {
@@ -133,16 +135,16 @@ public class LoginActivity extends AppCompatActivity implements IView {
     }
 
     @Override
-    public boolean validateForm() {
+    public boolean validarForm() {
 
-        if (TextUtils.isEmpty(edtUser.getText().toString())) {
-            edtUser.setError("Matricula Obrigatória!");
-            edtUser.requestFocus();
+        if (TextUtils.isEmpty(edtMatricula.getText().toString())) {
+            edtMatricula.setError("Matricula Obrigatória!");
+            edtMatricula.requestFocus();
             return false;
         }
-        if (TextUtils.isEmpty(edtPassword.getText().toString())) {
-            edtPassword.setError("Senha Obrigatória!");
-            edtPassword.requestFocus();
+        if (TextUtils.isEmpty(edtSenha.getText().toString())) {
+            edtSenha.setError("Senha Obrigatória!");
+            edtSenha.requestFocus();
             return false;
         }
 
@@ -155,11 +157,11 @@ public class LoginActivity extends AppCompatActivity implements IView {
         btnLogin.setVisibility(View.GONE);
 
         // Inicializacao a fim de testes
-        edtUser.setText("1");
-        edtPassword.setText("1234");
+        edtMatricula.setText("1");
+        edtSenha.setText("1234");
     }
 
-    private void verifyPermission() {
+    private void concederPermissoes() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
