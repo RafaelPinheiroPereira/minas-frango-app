@@ -1,5 +1,7 @@
 package com.br.minasfrango.ui.mvp.venda;
 
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.data.dao.ClientDAO;
 import com.br.minasfrango.data.dao.ItemPedidoDAO;
 import com.br.minasfrango.data.dao.ItemPedidoIDDAO;
@@ -90,7 +92,13 @@ public class Model implements IVendaMVP.IModel {
     public ArrayList<String> carregarProdutoPorId(final List<Produto> produtos) {
 
         ArrayList<String> productIds = new ArrayList<>();
-        produtos.forEach(item->productIds.add(String.valueOf(item.getId())));
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            produtos.forEach(item->productIds.add(String.valueOf(item.getId())));
+        } else {
+            for (Produto produto : produtos) {
+                productIds.add(String.valueOf(produto.getId()));
+            }
+        }
         return productIds;
 
     }
@@ -98,7 +106,13 @@ public class Model implements IVendaMVP.IModel {
     @Override
     public ArrayList<String> carregarProdutoPorNome(final List<Produto> produtos) {
         ArrayList<String> productNames = new ArrayList<String>();
-        produtos.forEach(item->productNames.add(item.getNome()));
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            produtos.forEach(item->productNames.add(item.getNome()));
+        } else {
+            for (Produto produto : produtos) {
+                productNames.add(produto.getNome());
+            }
+        }
         return productNames;
     }
 
@@ -114,17 +128,31 @@ public class Model implements IVendaMVP.IModel {
     public ArrayList<String> convertTipoRecebimentoInString(final List<TipoRecebimento> tiposRecebimentos) {
         ArrayList<String> strTiposRecebimentos = new ArrayList<>();
         strTiposRecebimentos.add("Formas de Pagamento");
-        tiposRecebimentos.forEach(item->strTiposRecebimentos.add(item.getNome()));
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            tiposRecebimentos.forEach(item->strTiposRecebimentos.add(item.getNome()));
+        } else {
+            for (TipoRecebimento tipoRecebimento : tiposRecebimentos) {
+                strTiposRecebimentos.add(tipoRecebimento.getNome());
+            }
+        }
         return strTiposRecebimentos;
     }
 
     @Override
     public ArrayList<String> converterUnidadeParaString(final List<Unidade> unidades) {
         ArrayList<String> unityNames = new ArrayList<>();
-        unidades.forEach(item->{
-            String[] unitID = item.getId().split("-");
-            unityNames.add(unitID[0]);
-        });
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            unidades.forEach(item->{
+                String[] unitID = item.getId().split("-");
+                unityNames.add(unitID[0]);
+            });
+        } else {
+            for (Unidade unidade : unidades) {
+                String[] unitID = unidade.getId().split("-");
+                unityNames.add(unitID[0]);
+
+            }
+        }
         return unityNames;
     }
 

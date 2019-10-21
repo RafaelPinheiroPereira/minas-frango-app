@@ -1,5 +1,7 @@
 package com.br.minasfrango.ui.mvp.recebimento;
 
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.data.dao.RecebimentoDAO;
 import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
 import com.br.minasfrango.data.model.Recebimento;
@@ -65,56 +67,34 @@ public class Model implements IRecebimentoMVP.IModel {
     }
 
     @Override
-    public void calculateAmortizationAutomatic() {
+    public void calcularAmortizacaoAutomatica() {
 
         // Todos os checkboxs sao desabilitados
         // O funcionarioORM nao pode selecionar nenhuma nota
         // Toda a quitacao e feita automatica
 
-        mPresenter
-                .getRecebimentos()
-                .forEach(
-                        item-> {
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            mPresenter
+                    .getRecebimentos()
+                    .forEach(
+                            item->{
+                                realizarAmortizacao(item);
 
-                            // Se o valor de credito for maior do que zero e for maior do que o
-                            // valor devido
-                            // do item entao o valor amortizado do item recebe o valor da venda
-                            if (creditValueIsGreaterThanZero()
-                                    && creditValueIsGreatherOrEqualThanSalesValueOfItem(item)) {
+                            });
+        } else {
+            for (Recebimento recebimento : mPresenter.getRecebimentos()) {
+                realizarAmortizacao(recebimento);
+            }
+        }
+    }
 
-                                item.setValorAmortizado(item.getValorVenda());
-                                item.setCheck(true);
-                                item.setOrderSelected(
-                                        mPresenter.getRecebimentos().lastIndexOf(item) + 1);
-                                mPresenter
-                                        .getRecebimentos()
-                                        .set(mPresenter.getRecebimentos().indexOf(item), item);
-                                mPresenter.updateRecycleViewAlteredItem(
-                                        mPresenter.getRecebimentos().lastIndexOf(item));
-                                mPresenter.setCredit(
-                                        mPresenter
-                                                .getCredit()
-                                                .subtract(new BigDecimal(item.getValorVenda())));
-                                mPresenter.atualizarRecycleView();
-
-                            } // Se o valor de credito for maior do que zero e for menor do que o
-                            // valor devido
-                            // do item entao o valor amortizado do item recebe o valor do credito
-                            else if ((creditValueIsGreaterThanZero())
-                                    && creditValueIsLessThanSalesValueOfItem(item)) {
-                                item.setValorAmortizado(mPresenter.getCredit().doubleValue());
-                                mPresenter
-                                        .getRecebimentos()
-                                        .set(mPresenter.getRecebimentos().lastIndexOf(item), item);
-                                item.setCheck(true);
-                                item.setOrderSelected(
-                                        mPresenter.getRecebimentos().lastIndexOf(item) + 1);
-                                mPresenter.setCredit(new BigDecimal(0));
-                                mPresenter.updateRecycleViewAlteredItem(
-                                        mPresenter.getRecebimentos().lastIndexOf(item));
-                                mPresenter.atualizarRecycleView();
-                            }
-                        });
+    @Override
+    public boolean saldoDevidoEhMaiorQueZero() {
+        return mPresenter
+                .getValorTotalDevido()
+                .subtract(mPresenter.getValorTotalAmortizado())
+                .compareTo(new BigDecimal(0))
+                == ConstantsUtil.BIGGER;
     }
 
     @Override
@@ -197,12 +177,11 @@ public class Model implements IRecebimentoMVP.IModel {
     }
 
     @Override
-    public boolean saldoDevidoEhMaiorQueZero() {
-        return mPresenter
-                .getValueTotalDevido()
-                .subtract(mPresenter.getValorTotalAmortizado())
-                .compareTo(new BigDecimal(0))
-                == ConstantsUtil.BIGGER;
+    public boolean totalValueOfDebtISLessTranCreditOrEquals() {
+        return ((mPresenter.getCredit().compareTo(mPresenter.getValorTotalDevido())
+                == ConstantsUtil.SMALLER)
+                || (mPresenter.getCredit().compareTo(mPresenter.getValorTotalDevido())
+                == ConstantsUtil.EQUAL));
     }
 
     @Override
@@ -230,12 +209,45 @@ public class Model implements IRecebimentoMVP.IModel {
     public void setAutomaticNoteSelectionOrder() {
     }
 
-    @Override
-    public boolean totalValueOfDebtISLessTranCreditOrEquals() {
-        return ((mPresenter.getCredit().compareTo(mPresenter.getValueTotalDevido())
-                == ConstantsUtil.SMALLER)
-                || (mPresenter.getCredit().compareTo(mPresenter.getValueTotalDevido())
-                == ConstantsUtil.EQUAL));
+    private void realizarAmortizacao(final Recebimento item) {
+        // Se o valor de credito for maior do que zero e for maior do que o
+        // valor devido
+        // do item entao o valor amortizado do item recebe o valor da venda
+        if (creditValueIsGreaterThanZero()
+                && creditValueIsGreatherOrEqualThanSalesValueOfItem(item)) {
+
+            item.setValorAmortizado(item.getValorVenda());
+            item.setCheck(true);
+            item.setOrderSelected(
+                    mPresenter.getRecebimentos().lastIndexOf(item) + 1);
+            mPresenter
+                    .getRecebimentos()
+                    .set(mPresenter.getRecebimentos().indexOf(item), item);
+            mPresenter.updateRecycleViewAlteredItem(
+                    mPresenter.getRecebimentos().lastIndexOf(item));
+            mPresenter.setCredit(
+                    mPresenter
+                            .getCredit()
+                            .subtract(new BigDecimal(item.getValorVenda())));
+            mPresenter.atualizarRecycleView();
+
+        } // Se o valor de credito for maior do que zero e for menor do que o
+        // valor devido
+        // do item entao o valor amortizado do item recebe o valor do credito
+        else if ((creditValueIsGreaterThanZero())
+                && creditValueIsLessThanSalesValueOfItem(item)) {
+            item.setValorAmortizado(mPresenter.getCredit().doubleValue());
+            mPresenter
+                    .getRecebimentos()
+                    .set(mPresenter.getRecebimentos().lastIndexOf(item), item);
+            item.setCheck(true);
+            item.setOrderSelected(
+                    mPresenter.getRecebimentos().lastIndexOf(item) + 1);
+            mPresenter.setCredit(new BigDecimal(0));
+            mPresenter.updateRecycleViewAlteredItem(
+                    mPresenter.getRecebimentos().lastIndexOf(item));
+            mPresenter.atualizarRecycleView();
+        }
     }
 
     private boolean creditValueIsGreaterThanZero() {

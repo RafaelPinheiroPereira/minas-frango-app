@@ -1,5 +1,7 @@
 package com.br.minasfrango.data.realm;
 
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.data.model.ItemPedido;
 import com.br.minasfrango.data.model.Pedido;
 import io.realm.RealmList;
@@ -39,9 +41,15 @@ public class PedidoORM extends RealmObject implements Serializable {
     private double valorTotal;
 
     public static RealmList<ItemPedidoORM> converterListModelParaListRealm(
-            List<ItemPedido> itemPedido) {
+            List<ItemPedido> itens) {
         RealmList<ItemPedidoORM> realmList = new RealmList<>();
-        itemPedido.forEach(item->realmList.add(new ItemPedidoORM(item)));
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            itens.forEach(item->realmList.add(new ItemPedidoORM(item)));
+        } else {
+            for (ItemPedido itemPedido : itens) {
+                realmList.add(new ItemPedidoORM(itemPedido));
+            }
+        }
         return realmList;
     }
 

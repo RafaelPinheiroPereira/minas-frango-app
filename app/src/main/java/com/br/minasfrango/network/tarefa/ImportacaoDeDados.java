@@ -1,6 +1,8 @@
 package com.br.minasfrango.network.tarefa;
 
 import android.os.AsyncTask;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.util.Log;
 import com.br.minasfrango.data.dao.PrecoIDDAO;
 import com.br.minasfrango.data.model.Cliente;
@@ -41,6 +43,7 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
         this.mHomePresenter = homePresenter;
     }
 
+
     public boolean importData() {
         boolean importou = false;
         if (importarClientes()) {
@@ -60,6 +63,7 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
 
         return importou;
     }
+
 
     @Override
     protected Boolean doInBackground(Void... params) {
@@ -88,6 +92,7 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
         this.mHomePresenter.exibirProgressDialog();
     }
 
+
     private boolean importarClientes() {
 
         ImportacaoService importacaoService = new RetrofitConfig().getImportacaoService();
@@ -102,7 +107,13 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
                 List<Cliente> clientes = responseCliente.body();
                 Realm realm = Realm.getDefaultInstance();
                 realm.beginTransaction();
-                clientes.forEach(cliente->realm.copyToRealmOrUpdate(new ClienteORM(cliente)));
+                if (VERSION.SDK_INT >= VERSION_CODES.N) {
+                    clientes.forEach(cliente->realm.copyToRealmOrUpdate(new ClienteORM(cliente)));
+                } else {
+                    for (Cliente cliente : clientes) {
+                        realm.copyToRealmOrUpdate(new ClienteORM(cliente));
+                    }
+                }
                 realm.commitTransaction();
                 Log.d("Importacao Clientes", "Sucess");
                 return true;
@@ -118,6 +129,7 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
         return false;
     }
 
+
     private boolean importarPrecos() {
         ImportacaoService importacaoService = new RetrofitConfig().getImportacaoService();
         Call<List<Preco>> callPrecos = importacaoService.importarPreco();
@@ -128,32 +140,57 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
                 Realm realm = Realm.getDefaultInstance();
                 realm.beginTransaction();
 
-                precos.forEach(
-                        preco->{
+                if (VERSION.SDK_INT >= VERSION_CODES.N) {
+                    precos.forEach(
+                            preco->{
 
-                            PrecoID precoID =
-                                    new PrecoID(
-                                            preco.getChavesPreco().getId(),
-                                            preco.getChavesPreco().getIdCliente(),
-                                            preco.getChavesPreco().getIdProduto(),
-                                            preco.getChavesPreco().getUnidadeProduto(),
-                                            preco.getChavesPreco().getDataPreco()
-                                    );
+                                PrecoID precoID =
+                                        new PrecoID(
+                                                preco.getChavesPreco().getId(),
+                                                preco.getChavesPreco().getIdCliente(),
+                                                preco.getChavesPreco().getIdProduto(),
+                                                preco.getChavesPreco().getUnidadeProduto(),
+                                                preco.getChavesPreco().getDataPreco()
+                                        );
 
+                                preco.setChavesPreco(precoID);
+                                preco.setId(
+                                        preco.getChavesPreco().getId()
+                                                + "-"
+                                                + preco.getChavesPreco().getIdCliente()
+                                                + "-"
+                                                + preco.getChavesPreco().getIdProduto()
+                                                + "-"
+                                                + preco.getChavesPreco().getUnidadeProduto() + "-" + preco
+                                                .getChavesPreco().getDataPreco());
+                                realm.copyToRealmOrUpdate(new PrecoORM(preco));
+                            });
+                } else {
+                    for (Preco preco : precos) {
 
+                        PrecoID precoID =
+                                new PrecoID(
+                                        preco.getChavesPreco().getId(),
+                                        preco.getChavesPreco().getIdCliente(),
+                                        preco.getChavesPreco().getIdProduto(),
+                                        preco.getChavesPreco().getUnidadeProduto(),
+                                        preco.getChavesPreco().getDataPreco()
+                                );
 
-                            preco.setChavesPreco(precoID);
-                            preco.setId(
-                                    preco.getChavesPreco().getId()
-                                            + "-"
-                                            + preco.getChavesPreco().getIdCliente()
-                                            + "-"
-                                            + preco.getChavesPreco().getIdProduto()
-                                            + "-"
-                                            + preco.getChavesPreco().getUnidadeProduto() + "-" + preco
-                                            .getChavesPreco().getDataPreco());
-                            realm.copyToRealmOrUpdate(new PrecoORM(preco));
-                        });
+                        preco.setChavesPreco(precoID);
+                        preco.setId(
+                                preco.getChavesPreco().getId()
+                                        + "-"
+                                        + preco.getChavesPreco().getIdCliente()
+                                        + "-"
+                                        + preco.getChavesPreco().getIdProduto()
+                                        + "-"
+                                        + preco.getChavesPreco().getUnidadeProduto() + "-" + preco
+                                        .getChavesPreco().getDataPreco());
+                        realm.copyToRealmOrUpdate(new PrecoORM(preco));
+
+                    }
+                }
 
                 realm.commitTransaction();
                 Log.d("Importacao Precos", "Sucess");
@@ -179,7 +216,13 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
                 List<Produto> produtos = responseProdutos.body();
                 Realm realm = Realm.getDefaultInstance();
                 realm.beginTransaction();
-                produtos.forEach(produto->realm.copyToRealmOrUpdate(new ProdutoORM(produto)));
+                if (VERSION.SDK_INT >= VERSION_CODES.N) {
+                    produtos.forEach(produto->realm.copyToRealmOrUpdate(new ProdutoORM(produto)));
+                } else {
+                    for (Produto produto : produtos) {
+                        realm.copyToRealmOrUpdate(new ProdutoORM(produto));
+                    }
+                }
                 realm.commitTransaction();
                 Log.d("Importacao de Produtos", "Sucess");
                 return true;
@@ -203,11 +246,17 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
                 List<Recebimento> recebimentos = responseRecebimentoDTO.body();
                 Realm realm = Realm.getDefaultInstance();
                 realm.beginTransaction();
-                recebimentos.forEach(
-                        recebimento->{
-                            recebimento.setId(recebimento.getIdVenda());
-                            realm.copyToRealmOrUpdate(new RecebimentoORM(recebimento));
-                        });
+                if (VERSION.SDK_INT >= VERSION_CODES.N) {
+                    recebimentos.forEach(
+                            recebimento->{
+                                recebimento.setId(recebimento.getIdVenda());
+                                realm.copyToRealmOrUpdate(new RecebimentoORM(recebimento));
+                            });
+                } else {
+                    for (Recebimento recebimento : recebimentos) {
+                        realm.copyToRealmOrUpdate(new RecebimentoORM(recebimento));
+                    }
+                }
                 realm.commitTransaction();
             }
 
@@ -228,9 +277,15 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
             List<TipoRecebimento> tipoRecebimentos = responseTipoRecebimento.body();
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
-            tipoRecebimentos.forEach(
-                    tipoRecebimento->
-                            realm.copyToRealmOrUpdate(new TipoRecebimentoORM(tipoRecebimento)));
+            if (VERSION.SDK_INT >= VERSION_CODES.N) {
+                tipoRecebimentos.forEach(
+                        tipoRecebimento->
+                                realm.copyToRealmOrUpdate(new TipoRecebimentoORM(tipoRecebimento)));
+            } else {
+                for (TipoRecebimento tipoRecebimento : tipoRecebimentos) {
+                    realm.copyToRealmOrUpdate(new TipoRecebimentoORM(tipoRecebimento));
+                }
+            }
             realm.commitTransaction();
             Log.d("Importacao Tipo", "Sucess");
             return true;
@@ -249,14 +304,24 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
                 List<Unidade> unidades = responseUnidades.body();
                 Realm realm = Realm.getDefaultInstance();
                 realm.beginTransaction();
-                unidades.forEach(
-                        unidade->{
-                            unidade.setId(
-                                    unidade.getChavesUnidade().getIdUnidade()
-                                            + "-"
-                                            + unidade.getChavesUnidade().getIdProduto());
-                            realm.copyToRealmOrUpdate(new UnidadeORM(unidade));
-                        });
+                if (VERSION.SDK_INT >= VERSION_CODES.N) {
+                    unidades.forEach(
+                            unidade->{
+                                unidade.setId(
+                                        unidade.getChavesUnidade().getIdUnidade()
+                                                + "-"
+                                                + unidade.getChavesUnidade().getIdProduto());
+                                realm.copyToRealmOrUpdate(new UnidadeORM(unidade));
+                            });
+                } else {
+                    for (Unidade unidade : unidades) {
+                        unidade.setId(
+                                unidade.getChavesUnidade().getIdUnidade()
+                                        + "-"
+                                        + unidade.getChavesUnidade().getIdProduto());
+                        realm.copyToRealmOrUpdate(new UnidadeORM(unidade));
+                    }
+                }
                 realm.commitTransaction();
                 Log.d("Importacao de  Unidades", "Sucess");
                 return true;

@@ -1,5 +1,7 @@
 package com.br.minasfrango.data.dao;
 
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.realm.PedidoORM;
@@ -53,12 +55,19 @@ public class PedidoDAO extends GenericsDAO<PedidoORM> {
         return null;
     }
 
+
     public List<Pedido> pesquisarPedidosPorCliente(Cliente cliente) {
         List<Pedido> pedidos = new ArrayList<>();
         RealmResults<PedidoORM> results =
                 where().equalTo("codigoCliente", cliente.getId()).findAll();
         if (results.size() > 0 && results != null) {
-            results.forEach(item->pedidos.add(new Pedido(item)));
+            if (VERSION.SDK_INT >= VERSION_CODES.N) {
+                results.forEach(pedidoORM->pedidos.add(new Pedido(pedidoORM)));
+            } else {
+                for (PedidoORM pedidoORM : results) {
+                    pedidos.add(new Pedido(pedidoORM));
+                }
+            }
         }
 
         return pedidos;
@@ -94,7 +103,13 @@ public class PedidoDAO extends GenericsDAO<PedidoORM> {
     public List<Pedido> todos() {
         List<Pedido> pedidos = new ArrayList<>();
         RealmResults<PedidoORM> results = where().findAll();
-        results.forEach(item->pedidos.add(new Pedido(item)));
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            results.forEach(pedidoORM->pedidos.add(new Pedido(pedidoORM)));
+        } else {
+            for (PedidoORM pedidoORM : results) {
+                pedidos.add(new Pedido(pedidoORM));
+            }
+        }
         return pedidos;
     }
 

@@ -1,5 +1,6 @@
 package com.br.minasfrango.ui.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -28,12 +29,10 @@ import com.br.minasfrango.ui.adapter.RecebimentoAdapter;
 import com.br.minasfrango.ui.mvp.recebimento.IRecebimentoMVP;
 import com.br.minasfrango.ui.mvp.recebimento.Presenter;
 import com.br.minasfrango.util.CameraUtil;
-import com.br.minasfrango.util.ConstantsUtil;
 import com.br.minasfrango.util.ControleSessao;
 import com.br.minasfrango.util.CurrencyEditText;
 import com.br.minasfrango.util.DateUtils;
 import com.br.minasfrango.util.FormatacaoMoeda;
-import com.hussain_chachuliya.customcamera.CustomCamera;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -115,7 +114,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
 
         txtValorTotalDevido.setText(
                 FormatacaoMoeda.converterParaDolar(
-                        mPresenter.getValueTotalDevido().doubleValue()));
+                        mPresenter.getValorTotalDevido().doubleValue()));
         adapter = new RecebimentoAdapter(mPresenter);
         rcvRecebimento.setAdapter(adapter);
 
@@ -193,12 +192,12 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CustomCamera.IMAGE_SAVE_REQUEST) {
+        if (requestCode == CameraUtil.RESULTADO_INTENCAO_FOTO) {
             if (resultCode == RESULT_OK) {
 
                 AbstractActivity.showToast(
                         mPresenter.getContext(),
-                        "Imagem salva em :" + data.getStringExtra(CustomCamera.IMAGE_PATH));
+                        "Imagem salva em :" + data.getStringExtra(CameraUtil.LOCAL_ONDE_A_IMAGEM_FOI_SALVA));
                 this.finish();
 
 
@@ -217,7 +216,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
         txtValorTotalDevido.setText(
                 FormatacaoMoeda.converterParaDolar(
                         mPresenter
-                                .getValueTotalDevido()
+                                .getValorTotalDevido()
                                 .subtract(mPresenter.getValorTotalAmortizado())
                                 .doubleValue()));
     }
@@ -253,8 +252,8 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
                 + DateUtils.formatarDateddMMyyyyhhmmParaString(
                 new Date(System.currentTimeMillis())).replace("/", "-")
                 + mPresenter.getCliente().getNome();
-        CameraUtil cameraUtil = new CameraUtil(mPresenter.getContext());
-        cameraUtil.inicializarCamera(ConstantsUtil.CAMINHO_IMAGEM_RECEBIMENTOS, nomeFoto);
+        CameraUtil cameraUtil = new CameraUtil((Activity) mPresenter.getContext());
+        cameraUtil.tirarFoto(CameraUtil.CAMINHO_IMAGEM_RECEBIMENTOS, nomeFoto);
 
     }
 

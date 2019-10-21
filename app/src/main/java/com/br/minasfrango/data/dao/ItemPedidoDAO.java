@@ -1,5 +1,7 @@
 package com.br.minasfrango.data.dao;
 
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.data.model.ItemPedido;
 import com.br.minasfrango.data.realm.ItemPedidoORM;
 import com.br.minasfrango.data.realm.PedidoORM;
@@ -48,6 +50,7 @@ public class ItemPedidoDAO extends GenericsDAO<ItemPedidoORM> {
         return id;
     }
 
+
     public List<ItemPedido> allItensByPedido(PedidoORM pedidoORM) {
         List<ItemPedido> itens = new ArrayList<>();
         RealmResults<ItemPedidoORM> results =
@@ -55,7 +58,14 @@ public class ItemPedidoDAO extends GenericsDAO<ItemPedidoORM> {
                         .findAll();
         if (results.size() > 0 && results != null) {
 
-            results.forEach(itemPedidoORM->itens.add(new ItemPedido(itemPedidoORM)));
+            if (VERSION.SDK_INT >= VERSION_CODES.N) {
+                results.forEach(itemPedidoORM->itens.add(new ItemPedido(itemPedidoORM)));
+            } else {
+                for (ItemPedidoORM itemPedidoORM : results) {
+
+                    itens.add(new ItemPedido(itemPedidoORM));
+                }
+            }
 
             return itens;
         }

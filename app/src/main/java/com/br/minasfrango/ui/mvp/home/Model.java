@@ -1,5 +1,7 @@
 package com.br.minasfrango.ui.mvp.home;
 
+import android.os.Build.VERSION_CODES;
+import androidx.annotation.RequiresApi;
 import com.br.minasfrango.data.dao.ClientDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
 import com.br.minasfrango.data.dao.RecebimentoDAO;
@@ -31,11 +33,13 @@ public class Model implements IModel {
         mPresenter = presenter;
     }
 
+    @RequiresApi(api = VERSION_CODES.N)
     @Override
     public List<Rota> obterTodasRotas() {
         return mRouteDAO.todos();
     }
 
+    @RequiresApi(api = VERSION_CODES.N)
     @Override
     public List<Cliente> obterTodosClientes() {
         return mClientDAO.todos();
@@ -51,6 +55,7 @@ public class Model implements IModel {
         return mClientDAO.pesquisarClientePorRota(rota);
     }
 
+    @RequiresApi(api = VERSION_CODES.N)
     @Override
     public List<Recebimento> pesquisarRecebimentoPorCliente(final Cliente cliente) {
         return mRecebimentoDAO.pesquisarRecebimentoPorCliente(cliente);

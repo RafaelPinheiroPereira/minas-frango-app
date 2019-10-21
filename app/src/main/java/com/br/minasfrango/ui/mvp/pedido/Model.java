@@ -1,5 +1,7 @@
 package com.br.minasfrango.ui.mvp.pedido;
 
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.data.dao.ClientDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
 import com.br.minasfrango.data.model.Cliente;
@@ -35,14 +37,24 @@ public class Model implements IModel {
         List<ClientePedido> clientePedidos = new ArrayList<>();
         List<Cliente> clientes = pesquisarClientePorPedido(todosPedidos());
 
-        clientes.forEach(
-                cliente->{
-                    List<Pedido> pedidos;
-                    pedidos = mPedidoDAO.pesquisarPedidosPorCliente(cliente);
-                    if (pedidos.size() > 0) {
-                    }
-                    clientePedidos.add(new ClientePedido(cliente, pedidos));
-                });
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            clientes.forEach(
+                    cliente->{
+                        List<Pedido> pedidos;
+                        pedidos = mPedidoDAO.pesquisarPedidosPorCliente(cliente);
+                        if (pedidos.size() > 0) {
+                        }
+                        clientePedidos.add(new ClientePedido(cliente, pedidos));
+                    });
+        } else {
+            for (Cliente cliente : clientes) {
+                List<Pedido> pedidos;
+                pedidos = mPedidoDAO.pesquisarPedidosPorCliente(cliente);
+                if (pedidos.size() > 0) {
+                }
+                clientePedidos.add(new ClientePedido(cliente, pedidos));
+            }
+        }
 
         return clientePedidos;
     }

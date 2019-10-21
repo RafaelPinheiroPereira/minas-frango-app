@@ -1,5 +1,6 @@
 package com.br.minasfrango.ui.activity;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -52,12 +55,10 @@ import com.br.minasfrango.ui.mvp.venda.IVendaMVP.IView;
 import com.br.minasfrango.ui.mvp.venda.Presenter;
 import com.br.minasfrango.util.AlertDialogItemPedido;
 import com.br.minasfrango.util.CameraUtil;
-import com.br.minasfrango.util.ConstantsUtil;
 import com.br.minasfrango.util.ControleSessao;
 import com.br.minasfrango.util.CurrencyEditText;
 import com.br.minasfrango.util.DateUtils;
 import com.br.minasfrango.util.FormatacaoMoeda;
-import com.hussain_chachuliya.customcamera.CustomCamera;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Date;
@@ -150,10 +151,20 @@ public class VendasActivity extends AppCompatActivity implements IView {
         mPresenter.getParametros();
         setAdaptadores();
         try {
-            if (Optional.ofNullable(mPresenter.getPedido()).isPresent()) {
-                mPresenter.carregarDadosDaVenda();
+            if (VERSION.SDK_INT >= VERSION_CODES.N) {
+                if (Optional.ofNullable(mPresenter.getPedido()).isPresent()) {
+                    mPresenter.carregarDadosDaVenda();
+                } else {
+                    inicializarSwipe();
+                }
             } else {
-                inicializarSwipe();
+                if (mPresenter.getPedido() != null) {
+                    mPresenter.carregarDadosDaVenda();
+                } else {
+                    inicializarSwipe();
+                }
+
+
             }
         } catch (Throwable throwable) {
             throwable.printStackTrace();
@@ -194,12 +205,12 @@ public class VendasActivity extends AppCompatActivity implements IView {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CustomCamera.IMAGE_SAVE_REQUEST) {
+        if (requestCode == CameraUtil.RESULTADO_INTENCAO_FOTO) {
             if (resultCode == RESULT_OK) {
 
                 AbstractActivity.showToast(
                         mPresenter.getContext(),
-                        "Imagem salva em :" + data.getStringExtra(CustomCamera.IMAGE_PATH));
+                        "Imagem salva: " + CameraUtil.LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
                 this.finish();
 
 
@@ -233,16 +244,35 @@ public class VendasActivity extends AppCompatActivity implements IView {
             }
             mPresenter.getItemPedido().setChavesItemPedido(itemPedidoID);
 
-            //if (!mPresenter.getItens().contains(mPresenter.getItemPedido().getChavesItemPedido().getIdProduto())) {
-            if (mPresenter.getItens().stream()
-                    .filter(itemPedido->itemPedido.getChavesItemPedido().getIdProduto() == mPresenter.getItemPedido()
-                            .getChavesItemPedido().getIdProduto()).count() == 0) {
-                mPresenter.getItens().add(mPresenter.getItemPedido());
-                mPresenter.atualizarRecyclerItens();
+            if (VERSION.SDK_INT >= VERSION_CODES.N) {
+                if (mPresenter.getItens().stream()
+                        .filter(itemPedido->itemPedido.getChavesItemPedido().getIdProduto() == mPresenter
+                                .getItemPedido()
+                                .getChavesItemPedido().getIdProduto()).count() == 0) {
+                    mPresenter.getItens().add(mPresenter.getItemPedido());
+                    mPresenter.atualizarRecyclerItens();
 
+                } else {
+                    AbstractActivity.showToast(
+                            mPresenter.getContext(), "O produto já existe na lista!");
+                }
             } else {
-                AbstractActivity.showToast(
-                        mPresenter.getContext(), "O produto já existe na lista!");
+                boolean temItemNaLista = false;
+
+                for (ItemPedido itemPedido : mPresenter.getItens()) {
+                    if (itemPedido.getChavesItemPedido().getIdProduto() == mPresenter.getItemPedido()
+                            .getChavesItemPedido().getIdProduto()) {
+                        temItemNaLista = true;
+                    }
+                }
+                if (!temItemNaLista) {
+                    mPresenter.getItens().add(mPresenter.getItemPedido());
+                    mPresenter.atualizarRecyclerItens();
+                } else {
+                    AbstractActivity.showToast(
+                            mPresenter.getContext(), "O produto já existe na lista!");
+                }
+
             }
         }
     }
@@ -257,10 +287,18 @@ public class VendasActivity extends AppCompatActivity implements IView {
     @Override
     public void atualizarTextViewValorTotalProduto() {
 
-        if (Optional.ofNullable(mPresenter.getPreco()).isPresent()) {
-            mPresenter.getPreco().setValor(cetPrecoUnitario.getCurrencyDouble());
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            if (Optional.ofNullable(mPresenter.getPreco()).isPresent()) {
+                mPresenter.getPreco().setValor(cetPrecoUnitario.getCurrencyDouble());
+            } else {
+                mPresenter.setPreco(new Preco());
+            }
         } else {
-            mPresenter.setPreco(new Preco());
+            if (mPresenter.getPreco() != null) {
+                mPresenter.getPreco().setValor(cetPrecoUnitario.getCurrencyDouble());
+            } else {
+                mPresenter.setPreco(new Preco());
+            }
         }
         mPresenter.setQuantidadeProdutos(
                 new BigDecimal(
@@ -402,8 +440,11 @@ public class VendasActivity extends AppCompatActivity implements IView {
                 + DateUtils.formatarDateddMMyyyyParaString(
                 mPresenter.getPedido().getDataPedido()).replace("/", "-")
                 + mPresenter.getCliente().getNome();
-        CameraUtil cameraUtil = new CameraUtil(mPresenter.getContext());
-        cameraUtil.inicializarCamera(ConstantsUtil.CAMINHO_IMAGEM_VENDAS, nomeFoto);
+
+        CameraUtil cameraUtil = new CameraUtil((Activity) mPresenter.getContext());
+        cameraUtil.tirarFoto(CameraUtil.CAMINHO_IMAGEM_VENDAS, nomeFoto);
+
+
 
     }
 

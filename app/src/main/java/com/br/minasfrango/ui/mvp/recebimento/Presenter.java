@@ -2,6 +2,8 @@ package com.br.minasfrango.ui.mvp.recebimento;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Recebimento;
 import com.br.minasfrango.ui.mvp.recebimento.IRecebimentoMVP.IView;
@@ -32,7 +34,7 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
 
     BigDecimal valorTotalAmortizado;
 
-    BigDecimal valueTotalDevido;
+    BigDecimal valorTotalDevido;
 
     IRecebimentoMVP.IView view;
 
@@ -60,7 +62,7 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
 
     @Override
     public void calcularAmortizacaoAutomatica() {
-        this.mModel.calculateAmortizationAutomatic();
+        this.mModel.calcularAmortizacaoAutomatica();
     }
 
     @Override
@@ -71,11 +73,20 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
     @Override
     public BigDecimal getValorTotalAmortizado() {
 
-        return this.valorTotalAmortizado =
-                new BigDecimal(
-                        getRecebimentos().stream()
-                                .mapToDouble(Recebimento::getValorAmortizado)
-                                .sum());
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            return this.valorTotalAmortizado =
+                    new BigDecimal(
+                            getRecebimentos().stream()
+                                    .mapToDouble(Recebimento::getValorAmortizado)
+                                    .sum());
+        } else {
+            double valorAmortizado = 0.0;
+            for (Recebimento recebimento : this.getRecebimentos()) {
+                valorAmortizado += recebimento.getValorAmortizado();
+            }
+
+            return this.valorTotalAmortizado = new BigDecimal(valorAmortizado);
+        }
     }
 
     @Override
@@ -189,13 +200,21 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
     }
 
     @Override
-    public BigDecimal getValueTotalDevido() {
-        valueTotalDevido =
-                new BigDecimal(
-                        this.getRecebimentos().stream()
-                                .mapToDouble(Recebimento::getValorVenda)
-                                .sum());
-        return valueTotalDevido;
+    public BigDecimal getValorTotalDevido() {
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            valorTotalDevido =
+                    new BigDecimal(
+                            this.getRecebimentos().stream()
+                                    .mapToDouble(Recebimento::getValorVenda)
+                                    .sum());
+        } else {
+            double valorVenda = 0.0;
+            for (Recebimento recebimento : this.getRecebimentos()) {
+                valorVenda += recebimento.getValorVenda();
+            }
+            valorTotalDevido = new BigDecimal(valorVenda);
+        }
+        return valorTotalDevido;
     }
 
     @Override

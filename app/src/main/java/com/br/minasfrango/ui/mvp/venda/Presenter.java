@@ -2,6 +2,8 @@ package com.br.minasfrango.ui.mvp.venda;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import androidx.appcompat.app.AlertDialog;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.ItemPedido;
@@ -18,6 +20,7 @@ import com.br.minasfrango.util.ImpressoraUtil;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Presenter implements IVendaMVP.IPresenter {
@@ -124,7 +127,15 @@ public class Presenter implements IVendaMVP.IPresenter {
 
     @Override
     public Double calcularTotalDaVenda() {
-        return getItens().stream().mapToDouble(ItemPedido::getValorTotal).sum();
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            return getItens().stream().mapToDouble(ItemPedido::getValorTotal).sum();
+        } else {
+            double valorTotalVenda = 0.0;
+            for (ItemPedido itemPedido : getItens()) {
+                valorTotalVenda += itemPedido.getValorTotal();
+            }
+            return valorTotalVenda;
+        }
     }
 
     @Override
@@ -360,13 +371,20 @@ public class Presenter implements IVendaMVP.IPresenter {
 
         Pedido pedido = new Pedido();
         pedido.setDataPedido(
-                DateUtils.formatarDateParaddMMyyyyhhmm(new java.util.Date(System.currentTimeMillis())));
+                DateUtils.formatarDateParaddMMyyyyhhmm(new Date(System.currentTimeMillis())));
         // Agora setar o id definitivo do item do pedido
 
-        getItens().forEach(item->{
-            this.mModel.criarChaveItemPedido(item.getChavesItemPedido());
-            this.mModel.addItemPedido(item);
-        });
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            getItens().forEach(item->{
+                this.mModel.criarChaveItemPedido(item.getChavesItemPedido());
+                this.mModel.addItemPedido(item);
+            });
+        } else {
+            for (ItemPedido itemPedido : getItens()) {
+                this.mModel.criarChaveItemPedido(itemPedido.getChavesItemPedido());
+                this.mModel.addItemPedido(itemPedido);
+            }
+        }
         ControleSessao controleSessao = new ControleSessao(getContext());
         pedido.setCodigoFuncionario(controleSessao.getIdUsuario());
         pedido.setCodigoCliente(getCliente().getId());
@@ -379,12 +397,19 @@ public class Presenter implements IVendaMVP.IPresenter {
         long idSaleOrder = this.mModel.salvarPedido(pedidoORM);
 
         // Seta a chave composta do item pedidoORM com o id da venda
-        getItens().forEach(item->{
-            item.getChavesItemPedido().setIdVenda(idSaleOrder);
-            this.mModel.atualizarChaveItemPedido(item.getChavesItemPedido());
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            getItens().forEach(item->{
+                item.getChavesItemPedido().setIdVenda(idSaleOrder);
+                this.mModel.atualizarChaveItemPedido(item.getChavesItemPedido());
 
 
-        });
+            });
+        } else {
+            for (ItemPedido itemPedido : getItens()) {
+                itemPedido.getChavesItemPedido().setIdVenda(idSaleOrder);
+                this.mModel.atualizarChaveItemPedido(itemPedido.getChavesItemPedido());
+            }
+        }
         pedido.setItens(getItens());
         pedido.setId(pedidoORM.getId());
 

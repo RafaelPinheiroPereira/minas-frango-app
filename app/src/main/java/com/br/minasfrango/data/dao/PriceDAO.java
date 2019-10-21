@@ -1,5 +1,7 @@
 package com.br.minasfrango.data.dao;
 
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.data.model.Preco;
 import com.br.minasfrango.data.model.Produto;
 import com.br.minasfrango.data.realm.PrecoORM;
@@ -46,9 +48,18 @@ public class PriceDAO extends GenericsDAO<PrecoORM> {
 
     }
 
+
     public List<PrecoORM> getAll() {
         List<PrecoORM> precoORM = new ArrayList<>();
-        where().findAll().forEach(item->precoORM.add(item));
+        RealmResults<PrecoORM> results = where().findAll();
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            results.forEach(item->precoORM.add(item));
+        } else {
+            for (PrecoORM item : results) {
+                precoORM.add(item);
+            }
+
+        }
         return precoORM;
     }
 }

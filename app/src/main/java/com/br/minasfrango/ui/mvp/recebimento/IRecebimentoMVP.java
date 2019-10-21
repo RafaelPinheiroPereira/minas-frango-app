@@ -65,7 +65,7 @@ public interface IRecebimentoMVP {
 
         List<Recebimento> getRecebimentos();
 
-        BigDecimal getValueTotalDevido();
+        BigDecimal getValorTotalDevido();
 
         List<Recebimento> obterRecebimentoPorCliente();
 
@@ -100,7 +100,7 @@ public interface IRecebimentoMVP {
 
     interface IModel {
 
-        void calculateAmortizationAutomatic();
+        void calcularAmortizacaoAutomatica();
 
         void calcularArmotizacaoManual(int position);
 

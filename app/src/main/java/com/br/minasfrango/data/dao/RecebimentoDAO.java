@@ -1,5 +1,7 @@
 package com.br.minasfrango.data.dao;
 
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Recebimento;
 import com.br.minasfrango.data.realm.RecebimentoORM;
@@ -39,6 +41,7 @@ public class RecebimentoDAO extends GenericsDAO<RecebimentoORM> {
         return null;
     }
 
+
     public ArrayList<Recebimento> pesquisarRecebimentoPorCliente(Cliente cliente) {
         ArrayList<Recebimento> recebimentos = new ArrayList<>();
 
@@ -50,7 +53,14 @@ public class RecebimentoDAO extends GenericsDAO<RecebimentoORM> {
                         .findAll();
 
         if (results != null && results.size() > 0) {
-            results.forEach(item->recebimentos.add(new Recebimento(item)));
+            if (VERSION.SDK_INT >= VERSION_CODES.N) {
+                results.forEach(item->recebimentos.add(new Recebimento(item)));
+            } else {
+                for (RecebimentoORM recebimentoORM : results) {
+                    recebimentos.add(new Recebimento(recebimentoORM));
+
+                }
+            }
         }
 
         return recebimentos;

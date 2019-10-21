@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.R;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.ItemPedido;
@@ -213,14 +215,36 @@ public class ImpressoraUtil {
                         + DateUtils.formatarDateddMMyyyyhhmmParaString(pedido.getDataPedido())
                         + "{br}");
         textBuffer.append("{b}CLIENTE: " + cliente.getNome() + "{br}");
-        textBuffer.append(
-                "{b}BICOS: "
-                        + pedido.getItens().stream().mapToInt(ItemPedido::getBicos).sum()
-                        + "{br}");
-        textBuffer.append(
-                "{b}PESO: "
-                        + pedido.getItens().stream().mapToInt(ItemPedido::getQuantidade).sum() + " KG"
-                        + "{br}");
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            textBuffer.append(
+                    "{b}BICOS: "
+                            + pedido.getItens().stream().mapToInt(ItemPedido::getBicos).sum()
+                            + "{br}");
+        } else {
+            int quantidadeBicos = 0;
+            for (ItemPedido itemPedido : pedido.getItens()) {
+                quantidadeBicos += itemPedido.getBicos();
+            }
+            textBuffer.append(
+                    "{b}BICOS: "
+                            + quantidadeBicos
+                            + "{br}");
+        }
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            textBuffer.append(
+                    "{b}PESO: "
+                            + pedido.getItens().stream().mapToInt(ItemPedido::getQuantidade).sum() + " KG"
+                            + "{br}");
+        } else {
+            int pesoTotal = 0;
+            for (ItemPedido itemPedido : pedido.getItens()) {
+                pesoTotal += itemPedido.getQuantidade();
+            }
+            textBuffer.append(
+                    "{b}PESO: "
+                            + pesoTotal + " KG"
+                            + "{br}");
+        }
         textBuffer.append("{br}VENDEDOR: " + new ControleSessao(this.activity).getUserName());
         textBuffer.append("{br}");
         textBuffer.append("{reset}{left}{w}{h}________________");
@@ -234,16 +258,35 @@ public class ImpressoraUtil {
 
         // Calcular valor total amortizado
         Double valorTotalAmortizado =
-                recebimentos.stream().mapToDouble(Recebimento::getValorAmortizado).sum();
-
+                null;
+        String strDataRecebimento = "";
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            valorTotalAmortizado = recebimentos.stream().mapToDouble(Recebimento::getValorAmortizado).sum();
+        } else {
+            for (Recebimento recebimento : recebimentos) {
+                valorTotalAmortizado += recebimento.getValorAmortizado();
+            }
+        }
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
         // Filtra um item checkado (Amortizado) para obter a data do recebimento
         Optional<Recebimento> recebimento =
                 recebimentos.stream().filter(item->item.isCheck()).findAny();
 
         // Data do recebimento
-        String strDataRecebimento =
-                DateUtils.formatarDateddMMyyyyhhmmParaString(
-                        recebimento.get().getDataRecebimento());
+
+            strDataRecebimento = DateUtils.formatarDateddMMyyyyhhmmParaString(
+                    recebimento.get().getDataRecebimento());
+        } else {
+
+            for (Recebimento recebimento : recebimentos) {
+                if (recebimento.isCheck()) {
+                    strDataRecebimento = DateUtils.formatarDateddMMyyyyhhmmParaString(
+                            recebimento.getDataRecebimento());
+                }
+            }
+
+
+        }
 
         StringBuffer textBuffer = new StringBuffer();
         textBuffer.append("{center}{b}MINAS FRANGOS ");

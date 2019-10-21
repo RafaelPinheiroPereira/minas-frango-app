@@ -1,7 +1,10 @@
 package com.br.minasfrango.data.dao;
 
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.data.model.Produto;
 import com.br.minasfrango.data.realm.ProdutoORM;
+import io.realm.RealmResults;
 import io.realm.Sort;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +27,17 @@ public class ProductDAO extends GenericsDAO<ProdutoORM> {
         return new Produto(where().equalTo("nome", productName).findFirst());
     }
 
+
     public List<Produto> getAll() {
         List<Produto> produtos = new ArrayList<>();
-        where().findAll().sort("nome", Sort.ASCENDING).forEach(item->produtos.add(new Produto(item)));
+        RealmResults<ProdutoORM> results = where().findAll().sort("nome", Sort.ASCENDING);
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            results.forEach(produtoORM->produtos.add(new Produto(produtoORM)));
+        } else {
+            for (ProdutoORM produtoORM : results) {
+                produtos.add(new Produto(produtoORM));
+            }
+        }
         return produtos;
 
     }

@@ -1,5 +1,7 @@
 package com.br.minasfrango.data.dao;
 
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.data.model.Produto;
 import com.br.minasfrango.data.model.Unidade;
 import com.br.minasfrango.data.realm.ProdutoORM;
@@ -38,6 +40,7 @@ public class UnidadeDAO extends GenericsDAO<UnidadeORM> {
         return new Unidade(unity);
     }
 
+
     public List<String> findUnitysOfProductsToString(ProdutoORM product) {
         ArrayList<String> strUnidades = new ArrayList<String>();
         RealmResults<UnidadeORM> results =
@@ -46,13 +49,27 @@ public class UnidadeDAO extends GenericsDAO<UnidadeORM> {
                         .and()
                         .notEqualTo("unidadePadrao", "S")
                         .findAll();
-        results.forEach(item->strUnidades.add(new Unidade(item).getNome()));
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            results.forEach(item->strUnidades.add(new Unidade(item).getNome()));
+        } else {
+            for (UnidadeORM unidadeORM : results) {
+                strUnidades.add(new Unidade(unidadeORM).getNome());
+            }
+        }
         return strUnidades;
     }
 
     public List<Unidade> getAll() {
         List<Unidade> unidade = new ArrayList<>();
-        where().findAll().forEach(item->unidade.add(new Unidade(item)));
+        RealmResults<UnidadeORM> results = where().findAll();
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            results.forEach(item->unidade.add(new Unidade(item)));
+        } else {
+            for (UnidadeORM unidadeORM : results) {
+                unidade.add(new Unidade(unidadeORM));
+            }
+
+        }
         return unidade;
     }
 

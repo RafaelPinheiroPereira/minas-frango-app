@@ -1,5 +1,7 @@
 package com.br.minasfrango.data.dao;
 
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.TipoRecebimento;
 import com.br.minasfrango.data.realm.TipoRecebimentoORM;
@@ -27,12 +29,13 @@ public class TipoRecebimentoDAO {
         realm = Realm.getDefaultInstance();
     }
 
-    public ArrayList<String> pesquisarTipoRecebimentoPorId() throws Throwable {
-        ArrayList<String> formas = new ArrayList<String>();
-        RealmResults<TipoRecebimentoORM> results = where().equalTo("id", 1).findAll();
-        Optional.ofNullable(results).orElseThrow(NullPointerException::new);
-        results.forEach(item->formas.add(String.valueOf(item.getNome())));
-        return formas;
+    public TipoRecebimento findById(long id) throws Throwable {
+        TipoRecebimentoORM result = where().equalTo("id", id).findAll().first();
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            return Optional.ofNullable(new TipoRecebimento(result)).orElseThrow(Throwable::new);
+        } else {
+            return result != null ? new TipoRecebimento(result) : new TipoRecebimento();
+        }
     }
 
     public int codigoFormaPagamento(String descricaoFormaPagamento) {
@@ -48,9 +51,22 @@ public class TipoRecebimentoDAO {
         return codigo;
     }
 
-    public TipoRecebimento findById(long id) throws Throwable {
-        TipoRecebimentoORM result = where().equalTo("id", id).findAll().first();
-        return Optional.ofNullable(new TipoRecebimento(result)).orElseThrow(Throwable::new);
+    public ArrayList<String> pesquisarTipoRecebimentoPorId() throws Throwable {
+        ArrayList<String> formas = new ArrayList<String>();
+        RealmResults<TipoRecebimentoORM> results = where().equalTo("id", 1).findAll();
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            Optional.ofNullable(results).orElseThrow(NullPointerException::new);
+            results.forEach(item->formas.add(String.valueOf(item.getNome())));
+        } else {
+            if (results != null && results.size() > 0) {
+                for (TipoRecebimentoORM tipoRecebimentoORM : results) {
+                    formas.add(String.valueOf(tipoRecebimentoORM.getNome()));
+                }
+            } else {
+                new Throwable("Tipo de Recebimento dados nao encontrados");
+            }
+        }
+        return formas;
     }
 
     public List<TipoRecebimento> findTipoRecebimentoByCliente(Cliente cliente) {
