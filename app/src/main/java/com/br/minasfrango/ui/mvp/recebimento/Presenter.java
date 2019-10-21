@@ -175,7 +175,7 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
     }
 
     @Override
-    public BigDecimal getCredit() {
+    public BigDecimal getCredito() {
         return this.credit;
     }
 
@@ -190,7 +190,7 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
     }
 
     @Override
-    public void setCredit(final BigDecimal credit) {
+    public void setCredito(final BigDecimal credit) {
         this.credit = credit;
     }
 
@@ -236,7 +236,7 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
 
     @Override
     public void setAutomaticNoteSelectionOrder() {
-        this.mModel.setAutomaticNoteSelectionOrder();
+        this.mModel.setOrdenarSelecaoAutomaticaDasNotas();
     }
 
     @Override
@@ -279,6 +279,6 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
 
     @Override
     public boolean valorTotalDevidoEhMenorOuIgualAoCredito() {
-        return this.mModel.totalValueOfDebtISLessTranCreditOrEquals();
+        return this.mModel.ehMenorOuIgualAoCreditoOValorDoDebito();
     }
 }

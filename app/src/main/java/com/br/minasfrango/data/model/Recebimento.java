@@ -1,8 +1,11 @@
 package com.br.minasfrango.data.model;
 
 import com.br.minasfrango.data.realm.RecebimentoORM;
+
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,8 +14,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class Recebimento implements Serializable {
+@EqualsAndHashCode()
+public class Recebimento implements Serializable, Comparable<Recebimento> {
 
     private boolean check = false;
 
@@ -51,5 +54,19 @@ public class Recebimento implements Serializable {
         this.valorVenda = recebimentoORM.getValorVenda();
         this.orderSelected = recebimentoORM.getOrderSelected();
         this.idVenda = recebimentoORM.getIdVenda();
+    }
+
+
+
+
+    @Override
+    public int compareTo(Recebimento outroRecebimento) {
+        if (this.getOrderSelected() > outroRecebimento.getOrderSelected()) {
+            return 1;
+        } else if (this.getOrderSelected() < outroRecebimento.getOrderSelected()) {
+            return -1;
+        } else {
+            return 0;
+        }
     }
 }

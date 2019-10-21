@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -28,7 +29,7 @@ public class ClienteAdapter
             implements View.OnClickListener, View.OnLongClickListener {
 
         @BindView(R.id.btnReceber)
-        public ImageView imgReceber;
+        public Button btnReceber;
 
         public TextView txtAdress;
 
@@ -38,7 +39,7 @@ public class ClienteAdapter
         ImageView imgInfo;
 
         @BindView(R.id.btnVender)
-        ImageView imgVender;
+        Button btnVender;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -47,8 +48,8 @@ public class ClienteAdapter
             txtNameFantasy = itemView.findViewById(R.id.textViewNomeFantasia);
             txtAdress = itemView.findViewById(R.id.textViewEndereco);
 
-            imgVender.setOnClickListener(this);
-            imgReceber.setOnClickListener(this);
+            btnVender.setOnClickListener(this);
+            btnReceber.setOnClickListener(this);
             imgInfo.setOnClickListener(this);
 
 
@@ -149,7 +150,7 @@ public class ClienteAdapter
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View v = mLayoutInflater.inflate(R.layout.cliente_item_new, viewGroup, false);
+        View v = mLayoutInflater.inflate(R.layout.item_recycle_home, viewGroup, false);
         MyViewHolder mvh = new MyViewHolder(v);
         return mvh;
     }

@@ -10,7 +10,7 @@ public interface IViewOrderMVP {
 
     interface IPresenter {
 
-        Pedido getVendaParams(final Bundle extras);
+        Pedido getParametrosDaVenda(final Bundle extras);
 
         Cliente pesquisarClientePorID(long codigoCliente);
 
@@ -40,6 +40,8 @@ public interface IViewOrderMVP {
         Context getContext();
 
         void imprimirComprovante();
+
+        void exibirBotaoFotografar();
     }
 
     interface IModel {
@@ -56,6 +58,8 @@ public interface IViewOrderMVP {
         void exibirBotaoGerarRecibo();
 
         void setDataView();
+
+        void exibirBotaoFotografar();
     }
 
 }

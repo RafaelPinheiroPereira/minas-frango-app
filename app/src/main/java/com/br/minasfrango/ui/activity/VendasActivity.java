@@ -708,7 +708,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
     private void iniciarViews() {
         // Toolbar
 
-        mToolbar.setTitle("Vendas");
+
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         txtValorTotalVenda.setText("R$ 00,00");

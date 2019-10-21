@@ -170,20 +170,28 @@ public class ImpressoraUtil {
                             mProtocolAdapter.getRawOutputStream());
         }
 
-        mPrinter.setConnectionListener(
-                ()->{
-                    abstractActivity.errorMSG(this.activity, "Impressora está desconectada");
+            mPrinter.setConnectionListener(
+                    () -> {
+                        abstractActivity.errorMSG(this.activity, "Impressora está desconectada");
 
-                    abstractActivity.runOnUiThread(
-                            ()->{
-                                if (!activity.isFinishing()) {
-                                    esperarPorConexao();
-                                }
-                            });
-                });
+                        abstractActivity.runOnUiThread(
+                                () -> {
+                                    if (!activity.isFinishing()) {
+                                        esperarPorConexao();
+                                    }
+                                });
+                    });
+
     }
 
     public void status(final String text) {
+
+        abstractActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
 
         abstractActivity.runOnUiThread(
                 ()->{

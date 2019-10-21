@@ -24,9 +24,17 @@ public class GenericsDAO<T extends RealmModel> implements IGenericsDAO<T> {
     }
 
     @Override
-    public T copyOrUpdate(T entity) {
+    public T alterar(T entity) {
         realm.beginTransaction();
         entity = realm.copyToRealmOrUpdate(entity);
+        realm.commitTransaction();
+        return entity;
+    }
+
+    @Override
+    public T inserir(T entity) {
+        realm.beginTransaction();
+        realm.insert(entity);
         realm.commitTransaction();
         return entity;
     }
@@ -40,7 +48,7 @@ public class GenericsDAO<T extends RealmModel> implements IGenericsDAO<T> {
 
 
     @Override
-    public void delete(final T persistentEntity) {
+    public void deletar(final T persistentEntity) {
         realm.beginTransaction();
         realm.delete(persistentEntity.getClass());
         realm.commitTransaction();

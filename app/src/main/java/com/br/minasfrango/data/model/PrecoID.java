@@ -15,15 +15,18 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 public class PrecoID implements Serializable {
 
-    private Date dataPreco;
+
+
+
+
+    private String id;
 
     private double idCliente;
 
     private long idProduto;
 
     private String unidadeProduto;
-
-    private String id;
+    private Date dataPreco;
 
     public PrecoID(PrecoIDORM precoIDORM) {
 

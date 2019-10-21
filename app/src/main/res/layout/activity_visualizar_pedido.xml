@@ -260,6 +260,7 @@
                     app:icon="@mipmap/ic_photo_camera_black_48dp"
                     app:iconGravity="textStart"
                     app:iconTint="@color/white" />
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

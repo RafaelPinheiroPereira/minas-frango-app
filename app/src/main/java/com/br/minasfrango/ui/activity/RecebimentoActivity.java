@@ -141,7 +141,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
                 new TextWatcher() {
                     @Override
                     public void afterTextChanged(final Editable s) {
-                        mPresenter.setCredit(
+                        mPresenter.setCredito(
                                 new BigDecimal(
                                         s.toString().isEmpty()
                                                 ? 0
@@ -197,7 +197,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
 
                 AbstractActivity.showToast(
                         mPresenter.getContext(),
-                        "Imagem salva em :" + data.getStringExtra(CameraUtil.LOCAL_ONDE_A_IMAGEM_FOI_SALVA));
+                        "Imagem salva em :" + CameraUtil.LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
                 this.finish();
 
 
@@ -299,7 +299,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
                 mPresenter.getRecebimentos().addAll(mPresenter.obterRecebimentoPorCliente());
                 mPresenter.atualizarRecycleView();
                 mPresenter.setTypeOfAmortizationIsAutomatic(true);
-                mPresenter.setCredit(new BigDecimal(cetValorAmortizar.getCurrencyDouble()));
+                mPresenter.setCredito(new BigDecimal(cetValorAmortizar.getCurrencyDouble()));
                 mPresenter.calcularAmortizacaoAutomatica();
                 compoundButton.setText("Quitação Automática de Notas");
                 mPresenter.atualizarViewSaldoDevedor();

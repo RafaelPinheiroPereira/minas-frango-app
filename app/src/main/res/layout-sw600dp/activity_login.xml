@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/bg_swipe_item_neutral">
+
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerInParent="true"
+        android:layout_margin="30dp"
+        android:src="@drawable/img_login" />
+
+    <LinearLayout
+        android:id="@+id/lnLoginBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="56dp">
+
+        <!-- Email Label -->
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            style="@style/TextInputLayout"
+            android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:padding="10dp"
+            android:inputType="number"
+            android:hint="Matrícula"
+            android:textSize="20sp"
+            android:textColor="@android:color/primary_text_light" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            style="@style/TextInputLayout"
+            android:layout_height="wrap_content">
+        <!-- Password Label -->
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:padding="10dp"
+            android:fontFamily="sans-serif"
+            android:hint="Senha"
+            android:textSize="20sp"
+            android:inputType="textPassword"
+            android:textColor="@android:color/primary_text_light" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnLogin"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignEnd="@+id/lnLoginBox"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignStart="@+id/lnLoginBox"
+
+        android:layout_marginBottom="131dp"
+        android:layout_marginRight="56dp"
+        android:layout_marginStart="31dp"
+        android:layout_marginTop="120dp"
+        android:gravity="center_horizontal"
+        android:text="@string/acessar"
+        android:textColor="@android:color/primary_text_dark"
+        android:textSize="20sp"
+        app:backgroundTint="@color/primary_dark" />
+
+</RelativeLayout>
+

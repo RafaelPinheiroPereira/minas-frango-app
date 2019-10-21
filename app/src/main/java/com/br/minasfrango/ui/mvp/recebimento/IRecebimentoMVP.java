@@ -51,13 +51,13 @@ public interface IRecebimentoMVP {
 
         int findIdTipoRecebimento(String item);
 
-        BigDecimal getCredit();
+        BigDecimal getCredito();
 
         int getIdTipoRecebimento();
 
         void setIdTipoRecebimento(int idTipoRecebimento);
 
-        void setCredit(BigDecimal credit);
+        void setCredito(BigDecimal credit);
 
         int getPositionOpenNotaSelect();
 
@@ -124,9 +124,9 @@ public interface IRecebimentoMVP {
 
         void salvarAmortizacao();
 
-        void setAutomaticNoteSelectionOrder();
+        void setOrdenarSelecaoAutomaticaDasNotas();
 
-        boolean totalValueOfDebtISLessTranCreditOrEquals();
+        boolean ehMenorOuIgualAoCreditoOValorDoDebito();
     }
 
     interface IView {

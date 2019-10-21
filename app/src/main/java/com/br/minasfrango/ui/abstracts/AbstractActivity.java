@@ -18,4 +18,5 @@ public class AbstractActivity extends AppCompatActivity {
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 
+
 }

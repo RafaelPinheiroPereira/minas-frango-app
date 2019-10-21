@@ -254,6 +254,7 @@ public class ImportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
                             });
                 } else {
                     for (Recebimento recebimento : recebimentos) {
+                        recebimento.setId(recebimento.getIdVenda());
                         realm.copyToRealmOrUpdate(new RecebimentoORM(recebimento));
                     }
                 }

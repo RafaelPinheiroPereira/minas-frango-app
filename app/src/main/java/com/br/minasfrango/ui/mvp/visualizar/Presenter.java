@@ -30,7 +30,7 @@ public class Presenter implements IViewOrderMVP.IPresenter {
     }
 
     @Override
-    public Pedido getVendaParams(final Bundle extras) {
+    public Pedido getParametrosDaVenda(final Bundle extras) {
         long id = extras.getLong("keyPedido");
 
         return this.mModel.pesquisarVendaPorId(id);
@@ -102,5 +102,10 @@ public class Presenter implements IViewOrderMVP.IPresenter {
     @Override
     public void imprimirComprovante() {
         this.mImpressoraUtil.imprimirComprovantePedido(getPedido(), getCliente());
+    }
+
+    @Override
+    public void exibirBotaoFotografar() {
+        this.mView.exibirBotaoFotografar();
     }
 }

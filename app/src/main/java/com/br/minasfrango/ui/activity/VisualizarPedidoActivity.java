@@ -1,25 +1,32 @@
 package com.br.minasfrango.ui.activity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NavUtils;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
 import com.br.minasfrango.R;
 import com.br.minasfrango.ui.abstracts.AbstractActivity;
 import com.br.minasfrango.ui.adapter.ItensPedidoVisualizarAdapter;
 import com.br.minasfrango.ui.mvp.visualizar.IViewOrderMVP;
 import com.br.minasfrango.ui.mvp.visualizar.IViewOrderMVP.IView;
 import com.br.minasfrango.ui.mvp.visualizar.Presenter;
+import com.br.minasfrango.util.CameraUtil;
+import com.br.minasfrango.util.DateUtils;
+
 import java.text.DateFormat;
 
 public class VisualizarPedidoActivity extends AppCompatActivity implements IView {
@@ -77,7 +84,7 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
         super.onStart();
 
         mPresenter = new Presenter(this);
-        mPresenter.setPedido(mPresenter.getVendaParams(getIntent().getExtras()));
+        mPresenter.setPedido(mPresenter.getParametrosDaVenda(getIntent().getExtras()));
         mPresenter.setCliente(mPresenter.pesquisarClientePorID(mPresenter.getPedido().getCodigoCliente()));
         try {
             mPresenter.setTipoRecebimento(
@@ -85,7 +92,7 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
                             mPresenter.getPedido().getTipoRecebimento()));
         } catch (Throwable throwable) {
             VisualizarPedidoActivity.this.runOnUiThread(
-                    ()->{
+                    () -> {
                         AbstractActivity.showToast(this, throwable.getMessage());
                     });
         }
@@ -125,7 +132,26 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
     public void setBtnImprimirOnClicked(View view) {
 
         this.mPresenter.imprimirComprovante();
+        this.mPresenter.exibirBotaoFotografar();
     }
+
+
+    @OnClick(R.id.btnFotografar)
+    public void fotografarComprovante(View view) {
+
+        String nomeFoto = mPresenter.getPedido().getId()
+                + DateUtils.formatarDateddMMyyyyParaString(
+                mPresenter.getPedido().getDataPedido()).replace("/", "-")
+                + mPresenter.getCliente().getNome();
+
+        CameraUtil cameraUtil = new CameraUtil((Activity) mPresenter.getContext());
+        cameraUtil.tirarFoto(CameraUtil.CAMINHO_IMAGEM_VENDAS, nomeFoto);
+
+
+    }
+
+
+
 
     @Override
     public void setDataView() {
@@ -146,6 +172,12 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
         } else {
             lnlMotivoCancelamento.setVisibility(View.INVISIBLE);
         }
+    }
+
+    @Override
+    public void exibirBotaoFotografar() {
+        btnFotografar.setVisibility(View.VISIBLE);
+
     }
 
     private void iniciarViews() {

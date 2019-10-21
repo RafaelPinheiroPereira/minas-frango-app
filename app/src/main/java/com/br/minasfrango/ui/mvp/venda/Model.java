@@ -67,7 +67,7 @@ public class Model implements IVendaMVP.IModel {
 
     @Override
     public void atualizarChaveItemPedido(final ItemPedidoID chavesItemPedido) {
-        this.mItemPedidoIDDAO.copyOrUpdate(new ItemPedidoIDORM(chavesItemPedido));
+        this.mItemPedidoIDDAO.alterar(new ItemPedidoIDORM(chavesItemPedido));
 
     }
 
@@ -120,7 +120,7 @@ public class Model implements IVendaMVP.IModel {
     public void copyOrUpdateSaleOrder(final Pedido pedido) {
         PedidoORM pedidoORM = new PedidoORM(pedido);
         pedidoORM.setItens(PedidoORM.converterListModelParaListRealm(pedido.getItens()));
-        mPedidoDAO.copyOrUpdate(pedidoORM);
+        mPedidoDAO.alterar(pedidoORM);
         mPresenter.setPedido(pedido);
     }
 
