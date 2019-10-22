@@ -342,10 +342,11 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
     }
 
     private void inicializarViews() {
-        toolbar.setTitle("Recebimentos");
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(RecebimentoActivity.this);
         rcvRecebimento.setLayoutManager(layoutManager);
+
     }
 }
