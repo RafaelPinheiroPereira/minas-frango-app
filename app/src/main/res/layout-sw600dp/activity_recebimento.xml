@@ -256,9 +256,9 @@
                     android:gravity="center_vertical|center_horizontal"
                     android:text=" Amortizar"
                     android:textColor="@color/white"
-                    app:iconSize="36dp"
+
                     android:textSize="20sp"
-                    app:iconPadding="10dp"
+
                     app:backgroundTint="@color/primary_dark"
                     app:icon="@mipmap/icon_vender"
                     app:iconGravity="textStart"

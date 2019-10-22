@@ -238,14 +238,17 @@
 
             <TextView
                 android:id="@+id/txtAmountSale"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="15dp"
-                android:text=""
-                android:textColor="@color/textColorPrimary"
-                android:textSize="18sp" />
+                android:gravity="right"
+                android:layout_marginLeft="6dp"
+                android:text="Total"
+                android:layout_marginRight="8dp"
+                android:padding="10dp"
+                android:textStyle="bold"
+                android:textColor="@color/red"
+                android:textSize="20sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"

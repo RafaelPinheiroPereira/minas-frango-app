@@ -120,7 +120,7 @@ public class PedidoActivity extends AppCompatActivity implements IPedidoMVP.IVie
     }
 
     private void initViews() {
-        toolbar.setTitle("Pedidos");
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

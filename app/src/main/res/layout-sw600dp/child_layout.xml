@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="-4dp"
+    android:layout_marginLeft="3dp"
+    android:layout_marginStart="3dp"
+    android:layout_marginRight="3dp"
+    android:layout_marginEnd="3dp"
+    app:cardCornerRadius="8dp"
+    android:id="@+id/card_child"
+    app:cardElevation="2dp"
+    app:cardUseCompatPadding="true">
+
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical"
+    android:gravity="center_vertical"
+    android:padding="10dp"
+    android:orientation="horizontal">
+        <TextView
+            android:id="@+id/txt_id_pedido_child"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_gravity="center_vertical"
+            android:padding="5dp"
+            android:textColor="@color/textColorPrimary"
+            android:text="lore insprosume"
+
+            />
+        <TextView
+            android:id="@+id/txt_data_pedido_child"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_gravity="center_vertical"
+            android:padding="10dp"
+            android:textColor="@color/textColorPrimary"
+
+             android:text="lore insprosume"
+
+            />
+        <TextView
+            android:id="@+id/txt_valor_pedido_child"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:padding="10dp"
+            android:layout_gravity="right|center_vertical"
+            android:gravity="right"
+            android:textColor="@color/textColorPrimary"
+            android:text="lore insprosume"
+
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/menu_imagem_view"
+            android:clickable="true"
+            android:layout_gravity="center_vertical|right"
+            android:src="@mipmap/more_vert_36"/>
+</LinearLayout>
+</androidx.cardview.widget.CardView>

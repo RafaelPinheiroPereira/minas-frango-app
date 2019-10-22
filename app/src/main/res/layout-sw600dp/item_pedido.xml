@@ -4,85 +4,166 @@
     android:id="@+id/card_child"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="-4dp"
-    android:layout_marginEnd="3dp"
-    android:layout_marginLeft="3dp"
-    android:layout_marginRight="3dp"
     android:layout_marginStart="3dp"
+    android:layout_marginLeft="3dp"
+    android:layout_marginEnd="3dp"
+    android:layout_marginRight="3dp"
+    android:layout_marginBottom="-4dp"
     app:cardCornerRadius="8dp"
     app:cardElevation="2dp"
     app:cardUseCompatPadding="true">
 
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="15dp">
+        android:gravity="center"
+        android:orientation="horizontal" />
 
-        <TextView
-            android:id="@+id/txtQTDProducts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_gravity="right|center_vertical"
-            android:text="lore insprosume"
-            android:textColor="@android:color/secondary_text_light"
-            android:textSize="20sp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="5dp">
 
-            />
 
-        <TextView
-            android:id="@+id/txtUnit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
-            android:text="lore insprosume "
-            android:textColor="@android:color/secondary_text_light"
-            android:textSize="20sp" />
+            android:layout_marginTop="6dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="2dp">
 
-        <TextView
-            android:id="@+id/txtProductName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+
+            <TextView
+
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="left"
+                android:text="ITEM"
+                android:textSize="18sp"
+
+                />
+
+
+            <TextView
+
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_horizontal"
+                android:text="UNIDADE"
+                android:textSize="18sp"
+
+                />
+
+            <TextView
+
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:gravity="center_vertical|center_horizontal"
+
+                android:text="QTD."
+                android:textSize="18sp" />
+
+            <TextView
+
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="right|center_vertical"
+                android:gravity="right"
+                android:text="PREC.UNIT"
+                android:textSize="18sp" />
+
+            <TextView
+
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:gravity="right"
+                android:text="TOTAL"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
-            android:padding="5dp"
-            android:text="lore insproseda"
-            android:textColor="@android:color/secondary_text_light"
-            android:textSize="20sp"
+            android:orientation="horizontal"
 
-            />
+            android:padding="2dp">
 
-        <TextView
-            android:id="@+id/txtValorUnitario"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right|center_vertical"
-            android:gravity="right"
-            android:padding="5dp"
-            android:text="lore insprosume"
-            android:textColor="@android:color/secondary_text_light"
-            android:textSize="20sp"
+            <TextView
+                android:id="@+id/txtProductName"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
 
-            />
+                android:text="lore insproseda"
+                android:textColor="@android:color/secondary_text_light"
+                android:textSize="18sp"
 
-        <TextView
-            android:id="@+id/txt_valor_total_item"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="right"
-            android:padding="5dp"
-            android:text="lore insprosume"
-            android:textColor="@android:color/secondary_text_light"
-            android:textSize="20sp"
+                />
 
-            />
+            <TextView
+                android:id="@+id/txtUnit"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
 
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:text="lore insprosume "
+                android:textColor="@android:color/secondary_text_light"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/txtQTDProducts"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+
+                android:layout_gravity="left|center_vertical"
+                android:gravity="center|center_vertical"
+                android:text="lore insprosume"
+                android:textColor="@android:color/secondary_text_light"
+                android:textSize="18sp"
+
+                />
+
+            <TextView
+                android:id="@+id/txtValorUnitario"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:gravity="right"
+
+                android:text="lore insprosume"
+                android:textColor="@android:color/secondary_text_light"
+                android:textSize="18sp"
+
+                />
+
+            <TextView
+                android:id="@+id/txt_valor_total_item"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="right"
+                android:text="lore insprosume"
+                android:textColor="@android:color/secondary_text_light"
+                android:textSize="18sp"
+
+                />
+        </LinearLayout>
 
     </LinearLayout>
+
+
 </androidx.cardview.widget.CardView>

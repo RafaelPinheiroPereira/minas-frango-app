@@ -181,7 +181,7 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
     }
 
     private void iniciarViews() {
-        mToolbar.setTitle("Visualizar Pedidos");
+
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
