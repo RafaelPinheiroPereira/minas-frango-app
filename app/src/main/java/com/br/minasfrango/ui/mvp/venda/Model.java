@@ -2,13 +2,13 @@ package com.br.minasfrango.ui.mvp.venda;
 
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
-import com.br.minasfrango.data.dao.ClientDAO;
+import com.br.minasfrango.data.dao.ClienteDAO;
 import com.br.minasfrango.data.dao.ItemPedidoDAO;
 import com.br.minasfrango.data.dao.ItemPedidoIDDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
+import com.br.minasfrango.data.dao.PrecoDAO;
 import com.br.minasfrango.data.dao.PrecoIDDAO;
-import com.br.minasfrango.data.dao.PriceDAO;
-import com.br.minasfrango.data.dao.ProductDAO;
+import com.br.minasfrango.data.dao.ProdutoDAO;
 import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
 import com.br.minasfrango.data.dao.UnidadeDAO;
 import com.br.minasfrango.data.model.Cliente;
@@ -34,17 +34,17 @@ public class Model implements IVendaMVP.IModel {
 
     ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstace(ItemPedidoORM.class);
 
-    ClientDAO mClientDAO = ClientDAO.getInstace(ClienteORM.class);
+    ClienteDAO mClienteDAO = ClienteDAO.getInstace(ClienteORM.class);
 
     PedidoDAO mPedidoDAO = PedidoDAO.getInstace(PedidoORM.class);
 
     PrecoIDDAO mPrecoIDDAO = PrecoIDDAO.getInstance(PrecoIDORM.class);
 
-    PriceDAO mPriceDAO = PriceDAO.getInstace(PrecoORM.class);
+    PrecoDAO mPrecoDAO = PrecoDAO.getInstace(PrecoORM.class);
 
-    ProductDAO mProductDAO = ProductDAO.getInstace(ProdutoORM.class);
+    ProdutoDAO mProdutoDAO = ProdutoDAO.getInstace(ProdutoORM.class);
 
-    ProductDAO produtoDAO = ProductDAO.getInstace(ProdutoORM.class);
+    ProdutoDAO produtoDAO = ProdutoDAO.getInstace(ProdutoORM.class);
 
     PedidoDAO saleDAO = PedidoDAO.getInstace(PedidoORM.class);
 
@@ -78,14 +78,14 @@ public class Model implements IVendaMVP.IModel {
 
     @Override
     public Preco carregarPrecoPorProduto() {
-        return this.mPriceDAO.carregaPrecoProduto(mPresenter.getProdutoSelecionado());
+        return this.mPrecoDAO.carregaPrecoProduto(mPresenter.getProdutoSelecionado());
     }
 
     @Override
     public Preco carregarPrecoUnidadePorProduto(final String unityID) {
         String id = mPrecoIDDAO.findPrecoIDByUnidadeAndProdutoAndCliente(mPresenter.getProdutoSelecionado(), unityID,
                 mPresenter.getCliente());
-        return this.mPriceDAO.findPriceByPriceID(id);
+        return this.mPrecoDAO.findPriceByPriceID(id);
     }
 
     @Override
@@ -164,17 +164,17 @@ public class Model implements IVendaMVP.IModel {
 
     @Override
     public Cliente pesquisarClientePorId(final Long id) {
-        return new Cliente(this.mClientDAO.findById(id));
+        return new Cliente(this.mClienteDAO.findById(id));
     }
 
     @Override
     public Produto pesquisarProdutoPorId(final long id) {
-        return new Produto(mProductDAO.findById(id));
+        return new Produto(mProdutoDAO.findById(id));
     }
 
     @Override
     public Produto pesquisarProdutoPorNome(final String productName) {
-        return mProductDAO.findByName(productName);
+        return mProdutoDAO.findByName(productName);
     }
 
     @Override

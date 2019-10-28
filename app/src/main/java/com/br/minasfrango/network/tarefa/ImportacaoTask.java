@@ -1,0 +1,281 @@
+package com.br.minasfrango.network.tarefa;
+
+import android.os.AsyncTask;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
+import android.util.Log;
+import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.Conta;
+import com.br.minasfrango.data.model.Funcionario;
+import com.br.minasfrango.data.model.Importacao;
+import com.br.minasfrango.data.model.Preco;
+import com.br.minasfrango.data.model.PrecoID;
+import com.br.minasfrango.data.model.Produto;
+import com.br.minasfrango.data.model.Recebimento;
+import com.br.minasfrango.data.model.TipoRecebimento;
+import com.br.minasfrango.data.model.Unidade;
+import com.br.minasfrango.data.realm.ClienteORM;
+import com.br.minasfrango.data.realm.ContaORM;
+import com.br.minasfrango.data.realm.PrecoORM;
+import com.br.minasfrango.data.realm.ProdutoORM;
+import com.br.minasfrango.data.realm.RecebimentoORM;
+import com.br.minasfrango.data.realm.TipoRecebimentoORM;
+import com.br.minasfrango.data.realm.UnidadeORM;
+import com.br.minasfrango.network.RetrofitConfig;
+import com.br.minasfrango.network.servico.ImportacaoService;
+import com.br.minasfrango.ui.mvp.home.IHomeMVP;
+import io.realm.Realm;
+import java.io.IOException;
+import java.util.List;
+import retrofit2.Call;
+import retrofit2.Response;
+
+/** Created by Pc on 13/01/2016. */
+public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
+
+    Funcionario mFuncionario;
+
+    IHomeMVP.IPresenter mHomePresenter;
+
+    public ImportacaoTask(Funcionario funcionario, IHomeMVP.IPresenter homePresenter) {
+        this.mFuncionario = funcionario;
+        this.mHomePresenter = homePresenter;
+    }
+
+    public boolean importData() {
+        boolean importou = false;
+
+                    if (importar()) {
+                        importou = true;
+                    }
+
+        return importou;
+    }
+
+    @Override
+    protected Boolean doInBackground(Void... params) {
+
+        return importData();
+    }
+
+    @Override
+    protected void onPostExecute(Boolean importou) {
+        super.onPostExecute(importou);
+
+        if (importou) {
+
+            this.mHomePresenter.esconderProgressDialog();
+            this.mHomePresenter.exibirToast("Importação realizada com sucesso!");
+            this.mHomePresenter.obterClientesAposImportarDados();
+            this.mHomePresenter.obterRotasAposImportarDados();
+
+            this.mHomePresenter.fecharDrawer();
+        }
+    }
+
+    @Override
+    protected void onPreExecute() {
+
+        this.mHomePresenter.exibirProgressDialog();
+    }
+
+    private void salvarClientes(List<Cliente> clientes) {
+
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            clientes.forEach(cliente -> realm.copyToRealmOrUpdate(new ClienteORM(cliente)));
+        } else {
+            for (Cliente cliente : clientes) {
+                realm.copyToRealmOrUpdate(new ClienteORM(cliente));
+            }
+        }
+        realm.commitTransaction();
+        Log.d("Importacao Clientes", "Sucess");
+    }
+
+    private void salvarContas(List<Conta> contas) {
+
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+
+
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+
+            contas.forEach(conta -> realm.copyToRealmOrUpdate(new ContaORM(conta)));
+        } else {
+            for (Conta conta : contas) {
+                realm.copyToRealmOrUpdate(new ContaORM(conta));
+            }
+        }
+        realm.commitTransaction();
+        Log.d("Importacao Contas", "Sucess");
+    }
+
+    private void salvarPrecos( List<Preco> precos) {
+
+                Realm realm = Realm.getDefaultInstance();
+                realm.beginTransaction();
+
+                if (VERSION.SDK_INT >= VERSION_CODES.N) {
+                    precos.forEach(
+                            preco -> {
+                                PrecoID precoID =
+                                        new PrecoID(
+                                                preco.getChavesPreco().getId(),
+                                                preco.getChavesPreco().getIdCliente(),
+                                                preco.getChavesPreco().getIdProduto(),
+                                                preco.getChavesPreco().getUnidadeProduto(),
+                                                preco.getChavesPreco().getDataPreco());
+
+                                preco.setChavesPreco(precoID);
+                                preco.setId(
+                                        preco.getChavesPreco().getId()
+                                                + "-"
+                                                + preco.getChavesPreco().getIdCliente()
+                                                + "-"
+                                                + preco.getChavesPreco().getIdProduto()
+                                                + "-"
+                                                + preco.getChavesPreco().getUnidadeProduto()
+                                                + "-"
+                                                + preco.getChavesPreco().getDataPreco());
+                                realm.copyToRealmOrUpdate(new PrecoORM(preco));
+                            });
+                } else {
+                    for (Preco preco : precos) {
+
+                        PrecoID precoID =
+                                new PrecoID(
+                                        preco.getChavesPreco().getId(),
+                                        preco.getChavesPreco().getIdCliente(),
+                                        preco.getChavesPreco().getIdProduto(),
+                                        preco.getChavesPreco().getUnidadeProduto(),
+                                        preco.getChavesPreco().getDataPreco());
+
+                        preco.setChavesPreco(precoID);
+                        preco.setId(
+                                preco.getChavesPreco().getId()
+                                        + "-"
+                                        + preco.getChavesPreco().getIdCliente()
+                                        + "-"
+                                        + preco.getChavesPreco().getIdProduto()
+                                        + "-"
+                                        + preco.getChavesPreco().getUnidadeProduto()
+                                        + "-"
+                                        + preco.getChavesPreco().getDataPreco());
+                        realm.copyToRealmOrUpdate(new PrecoORM(preco));
+                    }
+                }
+
+                realm.commitTransaction();
+                Log.d("Importacao Precos", "Sucess");
+
+
+    }
+
+    private void salvarProdutos(List<Produto> produtos) {
+
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            produtos.forEach(produto -> realm.copyToRealmOrUpdate(new ProdutoORM(produto)));
+        } else {
+            for (Produto produto : produtos) {
+                realm.copyToRealmOrUpdate(new ProdutoORM(produto));
+            }
+        }
+        realm.commitTransaction();
+        Log.d("Importacao de Produtos", "Sucess");
+    }
+
+    private void salvarRecebimentos(List<Recebimento> recebimentos) {
+
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            recebimentos.forEach(
+                    recebimento -> {
+                        recebimento.setId(recebimento.getIdVenda());
+                        realm.copyToRealmOrUpdate(new RecebimentoORM(recebimento));
+                    });
+        } else {
+            for (Recebimento recebimento : recebimentos) {
+                recebimento.setId(recebimento.getIdVenda());
+                realm.copyToRealmOrUpdate(new RecebimentoORM(recebimento));
+            }
+        }
+        realm.commitTransaction();
+
+        Log.d("Importacao Recebimentos", "Sucess");
+    }
+
+    private void salvarTipoRecebimentos(List<TipoRecebimento> tipoRecebimentos) {
+
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            tipoRecebimentos.forEach(
+                    tipoRecebimento ->
+                            realm.copyToRealmOrUpdate(new TipoRecebimentoORM(tipoRecebimento)));
+        } else {
+            for (TipoRecebimento tipoRecebimento : tipoRecebimentos) {
+                realm.copyToRealmOrUpdate(new TipoRecebimentoORM(tipoRecebimento));
+            }
+        }
+        realm.commitTransaction();
+        Log.d("Importacao Tipo", "Sucess");
+    }
+
+    private void salvarUnidades(List<Unidade> unidades ) {
+
+                Realm realm = Realm.getDefaultInstance();
+                realm.beginTransaction();
+                if (VERSION.SDK_INT >= VERSION_CODES.N) {
+                    unidades.forEach(
+                            unidade -> {
+                                unidade.setId(
+                                        unidade.getChavesUnidade().getIdUnidade()
+                                                + "-"
+                                                + unidade.getChavesUnidade().getIdProduto());
+                                realm.copyToRealmOrUpdate(new UnidadeORM(unidade));
+                            });
+                } else {
+                    for (Unidade unidade : unidades) {
+                        unidade.setId(
+                                unidade.getChavesUnidade().getIdUnidade()
+                                        + "-"
+                                        + unidade.getChavesUnidade().getIdProduto());
+                        realm.copyToRealmOrUpdate(new UnidadeORM(unidade));
+                    }
+                }
+                realm.commitTransaction();
+                Log.d("Importacao de  Unidades", "Sucess");
+
+
+
+    }
+
+    private boolean importar() {
+        ImportacaoService importacaoService = new RetrofitConfig().getImportacaoService();
+        Call<Importacao> importacaoCall = importacaoService.realizarImportacao(1);
+        try {
+            Response<Importacao> importacaoResponse = importacaoCall.execute();
+            if (importacaoResponse.isSuccessful()) {
+
+                Importacao importacao = importacaoResponse.body();
+
+                salvarClientes(importacao.getClientes());
+                salvarTipoRecebimentos(importacao.getTiposRecebimento());
+                salvarProdutos(importacao.getProdutos());
+                salvarUnidades(importacao.getUnidades());
+                salvarPrecos(importacao.getPrecos());
+                salvarRecebimentos(importacao.getRecebimentosDTO());
+                salvarContas(importacao.getContas());
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+}

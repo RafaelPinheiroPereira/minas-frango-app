@@ -2,7 +2,7 @@ package com.br.minasfrango.ui.mvp.login;
 
 import android.content.Context;
 import com.br.minasfrango.data.model.Funcionario;
-import com.br.minasfrango.network.servico.ServicoLogin;
+import com.br.minasfrango.network.servico.AutenticacaoService;
 import retrofit2.Call;
 
 public interface ILoginMVP {
@@ -17,7 +17,7 @@ public interface ILoginMVP {
 
         Context getContexto();
 
-        ServicoLogin getServicoLogin();
+        AutenticacaoService getServicoLogin();
 
         boolean loginValidado();
     }

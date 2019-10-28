@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.Conta;
 import com.br.minasfrango.data.model.Recebimento;
 import com.br.minasfrango.ui.mvp.recebimento.IRecebimentoMVP.IView;
 import com.br.minasfrango.util.ImpressoraUtil;
@@ -16,7 +17,7 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
 
     BigDecimal credit = new BigDecimal(0);
 
-    int idTipoRecebimento;
+    Conta conta;
 
     Cliente mCliente;
 
@@ -91,7 +92,7 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
 
     @Override
     public void desabilitarBotaoSalvar() {
-        this.view.inabilitarBotaoSalvarAmortizacao();
+        this.view.desabilitarBotaoSalvarAmortizacao();
     }
 
     @Override
@@ -154,14 +155,10 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
 
     }
 
-    @Override
-    public int getIdTipoRecebimento() {
-        return idTipoRecebimento;
-    }
 
     @Override
-    public void setIdTipoRecebimento(final int idTipoRecebimento) {
-        this.idTipoRecebimento = idTipoRecebimento;
+    public void setConta(Conta conta) {
+        this.conta = conta;
     }
 
     @Override
@@ -177,6 +174,11 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
     @Override
     public BigDecimal getCredito() {
         return this.credit;
+    }
+
+    @Override
+    public Conta getConta() {
+        return this.conta;
     }
 
     @Override
@@ -280,5 +282,10 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
     @Override
     public boolean valorTotalDevidoEhMenorOuIgualAoCredito() {
         return this.mModel.ehMenorOuIgualAoCreditoOValorDoDebito();
+    }
+
+    @Override
+    public List<Conta> obterContas() {
+        return this.mModel.obterContas();
     }
 }

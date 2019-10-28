@@ -8,8 +8,8 @@ import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.model.Recebimento;
 import com.br.minasfrango.data.model.Rota;
-import com.br.minasfrango.network.tarefa.ExportacaoDeDados;
-import com.br.minasfrango.network.tarefa.ImportacaoDeDados;
+import com.br.minasfrango.network.tarefa.ExportacaoTask;
+import com.br.minasfrango.network.tarefa.ImportacaoTask;
 import com.br.minasfrango.ui.abstracts.AbstractActivity;
 import com.br.minasfrango.ui.activity.RecebimentoActivity;
 import com.br.minasfrango.ui.activity.VendasActivity;
@@ -63,9 +63,9 @@ public class Presenter implements IHomeMVP.IPresenter {
     }
 
     @Override
-    public void exportarDados() {
+    public void exportar() {
         List<Pedido> pedidos = this.model.obterTodosPedidos();
-        new ExportacaoDeDados(this, pedidos).execute();
+        new ExportacaoTask(this, pedidos).execute();
     }
 
     @Override
@@ -142,11 +142,11 @@ public class Presenter implements IHomeMVP.IPresenter {
     }
 
     @Override
-    public void importarDados() {
+    public void importar() {
         Funcionario funcionario = new Funcionario();
         funcionario.setId(getUserId());
         funcionario.setNome(getNomeUsuario());
-        new ImportacaoDeDados(funcionario, this).execute();
+        new ImportacaoTask(funcionario, this).execute();
     }
 
     @Override

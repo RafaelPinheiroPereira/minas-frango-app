@@ -11,13 +11,13 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class ExportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
+public class ExportacaoTask extends AsyncTask<Void, Void, Boolean> {
 
     IHomeMVP.IPresenter mHomePresenter;
 
     List<Pedido> mPedidos;
 
-    public ExportacaoDeDados(IHomeMVP.IPresenter homePresenter, List<Pedido> pedidos) {
+    public ExportacaoTask(IHomeMVP.IPresenter homePresenter, List<Pedido> pedidos) {
 
         this.mHomePresenter = homePresenter;
         this.mPedidos = pedidos;
@@ -50,7 +50,7 @@ public class ExportacaoDeDados extends AsyncTask<Void, Void, Boolean> {
         ExportacaoService exportacaoService = new RetrofitConfig().getExportacaoService();
         ListaPedido listaPedido = new ListaPedido();
         listaPedido.setMPedidoORMS(pedidos);
-        Call<Boolean> callExportacao = exportacaoService.exportarPedido(listaPedido);
+        Call<Boolean> callExportacao = exportacaoService.realizarExportacao(listaPedido);
         try {
             Response<Boolean> response = callExportacao.execute();
             if (response.isSuccessful()) {

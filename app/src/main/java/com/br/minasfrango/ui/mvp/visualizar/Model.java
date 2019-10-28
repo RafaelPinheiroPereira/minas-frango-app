@@ -1,6 +1,6 @@
 package com.br.minasfrango.ui.mvp.visualizar;
 
-import com.br.minasfrango.data.dao.ClientDAO;
+import com.br.minasfrango.data.dao.ClienteDAO;
 import com.br.minasfrango.data.dao.ItemPedidoDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
 import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
@@ -13,7 +13,7 @@ import com.br.minasfrango.data.realm.PedidoORM;
 
 public class Model implements IViewOrderMVP.IModel {
 
-    ClientDAO mClientDAO = ClientDAO.getInstace(ClienteORM.class);
+    ClienteDAO mClienteDAO = ClienteDAO.getInstace(ClienteORM.class);
 
     PedidoDAO mPedidoDAO = PedidoDAO.getInstace(PedidoORM.class);
 
@@ -30,7 +30,7 @@ public class Model implements IViewOrderMVP.IModel {
 
     @Override
     public Cliente pesquisarClientePorID(final long codigoCliente) {
-        return new Cliente(this.mClientDAO.findById(codigoCliente));
+        return new Cliente(this.mClienteDAO.findById(codigoCliente));
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.br.minasfrango;
 
 import static org.junit.Assert.*;
 
-import com.br.minasfrango.data.dao.PriceDAO;
+import com.br.minasfrango.data.dao.PrecoDAO;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import org.junit.*;
@@ -15,7 +15,7 @@ import org.junit.*;
 
 public class ExampleUnitTest {
 
-    PriceDAO priceDAO;
+    PrecoDAO mPrecoDAO;
 
     private Realm realm;
 
@@ -24,7 +24,7 @@ public class ExampleUnitTest {
 		@Test
         public void loadAllPrices() {
 
-            assertTrue(priceDAO.getAll().size() > 0);
+            assertTrue(mPrecoDAO.getAll().size() > 0);
 
 
         }

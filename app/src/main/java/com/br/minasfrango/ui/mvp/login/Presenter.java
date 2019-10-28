@@ -3,7 +3,7 @@ package com.br.minasfrango.ui.mvp.login;
 import android.content.Context;
 import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.network.RetrofitConfig;
-import com.br.minasfrango.network.servico.ServicoLogin;
+import com.br.minasfrango.network.servico.AutenticacaoService;
 import com.br.minasfrango.network.tarefa.LoginTask;
 import com.br.minasfrango.util.ControleSessao;
 import retrofit2.Call;
@@ -22,7 +22,7 @@ public class Presenter implements ILoginMVP.IPresenter {
 
     @Override
     public Call<Funcionario> autenticarLogin(final String id, final String senha) {
-        return getServicoLogin().autenticarLogin(Long.parseLong(id), senha);
+        return getServicoLogin().autenticar(Long.parseLong(id), senha);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class Presenter implements ILoginMVP.IPresenter {
     }
 
     @Override
-    public ServicoLogin getServicoLogin() {
+    public AutenticacaoService getServicoLogin() {
         return new RetrofitConfig().getLoginService();
     }
 

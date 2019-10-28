@@ -14,13 +14,13 @@ import java.util.List;
  * Created by 04717299302 on 28/12/2016.
  */
 
-public class PriceDAO extends GenericsDAO<PrecoORM> {
+public class PrecoDAO extends GenericsDAO<PrecoORM> {
 
-    public static PriceDAO getInstace(final Class<PrecoORM> type) {
-        return new PriceDAO(type);
+    public static PrecoDAO getInstace(final Class<PrecoORM> type) {
+        return new PrecoDAO(type);
     }
 
-    public PriceDAO(final Class<PrecoORM> type) {
+    public PrecoDAO(final Class<PrecoORM> type) {
         super(type);
     }
 

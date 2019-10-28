@@ -2,7 +2,7 @@ package com.br.minasfrango.ui.mvp.home;
 
 import android.os.Build.VERSION_CODES;
 import androidx.annotation.RequiresApi;
-import com.br.minasfrango.data.dao.ClientDAO;
+import com.br.minasfrango.data.dao.ClienteDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
 import com.br.minasfrango.data.dao.RecebimentoDAO;
 import com.br.minasfrango.data.dao.RouteDAO;
@@ -19,7 +19,7 @@ import java.util.List;
 
 public class Model implements IModel {
 
-    ClientDAO mClientDAO = ClientDAO.getInstace(ClienteORM.class);
+    ClienteDAO mClienteDAO = ClienteDAO.getInstace(ClienteORM.class);
 
     PedidoDAO mOrderDAO = PedidoDAO.getInstace(PedidoORM.class);
 
@@ -42,7 +42,7 @@ public class Model implements IModel {
     @RequiresApi(api = VERSION_CODES.N)
     @Override
     public List<Cliente> obterTodosClientes() {
-        return mClientDAO.todos();
+        return mClienteDAO.todos();
     }
 
     @Override
@@ -52,7 +52,7 @@ public class Model implements IModel {
     }
 
     public List<Cliente> pesquisarClientePorRota(final Rota rota) {
-        return mClientDAO.pesquisarClientePorRota(rota);
+        return mClienteDAO.pesquisarClientePorRota(rota);
     }
 
     @RequiresApi(api = VERSION_CODES.N)

@@ -2,14 +2,15 @@ package com.br.minasfrango.ui.mvp.recebimento;
 
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
-
+import com.br.minasfrango.data.dao.ContaDAO;
 import com.br.minasfrango.data.dao.RecebimentoDAO;
 import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
+import com.br.minasfrango.data.model.Conta;
 import com.br.minasfrango.data.model.Recebimento;
+import com.br.minasfrango.data.realm.ContaORM;
 import com.br.minasfrango.data.realm.RecebimentoORM;
 import com.br.minasfrango.util.ConstantsUtil;
 import com.br.minasfrango.util.DateUtils;
-
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ public class Model implements IRecebimentoMVP.IModel {
     IRecebimentoMVP.IPresenter mPresenter;
 
     TipoRecebimentoDAO mTipoRecebimentoDAO = TipoRecebimentoDAO.getInstace();
+
+    ContaDAO mContaDAO = ContaDAO.getInstace(ContaORM.class);
 
     int position = 0;
 
@@ -108,6 +111,11 @@ public class Model implements IRecebimentoMVP.IModel {
     @Override
     public int findIdTipoRecebimento(final String item) {
         return mTipoRecebimentoDAO.codigoFormaPagamento(item);
+    }
+
+    @Override
+    public List<Conta> obterContas() {
+        return this.mContaDAO.obterTodasContas();
     }
 
     @Override

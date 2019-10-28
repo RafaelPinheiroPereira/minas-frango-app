@@ -32,7 +32,7 @@ public interface IHomeMVP {
 
         Context getContext();
 
-        void exportarDados();
+        void exportar();
 
         void fecharDrawer();
 
@@ -44,7 +44,7 @@ public interface IHomeMVP {
 
         String getNomeUsuario();
 
-        void importarDados();
+        void importar();
 
         void setAdapters();
 

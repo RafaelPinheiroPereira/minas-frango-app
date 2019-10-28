@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
@@ -25,6 +24,7 @@ import butterknife.OnItemSelected;
 import com.br.minasfrango.R;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.ui.abstracts.AbstractActivity;
+import com.br.minasfrango.ui.adapter.ContaAdapter;
 import com.br.minasfrango.ui.adapter.RecebimentoAdapter;
 import com.br.minasfrango.ui.mvp.recebimento.IRecebimentoMVP;
 import com.br.minasfrango.ui.mvp.recebimento.Presenter;
@@ -42,7 +42,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
 
     private static final long ID_TIPO_RECEBIMENTO_A_VISTA = 1;
 
-    ArrayAdapter<String> adaptadorTipoRecebimento;
+    ContaAdapter adaptadorConta;
 
     @BindView(R.id.btnImprimirRecebimento)
     Button btnImprimirRecebimento;
@@ -60,7 +60,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
     RecyclerView rcvRecebimento;
 
     @BindView(R.id.spnTipoRecebimento)
-    Spinner spnTipoRecebimento;
+    Spinner spnConta;
 
     IRecebimentoMVP.IPresenter mPresenter;
 
@@ -119,11 +119,10 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
         rcvRecebimento.setAdapter(adapter);
 
         try {
-            adaptadorTipoRecebimento =
-                    new ArrayAdapter<>(
+            adaptadorConta =
+                    new ContaAdapter(
                             RecebimentoActivity.this,
-                            android.R.layout.simple_spinner_item,
-                            mPresenter.obterTipoRecebimentos(ID_TIPO_RECEBIMENTO_A_VISTA));
+                            mPresenter.obterContas());
         } catch (Throwable throwable) {
             RecebimentoActivity.this.runOnUiThread(
                     ()->{
@@ -132,8 +131,8 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
                     });
         }
 
-        spnTipoRecebimento.setAdapter(adaptadorTipoRecebimento);
-        spnTipoRecebimento.setSelection(POSICAO_INICIAL);
+        spnConta.setAdapter(adaptadorConta);
+        spnConta.setSelection(POSICAO_INICIAL);
 
         cetValorAmortizar.setText("00,00");
 
@@ -271,7 +270,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
     }
 
     @Override
-    public void inabilitarBotaoSalvarAmortizacao() {
+    public void desabilitarBotaoSalvarAmortizacao() {
         this.btnSalvarRecebimento.setClickable(false);
     }
 
@@ -321,8 +320,8 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
     @OnItemSelected(R.id.spnTipoRecebimento)
     public void setSpnTipoRecebimentoOnSelected(int position) {
 
-        mPresenter.setIdTipoRecebimento(
-                mPresenter.findIdTipoRecebimento(adaptadorTipoRecebimento.getItem(position)));
+        mPresenter.setConta(
+               adaptadorConta.getItem(position));
     }
 
     @Override

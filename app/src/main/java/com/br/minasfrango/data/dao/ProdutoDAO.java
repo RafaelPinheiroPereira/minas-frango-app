@@ -13,13 +13,13 @@ import java.util.List;
  * Created by 04717299302 on 26/12/2016.
  */
 
-public class ProductDAO extends GenericsDAO<ProdutoORM> {
+public class ProdutoDAO extends GenericsDAO<ProdutoORM> {
 
-    public static ProductDAO getInstace(final Class<ProdutoORM> type) {
-        return new ProductDAO(type);
+    public static ProdutoDAO getInstace(final Class<ProdutoORM> type) {
+        return new ProdutoDAO(type);
     }
 
-    public ProductDAO(final Class<ProdutoORM> type) {
+    public ProdutoDAO(final Class<ProdutoORM> type) {
         super(type);
     }
 

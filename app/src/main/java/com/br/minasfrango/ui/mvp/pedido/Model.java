@@ -2,7 +2,7 @@ package com.br.minasfrango.ui.mvp.pedido;
 
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
-import com.br.minasfrango.data.dao.ClientDAO;
+import com.br.minasfrango.data.dao.ClienteDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Pedido;
@@ -15,7 +15,7 @@ import java.util.List;
 
 public class Model implements IModel {
 
-    private ClientDAO mClientDAO = ClientDAO.getInstace(ClienteORM.class);
+    private ClienteDAO mClienteDAO = ClienteDAO.getInstace(ClienteORM.class);
 
     private PedidoDAO mPedidoDAO = PedidoDAO.getInstace(PedidoORM.class);
 
@@ -61,7 +61,7 @@ public class Model implements IModel {
 
     @Override
     public List<Cliente> pesquisarClientePorPedido(final List<Pedido> pedido) {
-        return mClientDAO.pesquisarClientePorPedido(pedido);
+        return mClienteDAO.pesquisarClientePorPedido(pedido);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.br.minasfrango.ui.mvp.recebimento;
 
 import android.content.Context;
 import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.Conta;
 import com.br.minasfrango.data.model.Recebimento;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -53,9 +54,9 @@ public interface IRecebimentoMVP {
 
         BigDecimal getCredito();
 
-        int getIdTipoRecebimento();
+        Conta getConta();
 
-        void setIdTipoRecebimento(int idTipoRecebimento);
+        void setConta(Conta conta);
 
         void setCredito(BigDecimal credit);
 
@@ -96,6 +97,8 @@ public interface IRecebimentoMVP {
         boolean valorDoCreditoEhMaiorDoQueZero();
 
         boolean valorTotalDevidoEhMenorOuIgualAoCredito();
+
+        List<Conta> obterContas();
     }
 
     interface IModel {
@@ -107,6 +110,8 @@ public interface IRecebimentoMVP {
         boolean crediValueIsGranThenZero();
 
         int findIdTipoRecebimento(String item);
+
+        List<Conta> obterContas();
 
         List<Recebimento> pesquisarRecebimentoPorCliente();
 
@@ -139,7 +144,7 @@ public interface IRecebimentoMVP {
 
         void exibirBotaoFotografar();
 
-        void inabilitarBotaoSalvarAmortizacao();
+        void desabilitarBotaoSalvarAmortizacao();
 
         void getParametros();
 

@@ -14,13 +14,13 @@ import java.util.List;
 /**
  * Created by 04717299302 on 16/12/2016.
  */
-public class ClientDAO extends GenericsDAO<ClienteORM> {
+public class ClienteDAO extends GenericsDAO<ClienteORM> {
 
-    public static ClientDAO getInstace(final Class<ClienteORM> type) {
-        return new ClientDAO(type);
+    public static ClienteDAO getInstace(final Class<ClienteORM> type) {
+        return new ClienteDAO(type);
     }
 
-    public ClientDAO(final Class<ClienteORM> type) {
+    public ClienteDAO(final Class<ClienteORM> type) {
         super(type);
     }
 
