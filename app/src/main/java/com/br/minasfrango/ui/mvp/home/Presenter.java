@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.Exportacao;
 import com.br.minasfrango.data.model.Funcionario;
+import com.br.minasfrango.data.model.ListaPedido;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.model.Recebimento;
 import com.br.minasfrango.data.model.Rota;
@@ -65,7 +67,13 @@ public class Presenter implements IHomeMVP.IPresenter {
     @Override
     public void exportar() {
         List<Pedido> pedidos = this.model.obterTodosPedidos();
-        new ExportacaoTask(this, pedidos).execute();
+        List<Recebimento> recebimentos = this.model.obterTodosRecebimentos();
+        ListaPedido listaPedido = new ListaPedido();
+        listaPedido.setPedidos(pedidos);
+        Exportacao exportacao = new Exportacao();
+        exportacao.setListaPedido(listaPedido);
+       exportacao.setRecebimentos(recebimentos);
+        new ExportacaoTask(this, exportacao).execute();
     }
 
     @Override

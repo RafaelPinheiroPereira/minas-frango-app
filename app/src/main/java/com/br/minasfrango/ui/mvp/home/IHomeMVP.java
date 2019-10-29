@@ -88,6 +88,8 @@ public interface IHomeMVP {
 
         List<Pedido> obterTodosPedidos();
 
+        List<Recebimento> obterTodosRecebimentos();
+
         List<Cliente> pesquisarClientePorRota(Rota rota);
 
         List<Recebimento> pesquisarRecebimentoPorCliente(Cliente cliente);

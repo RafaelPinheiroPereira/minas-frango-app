@@ -237,6 +237,7 @@ public class Model implements IRecebimentoMVP.IModel {
                                     } catch (ParseException e) {
                                         e.printStackTrace();
                                     }
+                                    item.setIdConta(String.valueOf(mPresenter.getConta().getId()));
                                     recebimentoDAO.alterar(new RecebimentoORM(item));
                                 }
                             });
@@ -250,6 +251,7 @@ public class Model implements IRecebimentoMVP.IModel {
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
+                    recebimento.setIdConta(String.valueOf(mPresenter.getConta().getId()));
                     recebimentoDAO.alterar(new RecebimentoORM(recebimento));
                 }
             }

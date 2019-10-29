@@ -13,8 +13,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.br.minasfrango.R;
 import com.br.minasfrango.ui.mvp.recebimento.IRecebimentoMVP;
+import com.br.minasfrango.util.DateUtils;
 import com.br.minasfrango.util.FormatacaoMoeda;
-import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class RecebimentoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -97,27 +98,29 @@ public class RecebimentoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             return;
         } else {
 
-            SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
+
             ((MyViewHolder) viewHolder)
                     .txtRecebimentoIDVenda.setText(
                     String.valueOf(mPresenter.getRecebimentos().get(position - 1).getIdVenda()));
 
             ((MyViewHolder) viewHolder)
                     .txtSalesDate.setText(
-                    String.valueOf(
-                            formatador.format(
+                    DateUtils.formatarDateddMMyyyyParaString(
                                     mPresenter
                                             .getRecebimentos()
                                             .get(position - 1)
-                                            .getDataVenda())));
+                                            .getDataVenda()));
             ((MyViewHolder) viewHolder)
                     .txtDateVencimento.setText(
-                    String.valueOf(
-                            formatador.format(
+                    mPresenter
+                            .getRecebimentos()
+                            .get(position - 1)
+                            .getDataVencimento()!=null?
+                    DateUtils.formatarDateddMMyyyyParaString(
                                     mPresenter
                                             .getRecebimentos()
                                             .get(position - 1)
-                                            .getDataVencimento())));
+                                            .getDataVencimento()): DateUtils.formatarDateddMMyyyyParaString(new Date()));
 
             ((MyViewHolder) viewHolder)
                     .txtSalesValue.setText(

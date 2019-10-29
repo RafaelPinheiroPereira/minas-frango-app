@@ -1,11 +1,8 @@
 package com.br.minasfrango.data.model;
 
 import com.br.minasfrango.data.realm.RecebimentoORM;
-
 import java.io.Serializable;
-import java.util.Comparator;
 import java.util.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -40,6 +37,7 @@ public class Recebimento implements Serializable, Comparable<Recebimento> {
     private double valorAmortizado;
 
     private double valorVenda;
+    private String idConta;
 
     public Recebimento(RecebimentoORM recebimentoORM) {
         this.id = recebimentoORM.getId();
@@ -54,6 +52,7 @@ public class Recebimento implements Serializable, Comparable<Recebimento> {
         this.valorVenda = recebimentoORM.getValorVenda();
         this.orderSelected = recebimentoORM.getOrderSelected();
         this.idVenda = recebimentoORM.getIdVenda();
+        this.idConta=recebimentoORM.getIdConta();
     }
 
 

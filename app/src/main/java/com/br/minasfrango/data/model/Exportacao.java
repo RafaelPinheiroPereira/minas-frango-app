@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ListaPedido implements Serializable {
-
-    List<Pedido> pedidos;
+public class Exportacao  implements Serializable {
+    ListaPedido listaPedido;
+    List<Recebimento> recebimentos;
 }

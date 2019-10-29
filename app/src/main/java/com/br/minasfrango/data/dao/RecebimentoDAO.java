@@ -9,6 +9,7 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 import io.realm.exceptions.RealmException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class RecebimentoDAO extends GenericsDAO<RecebimentoORM> {
 
@@ -50,6 +51,28 @@ public class RecebimentoDAO extends GenericsDAO<RecebimentoORM> {
                         .and()
                         .isNull("dataRecebimento")
                         .sort("dataVencimento", Sort.ASCENDING)
+                        .findAll();
+
+        if (results != null && results.size() > 0) {
+            if (VERSION.SDK_INT >= VERSION_CODES.N) {
+                results.forEach(item->recebimentos.add(new Recebimento(item)));
+            } else {
+                for (RecebimentoORM recebimentoORM : results) {
+                    recebimentos.add(new Recebimento(recebimentoORM));
+
+                }
+            }
+        }
+
+        return recebimentos;
+    }
+
+    public List<Recebimento> pesquisarTodosRecebimentos() {
+
+        ArrayList<Recebimento> recebimentos = new ArrayList<>();
+
+        RealmResults<RecebimentoORM> results =
+                where().equalTo("check", true)
                         .findAll();
 
         if (results != null && results.size() > 0) {

@@ -51,6 +51,11 @@ public class Model implements IModel {
         return mOrderDAO.todos();
     }
 
+    @Override
+    public List<Recebimento> obterTodosRecebimentos() {
+        return this.mRecebimentoDAO.pesquisarTodosRecebimentos();
+    }
+
     public List<Cliente> pesquisarClientePorRota(final Rota rota) {
         return mClienteDAO.pesquisarClientePorRota(rota);
     }

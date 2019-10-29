@@ -42,6 +42,7 @@ public class RecebimentoORM extends RealmObject implements Serializable {
     private double valorAmortizado;
 
     private double valorVenda;
+    private String idConta;
 
     public RecebimentoORM(
             long idFuncionario,
@@ -56,6 +57,7 @@ public class RecebimentoORM extends RealmObject implements Serializable {
         this.dataVenda = dataVenda;
         this.valorVenda = valorVenda;
         this.dataVencimento = dataVencimento;
+
     }
 
     public RecebimentoORM(Recebimento recebimento) {
@@ -71,5 +73,6 @@ public class RecebimentoORM extends RealmObject implements Serializable {
         this.valorVenda = recebimento.getValorVenda();
         this.orderSelected = recebimento.getOrderSelected();
         this.idVenda = recebimento.getIdVenda();
+        this.idConta=recebimento.getIdConta();
     }
 }

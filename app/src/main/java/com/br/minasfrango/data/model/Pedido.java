@@ -1,5 +1,8 @@
 package com.br.minasfrango.data.model;
 
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
+import com.br.minasfrango.data.realm.ItemPedidoORM;
 import com.br.minasfrango.data.realm.PedidoORM;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -36,7 +39,14 @@ public class Pedido implements Serializable {
 
     public static List<ItemPedido> converterListItemPedidoRealmParaModel(PedidoORM pedidoORM) {
         List<ItemPedido> itens = new ArrayList<>();
-        pedidoORM.getItens().forEach(itemPedidoORM->itens.add(new ItemPedido(itemPedidoORM)));
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            pedidoORM.getItens().forEach(itemPedidoORM->itens.add(new ItemPedido(itemPedidoORM)));
+        }else{
+            for(ItemPedidoORM itemPedidoORM: pedidoORM.getItens()){
+                itens.add(new ItemPedido(itemPedidoORM));
+
+            }
+        }
         return itens;
     }
 

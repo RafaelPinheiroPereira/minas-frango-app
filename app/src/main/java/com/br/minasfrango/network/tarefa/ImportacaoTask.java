@@ -42,7 +42,7 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
         this.mHomePresenter = homePresenter;
     }
 
-    public boolean importData() {
+    public boolean importarDados() {
         boolean importou = false;
 
                     if (importar()) {
@@ -55,7 +55,7 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected Boolean doInBackground(Void... params) {
 
-        return importData();
+        return importarDados();
     }
 
     @Override
@@ -257,7 +257,7 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
 
     private boolean importar() {
         ImportacaoService importacaoService = new RetrofitConfig().getImportacaoService();
-        Call<Importacao> importacaoCall = importacaoService.realizarImportacao(1);
+        Call<Importacao> importacaoCall = importacaoService.realizarImportacao(this.mFuncionario.getId());
         try {
             Response<Importacao> importacaoResponse = importacaoCall.execute();
             if (importacaoResponse.isSuccessful()) {
