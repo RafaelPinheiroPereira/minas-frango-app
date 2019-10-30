@@ -16,7 +16,7 @@ public class RetrofitConfig {
                         //.baseUrl("http://10.0.2.2:8080/rest/minasFrango/")
                         .baseUrl("http://192.168.25.4:8080/api/")
                         //.baseUrl(
-                        //        "http://apiminasfrango-env.2scamzggaf.us-east-2.elasticbeanstalk.com/rest/minasFrango/")
+                          //     "http://apiminasfrango-env.2scamzggaf.us-east-2.elasticbeanstalk.com/api/")
                         .addConverterFactory(JacksonConverterFactory.create())
                         .build();
     }

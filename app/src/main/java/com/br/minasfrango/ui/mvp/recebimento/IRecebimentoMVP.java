@@ -5,12 +5,14 @@ import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Conta;
 import com.br.minasfrango.data.model.Recebimento;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 public interface IRecebimentoMVP {
 
     interface IPresenter {
+
+
+        List<Recebimento> obterRecebimentoPorCliente();
 
         void atualizarViewSaldoDevedor();
 
@@ -50,7 +52,7 @@ public interface IRecebimentoMVP {
 
         Context getContext();
 
-        int findIdTipoRecebimento(String item);
+
 
         BigDecimal getCredito();
 
@@ -68,9 +70,7 @@ public interface IRecebimentoMVP {
 
         BigDecimal getValorTotalDevido();
 
-        List<Recebimento> obterRecebimentoPorCliente();
 
-        ArrayList<String> obterTipoRecebimentos(long id) throws Throwable;
 
         void fecharConexaoAtiva();
 
@@ -98,7 +98,7 @@ public interface IRecebimentoMVP {
 
         boolean valorTotalDevidoEhMenorOuIgualAoCredito();
 
-        List<Conta> obterContas();
+        List<Conta> pesquisarContaPorId();
     }
 
     interface IModel {
@@ -109,13 +109,13 @@ public interface IRecebimentoMVP {
 
         boolean crediValueIsGranThenZero();
 
-        int findIdTipoRecebimento(String item);
 
-        List<Conta> obterContas();
 
-        List<Recebimento> pesquisarRecebimentoPorCliente();
+        List<Conta> pesquisarContaPorId();
 
-        ArrayList<String> obterTipoRecebimentos(long id) throws Throwable;
+
+
+
 
         void processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(
                 final int posicao, Recebimento recebimentoToUpdate);
@@ -132,6 +132,9 @@ public interface IRecebimentoMVP {
         void setOrdenarSelecaoAutomaticaDasNotas();
 
         boolean ehMenorOuIgualAoCreditoOValorDoDebito();
+
+        List<Recebimento> pesquisarRecebimentoPorCliente() ;
+
     }
 
     interface IView {

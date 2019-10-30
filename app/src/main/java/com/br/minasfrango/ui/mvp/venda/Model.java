@@ -9,7 +9,6 @@ import com.br.minasfrango.data.dao.PedidoDAO;
 import com.br.minasfrango.data.dao.PrecoDAO;
 import com.br.minasfrango.data.dao.PrecoIDDAO;
 import com.br.minasfrango.data.dao.ProdutoDAO;
-import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
 import com.br.minasfrango.data.dao.UnidadeDAO;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.ItemPedido;
@@ -17,7 +16,6 @@ import com.br.minasfrango.data.model.ItemPedidoID;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.model.Preco;
 import com.br.minasfrango.data.model.Produto;
-import com.br.minasfrango.data.model.TipoRecebimento;
 import com.br.minasfrango.data.model.Unidade;
 import com.br.minasfrango.data.realm.ClienteORM;
 import com.br.minasfrango.data.realm.ItemPedidoIDORM;
@@ -48,7 +46,7 @@ public class Model implements IVendaMVP.IModel {
 
     PedidoDAO saleDAO = PedidoDAO.getInstace(PedidoORM.class);
 
-    TipoRecebimentoDAO tipoRecebimentoDAO = TipoRecebimentoDAO.getInstace();
+
 
     UnidadeDAO unidadeDAO = UnidadeDAO.getInstace(UnidadeORM.class);
 
@@ -124,19 +122,6 @@ public class Model implements IVendaMVP.IModel {
         mPresenter.setPedido(pedido);
     }
 
-    @Override
-    public ArrayList<String> convertTipoRecebimentoInString(final List<TipoRecebimento> tiposRecebimentos) {
-        ArrayList<String> strTiposRecebimentos = new ArrayList<>();
-        strTiposRecebimentos.add("Formas de Pagamento");
-        if (VERSION.SDK_INT >= VERSION_CODES.N) {
-            tiposRecebimentos.forEach(item->strTiposRecebimentos.add(item.getNome()));
-        } else {
-            for (TipoRecebimento tipoRecebimento : tiposRecebimentos) {
-                strTiposRecebimentos.add(tipoRecebimento.getNome());
-            }
-        }
-        return strTiposRecebimentos;
-    }
 
     @Override
     public ArrayList<String> converterUnidadeParaString(final List<Unidade> unidades) {
@@ -187,20 +172,9 @@ public class Model implements IVendaMVP.IModel {
         return this.unidadeDAO.getAll();
     }
 
-    @Override
-    public int getTipoRecebimentoID() {
-        return this.tipoRecebimentoDAO.codigoFormaPagamento(mPresenter.getTipoRecebimento());
-    }
 
-    @Override
-    public TipoRecebimento pesquisarTipoRecebimentoPorId() throws Throwable {
-        return this.tipoRecebimentoDAO.findById(mPresenter.getPedido().getTipoRecebimento());
-    }
 
-    @Override
-    public List<TipoRecebimento> pesquisarTipoRecebimentosPorCliente(final Cliente cliente) {
-        return tipoRecebimentoDAO.findTipoRecebimentoByCliente(cliente);
-    }
+
 
     @Override
     public Unidade pesquisarUnidadePorProduto() {

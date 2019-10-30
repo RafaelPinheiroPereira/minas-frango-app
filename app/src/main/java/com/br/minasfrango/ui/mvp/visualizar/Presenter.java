@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Pedido;
-import com.br.minasfrango.data.model.TipoRecebimento;
 import com.br.minasfrango.ui.mvp.visualizar.IViewOrderMVP.IView;
 import com.br.minasfrango.util.ImpressoraUtil;
 
@@ -17,7 +16,7 @@ public class Presenter implements IViewOrderMVP.IPresenter {
 
     Pedido mPedido;
 
-    TipoRecebimento mTipoRecebimento;
+
 
     IViewOrderMVP.IView mView;
 
@@ -70,24 +69,14 @@ public class Presenter implements IViewOrderMVP.IPresenter {
         }
     }
 
-    @Override
-    public TipoRecebimento getTipoRecebimento() {
-        return mTipoRecebimento;
-    }
 
-    public void setTipoRecebimento(final TipoRecebimento tipoRecebimento) {
-        mTipoRecebimento = tipoRecebimento;
-    }
 
     @Override
     public void setDataView() {
         this.mView.setDataView();
     }
 
-    @Override
-    public TipoRecebimento pesquisarTipoRecebimentoPorId(final long tipoRecebimento) throws Throwable {
-        return this.mModel.pesquisarTipoRecebimentoPorID(tipoRecebimento);
-    }
+
 
     @Override
     public void fecharConexaoAtiva() {

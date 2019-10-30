@@ -22,7 +22,7 @@ import java.util.List;
  * Created by 04717299302 on 15/12/2016.
  */
 
-public class ClienteAdapter
+public class  ClienteAdapter
         extends RecyclerView.Adapter<ClienteAdapter.MyViewHolder> implements Filterable {
 
     public class MyViewHolder extends RecyclerView.ViewHolder
@@ -108,7 +108,7 @@ public class ClienteAdapter
                     List<Cliente> filteredList = new ArrayList<>();
                     for (Cliente clienteORM : mList) {
 
-                        if (clienteORM.getNome().toLowerCase().contains(charString.toLowerCase())) {
+                        if (clienteORM.getNome().toLowerCase().contains(charString.toLowerCase()) || String.valueOf(clienteORM.getId()).contains(charSequence)) {
                             filteredList.add(clienteORM);
                         }
                     }

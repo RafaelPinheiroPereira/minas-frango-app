@@ -5,7 +5,6 @@ import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.data.model.Conta;
 import com.br.minasfrango.data.realm.ContaORM;
 import io.realm.RealmResults;
-import io.realm.Sort;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,9 +17,9 @@ public class ContaDAO extends GenericsDAO<ContaORM> {
         super(type);
     }
 
-    public List<Conta> obterTodasContas() {
+    public List<Conta> pesquisarContaPorId() {
         List<Conta> contas = new ArrayList<>();
-        RealmResults<ContaORM> results = where().findAll().sort("id", Sort.DESCENDING);
+        RealmResults<ContaORM> results = where().equalTo("descricao","DINHEIRO").findAll();
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
             results.forEach(contaORM->contas.add(new Conta(contaORM)));
         } else {

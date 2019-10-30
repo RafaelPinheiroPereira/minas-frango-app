@@ -122,7 +122,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
             adaptadorConta =
                     new ContaAdapter(
                             RecebimentoActivity.this,
-                            mPresenter.obterContas());
+                            mPresenter.pesquisarContaPorId());
         } catch (Throwable throwable) {
             RecebimentoActivity.this.runOnUiThread(
                     ()->{

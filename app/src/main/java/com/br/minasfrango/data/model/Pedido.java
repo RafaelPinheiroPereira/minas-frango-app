@@ -33,7 +33,7 @@ public class Pedido implements Serializable {
 
     private String motivoCancelamento;
 
-    private long tipoRecebimento;
+
 
     private double valorTotal;
 
@@ -57,7 +57,7 @@ public class Pedido implements Serializable {
         this.codigoFuncionario = pedidoORM.getCodigoFuncionario();
         this.dataPedido = pedidoORM.getDataPedido();
         this.motivoCancelamento = pedidoORM.getMotivoCancelamento();
-        this.tipoRecebimento = pedidoORM.getTipoRecebimento();
+
         this.valorTotal = pedidoORM.getValorTotal();
     }
 }

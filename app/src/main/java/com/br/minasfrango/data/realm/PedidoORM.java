@@ -36,7 +36,6 @@ public class PedidoORM extends RealmObject implements Serializable {
 
     private String motivoCancelamento;
 
-    private long tipoRecebimento;
 
     private double valorTotal;
 
@@ -60,7 +59,6 @@ public class PedidoORM extends RealmObject implements Serializable {
         this.codigoFuncionario = pedido.getCodigoFuncionario();
         this.dataPedido = pedido.getDataPedido();
         this.motivoCancelamento = pedido.getMotivoCancelamento();
-        this.tipoRecebimento = pedido.getTipoRecebimento();
         this.valorTotal = pedido.getValorTotal();
     }
 }

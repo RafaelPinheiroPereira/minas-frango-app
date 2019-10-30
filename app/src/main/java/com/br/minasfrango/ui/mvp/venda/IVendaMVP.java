@@ -8,7 +8,6 @@ import com.br.minasfrango.data.model.ItemPedidoID;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.model.Preco;
 import com.br.minasfrango.data.model.Produto;
-import com.br.minasfrango.data.model.TipoRecebimento;
 import com.br.minasfrango.data.model.Unidade;
 import com.br.minasfrango.data.realm.PedidoORM;
 import java.math.BigDecimal;
@@ -67,8 +66,6 @@ public interface IVendaMVP {
 
         void setItens(List<ItemPedido> itens);
 
-        List<TipoRecebimento> carregarTipoRecebimentoPorCliente(Cliente cliente);
-
 
 
         void carregarDadosDaVenda() throws Throwable;
@@ -87,7 +84,7 @@ public interface IVendaMVP {
 
         Unidade carregarUnidadesPorProduto();
 
-        ArrayList<String> converterTipoRecebimentoEmString(List<TipoRecebimento> tiposRecebimentos);
+
 
         void desabilitarBotaoSalvarPedido();
 
@@ -111,11 +108,8 @@ public interface IVendaMVP {
 
         void setQuantidadeProdutos(BigDecimal quantidadeProdutos);
 
-        String getTipoRecebimento();
 
-        void setTipoRecebimento(final String tipoRecebimento);
 
-        int getTipoRecebimentoID();
 
         Preco pesquisarPrecoDaUnidadePorProduto(String unityID);
 
@@ -131,7 +125,7 @@ public interface IVendaMVP {
 
         Cliente pesquisarClientePorId(long codigoCliente);
 
-        TipoRecebimento pesquisarTipoRecebimentoPorId() throws Throwable;
+
 
         Preco pesquisarPrecoPorProduto();
 
@@ -210,7 +204,7 @@ public interface IVendaMVP {
 
         ArrayList<String> carregarProdutoPorNome(List<Produto> produto);
 
-        ArrayList<String> convertTipoRecebimentoInString(List<TipoRecebimento> tiposRecebimentos);
+
 
         ArrayList<String> converterUnidadeParaString(List<Unidade> unidades);
 
@@ -226,11 +220,8 @@ public interface IVendaMVP {
 
         List<Unidade> getAllUnitys();
 
-        int getTipoRecebimentoID();
 
-        TipoRecebimento pesquisarTipoRecebimentoPorId() throws Throwable;
 
-        List<TipoRecebimento> pesquisarTipoRecebimentosPorCliente(Cliente cliente);
 
         Unidade pesquisarUnidadePorProduto();
 

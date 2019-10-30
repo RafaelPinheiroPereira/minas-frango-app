@@ -161,10 +161,7 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
         this.conta = conta;
     }
 
-    @Override
-    public int findIdTipoRecebimento(final String item) {
-        return this.mModel.findIdTipoRecebimento(item);
-    }
+
 
     @Override
     public int getPositionOpenNotaSelect() {
@@ -225,11 +222,7 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
 
     }
 
-    @Override
-    public List<Recebimento> obterRecebimentoPorCliente() {
 
-        return this.mModel.pesquisarRecebimentoPorCliente();
-    }
 
     @Override
     public boolean saldoDevidoEhMaiorQueZero() {
@@ -241,10 +234,7 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
         this.mModel.setOrdenarSelecaoAutomaticaDasNotas();
     }
 
-    @Override
-    public ArrayList<String> obterTipoRecebimentos(long id) throws Throwable {
-        return this.mModel.obterTipoRecebimentos(id);
-    }
+
 
     @Override
     public void salvarAmortizacao() {
@@ -283,9 +273,13 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
     public boolean valorTotalDevidoEhMenorOuIgualAoCredito() {
         return this.mModel.ehMenorOuIgualAoCreditoOValorDoDebito();
     }
-
     @Override
-    public List<Conta> obterContas() {
-        return this.mModel.obterContas();
+    public List<Recebimento> obterRecebimentoPorCliente() {
+
+        return this.mModel.pesquisarRecebimentoPorCliente();
+    }
+    @Override
+    public List<Conta> pesquisarContaPorId() {
+        return this.mModel.pesquisarContaPorId();
     }
 }

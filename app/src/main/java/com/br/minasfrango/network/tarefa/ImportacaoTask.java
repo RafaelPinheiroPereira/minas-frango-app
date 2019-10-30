@@ -12,14 +12,12 @@ import com.br.minasfrango.data.model.Preco;
 import com.br.minasfrango.data.model.PrecoID;
 import com.br.minasfrango.data.model.Produto;
 import com.br.minasfrango.data.model.Recebimento;
-import com.br.minasfrango.data.model.TipoRecebimento;
 import com.br.minasfrango.data.model.Unidade;
 import com.br.minasfrango.data.realm.ClienteORM;
 import com.br.minasfrango.data.realm.ContaORM;
 import com.br.minasfrango.data.realm.PrecoORM;
 import com.br.minasfrango.data.realm.ProdutoORM;
 import com.br.minasfrango.data.realm.RecebimentoORM;
-import com.br.minasfrango.data.realm.TipoRecebimentoORM;
 import com.br.minasfrango.data.realm.UnidadeORM;
 import com.br.minasfrango.network.RetrofitConfig;
 import com.br.minasfrango.network.servico.ImportacaoService;
@@ -209,22 +207,6 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
         Log.d("Importacao Recebimentos", "Sucess");
     }
 
-    private void salvarTipoRecebimentos(List<TipoRecebimento> tipoRecebimentos) {
-
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        if (VERSION.SDK_INT >= VERSION_CODES.N) {
-            tipoRecebimentos.forEach(
-                    tipoRecebimento ->
-                            realm.copyToRealmOrUpdate(new TipoRecebimentoORM(tipoRecebimento)));
-        } else {
-            for (TipoRecebimento tipoRecebimento : tipoRecebimentos) {
-                realm.copyToRealmOrUpdate(new TipoRecebimentoORM(tipoRecebimento));
-            }
-        }
-        realm.commitTransaction();
-        Log.d("Importacao Tipo", "Sucess");
-    }
 
     private void salvarUnidades(List<Unidade> unidades ) {
 
@@ -265,7 +247,6 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
                 Importacao importacao = importacaoResponse.body();
 
                 salvarClientes(importacao.getClientes());
-                salvarTipoRecebimentos(importacao.getTiposRecebimento());
                 salvarProdutos(importacao.getProdutos());
                 salvarUnidades(importacao.getUnidades());
                 salvarPrecos(importacao.getPrecos());

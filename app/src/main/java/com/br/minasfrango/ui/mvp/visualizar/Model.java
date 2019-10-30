@@ -3,10 +3,8 @@ package com.br.minasfrango.ui.mvp.visualizar;
 import com.br.minasfrango.data.dao.ClienteDAO;
 import com.br.minasfrango.data.dao.ItemPedidoDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
-import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Pedido;
-import com.br.minasfrango.data.model.TipoRecebimento;
 import com.br.minasfrango.data.realm.ClienteORM;
 import com.br.minasfrango.data.realm.ItemPedidoORM;
 import com.br.minasfrango.data.realm.PedidoORM;
@@ -21,7 +19,7 @@ public class Model implements IViewOrderMVP.IModel {
 
     IViewOrderMVP.IPresenter mPresenter;
 
-    TipoRecebimentoDAO mTipoRecebimentoDAO = TipoRecebimentoDAO.getInstace();
+
 
 
     public Model(final Presenter presenter) {
@@ -33,10 +31,6 @@ public class Model implements IViewOrderMVP.IModel {
         return new Cliente(this.mClienteDAO.findById(codigoCliente));
     }
 
-    @Override
-    public TipoRecebimento pesquisarTipoRecebimentoPorID(final long tipoRecebimento) throws Throwable {
-        return this.mTipoRecebimentoDAO.findById(tipoRecebimento);
-    }
 
     @Override
     public Pedido pesquisarVendaPorId(final Long id) {

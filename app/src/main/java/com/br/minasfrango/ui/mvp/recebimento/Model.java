@@ -4,7 +4,6 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.data.dao.ContaDAO;
 import com.br.minasfrango.data.dao.RecebimentoDAO;
-import com.br.minasfrango.data.dao.TipoRecebimentoDAO;
 import com.br.minasfrango.data.model.Conta;
 import com.br.minasfrango.data.model.Recebimento;
 import com.br.minasfrango.data.realm.ContaORM;
@@ -13,7 +12,6 @@ import com.br.minasfrango.util.ConstantsUtil;
 import com.br.minasfrango.util.DateUtils;
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -26,7 +24,7 @@ public class Model implements IRecebimentoMVP.IModel {
 
     IRecebimentoMVP.IPresenter mPresenter;
 
-    TipoRecebimentoDAO mTipoRecebimentoDAO = TipoRecebimentoDAO.getInstace();
+
 
     ContaDAO mContaDAO = ContaDAO.getInstace(ContaORM.class);
 
@@ -108,14 +106,10 @@ public class Model implements IRecebimentoMVP.IModel {
         return mPresenter.getCredito().compareTo(new BigDecimal(0)) == ConstantsUtil.BIGGER;
     }
 
-    @Override
-    public int findIdTipoRecebimento(final String item) {
-        return mTipoRecebimentoDAO.codigoFormaPagamento(item);
-    }
 
     @Override
-    public List<Conta> obterContas() {
-        return this.mContaDAO.obterTodasContas();
+    public List<Conta> pesquisarContaPorId() {
+        return this.mContaDAO.pesquisarContaPorId();
     }
 
     @Override
@@ -123,10 +117,7 @@ public class Model implements IRecebimentoMVP.IModel {
         return recebimentoDAO.pesquisarRecebimentoPorCliente(mPresenter.getCliente());
     }
 
-    @Override
-    public ArrayList<String> obterTipoRecebimentos(long id) throws Throwable {
-        return this.mTipoRecebimentoDAO.pesquisarTipoRecebimentoPorId();
-    }
+
 
     @Override
     public void processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(

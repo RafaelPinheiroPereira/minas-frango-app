@@ -46,7 +46,6 @@ import com.br.minasfrango.data.model.ItemPedidoID;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.model.Preco;
 import com.br.minasfrango.data.model.Produto;
-import com.br.minasfrango.data.model.TipoRecebimento;
 import com.br.minasfrango.data.model.Unidade;
 import com.br.minasfrango.ui.abstracts.AbstractActivity;
 import com.br.minasfrango.ui.adapter.ItemPedidoAdapter;
@@ -104,10 +103,9 @@ public class VendasActivity extends AppCompatActivity implements IView {
 
     SearchView searchView;
 
-    @BindView(R.id.spnFormaPagamento)
-    Spinner spnFormaPagamento;
 
-    ArrayAdapter<String> adaptadorTiposRecebimentos;
+
+
 
     ArrayAdapter<String> adaptadorUnidades;
 
@@ -331,8 +329,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
     @OnClick(R.id.btnSalvarVenda)
     public void btnConfirmSaleOnClicked(View view) {
 
-        if ((mPresenter.getItens().size() > 0
-                && !mPresenter.getTipoRecebimento().equals("Formas de Pagamento"))
+        if ((mPresenter.getItens().size() > 0)
                 && (!new ControleSessao(mPresenter.getContext())
                 .getEnderecoBluetooth()
                 .isEmpty())) {
@@ -340,7 +337,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
             if (mPresenter.getPedido() != null) {
 
                 List<ItemPedido> itensDTO = mPresenter.getItens();
-                mPresenter.getPedido().setTipoRecebimento(mPresenter.getTipoRecebimentoID());
+
                 mPresenter
                         .getPedido()
                         .setItens((itensDTO));
@@ -362,9 +359,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
             }
             mPresenter.esperarPorConexao();
 
-        } else if (mPresenter.getTipoRecebimento().equals("Formas de Pagamento")) {
-            AbstractActivity.showToast(mPresenter.getContext(), "Forma de Pagamento Inválida!");
-        } else if (new ControleSessao(mPresenter.getContext()).getEnderecoBluetooth().isEmpty()) {
+        }  else if (new ControleSessao(mPresenter.getContext()).getEnderecoBluetooth().isEmpty()) {
             AbstractActivity.showToast(
                     mPresenter.getContext(),
                     "Dispositivo não conectado!\nHabilite no Menu : Configurar Impressora.");
@@ -376,10 +371,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
 
     @Override
     public void carregarDadosDaVenda() throws Throwable {
-        TipoRecebimento tipoRecebimento = mPresenter.pesquisarTipoRecebimentoPorId();
-        spnFormaPagamento.setSelection(
-                adaptadorTiposRecebimentos.getPosition(tipoRecebimento.getNome()));
-        mPresenter.setTipoRecebimento(tipoRecebimento.getNome());
+
         mPresenter.setItens(mPresenter.getPedido().getItens());
         mPresenter.atualizarRecyclerItens();
         inicializarSwipe();
@@ -521,10 +513,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
                 adaptadorDescricoesProduto.getPosition(mPresenter.getProdutoSelecionado().getNome()));
     }
 
-    @OnItemSelected(R.id.spnFormaPagamento)
-    public void setSpnFormaPagamentoOnSelected(int position) {
-        mPresenter.setTipoRecebimento(adaptadorTiposRecebimentos.getItem(position));
-    }
+
 
     @OnItemSelected(R.id.spnProducts)
     public void setSpnProductsOnSelected(int position) {
@@ -721,13 +710,6 @@ public class VendasActivity extends AppCompatActivity implements IView {
 
     private void setAdaptadores() {
 
-        List<TipoRecebimento> recebimentos =
-                mPresenter.carregarTipoRecebimentoPorCliente(mPresenter.getCliente());
-        adaptadorTiposRecebimentos =
-                new ArrayAdapter<>(
-                        VendasActivity.this,
-                        android.R.layout.simple_list_item_1,
-                        mPresenter.converterTipoRecebimentoEmString(recebimentos));
 
         List<Produto> produtos = mPresenter.carregarProdutos();
 
@@ -755,12 +737,12 @@ public class VendasActivity extends AppCompatActivity implements IView {
 
         actCodigoProduto.setAdapter(adaptadorCodigoProduto);
         spnProdutos.setAdapter(adaptadorDescricoesProduto);
-        spnFormaPagamento.setAdapter(adaptadorTiposRecebimentos);
+
         rcvItens.setAdapter(adaptadorItensPedido);
         spnUnidades.setAdapter(adaptadorUnidades);
 
         spnProdutos.setSelection(POSICAO_INICIAL);
-        spnFormaPagamento.setSelection(POSICAO_INICIAL);
+
         actCodigoProduto.setOnItemClickListener(
                 (adapterView, view, i, l) -> {
                     Long idProduct = Long.parseLong((String) adapterView.getItemAtPosition(i));

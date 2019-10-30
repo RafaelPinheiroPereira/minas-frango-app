@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Pedido;
-import com.br.minasfrango.data.model.TipoRecebimento;
+
 
 public interface IViewOrderMVP {
 
@@ -22,11 +22,10 @@ public interface IViewOrderMVP {
 
         void setPedido(Pedido pedido);
 
-        TipoRecebimento pesquisarTipoRecebimentoPorId(long tipoRecebimento) throws Throwable;
 
-        TipoRecebimento getTipoRecebimento();
 
-        void setTipoRecebimento(TipoRecebimento tipoRecebimento);
+
+
 
         void setDataView();
 
@@ -48,7 +47,7 @@ public interface IViewOrderMVP {
 
         Cliente pesquisarClientePorID(long codigoCliente);
 
-        TipoRecebimento pesquisarTipoRecebimentoPorID(long tipoRecebimento) throws Throwable;
+
 
         Pedido pesquisarVendaPorId(Long id);
     }

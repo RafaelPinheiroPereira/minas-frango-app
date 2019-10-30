@@ -10,7 +10,6 @@ import com.br.minasfrango.data.model.ItemPedido;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.model.Preco;
 import com.br.minasfrango.data.model.Produto;
-import com.br.minasfrango.data.model.TipoRecebimento;
 import com.br.minasfrango.data.model.Unidade;
 import com.br.minasfrango.data.realm.PedidoORM;
 import com.br.minasfrango.ui.mvp.venda.IVendaMVP.IView;
@@ -177,10 +176,7 @@ public class Presenter implements IVendaMVP.IPresenter {
         this.itens = itens;
     }
 
-    @Override
-    public List<TipoRecebimento> carregarTipoRecebimentoPorCliente(final Cliente client) {
-        return this.mModel.pesquisarTipoRecebimentosPorCliente(client);
-    }
+
 
     @Override
     public List<Unidade> carregarUnidades() {
@@ -223,31 +219,13 @@ public class Presenter implements IVendaMVP.IPresenter {
         return this.mModel.pesquisarUnidadePorProduto();
     }
 
-    @Override
-    public ArrayList<String> converterTipoRecebimentoEmString(
-            final List<TipoRecebimento> tiposRecebimentos) {
-        return this.mModel.convertTipoRecebimentoInString(tiposRecebimentos);
-    }
 
     @Override
     public void desabilitarBotaoSalvarPedido() {
         this.mView.desabilitarCliqueBotaoSalvarVenda();
     }
 
-    @Override
-    public String getTipoRecebimento() {
-        return tipoRecebimento;
-    }
 
-    @Override
-    public void setTipoRecebimento(final String tipoRecebimento) {
-        this.tipoRecebimento = tipoRecebimento;
-    }
-
-    @Override
-    public int getTipoRecebimentoID() {
-        return this.mModel.getTipoRecebimentoID();
-    }
 
     @Override
     public void exibirDialogAlterarItemPedido(final int position) {
@@ -356,10 +334,7 @@ public class Presenter implements IVendaMVP.IPresenter {
         return this.mModel.pesquisarProdutoPorId(id);
     }
 
-    @Override
-    public TipoRecebimento pesquisarTipoRecebimentoPorId() throws Throwable {
-        return this.mModel.pesquisarTipoRecebimentoPorId();
-    }
+
 
     @Override
     public Pedido pesquisarVendaPorId(final long keyPedido) {
@@ -389,7 +364,7 @@ public class Presenter implements IVendaMVP.IPresenter {
         pedido.setCodigoFuncionario(controleSessao.getIdUsuario());
         pedido.setCodigoCliente(getCliente().getId());
         pedido.setValorTotal(calcularTotalDaVenda());
-        pedido.setTipoRecebimento(getTipoRecebimentoID());
+
 
         PedidoORM pedidoORM = new PedidoORM(pedido);
 
