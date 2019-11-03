@@ -54,6 +54,8 @@ public class Presenter implements IVendaMVP.IPresenter {
 
     int bicos;
 
+    String loteSelecionado;
+
     private AlertDialog mAlertDialog;
 
     public Presenter(final IView view) {
@@ -80,6 +82,11 @@ public class Presenter implements IVendaMVP.IPresenter {
     @Override
     public void atualizarRecyclerItens() {
         this.mView.updateRecyclerItens();
+    }
+
+    @Override
+    public void atualizarSpinnerLotes() {
+        this.mView.atualizarSpinnerLotes();
     }
 
     @Override
@@ -138,8 +145,8 @@ public class Presenter implements IVendaMVP.IPresenter {
     }
 
     @Override
-    public void carregarDadosDaVenda() throws Throwable {
-        this.mView.carregarDadosDaVenda();
+    public void carregarVenda() throws Throwable {
+        this.mView.carregarVenda();
     }
 
     @Override
@@ -283,6 +290,8 @@ public class Presenter implements IVendaMVP.IPresenter {
         this.produtoSelecionado = produtoSelecionado;
     }
 
+
+
     @Override
     public BigDecimal getQuantidadeProdutos() {
         return quantidadeProdutos;
@@ -419,5 +428,15 @@ public class Presenter implements IVendaMVP.IPresenter {
     @Override
     public boolean validarCamposAntesDeAdicionarItem() {
         return this.mView.validarCamposAntesDeAdicionarItem();
+    }
+
+    @Override
+    public void setLoteSelecionado(final String loteSelecionado) {
+        this.loteSelecionado=loteSelecionado;
+    }
+
+    @Override
+    public String getLoteSelecionado() {
+        return this.loteSelecionado;
     }
 }

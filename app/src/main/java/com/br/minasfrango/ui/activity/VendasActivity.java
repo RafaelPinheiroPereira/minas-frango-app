@@ -120,6 +120,9 @@ public class VendasActivity extends AppCompatActivity implements IView {
     @BindView(R.id.spnProducts)
     Spinner spnProdutos;
 
+    @BindView(R.id.spnLotes)
+    Spinner spnLote;
+
     @BindView(R.id.spnUnitys)
     Spinner spnUnidades;
 
@@ -131,6 +134,8 @@ public class VendasActivity extends AppCompatActivity implements IView {
 
     @BindView(R.id.btnFotografar)
     Button btnFotografar;
+
+    ArrayAdapter<CharSequence> adaptadorLotes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,13 +156,13 @@ public class VendasActivity extends AppCompatActivity implements IView {
         try {
             if (VERSION.SDK_INT >= VERSION_CODES.N) {
                 if (Optional.ofNullable(mPresenter.getPedido()).isPresent()) {
-                    mPresenter.carregarDadosDaVenda();
+                    mPresenter.carregarVenda();
                 } else {
                     inicializarSwipe();
                 }
             } else {
                 if (mPresenter.getPedido() != null) {
-                    mPresenter.carregarDadosDaVenda();
+                    mPresenter.carregarVenda();
                 } else {
                     inicializarSwipe();
                 }
@@ -314,6 +319,18 @@ public class VendasActivity extends AppCompatActivity implements IView {
     }
 
     @Override
+    public void atualizarSpinnerLotes() {
+
+        String[] lotes= getResources().getStringArray(R.array.lotes);
+        for(int i=0;i<lotes.length; i++){
+            if(lotes[i].equals(mPresenter.getItens().get(0).getLote())){
+                spnLote.setSelection(i);
+            }
+        }
+
+    }
+
+    @Override
     public void atualizarViewsDoProdutoSelecionado() {
         mPresenter.setSpinnerProdutoSelecionado();
         mPresenter.setSpinnerUnidadePadraoProdutoSelecionado();
@@ -370,10 +387,11 @@ public class VendasActivity extends AppCompatActivity implements IView {
     }
 
     @Override
-    public void carregarDadosDaVenda() throws Throwable {
+    public void carregarVenda() throws Throwable {
 
         mPresenter.setItens(mPresenter.getPedido().getItens());
         mPresenter.atualizarRecyclerItens();
+        mPresenter.atualizarSpinnerLotes();
         inicializarSwipe();
     }
 
@@ -523,6 +541,15 @@ public class VendasActivity extends AppCompatActivity implements IView {
         mPresenter.atualizarProdutoSelecionadoView();
     }
 
+    @OnItemSelected(R.id.spnLotes)
+    public void setLoteSelecionado(int position) {
+
+        String lote = adaptadorLotes.getItem(position).toString();
+        mPresenter.setLoteSelecionado(lote);
+
+    }
+
+
     @OnItemSelected(R.id.spnUnitys)
     public void setSpnUnityOnSelected(int position) {
         // setar o preco de acordo com aquela unidade  no presenter
@@ -580,6 +607,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
         itemPedido.setDescricao(mPresenter.getProdutoSelecionado().getNome());
         itemPedido.setBicos(Integer.parseInt(edtQTDBicos.getText().toString()));
         itemPedido.setValorTotal(mPresenter.getValorTotalProduto().doubleValue());
+        itemPedido.setLote(mPresenter.getLoteSelecionado());
         return itemPedido;
     }
 
@@ -750,5 +778,9 @@ public class VendasActivity extends AppCompatActivity implements IView {
                     mPresenter.setProdutoSelecionado(mPresenter.pesquisarProdutoPorId(idProduct));
                     mPresenter.atualizarProdutoSelecionadoView();
                 });
+
+        adaptadorLotes=  ArrayAdapter.createFromResource(mPresenter.getContext(),R.array.lotes,android.R.layout.simple_spinner_item);
+        spnLote.setAdapter(adaptadorLotes);
+        spnLote.setSelection(POSICAO_INICIAL);
     }
 }

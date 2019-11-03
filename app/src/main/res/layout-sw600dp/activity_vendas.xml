@@ -131,6 +131,16 @@
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Lotes"
+                        android:textSize="18sp" />
+                    <Spinner
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:id="@+id/spnLotes"
+                        ></Spinner>
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="110dp"
                         style="@style/TextInputLayout"

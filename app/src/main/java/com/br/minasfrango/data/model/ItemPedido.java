@@ -27,6 +27,8 @@ public class ItemPedido implements Serializable {
 
     private Double valorUnitario;
 
+    private String lote;
+
     public ItemPedido(ItemPedidoORM itemPedidoORM) {
         this.id = itemPedidoORM.getId();
         this.chavesItemPedido = new ItemPedidoID(itemPedidoORM.getChavesItemPedidoORM());
@@ -35,5 +37,6 @@ public class ItemPedido implements Serializable {
         this.valorTotal = itemPedidoORM.getValorTotal();
         this.quantidade = itemPedidoORM.getQuantidade();
         this.bicos = itemPedidoORM.getBicos();
+        this.lote=itemPedidoORM.getLote();
     }
 }

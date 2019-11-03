@@ -25,6 +25,8 @@ public interface IVendaMVP {
 
         void atualizarRecyclerItens();
 
+        void atualizarSpinnerLotes();
+
         void error(String msg);
 
         void esperarPorConexao();
@@ -68,7 +70,7 @@ public interface IVendaMVP {
 
 
 
-        void carregarDadosDaVenda() throws Throwable;
+        void carregarVenda() throws Throwable;
 
         Preco getPreco();
 
@@ -146,9 +148,14 @@ public interface IVendaMVP {
         void imprimirComprovante();
 
         boolean validarCamposAntesDeAdicionarItem();
+
+        void setLoteSelecionado(String loteSelecionado);
+        String getLoteSelecionado();
     }
 
     interface IView {
+
+        void atualizarSpinnerLotes();
 
         void atualizarViewsDoProdutoSelecionado();
 
@@ -158,7 +165,7 @@ public interface IVendaMVP {
 
         void error(String msg);
 
-        void carregarDadosDaVenda() throws Throwable;
+        void carregarVenda() throws Throwable;
 
         void exibirBotaoImprimir();
 

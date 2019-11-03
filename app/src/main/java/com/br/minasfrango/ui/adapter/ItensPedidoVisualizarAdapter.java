@@ -33,6 +33,7 @@ public class ItensPedidoVisualizarAdapter
                 valorTextView,
                 unidadeTextView,
                 qtdTextView,
+                 txtLote,
                 vlrUnitarioTextView;
 
         public ItemViewHolder(View itemView) {
@@ -43,6 +44,7 @@ public class ItensPedidoVisualizarAdapter
             unidadeTextView = itemView.findViewById(R.id.unidade_txt_item_visualizar);
             qtdTextView = itemView.findViewById(R.id.qtd_text_view_item_visualizar);
             vlrUnitarioTextView = itemView.findViewById(R.id.valor_unitario_txt_item_visualizar);
+            txtLote= itemView.findViewById(R.id.txtLote);
         }
     }
 
@@ -64,6 +66,8 @@ public class ItensPedidoVisualizarAdapter
                 NumberFormat.getCurrencyInstance().format(itemPedido.getValorUnitario()));
 
         itemViewHolder.txtQTDBicos.setText(String.valueOf(itemPedido.getBicos()));
+        itemViewHolder.txtLote.setText(itemPedido.getLote());
+
     }
 
     @Override

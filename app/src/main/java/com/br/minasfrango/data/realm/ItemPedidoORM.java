@@ -30,6 +30,8 @@ public class ItemPedidoORM extends RealmObject implements Serializable {
 
     private Double valorUnitario;
 
+    private String lote;
+
     public ItemPedidoORM(ItemPedido itemPedido) {
         this.id = itemPedido.getId();
         this.chavesItemPedidoORM = new ItemPedidoIDORM(itemPedido.getChavesItemPedido());
@@ -38,5 +40,6 @@ public class ItemPedidoORM extends RealmObject implements Serializable {
         this.valorTotal = itemPedido.getValorTotal();
         this.quantidade = itemPedido.getQuantidade();
         this.bicos = itemPedido.getBicos();
+        this.lote=itemPedido.getLote();
     }
 }

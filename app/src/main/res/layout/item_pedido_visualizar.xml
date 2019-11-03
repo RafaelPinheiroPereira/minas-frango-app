@@ -70,6 +70,16 @@
                 android:textColor="@color/textColorPrimary"
                 android:textSize="12sp" />
             <TextView
+                android:id="@+id/txtLote"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:text="Lote"
+                android:textColor="@color/textColorPrimary"
+                android:textSize="12sp" />
+            <TextView
                 android:id="@+id/valor_unitario_txt_item_visualizar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
