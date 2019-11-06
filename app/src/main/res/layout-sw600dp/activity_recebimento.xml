@@ -275,7 +275,6 @@
                     android:text=" Gerar Recibo"
                     android:textSize="20sp"
                     app:iconPadding="10dp"
-                    app:iconSize="48dp"
                     android:textColor="@color/white"
                     android:visibility="gone"
                     app:backgroundTint="@color/primary_dark"
@@ -296,7 +295,6 @@
                     app:backgroundTint="@color/primary_dark"
                     app:icon="@mipmap/ic_photo_camera_black_48dp"
                     app:iconPadding="10dp"
-                    app:iconSize="48dp"
                     app:iconGravity="textStart"
                     app:iconTint="@color/white" />
 

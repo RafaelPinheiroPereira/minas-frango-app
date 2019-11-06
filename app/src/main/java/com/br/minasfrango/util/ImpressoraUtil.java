@@ -5,6 +5,9 @@ import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.R;
@@ -81,9 +84,10 @@ public class ImpressoraUtil {
     public void imprimirComprovantePedido(final Pedido pedido, Cliente cliente) {
 
         runTask(
-                (dialog, printer)->{
-                    StringBuffer textBuffer =
-                            configurarLayoutImpressaoPedido(pedido, cliente);
+                (dialog, printer) -> {
+                    imprimirLogo(printer);
+
+                    StringBuffer textBuffer = configurarLayoutImpressaoPedido(pedido, cliente);
 
                     printer.reset();
                     printer.printTaggedText(textBuffer.toString());
@@ -93,10 +97,30 @@ public class ImpressoraUtil {
                 R.string.acessar);
     }
 
+    private void imprimirLogo(final Printer printer) throws IOException {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inScaled = false;
+
+        final AssetManager assetManager = this.activity.getAssets();
+        final Bitmap bitmap =
+                BitmapFactory.decodeStream(assetManager.open("logo.png"), null, options);
+        final int width = bitmap.getWidth();
+        final int height = bitmap.getHeight();
+        final int[] argb = new int[width * height];
+        bitmap.getPixels(argb, 0, width, 0, 0, width, height);
+        bitmap.recycle();
+
+        printer.reset();
+        printer.printCompressedImage(argb, width, height, Printer.ALIGN_CENTER, true);
+        printer.feedPaper(110);
+        printer.flush();
+    }
+
     public void imprimirComprovanteRecebimento(
             final List<Recebimento> recebimentos, final Cliente cliente) {
         runTask(
-                (dialog, printer)->{
+                (dialog, printer) -> {
+                    imprimirLogo(printer);
                     StringBuffer textBuffer =
                             configurarLayoutImpressaoRecebimento(recebimentos, cliente);
 
@@ -170,31 +194,29 @@ public class ImpressoraUtil {
                             mProtocolAdapter.getRawOutputStream());
         }
 
-            mPrinter.setConnectionListener(
-                    () -> {
-                        abstractActivity.errorMSG(this.activity, "Impressora está desconectada");
+        mPrinter.setConnectionListener(
+                () -> {
+                    abstractActivity.errorMSG(this.activity, "Impressora está desconectada");
 
-                        abstractActivity.runOnUiThread(
-                                () -> {
-                                    if (!activity.isFinishing()) {
-                                        esperarPorConexao();
-                                    }
-                                });
-                    });
-
+                    abstractActivity.runOnUiThread(
+                            () -> {
+                                if (!activity.isFinishing()) {
+                                    esperarPorConexao();
+                                }
+                            });
+                });
     }
 
     public void status(final String text) {
 
-        abstractActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });
+        abstractActivity.runOnUiThread(
+                new Runnable() {
+                    @Override
+                    public void run() {}
+                });
 
         abstractActivity.runOnUiThread(
-                ()->{
+                () -> {
                     if (text != null) {
                         AbstractActivity.showToast(activity.getApplicationContext(), text);
                     } else {
@@ -206,15 +228,13 @@ public class ImpressoraUtil {
     private StringBuffer configurarLayoutImpressaoPedido(
             final Pedido pedido, final Cliente cliente) {
         StringBuffer textBuffer = new StringBuffer();
-        textBuffer.append("{center}{b}MINAS FRANGOS ");
-        textBuffer.append("{br}");
+
+        textBuffer.append("{s}{center}{b}COMPROVANTE DE VENDAS {br}");
         textBuffer.append("{br}{reset}");
-        textBuffer.append("{s}{center}COMPROVANTE DE VENDAS {br}");
-        textBuffer.append("{br}{reset}{br}");
         textBuffer.append(
                 "{b}VENDA: "
                         + DateUtils.retirarBarrasDaDataNoPadraoddMMyyyyParaString(
-                        pedido.getDataPedido())
+                                pedido.getDataPedido())
                         + pedido.getCodigoFuncionario()
                         + pedido.getId()
                         + "{br}");
@@ -223,35 +243,22 @@ public class ImpressoraUtil {
                         + DateUtils.formatarDateddMMyyyyhhmmParaString(pedido.getDataPedido())
                         + "{br}");
         textBuffer.append("{b}CLIENTE: " + cliente.getNome() + "{br}");
-        if (VERSION.SDK_INT >= VERSION_CODES.N) {
-            textBuffer.append(
-                    "{b}BICOS: "
-                            + pedido.getItens().stream().mapToInt(ItemPedido::getBicos).sum()
-                            + "{br}");
-        } else {
-            int quantidadeBicos = 0;
-            for (ItemPedido itemPedido : pedido.getItens()) {
-                quantidadeBicos += itemPedido.getBicos();
-            }
-            textBuffer.append(
-                    "{b}BICOS: "
-                            + quantidadeBicos
-                            + "{br}");
-        }
+
+        textBuffer.append(
+                "{b}TOTAL: " + FormatacaoMoeda.converterParaReal(pedido.getValorTotal()).replace("R$","") + "{br}");
+
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
             textBuffer.append(
                     "{b}PESO: "
-                            + pedido.getItens().stream().mapToInt(ItemPedido::getQuantidade).sum() + " KG"
+                            + pedido.getItens().stream().mapToInt(ItemPedido::getQuantidade).sum()
+                            + " KG"
                             + "{br}");
         } else {
             int pesoTotal = 0;
             for (ItemPedido itemPedido : pedido.getItens()) {
                 pesoTotal += itemPedido.getQuantidade();
             }
-            textBuffer.append(
-                    "{b}PESO: "
-                            + pesoTotal + " KG"
-                            + "{br}");
+            textBuffer.append("{b}PESO: " + pesoTotal + " KG" + "{br}");
         }
         textBuffer.append("{br}VENDEDOR: " + new ControleSessao(this.activity).getUserName());
         textBuffer.append("{br}");
@@ -265,48 +272,44 @@ public class ImpressoraUtil {
             final List<Recebimento> recebimentos, final Cliente cliente) {
 
         // Calcular valor total amortizado
-        Double valorTotalAmortizado =
-                null;
+        Double valorTotalAmortizado = 0.0;
         String strDataRecebimento = "";
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            valorTotalAmortizado = recebimentos.stream().mapToDouble(Recebimento::getValorAmortizado).sum();
+            valorTotalAmortizado =
+                    recebimentos.stream().mapToDouble(Recebimento::getValorAmortizado).sum();
         } else {
             for (Recebimento recebimento : recebimentos) {
                 valorTotalAmortizado += recebimento.getValorAmortizado();
             }
         }
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-        // Filtra um item checkado (Amortizado) para obter a data do recebimento
-        Optional<Recebimento> recebimento =
-                recebimentos.stream().filter(item->item.isCheck()).findAny();
+            // Filtra um item checkado (Amortizado) para obter a data do recebimento
+            Optional<Recebimento> recebimento =
+                    recebimentos.stream().filter(item -> item.isCheck()).findAny();
 
-        // Data do recebimento
+            // Data do recebimento
 
-            strDataRecebimento = DateUtils.formatarDateddMMyyyyhhmmParaString(
-                    recebimento.get().getDataRecebimento());
+            strDataRecebimento =
+                    DateUtils.formatarDateddMMyyyyhhmmParaString(
+                            recebimento.get().getDataRecebimento());
         } else {
 
             for (Recebimento recebimento : recebimentos) {
                 if (recebimento.isCheck()) {
-                    strDataRecebimento = DateUtils.formatarDateddMMyyyyhhmmParaString(
-                            recebimento.getDataRecebimento());
+                    strDataRecebimento =
+                            DateUtils.formatarDateddMMyyyyhhmmParaString(
+                                    recebimento.getDataRecebimento());
                 }
             }
-
-
         }
 
         StringBuffer textBuffer = new StringBuffer();
-        textBuffer.append("{center}{b}MINAS FRANGOS ");
-        textBuffer.append("{br}");
-        textBuffer.append("{br}{reset}");
-        textBuffer.append("{s}{center}COMPROVANTE DE PAGAMENTOS {br}");
+
+        textBuffer.append("{s}{center}{b}COMPROVANTE DE PAGAMENTOS {br}");
         textBuffer.append("{br}{reset}{br}");
         textBuffer.append("{b}CLIENTE: " + cliente.getNome() + "{br}");
         textBuffer.append(
-                "{b}VALOR: "
-                        + FormatacaoMoeda.converterParaDolar(valorTotalAmortizado)
-                        + "{br}");
+                "{b}VALOR: " + FormatacaoMoeda.converterParaDolar(valorTotalAmortizado) + "{br}");
         textBuffer.append("{b}DATA/HORA: " + strDataRecebimento + "{br}");
         textBuffer.append("{br}VENDEDOR: " + new ControleSessao(this.activity).getUserName());
         textBuffer.append("{br}");
@@ -327,7 +330,7 @@ public class ImpressoraUtil {
         final BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
         final Thread t =
                 new Thread(
-                        ()->{
+                        () -> {
                             btAdapter.cancelDiscovery();
                             try {
                                 UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
@@ -347,7 +350,7 @@ public class ImpressoraUtil {
                                 } catch (IOException e) {
 
                                     activity.runOnUiThread(
-                                            ()->{
+                                            () -> {
                                                 AbstractActivity.showToast(
                                                         this.activity,
                                                         "Impressora desligada/desabilitada.\nFalha ao conectar:  "
@@ -398,7 +401,7 @@ public class ImpressoraUtil {
 
         Thread t =
                 new Thread(
-                        ()->{
+                        () -> {
                             try {
                                 r.run(dialog, mPrinter);
                             } catch (IOException e) {

@@ -40,7 +40,6 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
 
     private static final int POSICAO_INICIAL = 0;
 
-    private static final long ID_TIPO_RECEBIMENTO_A_VISTA = 1;
 
     ContaAdapter adaptadorConta;
 
