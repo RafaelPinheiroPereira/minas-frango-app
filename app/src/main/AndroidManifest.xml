@@ -2,26 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.br.minasfrango">
-
-    <!--Permisoes de Internet-->
-    <uses-permission android:name="android.permission.INTERNET" />
-
-    <!--GPS-->
+    <!-- Permisoes de Internet -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- GPS -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
-
-    <!--Permisoes de Bluetooth-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- Permisoes de Bluetooth -->
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-
-    <!--Escrita e leitura no Storage-->
+    <uses-permission android:name="android.permission.BLUETOOTH" /> <!-- Escrita e leitura no Storage -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-
-    <!--Permissao e Recurso de camera-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- Permissao e Recurso de camera -->
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -37,6 +27,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:appComponentFactory">
+        <activity android:name=".ui.activity.ExclusaoActivity"></activity>
         <activity android:name=".ui.activity.HomeActivity">
             <meta-data
                 android:name="android.app.searchable"
@@ -46,10 +37,10 @@
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.DeviceListActivity"></activity>
+        <activity android:name=".ui.activity.DeviceListActivity" />
         <activity
             android:name=".ui.activity.PedidoActivity"
-            android:parentActivityName=".ui.activity.HomeActivity"></activity>
+            android:parentActivityName=".ui.activity.HomeActivity" />
 
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
@@ -62,7 +53,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.activity.VendasActivity"
             android:parentActivityName=".ui.activity.HomeActivity">
@@ -92,7 +82,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activity.VisualizarPedidoActivity" />
         </activity>
-
     </application>
 
 </manifest>

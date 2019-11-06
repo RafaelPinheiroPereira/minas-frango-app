@@ -252,6 +252,9 @@ public class HomeActivity extends AppCompatActivity
                                 break;
 
                             case 7:
+                                presenter.exibirToast("Dados sendo excluidos...");
+                                break;
+                            case 8:
                                 presenter.exibirDialogLogout();
                                 break;
                         }

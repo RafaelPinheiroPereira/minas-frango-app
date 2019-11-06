@@ -39,6 +39,10 @@ public class NavigateDrawer implements IDrawer {
                         .withIcon(mActivity.getResources().getDrawable(R.drawable.ic_file_upload_black_24dp)));
         drawer.addItem(
                 new PrimaryDrawerItem().withName("Configurar Impressora").withIcon(R.mipmap.ic_print_black_36dp));
+
+        drawer.addItem(
+                new PrimaryDrawerItem().withName("Excluir Dados")
+                        .withIcon(mActivity.getResources().getDrawable(R.mipmap.icon_delete)));
         drawer.addItem(
                 new PrimaryDrawerItem().withName("Sair")
                         .withIcon(mActivity.getResources().getDrawable(R.mipmap.ic_logout)));

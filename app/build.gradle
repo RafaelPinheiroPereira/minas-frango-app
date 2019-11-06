@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 
-
 android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
@@ -48,12 +47,11 @@ dependencies {
     //Picasso
     implementation 'com.squareup.picasso:picasso:2.5.2'
 
-
     //NavigateDrawer Navigate
     implementation "com.mikepenz:materialdrawer:6.1.2"
 
     //  Butter Knife
-     implementation 'com.jakewharton:butterknife:10.1.0'
+    implementation 'com.jakewharton:butterknife:10.1.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
 
     //Lib requisicao
@@ -61,7 +59,6 @@ dependencies {
 
     //Serializacao e deserializacao de json
     implementation 'com.squareup.retrofit2:converter-jackson:2.3.0'
-
 
     compileOnly 'org.projectlombok:lombok:1.18.2'
     annotationProcessor 'org.projectlombok:lombok:1.18.2'
@@ -83,7 +80,6 @@ dependencies {
     //Datecs Impressora
     implementation files('libs/com.datecs.api.jar')
 
-
     //lib geolocalizacao
 
     implementation 'com.github.AravindVijay7:GeoLocator-Android:1.0.2'
@@ -92,4 +88,3 @@ dependencies {
     implementation 'com.jaredrummler:material-spinner:1.3.1'
 }
 apply plugin: 'realm-android'
-
