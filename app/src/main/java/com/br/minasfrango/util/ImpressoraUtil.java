@@ -245,7 +245,7 @@ public class ImpressoraUtil {
         textBuffer.append("{b}CLIENTE: " + cliente.getNome() + "{br}");
 
         textBuffer.append(
-                "{b}TOTAL: " + pedido.getValorTotal() + "{br}");
+                "{b}TOTAL: " + FormatacaoMoeda.formatarValorSemSimboloMonetarioComDuasCasasDecimais(pedido.getValorTotal()) + "{br}");
 
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
             textBuffer.append(
