@@ -228,8 +228,11 @@ public class ImpressoraUtil {
     private StringBuffer configurarLayoutImpressaoPedido(
             final Pedido pedido, final Cliente cliente) {
         StringBuffer textBuffer = new StringBuffer();
-
-        textBuffer.append("{s}{center}{b}COMPROVANTE DE VENDAS {br}");
+        textBuffer.append("{s}AV.PRINCESA LEOPOLDINA,220,TIJUPA QUEIMADO{br}");
+        textBuffer.append("{s}CEP:65110000 SAO JOSE DE RIBAMAR, MA{br}");
+        textBuffer.append("{s}CNPJ:41627969000174 I.E:121292070{br}");
+        textBuffer.append("{s}FONE:(98)32372233{br}{br}");
+        textBuffer.append("{center}{b}COMPROVANTE DE VENDAS {br}");
         textBuffer.append("{br}{reset}");
         textBuffer.append(
                 "{b}VENDA: "
@@ -244,8 +247,21 @@ public class ImpressoraUtil {
                         + "{br}");
         textBuffer.append("{b}CLIENTE: " + cliente.getNome() + "{br}");
 
-        textBuffer.append(
-                "{b}TOTAL: " + FormatacaoMoeda.formatarValorSemSimboloMonetarioComDuasCasasDecimais(pedido.getValorTotal()) + "{br}");
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            textBuffer.append(
+                    "{b}BICOS: "
+                            + pedido.getItens().stream().mapToInt(ItemPedido::getBicos).sum()
+                            + "{br}");
+        } else {
+            int quantidadeBicos = 0;
+            for (ItemPedido itemPedido : pedido.getItens()) {
+                quantidadeBicos += itemPedido.getBicos();
+            }
+            textBuffer.append(
+                    "{b}BICOS: "
+                            + quantidadeBicos
+                            + "{br}");
+        }
 
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
             textBuffer.append(
@@ -260,7 +276,7 @@ public class ImpressoraUtil {
             }
             textBuffer.append("{b}PESO: " + pesoTotal + " KG" + "{br}");
         }
-        textBuffer.append("{br}VENDEDOR: " + new ControleSessao(this.activity).getUserName());
+        textBuffer.append("VENDEDOR: " + new ControleSessao(this.activity).getUserName());
         textBuffer.append("{br}");
         textBuffer.append("{reset}{left}{w}{h}________________");
         textBuffer.append("{br}");
@@ -304,14 +320,17 @@ public class ImpressoraUtil {
         }
 
         StringBuffer textBuffer = new StringBuffer();
-
-        textBuffer.append("{s}{center}{b}COMPROVANTE DE PAGAMENTOS {br}");
-        textBuffer.append("{br}{reset}{br}");
+        textBuffer.append("{s}AV.PRINCESA LEOPOLDINA,220,TIJUPA QUEIMADO{br}");
+        textBuffer.append("{s}CEP:65110000 SAO JOSE DE RIBAMAR, MA{br}");
+        textBuffer.append("{s}CNPJ:41627969000174 I.E:121292070{br}");
+        textBuffer.append("{s}FONE:(98)32372233{br}{br}");
+        textBuffer.append("{reset}{center}{b}COMPROVANTE DE PAGAMENTOS {br}");
+        textBuffer.append("{reset}");
         textBuffer.append("{b}CLIENTE: " + cliente.getNome() + "{br}");
         textBuffer.append(
                 "{b}VALOR: " + FormatacaoMoeda.converterParaDolar(valorTotalAmortizado) + "{br}");
         textBuffer.append("{b}DATA/HORA: " + strDataRecebimento + "{br}");
-        textBuffer.append("{br}VENDEDOR: " + new ControleSessao(this.activity).getUserName());
+        textBuffer.append("VENDEDOR: " + new ControleSessao(this.activity).getUserName());
         textBuffer.append("{br}");
         textBuffer.append("{reset}{left}{w}{h}________________");
         textBuffer.append("{br}");
