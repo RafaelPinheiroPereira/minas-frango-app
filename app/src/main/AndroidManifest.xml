@@ -27,7 +27,12 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:appComponentFactory">
-        <activity android:name=".ui.activity.ExclusaoActivity"></activity>
+        <activity android:name=".ui.activity.ExclusaoActivity"
+            android:parentActivityName=".ui.activity.HomeActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activity.ExclusaoActivity" />
+        </activity>
         <activity android:name=".ui.activity.HomeActivity">
             <meta-data
                 android:name="android.app.searchable"
@@ -82,6 +87,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activity.VisualizarPedidoActivity" />
         </activity>
+
     </application>
 
 </manifest>

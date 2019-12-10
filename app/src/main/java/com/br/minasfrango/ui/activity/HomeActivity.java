@@ -252,8 +252,13 @@ public class HomeActivity extends AppCompatActivity
                                 break;
 
                             case 7:
-                                presenter.exibirToast("Dados sendo excluidos...");
+                                AbstractActivity.navigateToActivity(
+                                        presenter.getContext(),
+                                        new Intent(
+                                                presenter.getContext(), ExclusaoActivity.class));
                                 break;
+
+
                             case 8:
                                 presenter.exibirDialogLogout();
                                 break;

@@ -7,10 +7,14 @@ import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.realm.PedidoORM;
+import com.br.minasfrango.util.DateUtils;
+import com.br.minasfrango.util.FormatacaoMoeda;
 import io.realm.RealmResults;
 import io.realm.exceptions.RealmException;
 import io.realm.internal.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class PedidoDAO extends GenericsDAO<PedidoORM> {
@@ -62,6 +66,28 @@ public class PedidoDAO extends GenericsDAO<PedidoORM> {
         List<Pedido> pedidos = new ArrayList<>();
         RealmResults<PedidoORM> results =
                 where().equalTo("codigoCliente", cliente.getId()).findAll();
+        if (results.size() > 0 && results != null) {
+            if (VERSION.SDK_INT >= VERSION_CODES.N) {
+                results.forEach(pedidoORM->pedidos.add(new Pedido(pedidoORM)));
+            } else {
+                for (PedidoORM pedidoORM : results) {
+                    pedidos.add(new Pedido(pedidoORM));
+                }
+            }
+        }
+
+        return pedidos;
+    }
+
+
+    public List<Pedido> pesquisarPedidosPorPeriodo(Date dataInicial,Date dataFinal) throws ParseException {
+        List<Pedido> pedidos = new ArrayList<>();
+
+
+
+
+        RealmResults<PedidoORM> results =
+                where().between("dataPedido",dataInicial,dataFinal).findAll();
         if (results.size() > 0 && results != null) {
             if (VERSION.SDK_INT >= VERSION_CODES.N) {
                 results.forEach(pedidoORM->pedidos.add(new Pedido(pedidoORM)));
