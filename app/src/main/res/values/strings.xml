@@ -10,7 +10,7 @@
     <string name="search_hint">FANTASIA,ID CLIENTE...</string>
     <string name="search_vendas_hint">ID PRODUTO, DESCRIÇÃO...</string>
     <string name="action_delete">Limpar Historico</string>
-    <string name="title_spinner_rota">Todas as Rotas</string>
+    <string name="title_spinner_rota">Todas as Redes</string>
 
     <string name="acessar">Login</string>
 

@@ -116,8 +116,9 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
 
     @OnClick(R.id.btnImprimir)
     public void setBtnImprimirOnClicked(View view) {
-
-        this.mPresenter.imprimirComprovante();
+        for (int i = 0; i < 2; i++) {
+            this.mPresenter.imprimirComprovante();
+        }
         this.mPresenter.exibirBotaoFotografar();
     }
 

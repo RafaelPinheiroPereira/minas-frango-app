@@ -37,6 +37,9 @@ public class Cliente implements Serializable {
 
     private String telefone;
 
+
+    private long codigoClienteGrupo;
+
     public Cliente(ClienteORM clienteORM) {
         this.id = clienteORM.getId();
         this.nome = clienteORM.getNome();
@@ -50,5 +53,6 @@ public class Cliente implements Serializable {
         this.referencia = clienteORM.getReferencia();
         this.telefone = clienteORM.getTelefone();
         this.numero = clienteORM.getNumero();
+        this.codigoClienteGrupo=clienteORM.getCodigoClienteGrupo();
     }
 }

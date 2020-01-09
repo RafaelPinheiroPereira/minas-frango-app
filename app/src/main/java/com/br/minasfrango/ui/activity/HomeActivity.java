@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.OnItemSelected;
 import com.br.minasfrango.R;
 import com.br.minasfrango.data.model.Cliente;
-import com.br.minasfrango.data.model.Rota;
+import com.br.minasfrango.data.model.ClienteGrupo;
 import com.br.minasfrango.ui.abstracts.AbstractActivity;
 import com.br.minasfrango.ui.adapter.ClienteAdapter;
 import com.br.minasfrango.ui.listener.IDrawer;
@@ -41,15 +41,15 @@ public class HomeActivity extends AppCompatActivity
 
     ClienteAdapter mClientAdapter;
 
-    ArrayAdapter mRouteAdapter;
+    ArrayAdapter mRedeAdapter;
 
     IPresenter presenter;
 
     @BindView(R.id.rcvCliente)
     RecyclerView rvCliente;
 
-    @BindView(R.id.spnRoute)
-    Spinner spnRoute;
+    @BindView(R.id.spnClienteGrupo)
+    Spinner spnClienteGrupo;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -99,7 +99,7 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void obterRotasAposImportarDados() {
-        mRouteAdapter.notifyDataSetChanged();
+        mRedeAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -120,7 +120,7 @@ public class HomeActivity extends AppCompatActivity
     public ProgressDialog getProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setTitle("Importação de Dados");
+            mProgressDialog.setTitle("Sincronização de dados");
             mProgressDialog.setCancelable(false);
             mProgressDialog.setMessage("Carregando dados, Por favor aguarde...");
         }
@@ -134,7 +134,7 @@ public class HomeActivity extends AppCompatActivity
         if (result != null && result.isDrawerOpen()) {
             result.closeDrawer();
         } else {
-            super.onBackPressed();
+            //super.onBackPressed();
         }
     }
 
@@ -205,12 +205,13 @@ public class HomeActivity extends AppCompatActivity
 
         rvCliente.setAdapter(mClientAdapter);
 
-        mRouteAdapter =
+        mRedeAdapter =
                 new ArrayAdapter(
-                        this, android.R.layout.simple_list_item_1, presenter.obterTodasRotas());
+                        this, android.R.layout.simple_list_item_1, presenter.obterTodasRedes());
 
-        spnRoute.setAdapter(mRouteAdapter);
-        spnRoute.setPrompt("Todas as Rotas");
+        spnClienteGrupo.setAdapter(mRedeAdapter);
+        spnClienteGrupo.setSelection(0);
+        spnClienteGrupo.setPrompt("Todas as Redes");
     }
 
     @Override
@@ -315,13 +316,13 @@ public class HomeActivity extends AppCompatActivity
         b.show();
     }
 
-    @OnItemSelected(R.id.spnRoute)
+    @OnItemSelected(R.id.spnClienteGrupo)
     void onItemSelected(int position) {
-        if (position != 0) {
-            presenter.pesquisarClientePorRota((Rota) mRouteAdapter.getItem(position));
+
+            presenter.pesquisarClientePorRede((ClienteGrupo) mRedeAdapter.getItem(position));
             mClientAdapter.notifyDataSetChanged();
-            spnRoute.setSelection(position);
-        }
+            spnClienteGrupo.setSelection(position);
+        
     }
 
     @Override

@@ -83,7 +83,15 @@ public class Model implements IVendaMVP.IModel {
     public Preco carregarPrecoUnidadePorProduto(final String unityID) {
         String id = mPrecoIDDAO.findPrecoIDByUnidadeAndProdutoAndCliente(mPresenter.getProdutoSelecionado(), unityID,
                 mPresenter.getCliente());
-        return this.mPrecoDAO.findPriceByPriceID(id);
+        if (id.equals("")){
+            String padrao = mPrecoIDDAO.findPrecoIDByUnidadeAndProdutoPadrao(mPresenter.getProdutoSelecionado(), unityID);
+            return this.mPrecoDAO.findPriceByPriceID(padrao);
+        }
+        else{
+
+
+
+        return this.mPrecoDAO.findPriceByPriceID(id);}
     }
 
     @Override

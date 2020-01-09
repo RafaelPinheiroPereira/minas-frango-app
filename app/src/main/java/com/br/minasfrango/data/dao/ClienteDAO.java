@@ -3,8 +3,8 @@ package com.br.minasfrango.data.dao;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.ClienteGrupo;
 import com.br.minasfrango.data.model.Pedido;
-import com.br.minasfrango.data.model.Rota;
 import com.br.minasfrango.data.realm.ClienteORM;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -57,10 +57,10 @@ public class ClienteDAO extends GenericsDAO<ClienteORM> {
         return clientes;
     }
 
-    public List<Cliente> pesquisarClientePorRota(Rota rotaParaPesquisar) {
+    public List<Cliente> pesquisarClientePorRede(ClienteGrupo clienteGrupo) {
         List<Cliente> clientes = new ArrayList<>();
         RealmResults<ClienteORM> results =
-                where().equalTo("localidadeORM.rotaORM.id", rotaParaPesquisar.getId())
+                where().equalTo("codigoClienteGrupo", clienteGrupo.getId())
                         .sort("nome", Sort.DESCENDING)
                         .findAll();
         if (VERSION.SDK_INT >= VERSION_CODES.N) {

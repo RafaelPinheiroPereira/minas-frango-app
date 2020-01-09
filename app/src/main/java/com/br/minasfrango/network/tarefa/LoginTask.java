@@ -46,16 +46,22 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(String islogin) {
         super.onPostExecute(islogin);
         progressDialog.dismiss();
-        if (islogin.equals("SUCESS")) {
-            mPresenter
-                    .getContexto()
-                    .startActivity(new Intent(mPresenter.getContexto(), HomeActivity.class));
-        } else if (islogin.equals("UNAUTHORIZED")) {
-            Toast.makeText(mPresenter.getContexto(), "Matricula/Senha inválidos!", Toast.LENGTH_LONG)
-                    .show();
-        } else {
-            Toast.makeText(mPresenter.getContexto(), islogin, Toast.LENGTH_LONG).show();
+        if(islogin!=null){
+            if (islogin.equals("SUCESS")) {
+                mPresenter
+                        .getContexto()
+                        .startActivity(new Intent(mPresenter.getContexto(), HomeActivity.class));
+
+            } else if (islogin.equals("UNAUTHORIZED")) {
+                Toast.makeText(mPresenter.getContexto(), "Matricula/Senha inválidos!", Toast.LENGTH_LONG)
+                        .show();
+            } else {
+                Toast.makeText(mPresenter.getContexto(), islogin, Toast.LENGTH_LONG).show();
+            }
+        }else{
+            Toast.makeText(mPresenter.getContexto(), "Erro ao conectar ao servidor", Toast.LENGTH_LONG).show();
         }
+
     }
 
     @Override

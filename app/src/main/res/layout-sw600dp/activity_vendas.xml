@@ -175,7 +175,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:digits="0123456789."
-                            android:hint="Preço"
+                            android:hint=""
                             android:enabled="false"
                             android:inputType="numberDecimal|textMultiLine"
                             android:lines="1"

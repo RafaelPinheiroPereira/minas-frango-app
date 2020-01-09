@@ -44,7 +44,18 @@ public class PrecoDAO extends GenericsDAO<PrecoORM> {
     }
 
     public Preco findPriceByPriceID(String idPriceID) {
-        return idPriceID == "" ? new Preco() : new Preco(where().like("chavesPrecoORM.id", idPriceID).findFirst());
+
+        Preco preco = new Preco();
+
+
+        RealmResults<PrecoORM> result = where().equalTo("chavesPrecoORM.id", idPriceID).findAll();
+
+        if (result != null && result.size() > 0) {
+           return  new Preco(result.first());
+
+        }
+
+        return preco;
 
     }
 

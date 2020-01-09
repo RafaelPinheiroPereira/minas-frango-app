@@ -5,6 +5,7 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.util.Log;
 import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.ClienteGrupo;
 import com.br.minasfrango.data.model.Conta;
 import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.data.model.Importacao;
@@ -13,6 +14,7 @@ import com.br.minasfrango.data.model.PrecoID;
 import com.br.minasfrango.data.model.Produto;
 import com.br.minasfrango.data.model.Recebimento;
 import com.br.minasfrango.data.model.Unidade;
+import com.br.minasfrango.data.realm.ClienteGrupoORM;
 import com.br.minasfrango.data.realm.ClienteORM;
 import com.br.minasfrango.data.realm.ContaORM;
 import com.br.minasfrango.data.realm.PrecoORM;
@@ -90,6 +92,21 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
         }
         realm.commitTransaction();
         Log.d("Importacao Clientes", "Sucess");
+    }
+
+    private void salvarClientesGrupos(List<ClienteGrupo> clienteGrupos) {
+
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            clienteGrupos.forEach(clienteGrupo -> realm.copyToRealmOrUpdate(new ClienteGrupoORM(clienteGrupo)));
+        } else {
+            for (ClienteGrupo clienteGrupo : clienteGrupos) {
+                realm.copyToRealmOrUpdate(new ClienteGrupoORM(clienteGrupo));
+            }
+        }
+        realm.commitTransaction();
+        Log.d("Importacao Grupos", "Sucess");
     }
 
     private void salvarContas(List<Conta> contas) {
@@ -252,9 +269,12 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
                 salvarPrecos(importacao.getPrecos());
                 salvarRecebimentos(importacao.getRecebimentosDTO());
                 salvarContas(importacao.getContas());
+                salvarClientesGrupos(importacao.getClientesGrupos());
+
 
             }
         } catch (IOException e) {
+           // Log.d("Error",e.getMessage());
             e.printStackTrace();
         }
         return true;

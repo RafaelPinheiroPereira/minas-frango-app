@@ -3,9 +3,9 @@ package com.br.minasfrango.ui.mvp.home;
 import android.content.Context;
 import android.os.Bundle;
 import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.ClienteGrupo;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.model.Recebimento;
-import com.br.minasfrango.data.model.Rota;
 import java.util.List;
 
 public interface IHomeMVP {
@@ -18,11 +18,11 @@ public interface IHomeMVP {
 
         void exibirDialogLogout();
 
-        List<Rota> obterTodasRotas();
+        List<ClienteGrupo> obterTodasRedes();
 
         List<Cliente> obterTodosClientes();
 
-        List<Cliente> pesquisarClientePorRota(Rota rota);
+        List<Cliente> pesquisarClientePorRede(ClienteGrupo ClienteGrupo);
 
         List<Recebimento> pesquisarRecebimentoPorCliente(Cliente cliente);
 
@@ -82,7 +82,7 @@ public interface IHomeMVP {
 
     interface IModel {
 
-        List<Rota> obterTodasRotas();
+        List<ClienteGrupo> obterTodasRedes();
 
         List<Cliente> obterTodosClientes();
 
@@ -90,7 +90,7 @@ public interface IHomeMVP {
 
         List<Recebimento> obterTodosRecebimentos();
 
-        List<Cliente> pesquisarClientePorRota(Rota rota);
+        List<Cliente> pesquisarClientePorRede(ClienteGrupo clienteGrupo);
 
         List<Recebimento> pesquisarRecebimentoPorCliente(Cliente cliente);
     }

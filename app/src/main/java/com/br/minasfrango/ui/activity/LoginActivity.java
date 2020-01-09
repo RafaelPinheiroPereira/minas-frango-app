@@ -181,7 +181,7 @@ public class LoginActivity extends AppCompatActivity implements IView {
         btnLogin.setVisibility(View.GONE);
 
         // Inicializacao a fim de testes
-        edtMatricula.setText("1");
-        edtSenha.setText("1234");
+        //edtMatricula.setText("1");
+       // edtSenha.setText("1234");
     }
 }

@@ -25,8 +25,9 @@ public class ClienteORM extends RealmObject implements Serializable {
 
     private String endereco;
 
-    @PrimaryKey
-    private long id;
+
+
+    @PrimaryKey private long id;
 
     private LocalidadeORM mLocalidadeORM;
 
@@ -39,6 +40,7 @@ public class ClienteORM extends RealmObject implements Serializable {
     private String referencia;
 
     private String telefone;
+    private long codigoClienteGrupo;
 
     public ClienteORM(Cliente cliente) {
         this.id = cliente.getId();
@@ -53,5 +55,6 @@ public class ClienteORM extends RealmObject implements Serializable {
         this.referencia = cliente.getReferencia();
         this.telefone = cliente.getTelefone();
         this.numero = cliente.getNumero();
+        this.codigoClienteGrupo = cliente.getCodigoClienteGrupo();
     }
 }

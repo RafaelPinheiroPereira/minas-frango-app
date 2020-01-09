@@ -5,10 +5,9 @@ import static com.br.minasfrango.data.model.Pedido.converterListItemPedidoRealmP
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.ItemPedido;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.realm.PedidoORM;
-import com.br.minasfrango.util.DateUtils;
-import com.br.minasfrango.util.FormatacaoMoeda;
 import io.realm.RealmResults;
 import io.realm.exceptions.RealmException;
 import io.realm.internal.IOException;
@@ -135,13 +134,15 @@ public class PedidoDAO extends GenericsDAO<PedidoORM> {
 
             results.forEach(pedidoORM->{
                 Pedido pedido =  new Pedido(pedidoORM) ;
-                pedido.setItens(converterListItemPedidoRealmParaModel(pedidoORM));
+                List<ItemPedido> itemPedidos=converterListItemPedidoRealmParaModel(pedidoORM);
+                pedido.setItens(itemPedidos);
                 pedidos.add(pedido);});
         } else {
             for (PedidoORM pedidoORM : results) {
                 Pedido pedido =  new Pedido(pedidoORM) ;
-                pedido.setItens(converterListItemPedidoRealmParaModel(pedidoORM));
-                pedidos.add(new Pedido(pedidoORM));
+                List<ItemPedido> itemPedidos=converterListItemPedidoRealmParaModel(pedidoORM);
+                pedido.setItens(itemPedidos);
+                pedidos.add(pedido);
             }
         }
         return pedidos;

@@ -4,12 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.ClienteGrupo;
 import com.br.minasfrango.data.model.Exportacao;
 import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.data.model.ListaPedido;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.model.Recebimento;
-import com.br.minasfrango.data.model.Rota;
 import com.br.minasfrango.network.tarefa.ExportacaoTask;
 import com.br.minasfrango.network.tarefa.ImportacaoTask;
 import com.br.minasfrango.ui.abstracts.AbstractActivity;
@@ -29,7 +29,7 @@ public class Presenter implements IHomeMVP.IPresenter {
 
     private List<Cliente> clients = new ArrayList<>();
 
-    private List<Rota> routes = new ArrayList<>();
+    private List<ClienteGrupo> redes = new ArrayList<>();
 
     private IModel model;
     private IView view;
@@ -89,10 +89,10 @@ public class Presenter implements IHomeMVP.IPresenter {
     }
 
     @Override
-    public List<Rota> obterTodasRotas() {
-        routes.clear();
-        routes.addAll(model.obterTodasRotas());
-        return routes;
+    public List<ClienteGrupo> obterTodasRedes() {
+        redes.clear();
+        redes.addAll(model.obterTodasRedes());
+        return redes;
     }
 
     @Override
@@ -102,9 +102,9 @@ public class Presenter implements IHomeMVP.IPresenter {
         return clients;
     }
 
-    public List<Cliente> pesquisarClientePorRota(final Rota route) {
+    public List<Cliente> pesquisarClientePorRede(final ClienteGrupo clienteGrupo) {
         clients.clear();
-        clients.addAll(model.pesquisarClientePorRota(route));
+        clients.addAll(model.pesquisarClientePorRede(clienteGrupo));
         return clients;
     }
 
@@ -170,7 +170,7 @@ public class Presenter implements IHomeMVP.IPresenter {
 
     @Override
     public void obterRotasAposImportarDados() {
-        obterTodasRotas();
+        obterTodasRedes();
         this.view.obterRotasAposImportarDados();
     }
 

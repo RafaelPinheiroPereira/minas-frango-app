@@ -41,7 +41,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Rotas"
+                android:text="Redes"
                 android:textColor="@color/textColorPrimary"
                 android:textSize="18sp"
                 android:padding="5dp"
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:prompt="@string/title_spinner_rota"
-                android:id="@+id/spnRoute">
+                android:id="@+id/spnClienteGrupo">
 
             </Spinner>
 
