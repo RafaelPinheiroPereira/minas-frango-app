@@ -24,7 +24,7 @@ public class ItemPedidoORM extends RealmObject implements Serializable {
     @PrimaryKey
     private long id;
 
-    private int quantidade;
+    private double quantidade;
 
     private double valorTotal;
 

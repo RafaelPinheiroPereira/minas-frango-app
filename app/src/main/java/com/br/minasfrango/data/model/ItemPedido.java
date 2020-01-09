@@ -21,7 +21,7 @@ public class ItemPedido implements Serializable {
 
     private long id;
 
-    private int quantidade;
+    private double quantidade;
 
     private double valorTotal;
 

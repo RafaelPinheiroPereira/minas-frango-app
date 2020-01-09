@@ -266,7 +266,7 @@ public class ImpressoraUtil {
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
             textBuffer.append(
                     "{b}PESO: "
-                            + pedido.getItens().stream().mapToInt(ItemPedido::getQuantidade).sum()
+                            + pedido.getItens().stream().mapToDouble(ItemPedido::getQuantidade).sum()
                             + " KG"
                             + "{br}");
         } else {

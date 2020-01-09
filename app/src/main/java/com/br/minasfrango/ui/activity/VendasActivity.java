@@ -298,10 +298,11 @@ public class VendasActivity extends AppCompatActivity implements IView {
             }
         }
         mPresenter.setQuantidadeProdutos(
+
                 new BigDecimal(
-                        edtQuantidadeProduto.getText().toString().isEmpty()
+                       edtQuantidadeProduto.getText().toString().isEmpty()
                                 ? "0"
-                                : edtQuantidadeProduto.getText().toString()));
+                                :  edtQuantidadeProduto.getText().toString()));
         txtValorTotalProduto.setText(
                 FormatacaoMoeda.converterParaReal(mPresenter.getValorTotalProduto().doubleValue()));
     }
@@ -570,7 +571,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
             edtQuantidadeProduto.requestFocus();
             return false;
         }
-        if (Integer.parseInt(edtQuantidadeProduto.getText().toString()) <= 0) {
+        if (Double.parseDouble(edtQuantidadeProduto.getText().toString()) <= 0) {
             edtQuantidadeProduto.setError("Quantidade mínima de 1 item!");
             edtQuantidadeProduto.requestFocus();
             return false;
