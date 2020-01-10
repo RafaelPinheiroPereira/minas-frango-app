@@ -27,6 +27,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:appComponentFactory">
+
+
         <activity android:name=".ui.activity.ExclusaoActivity"
             android:parentActivityName=".ui.activity.HomeActivity" >
             <meta-data
@@ -87,7 +89,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activity.VisualizarPedidoActivity" />
         </activity>
-
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
     </application>
 
 </manifest>

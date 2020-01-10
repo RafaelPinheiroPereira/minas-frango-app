@@ -61,7 +61,7 @@ public class ItemPedidoAdapter extends RecyclerView.Adapter<ItemPedidoAdapter.My
 
         myViewHolder.txtDescricao.setText((itemPedido.getDescricao()));
         myViewHolder.txtUnidade.setText(itemPedido.getChavesItemPedido().getIdUnidade().split("-")[0]);
-        myViewHolder.txtQuantidade.setText(String.valueOf(itemPedido.getQuantidade()));
+        myViewHolder.txtQuantidade.setText(String.format("%.2f",itemPedido.getQuantidade()));
         myViewHolder.txtValorUnitario.setText(FormatacaoMoeda.converterParaReal(itemPedido.getValorUnitario()));
         myViewHolder.txtValorTotal
                 .setText(FormatacaoMoeda.converterParaReal(itemPedido.getValorTotal()));

@@ -56,10 +56,10 @@ public class ItensPedidoVisualizarAdapter
     @Override
     public void onBindViewHolder(@NonNull final ItemViewHolder itemViewHolder, final int position) {
         final ItemPedido itemPedido = mItensPedido.get(position);
-        // itemViewHolder.txtQTDBicos.setText(String.valueOf(itemPedido.getChavesItemPedidoORM().getIdProduto()));
+
         itemViewHolder.descricaoTextView.setText((itemPedido.getDescricao()));
         itemViewHolder.unidadeTextView.setText(itemPedido.getChavesItemPedido().getIdUnidade());
-        itemViewHolder.qtdTextView.setText(String.valueOf(itemPedido.getQuantidade()));
+        itemViewHolder.qtdTextView.setText(String.format("%.2f",itemPedido.getQuantidade()));
         itemViewHolder.valorTextView.setText(
                 NumberFormat.getCurrencyInstance().format(itemPedido.getValorTotal()));
         itemViewHolder.vlrUnitarioTextView.setText(

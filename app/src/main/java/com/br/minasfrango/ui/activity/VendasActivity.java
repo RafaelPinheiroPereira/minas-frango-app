@@ -298,11 +298,11 @@ public class VendasActivity extends AppCompatActivity implements IView {
             }
         }
         mPresenter.setQuantidadeProdutos(
-
                 new BigDecimal(
-                       edtQuantidadeProduto.getText().toString().isEmpty()
-                                ? "0"
-                                :  edtQuantidadeProduto.getText().toString()));
+                                edtQuantidadeProduto.getText().toString().isEmpty()
+                                        ? "0"
+                                        : edtQuantidadeProduto.getText().toString())
+                        .setScale(2));
         txtValorTotalProduto.setText(
                 FormatacaoMoeda.converterParaReal(mPresenter.getValorTotalProduto().doubleValue()));
     }
@@ -329,7 +329,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
         mPresenter.setPreco(mPresenter.pesquisarPrecoPorProduto());
 
         cetPrecoUnitario.setText(
-                FormatacaoMoeda.converterParaDolar( mPresenter.getPreco().getValor()));
+                FormatacaoMoeda.converterParaDolar(mPresenter.getPreco().getValor()));
 
         mPresenter.updateTxtAmountProducts();
         updateActCodigoProduto();
@@ -434,13 +434,9 @@ public class VendasActivity extends AppCompatActivity implements IView {
 
     @OnClick(R.id.btnFotografar)
     public void fotografarComprovante(View view) {
-
         String nomeFoto =
-                mPresenter.getPedido().getId()
-                        + DateUtils.formatarDateddMMyyyyParaString(
-                                        mPresenter.getPedido().getDataPedido())
-                                .replace("/", "-")
-                        + mPresenter.getCliente().getNome();
+                String.format("%03d", mPresenter.getPedido().getCodigoFuncionario())
+                        + String.format("%08d", mPresenter.getPedido().getId());
 
         CameraUtil cameraUtil = new CameraUtil((Activity) mPresenter.getContext());
         cameraUtil.tirarFoto(CameraUtil.CAMINHO_IMAGEM_VENDAS, nomeFoto);
@@ -546,7 +542,8 @@ public class VendasActivity extends AppCompatActivity implements IView {
                 mPresenter.pesquisarPrecoDaUnidadePorProduto(adaptadorUnidades.getItem(position)));
         cetPrecoUnitario.setText(
                 FormatacaoMoeda.converterParaDolar(mPresenter.getPreco().getValor()));
-        mPresenter.setQuantidadeProdutos(new BigDecimal(edtQuantidadeProduto.getText().toString()));
+        mPresenter.setQuantidadeProdutos(
+                new BigDecimal(edtQuantidadeProduto.getText().toString()).setScale(2));
         txtValorTotalProduto.setText(
                 FormatacaoMoeda.converterParaReal(
                         this.mPresenter.getValorTotalProduto().doubleValue()));
@@ -592,7 +589,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
     @NonNull
     private ItemPedido getItemPedido() {
         ItemPedido itemPedido = new ItemPedido();
-        itemPedido.setQuantidade(mPresenter.getQuantidadeProdutos().intValue());
+        itemPedido.setQuantidade(mPresenter.getQuantidadeProdutos().doubleValue());
         itemPedido.setValorUnitario(mPresenter.getPreco().getValor());
         itemPedido.setDescricao(mPresenter.getProdutoSelecionado().getNome());
         itemPedido.setBicos(Integer.parseInt(edtQTDBicos.getText().toString()));
@@ -705,6 +702,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
                         } else {
                             mPresenter.setItemPedido(mPresenter.getItens().get(position));
                             mPresenter.exibirDialogAlterarItemPedido(position);
+                            mPresenter.atualizarRecyclerItens();
                         }
                     }
                 };

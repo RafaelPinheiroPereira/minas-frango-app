@@ -102,19 +102,19 @@ public class AlertDialogItemPedido {
 
         mIPresenter
                 .getItemPedido()
-                .setQuantidade(Integer.parseInt(edtQTDProductDialog.getText().toString()));
+                .setQuantidade(Double.parseDouble(edtQTDProductDialog.getText().toString()));
         mIPresenter
                 .getItemPedido()
-                .setQuantidade(Integer.parseInt(edtQTDBicoDialog.getText().toString()));
+                .setBicos(Integer.parseInt(edtQTDBicoDialog.getText().toString()));
         mIPresenter.getItemPedido().setValorUnitario(cetPriceDialog.getCurrencyDouble());
         mIPresenter
                 .getItemPedido()
                 .setValorTotal(
-                        Integer.parseInt(edtQTDProductDialog.getText().toString())
+                        Double.parseDouble(edtQTDProductDialog.getText().toString())
                                 * cetPriceDialog.getCurrencyDouble());
         mIPresenter.getItens().set(position, mIPresenter.getItemPedido());
         mIPresenter.setTotalDaVenda(new BigDecimal(mIPresenter.calcularTotalDaVenda()));
-        mIPresenter.atualizarRecyclerItens();
+
         mIPresenter.dissmis();
     }
 
