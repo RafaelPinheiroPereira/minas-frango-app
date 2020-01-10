@@ -302,7 +302,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
                                 edtQuantidadeProduto.getText().toString().isEmpty()
                                         ? "0"
                                         : edtQuantidadeProduto.getText().toString())
-                        .setScale(2));
+                        .setScale(2,BigDecimal.ROUND_HALF_DOWN));
         txtValorTotalProduto.setText(
                 FormatacaoMoeda.converterParaReal(mPresenter.getValorTotalProduto().doubleValue()));
     }
@@ -543,7 +543,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
         cetPrecoUnitario.setText(
                 FormatacaoMoeda.converterParaDolar(mPresenter.getPreco().getValor()));
         mPresenter.setQuantidadeProdutos(
-                new BigDecimal(edtQuantidadeProduto.getText().toString()).setScale(2));
+                new BigDecimal(edtQuantidadeProduto.getText().toString()).setScale(2,BigDecimal.ROUND_HALF_DOWN));
         txtValorTotalProduto.setText(
                 FormatacaoMoeda.converterParaReal(
                         this.mPresenter.getValorTotalProduto().doubleValue()));

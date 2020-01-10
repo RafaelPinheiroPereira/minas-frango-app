@@ -134,13 +134,14 @@ public class Presenter implements IVendaMVP.IPresenter {
     @Override
     public Double calcularTotalDaVenda() {
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
-            return getItens().stream().mapToDouble(ItemPedido::getValorTotal).sum();
+
+            return new BigDecimal(getItens().stream().mapToDouble(ItemPedido::getValorTotal).sum()).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue();
         } else {
             double valorTotalVenda = 0.0;
             for (ItemPedido itemPedido : getItens()) {
                 valorTotalVenda += itemPedido.getValorTotal();
             }
-            return valorTotalVenda;
+            return new BigDecimal(valorTotalVenda).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue();
         }
     }
 
