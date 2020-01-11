@@ -21,7 +21,6 @@ import com.br.minasfrango.ui.mvp.visualizar.IViewOrderMVP;
 import com.br.minasfrango.ui.mvp.visualizar.IViewOrderMVP.IView;
 import com.br.minasfrango.ui.mvp.visualizar.Presenter;
 import com.br.minasfrango.util.CameraUtil;
-import com.br.minasfrango.util.DateUtils;
 import java.text.DateFormat;
 
 public class VisualizarPedidoActivity extends AppCompatActivity implements IView {
@@ -126,10 +125,12 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
     @OnClick(R.id.btnFotografar)
     public void fotografarComprovante(View view) {
 
-        String nomeFoto = mPresenter.getPedido().getIdVenda()
-                + DateUtils.formatarDateddMMyyyyParaString(
-                mPresenter.getPedido().getDataPedido()).replace("/", "-")
-                + mPresenter.getCliente().getNome();
+
+        String nomeFoto =
+                String.format("%03d", mPresenter.getPedido().getCodigoFuncionario())
+                        + String.format("%08d", mPresenter.getPedido().getIdVenda());
+
+        
 
         CameraUtil cameraUtil = new CameraUtil((Activity) mPresenter.getContext());
         cameraUtil.tirarFoto(CameraUtil.CAMINHO_IMAGEM_VENDAS, nomeFoto);
