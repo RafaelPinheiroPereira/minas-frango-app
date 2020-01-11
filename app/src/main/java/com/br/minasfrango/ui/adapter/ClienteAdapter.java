@@ -143,7 +143,7 @@ public class  ClienteAdapter
 
     @Override
     public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
-        myViewHolder.txtIdCliente.setText(String.format("03%d",mClienteListFiltered.get(position).getId()));
+        myViewHolder.txtIdCliente.setText(String.format("%05d",mClienteListFiltered.get(position).getId()));
         myViewHolder.txtNameFantasy.setText(mClienteListFiltered.get(position).getNome());
         myViewHolder.txtAdress.setText(
                 mClienteListFiltered.get(position).getEndereco() != null ? mClienteListFiltered.get(position)
