@@ -86,7 +86,9 @@ public class PedidoDAO extends GenericsDAO<PedidoORM> {
 
 
         RealmResults<PedidoORM> results =
-                where().between("dataPedido",dataInicial,dataFinal).findAll();
+                where()
+                        //.between("dataPedido",dataInicial,dataFinal)
+                        .findAll();
         if (results.size() > 0 && results != null) {
             if (VERSION.SDK_INT >= VERSION_CODES.N) {
                 results.forEach(pedidoORM->pedidos.add(new Pedido(pedidoORM)));

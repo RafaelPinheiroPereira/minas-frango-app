@@ -27,7 +27,7 @@ public class Pedido implements Serializable {
 
     private Date dataPedido;
 
-    private long id;
+    private long idVenda;
 
     private List<ItemPedido> itens = new ArrayList<>();
 
@@ -51,7 +51,7 @@ public class Pedido implements Serializable {
     }
 
     public Pedido(PedidoORM pedidoORM) {
-        this.id = pedidoORM.getId();
+        this.idVenda = pedidoORM.getId();
         this.cancelado = pedidoORM.isCancelado();
         this.codigoCliente = pedidoORM.getCodigoCliente();
         this.codigoFuncionario = pedidoORM.getCodigoFuncionario();

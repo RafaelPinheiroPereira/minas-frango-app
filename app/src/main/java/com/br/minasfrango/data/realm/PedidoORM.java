@@ -53,7 +53,7 @@ public class PedidoORM extends RealmObject implements Serializable {
     }
 
     public PedidoORM(Pedido pedido) {
-        this.id = pedido.getId();
+        this.id = pedido.getIdVenda();
         this.cancelado = pedido.isCancelado();
         this.codigoCliente = pedido.getCodigoCliente();
         this.codigoFuncionario = pedido.getCodigoFuncionario();

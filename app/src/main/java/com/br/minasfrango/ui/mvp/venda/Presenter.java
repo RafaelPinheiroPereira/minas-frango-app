@@ -396,7 +396,7 @@ public class Presenter implements IVendaMVP.IPresenter {
             }
         }
         pedido.setItens(getItens());
-        pedido.setId(pedidoORM.getId());
+        pedido.setIdVenda(pedidoORM.getId());
 
         this.mModel.copyOrUpdateSaleOrder(pedido);
     }

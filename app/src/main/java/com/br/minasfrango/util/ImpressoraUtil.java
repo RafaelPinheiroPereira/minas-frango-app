@@ -239,7 +239,7 @@ public class ImpressoraUtil {
                         + DateUtils.retirarBarrasDaDataNoPadraoddMMyyyyParaString(
                                 pedido.getDataPedido())
                         + pedido.getCodigoFuncionario()
-                        + pedido.getId()
+                        + pedido.getIdVenda()
                         + "{br}");
         textBuffer.append(
                 "{b}DATA/HORA: "

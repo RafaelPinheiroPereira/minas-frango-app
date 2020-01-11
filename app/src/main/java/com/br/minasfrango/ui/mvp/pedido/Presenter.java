@@ -73,7 +73,7 @@ public class Presenter implements IPedidoMVP.IPresenter {
             Intent intent = new Intent(getContext(), VendasActivity.class);
             Bundle params = new Bundle();
             params.putSerializable("keyCliente", new Cliente());
-            params.putLong("keyPedido", pedido.getId());
+            params.putLong("keyPedido", pedido.getIdVenda());
             intent.putExtras(params);
             AbstractActivity.navigateToActivity(getContext(), intent);
         } else {
@@ -94,7 +94,7 @@ public class Presenter implements IPedidoMVP.IPresenter {
     public void onNavigateToViewSalesOrderActivity(final Pedido pedido) {
         Intent intent = new Intent(getContext(), VisualizarPedidoActivity.class);
         Bundle params = new Bundle();
-        params.putLong("keyPedido", pedido.getId());
+        params.putLong("keyPedido", pedido.getIdVenda());
         intent.putExtras(params);
         AbstractActivity.navigateToActivity(getContext(), intent);
     }

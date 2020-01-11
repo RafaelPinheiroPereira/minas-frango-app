@@ -3,6 +3,7 @@ package com.br.minasfrango.ui.activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NavUtils;
@@ -23,6 +24,8 @@ public class PedidoActivity extends AppCompatActivity implements IPedidoMVP.IVie
 
     @BindView(R.id.recyclerview)
     RecyclerView recyclerView;
+    @BindView(R.id.txt_quantidade_pedido)
+    TextView txtQuantidadePedidos;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -104,6 +107,7 @@ public class PedidoActivity extends AppCompatActivity implements IPedidoMVP.IVie
     protected void fillAdapter() {
 
         mAdapter = new PedidosAdapter(presenter, presenter.obterTodosClientePedido());
+        txtQuantidadePedidos.setText("N° de Pedidos:"+ mAdapter.getItemCount());
         recyclerView.setAdapter(mAdapter);
         mAdapter.setExpandCollapseListener(new ExpandableRecyclerAdapter.ExpandCollapseListener() {
             @Override
@@ -124,6 +128,7 @@ public class PedidoActivity extends AppCompatActivity implements IPedidoMVP.IVie
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
     }
 
 }

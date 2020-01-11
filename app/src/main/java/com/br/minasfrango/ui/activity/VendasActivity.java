@@ -58,10 +58,12 @@ import com.br.minasfrango.util.ControleSessao;
 import com.br.minasfrango.util.CurrencyEditText;
 import com.br.minasfrango.util.DateUtils;
 import com.br.minasfrango.util.FormatacaoMoeda;
+import com.br.minasfrango.util.MoneyTextWatcher;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 public class VendasActivity extends AppCompatActivity implements IView {
@@ -143,6 +145,8 @@ public class VendasActivity extends AppCompatActivity implements IView {
     protected void onStart() {
         super.onStart();
 
+        edtQuantidadeProduto.addTextChangedListener(
+                new MoneyTextWatcher(edtQuantidadeProduto, new Locale("pt", "BR")));
         mPresenter = new Presenter(this);
         mPresenter.getParametros();
         setAdaptadores();
@@ -301,8 +305,11 @@ public class VendasActivity extends AppCompatActivity implements IView {
                 new BigDecimal(
                                 edtQuantidadeProduto.getText().toString().isEmpty()
                                         ? "0"
-                                        : edtQuantidadeProduto.getText().toString())
-                        .setScale(2,BigDecimal.ROUND_HALF_DOWN));
+                                        : edtQuantidadeProduto
+                                                .getText()
+                                                .toString()
+                                                .replace(",", "."))
+                        .setScale(2, BigDecimal.ROUND_HALF_DOWN));
         txtValorTotalProduto.setText(
                 FormatacaoMoeda.converterParaReal(mPresenter.getValorTotalProduto().doubleValue()));
     }
@@ -436,7 +443,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
     public void fotografarComprovante(View view) {
         String nomeFoto =
                 String.format("%03d", mPresenter.getPedido().getCodigoFuncionario())
-                        + String.format("%08d", mPresenter.getPedido().getId());
+                        + String.format("%08d", mPresenter.getPedido().getIdVenda());
 
         CameraUtil cameraUtil = new CameraUtil((Activity) mPresenter.getContext());
         cameraUtil.tirarFoto(CameraUtil.CAMINHO_IMAGEM_VENDAS, nomeFoto);
@@ -543,7 +550,8 @@ public class VendasActivity extends AppCompatActivity implements IView {
         cetPrecoUnitario.setText(
                 FormatacaoMoeda.converterParaDolar(mPresenter.getPreco().getValor()));
         mPresenter.setQuantidadeProdutos(
-                new BigDecimal(edtQuantidadeProduto.getText().toString()).setScale(2,BigDecimal.ROUND_HALF_DOWN));
+                new BigDecimal(edtQuantidadeProduto.getText().toString())
+                        .setScale(2, BigDecimal.ROUND_HALF_DOWN));
         txtValorTotalProduto.setText(
                 FormatacaoMoeda.converterParaReal(
                         this.mPresenter.getValorTotalProduto().doubleValue()));
@@ -568,7 +576,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
             edtQuantidadeProduto.requestFocus();
             return false;
         }
-        if (Double.parseDouble(edtQuantidadeProduto.getText().toString()) <= 0) {
+        if (Double.parseDouble(edtQuantidadeProduto.getText().toString().replace(",", ".")) <= 0) {
             edtQuantidadeProduto.setError("Quantidade mínima de 1 item!");
             edtQuantidadeProduto.requestFocus();
             return false;
@@ -717,6 +725,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         txtValorTotalVenda.setText("R$ 00,00");
         edtQuantidadeProduto.setText("1");
+
         LinearLayoutManager layoutManager;
         layoutManager = new LinearLayoutManager(VendasActivity.this);
         // Configurando os recycle views

@@ -33,16 +33,16 @@ public class PedidosViewHolder extends ChildViewHolder implements OnClickListene
     }
 
 
-    public void bind(final Pedido pedidos) {
-        valorTotalTextView.setText(NumberFormat.getCurrencyInstance().format(pedidos.getValorTotal()));
-        idTextView.setText(String.valueOf(pedidos.getId()));
-        dataTextView.setText(DateFormat.getDateInstance().format(pedidos.getDataPedido()).toUpperCase());
-        if (pedidos.isCancelado()) {
+    public void bind(final Pedido pedidoSelecionado) {
+        valorTotalTextView.setText(NumberFormat.getCurrencyInstance().format(pedidoSelecionado.getValorTotal()));
+        idTextView.setText(String.valueOf(pedidoSelecionado.getIdVenda()));
+        dataTextView.setText(DateFormat.getDateInstance().format(pedidoSelecionado.getDataPedido()).toUpperCase());
+        if (pedidoSelecionado.isCancelado()) {
             valorTotalTextView.setTextColor(Color.RED);
             idTextView.setTextColor(Color.RED);
             dataTextView.setTextColor(Color.RED);
         }
-        pedido = pedidos;
+        pedido = pedidoSelecionado;
     }
 
     @Override

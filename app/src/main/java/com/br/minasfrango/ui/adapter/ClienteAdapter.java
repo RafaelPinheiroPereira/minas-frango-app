@@ -35,6 +35,8 @@ public class  ClienteAdapter
 
         public TextView txtNameFantasy;
 
+        public TextView txtIdCliente;
+
         @BindView(R.id.imgInfo)
         ImageView imgInfo;
 
@@ -47,6 +49,7 @@ public class  ClienteAdapter
 
             txtNameFantasy = itemView.findViewById(R.id.textViewNomeFantasia);
             txtAdress = itemView.findViewById(R.id.textViewEndereco);
+            txtIdCliente=itemView.findViewById(R.id.textViewIdCliente);
 
             btnVender.setOnClickListener(this);
             btnReceber.setOnClickListener(this);
@@ -140,7 +143,7 @@ public class  ClienteAdapter
 
     @Override
     public void onBindViewHolder(final MyViewHolder myViewHolder, final int position) {
-
+        myViewHolder.txtIdCliente.setText(String.format("03%d",mClienteListFiltered.get(position).getId()));
         myViewHolder.txtNameFantasy.setText(mClienteListFiltered.get(position).getNome());
         myViewHolder.txtAdress.setText(
                 mClienteListFiltered.get(position).getEndereco() != null ? mClienteListFiltered.get(position)

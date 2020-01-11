@@ -126,7 +126,7 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
     @OnClick(R.id.btnFotografar)
     public void fotografarComprovante(View view) {
 
-        String nomeFoto = mPresenter.getPedido().getId()
+        String nomeFoto = mPresenter.getPedido().getIdVenda()
                 + DateUtils.formatarDateddMMyyyyParaString(
                 mPresenter.getPedido().getDataPedido()).replace("/", "-")
                 + mPresenter.getCliente().getNome();
@@ -150,7 +150,7 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
                 DateFormat.getDateInstance()
                         .format(mPresenter.getPedido().getDataPedido())
                         .toUpperCase());
-        txtSaleOrderID.setText(String.valueOf(mPresenter.getPedido().getId()));
+        txtSaleOrderID.setText(String.valueOf(mPresenter.getPedido().getIdVenda()));
         txtClientName.setText(mPresenter.getCliente().getNome());
         txtAdress.setText(mPresenter.getCliente().getEndereco());
         txtStatus.setText(mPresenter.getPedido().isCancelado() ? "Cancelado" : "Ativo");
