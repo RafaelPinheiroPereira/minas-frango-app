@@ -127,6 +127,15 @@ public class VendasActivity extends AppCompatActivity implements IView {
     @BindView(R.id.txtAmountSale)
     TextView txtValorTotalVenda;
 
+    @BindView(R.id.txtClienteID)
+    TextView txtClienteID;
+    @BindView(R.id.txtRazaoSocial)
+    TextView txtRazaoSocial;
+    @BindView(R.id.txtCidade)
+    TextView txtCidade;
+    @BindView(R.id.txtEndereco)
+    TextView txtEndereco;
+
     @BindView(R.id.btnFotografar)
     Button btnFotografar;
 
@@ -149,6 +158,8 @@ public class VendasActivity extends AppCompatActivity implements IView {
                 new MoneyTextWatcher(edtQuantidadeProduto, new Locale("pt", "BR")));
         mPresenter = new Presenter(this);
         mPresenter.getParametros();
+
+
         setAdaptadores();
         try {
             if (VERSION.SDK_INT >= VERSION_CODES.N) {
@@ -726,6 +737,8 @@ public class VendasActivity extends AppCompatActivity implements IView {
         txtValorTotalVenda.setText("R$ 00,00");
         edtQuantidadeProduto.setText("1");
 
+
+
         LinearLayoutManager layoutManager;
         layoutManager = new LinearLayoutManager(VendasActivity.this);
         // Configurando os recycle views
@@ -781,5 +794,10 @@ public class VendasActivity extends AppCompatActivity implements IView {
                         android.R.layout.simple_spinner_item);
         spnLote.setAdapter(adaptadorLotes);
         spnLote.setSelection(POSICAO_INICIAL);
+
+        txtClienteID.setText(String.format("%05d",mPresenter.getCliente().getId()));
+        txtRazaoSocial.setText(mPresenter.getCliente().getRazaoSocial());
+        txtCidade.setText(mPresenter.getCliente().getCidade());
+        txtEndereco.setText(mPresenter.getCliente().getEndereco());
     }
 }

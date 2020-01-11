@@ -130,7 +130,7 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
                 String.format("%03d", mPresenter.getPedido().getCodigoFuncionario())
                         + String.format("%08d", mPresenter.getPedido().getIdVenda());
 
-        
+
 
         CameraUtil cameraUtil = new CameraUtil((Activity) mPresenter.getContext());
         cameraUtil.tirarFoto(CameraUtil.CAMINHO_IMAGEM_VENDAS, nomeFoto);
