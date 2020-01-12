@@ -24,7 +24,7 @@
 
         <TextView
             android:id="@+id/txtQTDProducts"
-            android:layout_width="30dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:layout_gravity="right|center_vertical"
@@ -39,7 +39,7 @@
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="left|center_vertical"
             android:text="lore insprosume "
             android:textColor="@android:color/secondary_text_light"
             android:textSize="10sp" />
@@ -59,7 +59,7 @@
 
         <TextView
             android:id="@+id/txtValorUnitario"
-            android:layout_width="60dp"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
             android:gravity="right"
@@ -72,9 +72,9 @@
 
         <TextView
             android:id="@+id/txt_valor_total_item"
-            android:layout_width="60dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="right|center_vertical"
             android:gravity="right"
             android:padding="5dp"
             android:text="lore insprosume"

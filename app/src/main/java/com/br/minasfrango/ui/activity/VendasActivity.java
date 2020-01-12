@@ -58,12 +58,10 @@ import com.br.minasfrango.util.ControleSessao;
 import com.br.minasfrango.util.CurrencyEditText;
 import com.br.minasfrango.util.DateUtils;
 import com.br.minasfrango.util.FormatacaoMoeda;
-import com.br.minasfrango.util.MoneyTextWatcher;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 public class VendasActivity extends AppCompatActivity implements IView {
@@ -105,7 +103,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
     ArrayAdapter<String> adaptadorUnidades;
 
     @BindView(R.id.edtQTDProducts)
-    EditText edtQuantidadeProduto;
+    CurrencyEditText edtQuantidadeProduto;
 
     IVendaMVP.IPresenter mPresenter;
 
@@ -154,8 +152,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
     protected void onStart() {
         super.onStart();
 
-        edtQuantidadeProduto.addTextChangedListener(
-                new MoneyTextWatcher(edtQuantidadeProduto, new Locale("pt", "BR")));
+
         mPresenter = new Presenter(this);
         mPresenter.getParametros();
 
@@ -315,11 +312,8 @@ public class VendasActivity extends AppCompatActivity implements IView {
         mPresenter.setQuantidadeProdutos(
                 new BigDecimal(
                                 edtQuantidadeProduto.getText().toString().isEmpty()
-                                        ? "0"
-                                        : edtQuantidadeProduto
-                                                .getText()
-                                                .toString()
-                                                .replace(",", "."))
+                                        ? 0.0
+                                        : edtQuantidadeProduto.getCurrencyDouble())
                         .setScale(2, BigDecimal.ROUND_HALF_DOWN));
         txtValorTotalProduto.setText(
                 FormatacaoMoeda.converterParaReal(mPresenter.getValorTotalProduto().doubleValue()));
@@ -359,7 +353,8 @@ public class VendasActivity extends AppCompatActivity implements IView {
         if ((mPresenter.getItens().size() > 0)
                 && (!new ControleSessao(mPresenter.getContext())
                         .getEnderecoBluetooth()
-                        .isEmpty())) {
+                        .isEmpty()))
+        {
             // Realiza Update do PedidoORM
             if (mPresenter.getPedido() != null) {
 
@@ -561,7 +556,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
         cetPrecoUnitario.setText(
                 FormatacaoMoeda.converterParaDolar(mPresenter.getPreco().getValor()));
         mPresenter.setQuantidadeProdutos(
-                new BigDecimal(edtQuantidadeProduto.getText().toString())
+                new BigDecimal(edtQuantidadeProduto.getText().toString().replace(",","."))
                         .setScale(2, BigDecimal.ROUND_HALF_DOWN));
         txtValorTotalProduto.setText(
                 FormatacaoMoeda.converterParaReal(
@@ -587,7 +582,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
             edtQuantidadeProduto.requestFocus();
             return false;
         }
-        if (Double.parseDouble(edtQuantidadeProduto.getText().toString().replace(",", ".")) <= 0) {
+        if (edtQuantidadeProduto.getCurrencyDouble()<=0) {
             edtQuantidadeProduto.setError("Quantidade mínima de 1 item!");
             edtQuantidadeProduto.requestFocus();
             return false;
@@ -734,8 +729,9 @@ public class VendasActivity extends AppCompatActivity implements IView {
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        edtQuantidadeProduto.setText("0.00");
         txtValorTotalVenda.setText("R$ 00,00");
-        edtQuantidadeProduto.setText("1");
+
 
 
 

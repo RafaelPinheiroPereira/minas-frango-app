@@ -33,7 +33,7 @@ public class AlertDialogItemPedido {
     CurrencyEditText cetPriceDialog;
 
     @BindView(R.id.edtQTDProductDialog)
-    EditText edtQTDProductDialog;
+    CurrencyEditText edtQTDProductDialog;
 
     @BindView(R.id.edtQTDBicoDialog)
     EditText edtQTDBicoDialog;
@@ -102,7 +102,7 @@ public class AlertDialogItemPedido {
 
         mIPresenter
                 .getItemPedido()
-                .setQuantidade(Double.parseDouble(edtQTDProductDialog.getText().toString()));
+                .setQuantidade(edtQTDProductDialog.getCurrencyDouble());
         mIPresenter
                 .getItemPedido()
                 .setBicos(Integer.parseInt(edtQTDBicoDialog.getText().toString()));
@@ -110,7 +110,7 @@ public class AlertDialogItemPedido {
         mIPresenter
                 .getItemPedido()
                 .setValorTotal(
-                        Double.parseDouble(edtQTDProductDialog.getText().toString())
+                        edtQTDProductDialog.getCurrencyDouble()
                                 * cetPriceDialog.getCurrencyDouble());
         mIPresenter.getItens().set(position, mIPresenter.getItemPedido());
         mIPresenter.setTotalDaVenda(new BigDecimal(mIPresenter.calcularTotalDaVenda()));
