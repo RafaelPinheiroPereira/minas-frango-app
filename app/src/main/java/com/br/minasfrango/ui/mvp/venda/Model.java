@@ -32,6 +32,8 @@ public class Model implements IVendaMVP.IModel {
 
     ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstace(ItemPedidoORM.class);
 
+    ItemPedidoIDDAO mItemPedidoIDDAO=ItemPedidoIDDAO.getInstace(ItemPedidoIDORM.class);
+
     ClienteDAO mClienteDAO = ClienteDAO.getInstace(ClienteORM.class);
 
     PedidoDAO mPedidoDAO = PedidoDAO.getInstace(PedidoORM.class);
@@ -50,7 +52,6 @@ public class Model implements IVendaMVP.IModel {
 
     UnidadeDAO unidadeDAO = UnidadeDAO.getInstace(UnidadeORM.class);
 
-    ItemPedidoIDDAO mItemPedidoIDDAO = ItemPedidoIDDAO.getInstace(ItemPedidoIDORM.class);
 
     private com.br.minasfrango.ui.mvp.venda.Presenter mPresenter;
 
@@ -192,9 +193,8 @@ public class Model implements IVendaMVP.IModel {
     @Override
     public Pedido pesquisarVendaPorId(final Long id) {
         PedidoORM pedidoORM = saleDAO.findById(id);
-
         Pedido pedido = new Pedido(pedidoORM);
-        pedido.setItens(itemPedidoDAO.allItensByPedido(pedidoORM));
+        pedido.setItens(PedidoORM.converterListRealmParaModel(pedidoORM.getItens()));
         return pedido;
     }
 

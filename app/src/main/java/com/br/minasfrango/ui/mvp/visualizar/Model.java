@@ -34,9 +34,13 @@ public class Model implements IViewOrderMVP.IModel {
 
     @Override
     public Pedido pesquisarVendaPorId(final Long id) {
+
+
         PedidoORM pedidoORM = mPedidoDAO.findById(id);
         Pedido pedido = new Pedido(pedidoORM);
-        pedido.setItens(mItemPedidoDAO.allItensByPedido(pedidoORM));
+        pedido.setItens(PedidoORM.converterListRealmParaModel(pedidoORM.getItens()));
         return pedido;
+
+
     }
 }

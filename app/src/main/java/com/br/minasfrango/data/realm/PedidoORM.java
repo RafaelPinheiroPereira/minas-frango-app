@@ -52,6 +52,19 @@ public class PedidoORM extends RealmObject implements Serializable {
         return realmList;
     }
 
+    public static List<ItemPedido> converterListRealmParaModel(
+            List<ItemPedidoORM> itemPedidoORMS) {
+        List<ItemPedido> itemPedidos = new RealmList<>();
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            itemPedidoORMS.forEach(itemORM->itemPedidos.add(new ItemPedido(itemORM)));
+        } else {
+            for (ItemPedidoORM itemPedidoORM : itemPedidoORMS) {
+                itemPedidos.add(new ItemPedido(itemPedidoORM));
+            }
+        }
+        return itemPedidos;
+    }
+
     public PedidoORM(Pedido pedido) {
         this.id = pedido.getIdVenda();
         this.cancelado = pedido.isCancelado();

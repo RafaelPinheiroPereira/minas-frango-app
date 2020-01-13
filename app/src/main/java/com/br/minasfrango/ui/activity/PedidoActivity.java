@@ -13,12 +13,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.br.minasfrango.R;
 import com.br.minasfrango.data.model.Pedido;
+import com.br.minasfrango.data.realm.ClientePedido;
 import com.br.minasfrango.ui.adapter.ExpandableRecyclerAdapter;
 import com.br.minasfrango.ui.adapter.PedidosAdapter;
 import com.br.minasfrango.ui.mvp.pedido.IPedidoMVP;
 import com.br.minasfrango.ui.mvp.pedido.Presenter;
 import com.br.minasfrango.util.AlertDialogOrderCancel;
 import com.br.minasfrango.util.BottomSheet;
+import java.util.List;
 
 public class PedidoActivity extends AppCompatActivity implements IPedidoMVP.IView {
 
@@ -106,8 +108,15 @@ public class PedidoActivity extends AppCompatActivity implements IPedidoMVP.IVie
 
     protected void fillAdapter() {
 
-        mAdapter = new PedidosAdapter(presenter, presenter.obterTodosClientePedido());
-        txtQuantidadePedidos.setText("N° de Pedidos:"+ mAdapter.getItemCount());
+        List<ClientePedido> clientePedidoList=presenter.obterTodosClientePedido();
+        int count=0;
+        for(ClientePedido clientePedido:clientePedidoList){
+            count+=clientePedido.getChildItemList().size();
+        }
+
+
+        mAdapter = new PedidosAdapter(presenter,clientePedidoList );
+        txtQuantidadePedidos.setText("N° de Pedidos:"+ count);
         recyclerView.setAdapter(mAdapter);
         mAdapter.setExpandCollapseListener(new ExpandableRecyclerAdapter.ExpandCollapseListener() {
             @Override

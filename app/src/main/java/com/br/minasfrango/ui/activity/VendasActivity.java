@@ -621,7 +621,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
                 DateUtils.formatarDateParaddMMyyyyhhmm(new Date(System.currentTimeMillis())));
         // Nao sei o significado
         itemPedidoID.setVendaMae("N");
-        itemPedidoID.setNucleoCodigo(1);
+        itemPedidoID.setNucleoCodigo(4);
         itemPedidoID.setTipoVenda("?");
         return itemPedidoID;
     }

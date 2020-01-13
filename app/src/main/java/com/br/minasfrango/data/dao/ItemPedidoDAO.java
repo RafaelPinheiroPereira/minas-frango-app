@@ -3,8 +3,8 @@ package com.br.minasfrango.data.dao;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.data.model.ItemPedido;
+import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.realm.ItemPedidoORM;
-import com.br.minasfrango.data.realm.PedidoORM;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.internal.IOException;
@@ -51,10 +51,14 @@ public class ItemPedidoDAO extends GenericsDAO<ItemPedidoORM> {
     }
 
 
-    public List<ItemPedido> allItensByPedido(PedidoORM pedidoORM) {
+    public List<ItemPedido> allItensByPedido(Pedido pedido) {
         List<ItemPedido> itens = new ArrayList<>();
+
+
+
+
         RealmResults<ItemPedidoORM> results =
-                where().equalTo("chavesItemPedidoORM.idVenda", Double.valueOf(pedidoORM.getId()))
+                where().equalTo("chavesItemPedidoORM.idVenda", Double.valueOf(pedido.getIdVenda()))
                         .findAll();
         if (results.size() > 0 && results != null) {
 

@@ -73,7 +73,7 @@ public class AlertDialogItemPedido {
         cetPriceDialog.setText(
                 FormatacaoMoeda.converterParaDolar(
                         mIPresenter.getItemPedido().getValorUnitario()));
-        edtQTDProductDialog.setText(String.valueOf(mIPresenter.getItemPedido().getQuantidade()));
+        edtQTDProductDialog.setText( FormatacaoMoeda.converterParaDolar((mIPresenter.getItemPedido().getQuantidade())));
         edtQTDBicoDialog.setText(String.valueOf(mIPresenter.getItemPedido().getBicos()));
 
         List<Unidade> unidades = mIPresenter.carregarUnidades();

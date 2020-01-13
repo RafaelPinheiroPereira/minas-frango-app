@@ -143,7 +143,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
                                 new BigDecimal(
                                         s.toString().isEmpty()
                                                 ? 0
-                                                : cetValorAmortizar.getCurrencyDouble()));
+                                                : cetValorAmortizar.getCurrencyDouble()).setScale(2, BigDecimal.ROUND_HALF_DOWN));
 
                         mPresenter.getRecebimentos().clear();
                         mPresenter
@@ -299,7 +299,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
                 mPresenter.getRecebimentos().addAll(mPresenter.obterRecebimentoPorCliente());
                 mPresenter.atualizarRecycleView();
                 mPresenter.setTypeOfAmortizationIsAutomatic(true);
-                mPresenter.setCredito(new BigDecimal(cetValorAmortizar.getCurrencyDouble()));
+                mPresenter.setCredito(new BigDecimal(cetValorAmortizar.getCurrencyDouble()).setScale(2, BigDecimal.ROUND_HALF_DOWN));
                 mPresenter.calcularAmortizacaoAutomatica();
                 compoundButton.setText("Quitação Automática de Notas");
                 mPresenter.atualizarViewSaldoDevedor();
