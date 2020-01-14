@@ -266,7 +266,7 @@ public class ImpressoraUtil {
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
             textBuffer.append(
                     "{b}PESO: "
-                            + pedido.getItens().stream().mapToDouble(ItemPedido::getQuantidade).sum()
+                            + String.format("%.2f", pedido.getItens().stream().mapToDouble(ItemPedido::getQuantidade).sum())
                             + " KG"
                             + "{br}");
         } else {
@@ -274,7 +274,7 @@ public class ImpressoraUtil {
             for (ItemPedido itemPedido : pedido.getItens()) {
                 pesoTotal += itemPedido.getQuantidade();
             }
-            textBuffer.append("{b}PESO: " + pesoTotal + " KG" + "{br}");
+            textBuffer.append("{b}PESO: " + String.format("%.2f",pesoTotal) + " KG" + "{br}");
         }
         textBuffer.append("VENDEDOR: " + new ControleSessao(this.activity).getUserName());
         textBuffer.append("{br}");
