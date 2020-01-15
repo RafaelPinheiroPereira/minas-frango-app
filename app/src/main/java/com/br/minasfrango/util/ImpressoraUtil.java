@@ -236,10 +236,9 @@ public class ImpressoraUtil {
         textBuffer.append("{br}{reset}");
         textBuffer.append(
                 "{b}VENDA: "
-                        + DateUtils.retirarBarrasDaDataNoPadraoddMMyyyyParaString(
-                                pedido.getDataPedido())
-                        + pedido.getCodigoFuncionario()
-                        + pedido.getIdVenda()
+                        + String.format("%03d", pedido.getCodigoFuncionario())
+
+                        + String.format( "%05d",pedido.getIdVenda())
                         + "{br}");
         textBuffer.append(
                 "{b}DATA/HORA: "
@@ -328,7 +327,7 @@ public class ImpressoraUtil {
         textBuffer.append("{reset}");
         textBuffer.append("{b}CLIENTE: " + cliente.getNome() + "{br}");
         textBuffer.append(
-                "{b}VALOR: " + FormatacaoMoeda.converterParaDolar(valorTotalAmortizado) + "{br}");
+                "{b}VALOR: " + String.format("%.2f",valorTotalAmortizado) + "{br}");
         textBuffer.append("{b}DATA/HORA: " + strDataRecebimento + "{br}");
         textBuffer.append("VENDEDOR: " + new ControleSessao(this.activity).getUserName());
         textBuffer.append("{br}");
