@@ -269,7 +269,7 @@ public class ImpressoraUtil {
                             + " KG"
                             + "{br}");
         } else {
-            int pesoTotal = 0;
+            Double pesoTotal = 0.0;
             for (ItemPedido itemPedido : pedido.getItens()) {
                 pesoTotal += itemPedido.getQuantidade();
             }
