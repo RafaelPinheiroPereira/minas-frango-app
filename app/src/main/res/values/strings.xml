@@ -14,7 +14,7 @@
 
     <string name="acessar">Login</string>
 
-    <string name="title_select_device">Selecione um dispositivo para conectar</string>
+    <string name="title_select_device">Selecione um dispositivoImpressora para conectar</string>
     <string name="title_scanning">Procurando por dispositvos&#8230;</string>
 
     <!-- Strings related to login -->

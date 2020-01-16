@@ -24,11 +24,14 @@ public class FuncionarioORM extends RealmObject implements Serializable {
 
     private String tipoFuncionario;
 
+    private long idEmpresa;
+
     public FuncionarioORM(Funcionario funcionario) {
 
         this.id = funcionario.getId();
         this.senha = funcionario.getSenha();
         this.nome = funcionario.getNome();
         this.tipoFuncionario = funcionario.getTipoFuncionario();
+        this.idEmpresa=funcionario.getIdEmpresa();
     }
 }

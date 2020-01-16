@@ -1,6 +1,7 @@
 package com.br.minasfrango.network;
 
 import com.br.minasfrango.network.servico.AutenticacaoService;
+import com.br.minasfrango.network.servico.ConfiguracaoService;
 import com.br.minasfrango.network.servico.ExportacaoService;
 import com.br.minasfrango.network.servico.ImportacaoService;
 import java.util.concurrent.TimeUnit;
@@ -21,9 +22,9 @@ public class RetrofitConfig {
         this.retrofit =
                 new Retrofit.Builder()
                          //.baseUrl("http://10.0.2.2:8080/api/")
-                        // .baseUrl("http://192.168.0.174:8080/api/")
-                        .baseUrl(
-                                "http://apiminasfrango-env.2scamzggaf.us-east-2.elasticbeanstalk.com/api/")
+                         .baseUrl("http://192.168.25.10:8080/api/")
+                        //.baseUrl(
+                         //       "http://apiminasfrango-env.2scamzggaf.us-east-2.elasticbeanstalk.com/api/")
                         .client(okHttpClient)
                         .addConverterFactory(JacksonConverterFactory.create())
                         .build();
@@ -43,4 +44,6 @@ public class RetrofitConfig {
     public AutenticacaoService getLoginService() {
         return this.retrofit.create(AutenticacaoService.class);
     }
+
+    public ConfiguracaoService getConfiguracaoService(){return  this.retrofit.create(ConfiguracaoService.class);}
 }

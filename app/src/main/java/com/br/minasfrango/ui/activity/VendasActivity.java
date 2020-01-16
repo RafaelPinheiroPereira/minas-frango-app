@@ -382,7 +382,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
         } else if (new ControleSessao(mPresenter.getContext()).getEnderecoBluetooth().isEmpty()) {
             AbstractActivity.showToast(
                     mPresenter.getContext(),
-                    "Dispositivo não conectado!\nHabilite no Menu : Configurar Impressora.");
+                    "DispositivoImpressora não conectado!\nHabilite no Menu : Configurar Impressora.");
         } else {
             AbstractActivity.showToast(
                     mPresenter.getContext(), " No mímimo um item deve ser adicionado!");

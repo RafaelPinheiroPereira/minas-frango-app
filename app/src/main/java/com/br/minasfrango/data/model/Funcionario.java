@@ -21,6 +21,8 @@ public class Funcionario implements Serializable {
 
     private String tipoFuncionario;
 
+    private long idEmpresa;
+
     public Funcionario(FuncionarioORM funcionarioORM) {
         this.id = funcionarioORM.getId();
         this.senha = funcionarioORM.getSenha();

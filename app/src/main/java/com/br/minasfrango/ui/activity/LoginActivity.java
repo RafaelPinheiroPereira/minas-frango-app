@@ -27,15 +27,7 @@ import com.br.minasfrango.ui.mvp.login.Presenter;
 
 public class LoginActivity extends AppCompatActivity implements IView {
 
-    private static String[] PERMISSIONS = {
-            Manifest.permission.BLUETOOTH,
-            Manifest.permission.BLUETOOTH_ADMIN,
-            Manifest.permission.BLUETOOTH_PRIVILEGED,
-            Manifest.permission.INTERNET,
-            permission.CAMERA,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-    };
+
 
     private static int REQUEST_STORAGE = 112;
 
@@ -62,7 +54,7 @@ public class LoginActivity extends AppCompatActivity implements IView {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         initView();
-        concederPermissoes();
+
         carregarAnimacaoInicializacao();
         // Internet
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -76,21 +68,6 @@ public class LoginActivity extends AppCompatActivity implements IView {
         presenter = new Presenter(this);
     }
 
-    @Override
-    public void onRequestPermissionsResult(
-            int requestCode, String[] permissions, int[] grantResults) {
-
-        if (requestCode == REQUEST_STORAGE) {
-
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                AbstractActivity.showToast(
-                        presenter.getContexto(), "Permissões necessárias concedidas");
-
-            } else {
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-            }
-        }
-    }
 
     @OnClick(R.id.btnLogin)
     public void btnSubmitClicked(View view) {
@@ -150,30 +127,6 @@ public class LoginActivity extends AppCompatActivity implements IView {
         return true;
     }
 
-    private void concederPermissoes() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED
-                    || checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(
-                        LoginActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    // Caso o usuário tenha negado a permissão anteriormente, e não tenha marcado o
-                    // check
-                    // "nunca mais mostre este alerta"
-                    // Podemos mostrar um alerta explicando para o usuário porque a permissão é
-                    // importante.
-                } else {
-                    // Solicita a permissao
-                    ActivityCompat.requestPermissions(
-                            LoginActivity.this, PERMISSIONS, REQUEST_STORAGE);
-                }
-            }
-        } else {
-            // ver  o que fazer aqui
-        }
-    }
 
     private void initView() {
 

@@ -21,7 +21,7 @@ import android.widget.ListView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.model.Dispositivo;
+import com.br.minasfrango.data.model.DispositivoImpressora;
 import com.br.minasfrango.ui.adapter.DispositivoAdapter;
 import com.br.minasfrango.ui.mvp.impressora.IImpressoraMVP;
 import com.br.minasfrango.ui.mvp.impressora.Presenter;
@@ -72,8 +72,8 @@ public class DeviceListActivity extends Activity implements IImpressoraMVP.IView
             // Cancel discovery because it's costly and we're about to connect
             mBtAdapter.cancelDiscovery();
 
-            Dispositivo dispositivo = (Dispositivo) mDevicesAdapter.getItem(location);
-            String address = dispositivo.getEnderecoBluetooth();
+            DispositivoImpressora dispositivoImpressora = (DispositivoImpressora) mDevicesAdapter.getItem(location);
+            String address = dispositivoImpressora.getEnderecoBluetooth();
 
             if (BluetoothAdapter.checkBluetoothAddress(address)) {
                 salvarEnderecoBluetoothPreferences(address);
@@ -95,13 +95,13 @@ public class DeviceListActivity extends Activity implements IImpressoraMVP.IView
                 boolean bonded = device.getBondState() == BluetoothDevice.BOND_BONDED;
                 int iconId = bonded ? R.mipmap.ic_bluetooth_connected_black_48dp : R.mipmap.ic_bluetooth_black_48dp;
                 // Find is device is already exists
-                Dispositivo dispositivo = mDevicesAdapter.find(device.getAddress());
+                DispositivoImpressora dispositivoImpressora = mDevicesAdapter.find(device.getAddress());
                 // Skip if device is already in list
-                if (dispositivo == null) {
+                if (dispositivoImpressora == null) {
                     mDevicesAdapter.add(device.getName(), device.getAddress(), iconId);
                 } else {
-                    dispositivo.setNome(device.getName());
-                    dispositivo.setIcone(iconId);
+                    dispositivoImpressora.setNome(device.getName());
+                    dispositivoImpressora.setIcone(iconId);
                 }
 
                 // When discovery is finished, change the Activity title

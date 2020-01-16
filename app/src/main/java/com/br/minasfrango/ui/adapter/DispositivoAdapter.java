@@ -7,14 +7,14 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.br.minasfrango.R;
-import com.br.minasfrango.data.model.Dispositivo;
+import com.br.minasfrango.data.model.DispositivoImpressora;
 import com.br.minasfrango.ui.mvp.impressora.IImpressoraMVP.IPresenter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DispositivoAdapter extends BaseAdapter {
 
-    private List<Dispositivo> mDispositivos = new ArrayList<>();
+    private List<DispositivoImpressora> mDispositivoImpressoras = new ArrayList<>();
 
     private IPresenter mPresenter;
 
@@ -24,16 +24,16 @@ public class DispositivoAdapter extends BaseAdapter {
     }
 
     public void add(String nome, String enderecoBluetooth, int icone) {
-        Dispositivo impressora = new Dispositivo(enderecoBluetooth, icone, nome);
-        mDispositivos.add(impressora);
+        DispositivoImpressora impressora = new DispositivoImpressora(enderecoBluetooth, icone, nome);
+        mDispositivoImpressoras.add(impressora);
     }
 
     public void clear() {
-        mDispositivos.clear();
+        mDispositivoImpressoras.clear();
     }
 
-    public Dispositivo find(String address) {
-        for (Dispositivo d : mDispositivos) {
+    public DispositivoImpressora find(String address) {
+        for (DispositivoImpressora d : mDispositivoImpressoras) {
             if (address.equals(d.getEnderecoBluetooth())) {
                 return d;
             }
@@ -44,12 +44,12 @@ public class DispositivoAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mDispositivos.size();
+        return mDispositivoImpressoras.size();
     }
 
     @Override
     public Object getItem(int location) {
-        return mDispositivos.get(location);
+        return mDispositivoImpressoras.get(location);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class DispositivoAdapter extends BaseAdapter {
         }
 
         // Populate the layout with new data
-        Dispositivo impressora = (Dispositivo) getItem(position);
+        DispositivoImpressora impressora = (DispositivoImpressora) getItem(position);
         ((ImageView) v.findViewById(R.id.icon)).setImageResource(impressora.getIcone());
         ((TextView) v.findViewById(R.id.name)).setText(impressora.getNome());
         ((TextView) v.findViewById(R.id.address)).setText(impressora.getEnderecoBluetooth());
