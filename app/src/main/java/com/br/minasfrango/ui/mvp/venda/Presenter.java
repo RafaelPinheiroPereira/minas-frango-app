@@ -395,19 +395,19 @@ public class Presenter implements IVendaMVP.IPresenter {
 
 
         // Salva o pedidoORM e retorna o id salvo
-        long idSaleOrder = this.mModel.salvarPedido(pedidoORM);
+        long idVenda = this.mModel.salvarPedido(pedidoORM);
 
         // Seta a chave composta do item pedidoORM com o id da venda
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
             getItens().forEach(item->{
-                item.getChavesItemPedido().setIdVenda(idSaleOrder);
+                item.getChavesItemPedido().setIdVenda(idVenda);
                 this.mModel.atualizarChaveItemPedido(item.getChavesItemPedido());
 
 
             });
         } else {
             for (ItemPedido itemPedido : getItens()) {
-                itemPedido.getChavesItemPedido().setIdVenda(idSaleOrder);
+                itemPedido.getChavesItemPedido().setIdVenda(idVenda);
                 this.mModel.atualizarChaveItemPedido(itemPedido.getChavesItemPedido());
             }
         }
@@ -416,7 +416,7 @@ public class Presenter implements IVendaMVP.IPresenter {
 
         this.mModel.copyOrUpdateSaleOrder(pedido);
 
-        this.mModel.atualizarIdMaximoDeVenda(controleSessao.getIdUsuario(),codigoVendaMaxima);
+        this.mModel.atualizarIdMaximoDeVenda(controleSessao.getIdUsuario(),idVenda);
     }
 
     @Override

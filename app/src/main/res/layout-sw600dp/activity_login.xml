@@ -59,7 +59,12 @@
             android:inputType="textPassword"
             android:textColor="@android:color/primary_text_light" />
         </com.google.android.material.textfield.TextInputLayout>
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/spnNucleo">
 
+        </Spinner>
     </LinearLayout>
 
 

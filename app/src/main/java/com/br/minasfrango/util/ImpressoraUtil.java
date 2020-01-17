@@ -236,6 +236,8 @@ public class ImpressoraUtil {
         textBuffer.append("{br}{reset}");
         textBuffer.append(
                 "{b}VENDA: "
+
+                        + String.format("%02d", this.mControleSessao.getIdNucleo())
                         + String.format("%03d", pedido.getCodigoFuncionario())
 
                         + String.format( "%05d",pedido.getIdVenda())

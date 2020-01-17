@@ -83,6 +83,8 @@ public interface IHomeMVP {
 
     interface IModel {
 
+        void deletarFuncionarioDaSessao(int idUsuario);
+
         List<ClienteGrupo> obterTodasRedes();
 
         List<Cliente> obterTodosClientes();

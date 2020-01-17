@@ -163,6 +163,7 @@ public class Presenter implements IHomeMVP.IPresenter {
     @Override
     public void logout() {
         this.mControleSessao.logout();
+        this.model.deletarFuncionarioDaSessao(this.mControleSessao.getIdUsuario());
     }
 
     @Override
