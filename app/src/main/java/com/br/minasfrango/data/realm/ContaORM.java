@@ -17,7 +17,7 @@ public class ContaORM  extends RealmObject implements Serializable {
 
 
     @PrimaryKey
-    private long id;
+    private String id;
     private String descricao;
     private String agencia;
     private String conta;

@@ -3,6 +3,8 @@ package com.br.minasfrango.ui.mvp.venda;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.data.dao.ClienteDAO;
+import com.br.minasfrango.data.dao.EmpresaDAO;
+import com.br.minasfrango.data.dao.FuncionarioDAO;
 import com.br.minasfrango.data.dao.ItemPedidoDAO;
 import com.br.minasfrango.data.dao.ItemPedidoIDDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
@@ -11,6 +13,8 @@ import com.br.minasfrango.data.dao.PrecoIDDAO;
 import com.br.minasfrango.data.dao.ProdutoDAO;
 import com.br.minasfrango.data.dao.UnidadeDAO;
 import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.Empresa;
+import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.data.model.ItemPedido;
 import com.br.minasfrango.data.model.ItemPedidoID;
 import com.br.minasfrango.data.model.Pedido;
@@ -18,6 +22,8 @@ import com.br.minasfrango.data.model.Preco;
 import com.br.minasfrango.data.model.Produto;
 import com.br.minasfrango.data.model.Unidade;
 import com.br.minasfrango.data.realm.ClienteORM;
+import com.br.minasfrango.data.realm.EmpresaORM;
+import com.br.minasfrango.data.realm.FuncionarioORM;
 import com.br.minasfrango.data.realm.ItemPedidoIDORM;
 import com.br.minasfrango.data.realm.ItemPedidoORM;
 import com.br.minasfrango.data.realm.PedidoORM;
@@ -29,6 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Model implements IVendaMVP.IModel {
+
+
 
     ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstace(ItemPedidoORM.class);
 
@@ -48,9 +56,13 @@ public class Model implements IVendaMVP.IModel {
 
     PedidoDAO saleDAO = PedidoDAO.getInstace(PedidoORM.class);
 
+    EmpresaDAO mEmpresaDAO= EmpresaDAO.getInstace(EmpresaORM.class);
+
 
 
     UnidadeDAO unidadeDAO = UnidadeDAO.getInstace(UnidadeORM.class);
+
+    FuncionarioDAO mFuncionarioDAO=FuncionarioDAO.getInstace(FuncionarioORM.class);
 
 
     private com.br.minasfrango.ui.mvp.venda.Presenter mPresenter;
@@ -162,6 +174,16 @@ public class Model implements IVendaMVP.IModel {
     }
 
     @Override
+    public long pesquisarCodigoMaximoDeVendaDoFuncionario(final int idUsuario) {
+        return mFuncionarioDAO.findById(Long.valueOf(idUsuario)).getMaxIdVenda();
+    }
+
+    @Override
+    public Empresa pesquisarEmpresaRegistrada() {
+        return mEmpresaDAO.pesquisarEmpresaRegistradaNoDispositivo();
+    }
+
+    @Override
     public Produto pesquisarProdutoPorId(final long id) {
         return new Produto(mProdutoDAO.findById(id));
     }
@@ -201,5 +223,11 @@ public class Model implements IVendaMVP.IModel {
     @Override
     public long salvarPedido(final PedidoORM saleOrderToSave) {
         return this.mPedidoDAO.addPedido(saleOrderToSave);
+    }
+    @Override
+    public void atualizarIdMaximoDeVenda(final long idFuncionario, final long idVendaMaxima) {
+        Funcionario funcionarioPesquisado= new Funcionario(this.mFuncionarioDAO.findById(idFuncionario));
+        funcionarioPesquisado.setMaxIdVenda(idVendaMaxima);
+        this.mFuncionarioDAO.alterar(new FuncionarioORM(funcionarioPesquisado));
     }
 }

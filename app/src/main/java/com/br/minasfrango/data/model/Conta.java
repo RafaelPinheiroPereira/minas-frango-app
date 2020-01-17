@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class Conta implements Serializable {
-    private long id;
+    private String id;
     private String descricao;
     private String agencia;
     private String conta;

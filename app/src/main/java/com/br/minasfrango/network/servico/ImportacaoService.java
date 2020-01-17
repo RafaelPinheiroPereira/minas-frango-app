@@ -10,6 +10,6 @@ public interface ImportacaoService {
 
 
     @GET("importacoes/funcionarios")
-    Call<Importacao> realizarImportacao( @Query("id") long id);
+    Call<Importacao> realizarImportacao( @Query("id") long id,@Query("idEmpresa") long idEmpresa,@Query("idNucleo") long idNucleo);
 
 }

@@ -6,6 +6,7 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import androidx.appcompat.app.AlertDialog;
 import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.Empresa;
 import com.br.minasfrango.data.model.ItemPedido;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.model.Preco;
@@ -92,6 +93,11 @@ public class Presenter implements IVendaMVP.IPresenter {
     @Override
     public int getBicos() {
         return bicos;
+    }
+
+    @Override
+    public Empresa pesquisarEmpresaRegistrada() {
+       return  this.mModel.pesquisarEmpresaRegistrada();
     }
 
     @Override
@@ -371,12 +377,22 @@ public class Presenter implements IVendaMVP.IPresenter {
             }
         }
         ControleSessao controleSessao = new ControleSessao(getContext());
+
+
+
+        pedido.setIdEmpresa(this.mModel.pesquisarEmpresaRegistrada().getId());
         pedido.setCodigoFuncionario(controleSessao.getIdUsuario());
         pedido.setCodigoCliente(getCliente().getId());
         pedido.setValorTotal(calcularTotalDaVenda());
 
 
+        long codigoVendaMaxima=this.mModel.pesquisarCodigoMaximoDeVendaDoFuncionario(controleSessao.getIdUsuario());
+
+        pedido.setIdVenda(codigoVendaMaxima);
         PedidoORM pedidoORM = new PedidoORM(pedido);
+
+
+
 
         // Salva o pedidoORM e retorna o id salvo
         long idSaleOrder = this.mModel.salvarPedido(pedidoORM);
@@ -399,6 +415,8 @@ public class Presenter implements IVendaMVP.IPresenter {
         pedido.setIdVenda(pedidoORM.getId());
 
         this.mModel.copyOrUpdateSaleOrder(pedido);
+
+        this.mModel.atualizarIdMaximoDeVenda(controleSessao.getIdUsuario(),codigoVendaMaxima);
     }
 
     @Override

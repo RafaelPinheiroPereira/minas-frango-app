@@ -4,14 +4,17 @@ import android.os.Build.VERSION_CODES;
 import androidx.annotation.RequiresApi;
 import com.br.minasfrango.data.dao.ClienteDAO;
 import com.br.minasfrango.data.dao.ClienteGrupoDAO;
+import com.br.minasfrango.data.dao.EmpresaDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
 import com.br.minasfrango.data.dao.RecebimentoDAO;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.ClienteGrupo;
+import com.br.minasfrango.data.model.Empresa;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.model.Recebimento;
 import com.br.minasfrango.data.realm.ClienteGrupoORM;
 import com.br.minasfrango.data.realm.ClienteORM;
+import com.br.minasfrango.data.realm.EmpresaORM;
 import com.br.minasfrango.data.realm.PedidoORM;
 import com.br.minasfrango.data.realm.RecebimentoORM;
 import com.br.minasfrango.ui.mvp.home.IHomeMVP.IModel;
@@ -26,6 +29,8 @@ public class Model implements IModel {
     RecebimentoDAO mRecebimentoDAO = RecebimentoDAO.getInstace(RecebimentoORM.class);
 
     ClienteGrupoDAO mClienteGrupoDAO = ClienteGrupoDAO.getInstace(ClienteGrupoORM.class);
+
+    EmpresaDAO mEmpresaDAO =EmpresaDAO.getInstace(EmpresaORM.class);
 
     private Presenter mPresenter;
 
@@ -58,6 +63,11 @@ public class Model implements IModel {
 
     public List<Cliente> pesquisarClientePorRede(final ClienteGrupo clienteGrupo) {
         return mClienteDAO.pesquisarClientePorRede(clienteGrupo);
+    }
+
+    @Override
+    public Empresa pesquisarEmpresaRegistrada() {
+        return mEmpresaDAO.pesquisarEmpresaRegistradaNoDispositivo();
     }
 
     @RequiresApi(api = VERSION_CODES.N)

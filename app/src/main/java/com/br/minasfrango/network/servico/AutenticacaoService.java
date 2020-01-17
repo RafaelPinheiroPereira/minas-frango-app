@@ -8,5 +8,5 @@ import retrofit2.http.Query;
 public interface AutenticacaoService {
 
 	@GET("autenticacoes/funcionarios")
-    Call<Funcionario> autenticar(@Query("id") long id, @Query("senha") String senha);
+    Call<Funcionario> autenticar(@Query("id") long id, @Query("senha") String senha, @Query("idEmpresa")long idEmpresa);
 }

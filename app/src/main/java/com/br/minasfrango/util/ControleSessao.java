@@ -20,6 +20,7 @@ public class ControleSessao {
     public static final String CHAVE_SENHA = "senha";
 
     public static final String CHAVE_NOME = "nome";
+    public static final String CHAVE_NUCLEO = "idNucleo";
 
     public static final String CHAVE_ENDERECO_BLUETOOTH = "device_address";
 
@@ -62,7 +63,7 @@ public class ControleSessao {
         return false;
     }
 
-    public void criarSessao(String matricula, String senha, String nome) {
+    public void criarSessao(String matricula, String senha, String nome,long idNucleo) {
 
         editor.putBoolean(USUARIO_CONECTADO, true);
 
@@ -72,6 +73,7 @@ public class ControleSessao {
         // salva senha
         editor.putString(CHAVE_SENHA, senha);
         editor.putString(CHAVE_NOME, nome);
+        editor.putLong(CHAVE_NUCLEO,idNucleo);
 
         // commit changes
         editor.commit();
@@ -91,6 +93,8 @@ public class ControleSessao {
 
         user.put(CHAVE_NOME, pref.getString(CHAVE_NOME, null));
 
+        user.put(CHAVE_NUCLEO,pref.getString(CHAVE_NUCLEO,null));
+
         // return user
         return user;
     }
@@ -108,6 +112,11 @@ public class ControleSessao {
     public String getUserName() {
         pref = this.contexto.getSharedPreferences(PREFERENCIAS, 0);
         return pref.getString(CHAVE_NOME, "");
+    }
+    public long getIdNucleo(){
+        pref = this.contexto.getSharedPreferences(PREFERENCIAS, 0);
+        return pref.getLong(CHAVE_NUCLEO, 0);
+
     }
 
     /** Clear session details */

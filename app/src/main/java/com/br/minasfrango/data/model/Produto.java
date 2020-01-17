@@ -21,11 +21,16 @@ public class Produto implements Serializable {
 
     private String unidade;
 
+    private long idEmpresa;
+    private long idNucleo;
+
     public Produto(ProdutoORM produtoORM) {
         this.id = produtoORM.getId();
         this.nome = produtoORM.getNome();
         this.unidade = produtoORM.getUnidade();
         this.quantidade = produtoORM.getQuantidade();
+        this.idEmpresa=produtoORM.getIdEmpresa();
+        this.idNucleo=produtoORM.getIdNucleo();
     }
 
 }

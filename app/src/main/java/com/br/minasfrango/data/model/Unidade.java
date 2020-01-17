@@ -19,12 +19,14 @@ public class Unidade {
     private String nome;
 
     private String unidadePadrao;
+    private long idEmpresa;
 
     public Unidade(UnidadeORM unidadeORM) {
         this.id = unidadeORM.getId();
         this.chavesUnidade = new UnidadeProdutoID(unidadeORM.getChavesUnidadeORM());
         this.nome = unidadeORM.getNome();
         this.unidadePadrao = unidadeORM.getUnidadePadrao();
+        this.idEmpresa=unidadeORM.getIdEmpresa();
 
     }
 

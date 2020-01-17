@@ -24,6 +24,7 @@ import com.br.minasfrango.data.realm.UnidadeORM;
 import com.br.minasfrango.network.RetrofitConfig;
 import com.br.minasfrango.network.servico.ImportacaoService;
 import com.br.minasfrango.ui.mvp.home.IHomeMVP;
+import com.br.minasfrango.util.ControleSessao;
 import io.realm.Realm;
 import java.io.IOException;
 import java.util.List;
@@ -37,9 +38,14 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
 
     IHomeMVP.IPresenter mHomePresenter;
 
+    ControleSessao mControleSessao;
+
+
+
     public ImportacaoTask(Funcionario funcionario, IHomeMVP.IPresenter homePresenter) {
         this.mFuncionario = funcionario;
         this.mHomePresenter = homePresenter;
+        this.mControleSessao=new ControleSessao(mHomePresenter.getContext());
     }
 
     public boolean importarDados() {
@@ -210,12 +216,12 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
             recebimentos.forEach(
                     recebimento -> {
-                        recebimento.setId(recebimento.getIdVenda());
+                        recebimento.setIdVenda(recebimento.getIdVenda());
                         realm.copyToRealmOrUpdate(new RecebimentoORM(recebimento));
                     });
         } else {
             for (Recebimento recebimento : recebimentos) {
-                recebimento.setId(recebimento.getIdVenda());
+                recebimento.setIdVenda(recebimento.getIdVenda());
                 realm.copyToRealmOrUpdate(new RecebimentoORM(recebimento));
             }
         }
@@ -256,7 +262,8 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
 
     private boolean importar() {
         ImportacaoService importacaoService = new RetrofitConfig().getImportacaoService();
-        Call<Importacao> importacaoCall = importacaoService.realizarImportacao(this.mFuncionario.getId());
+
+        Call<Importacao> importacaoCall = importacaoService.realizarImportacao(this.mFuncionario.getId(),this.mFuncionario.getIdEmpresa(), mControleSessao.getIdNucleo());
         try {
             Response<Importacao> importacaoResponse = importacaoCall.execute();
             if (importacaoResponse.isSuccessful()) {

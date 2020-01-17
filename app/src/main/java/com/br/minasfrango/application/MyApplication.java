@@ -12,7 +12,7 @@ public class MyApplication extends Application {
 				// The default Realm file is "default.realm" in Context.getFilesDir();
 				// we'll change it to "myrealm.realm"
 				Realm.init(this);
-            RealmConfiguration config = new RealmConfiguration.Builder().name("BD_minas_frango.realm").deleteRealmIfMigrationNeeded().build();
+               RealmConfiguration config = new RealmConfiguration.Builder().name("minas_frango.realm").deleteRealmIfMigrationNeeded().build();
 				Realm.setDefaultConfiguration(config);
 		}
 }

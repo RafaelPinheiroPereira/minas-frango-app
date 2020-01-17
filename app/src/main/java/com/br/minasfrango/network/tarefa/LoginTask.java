@@ -74,13 +74,15 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
     }
 
     private String validateAcess(String idUser, String password) throws IOException {
-        Call<Funcionario> autenticaLoginCall = mPresenter.autenticarLogin(idUser, password);
+        Call<Funcionario> autenticaLoginCall = mPresenter.autenticarLogin(idUser, password,mPresenter.getEmpresa().getId());
         Response<Funcionario> response = autenticaLoginCall.execute();
 
         switch (response.code()) {
             case HttpConstant.OK:
                 Funcionario funcionario = response.body();
-                mPresenter.criarSessao(idUser, password, funcionario.getNome());
+                funcionario.setSenha(password);
+                mPresenter.salvarFuncionario(funcionario);
+                mPresenter.criarSessao(idUser, password, funcionario.getNome(),mPresenter.getNucleo().getId());
                 return "SUCESS";
 
             case HttpConstant.UNAUTHORIZED:
@@ -91,7 +93,7 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
     }
 
     private String validateAcessOffLine(String idUser, String password) {
-        mPresenter.criarSessao(idUser, password, "teste-off-line");
+        mPresenter.criarSessao(idUser, password, "teste-off-line",mPresenter.getNucleo().getId());
         return "SUCESS";
     }
 }

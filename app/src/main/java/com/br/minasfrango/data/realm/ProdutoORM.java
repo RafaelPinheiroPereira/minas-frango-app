@@ -24,11 +24,15 @@ public class ProdutoORM extends RealmObject implements Serializable {
 		private String unidade;
 		
 		private double quantidade;
+        private long idEmpresa;
+    private long idNucleo;
 
     public ProdutoORM(Produto produto) {
         this.id = produto.getId();
         this.nome = produto.getNome();
         this.unidade = produto.getUnidade();
         this.quantidade = produto.getQuantidade();
+        this.idEmpresa=produto.getIdEmpresa();
+        this.idNucleo=produto.getIdNucleo();
     }
 }

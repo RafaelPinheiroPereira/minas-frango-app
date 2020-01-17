@@ -19,9 +19,12 @@ public class Localidade implements Serializable {
 
     private Rota rota;
 
+    private long idEmpresa;
+
     public Localidade(LocalidadeORM localidadeORM) {
         this.id = localidadeORM.getId();
         this.rota = new Rota(localidadeORM.getMRotaORM());
         this.nome = localidadeORM.getNome();
+        this.idEmpresa=localidadeORM.getIdEmpresa();
     }
 }

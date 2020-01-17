@@ -42,10 +42,7 @@ public class ProdutoDAO extends GenericsDAO<ProdutoORM> {
 
     }
 
-    //Converter realm em DTO
-    private ProdutoORM convertRealmToPojo(final ProdutoORM item) {
-        return new ProdutoORM(item.getId(), item.getNome(), item.getUnidade(), item.getQuantidade());
-    }
+
 
 
 }

@@ -21,11 +21,15 @@ public class PrecoORM extends RealmObject implements Serializable {
     private String id;
 
     private double valor;
+    private long idEmpresa;
+    private long idNucleo;
 
     public PrecoORM(Preco preco) {
         this.id = preco.getId();
         this.chavesPrecoORM = new PrecoIDORM(preco.getChavesPreco());
         this.valor = preco.getValor();
+        this.idEmpresa=preco.getIdEmpresa();
+        this.idNucleo=preco.getIdNucleo();
     }
 
     @Override

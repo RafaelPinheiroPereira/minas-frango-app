@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.ClienteGrupo;
+import com.br.minasfrango.data.model.Empresa;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.model.Recebimento;
 import java.util.List;
@@ -91,6 +92,8 @@ public interface IHomeMVP {
         List<Recebimento> obterTodosRecebimentos();
 
         List<Cliente> pesquisarClientePorRede(ClienteGrupo clienteGrupo);
+
+        Empresa pesquisarEmpresaRegistrada();
 
         List<Recebimento> pesquisarRecebimentoPorCliente(Cliente cliente);
     }

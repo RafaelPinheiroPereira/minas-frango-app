@@ -3,6 +3,7 @@ package com.br.minasfrango.ui.mvp.venda;
 import android.content.Context;
 import androidx.appcompat.app.AlertDialog;
 import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.Empresa;
 import com.br.minasfrango.data.model.ItemPedido;
 import com.br.minasfrango.data.model.ItemPedidoID;
 import com.br.minasfrango.data.model.Pedido;
@@ -48,6 +49,8 @@ public interface IVendaMVP {
         void fecharConexaoAtiva();
 
         int getBicos();
+
+        Empresa pesquisarEmpresaRegistrada();
 
         void setAlertDialog(AlertDialog alertDialog);
 
@@ -219,6 +222,10 @@ public interface IVendaMVP {
 
         Cliente pesquisarClientePorId(Long id);
 
+        long pesquisarCodigoMaximoDeVendaDoFuncionario(int idUsuario);
+
+        Empresa pesquisarEmpresaRegistrada();
+
         Produto pesquisarProdutoPorId(long id);
 
         Produto pesquisarProdutoPorNome(String productName);
@@ -228,7 +235,7 @@ public interface IVendaMVP {
         List<Unidade> getAllUnitys();
 
 
-
+        void atualizarIdMaximoDeVenda(long idFuncionario,long idVendaMaxima);
 
         Unidade pesquisarUnidadePorProduto();
 

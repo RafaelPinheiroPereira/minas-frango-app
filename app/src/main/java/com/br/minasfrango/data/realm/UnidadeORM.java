@@ -23,11 +23,13 @@ public class UnidadeORM extends RealmObject implements Serializable {
     private String nome;
 
     private String unidadePadrao;
+    private long idEmpresa;
 
     public UnidadeORM(Unidade unidade) {
         this.id = unidade.getId();
         this.chavesUnidadeORM = new UnidadeProdutoIDORM(unidade.getChavesUnidade());
         this.nome = unidade.getNome();
         this.unidadePadrao = unidade.getUnidadePadrao();
+        this.idEmpresa=unidade.getIdEmpresa();
     }
 }

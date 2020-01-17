@@ -31,4 +31,14 @@ public class Nucleo implements Serializable {
         this.dataInicio=nucleoORM.getDataInicio();
         this.dataInicio=nucleoORM.getDataFim();
     }
+
+    public Nucleo(final int id, final String nome) {
+        this.id=id;
+        this.nome=nome;
+    }
+
+    @Override
+    public String toString() {
+        return this.getNome();
+    }
 }

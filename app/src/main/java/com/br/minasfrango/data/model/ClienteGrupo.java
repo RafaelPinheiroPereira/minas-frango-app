@@ -16,10 +16,12 @@ public class ClienteGrupo implements Serializable {
 
     private long id;
     private String nome;
+    private long idEmpresa;
 
     public ClienteGrupo(ClienteGrupoORM clienteGrupoORM){
         this.id=clienteGrupoORM.getId();
         this.nome=clienteGrupoORM.getNome();
+        this.idEmpresa=clienteGrupoORM.getIdEmpresa();
     }
     @Override
     public String toString() {

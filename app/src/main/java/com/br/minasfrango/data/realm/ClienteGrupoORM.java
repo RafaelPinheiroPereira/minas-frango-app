@@ -17,10 +17,17 @@ public class ClienteGrupoORM extends RealmObject implements Serializable {
     @PrimaryKey
     private long id;
     private String nome;
+    private long idEmpresa;
 
 
     public ClienteGrupoORM(ClienteGrupo clienteGrupo){
         this.id=clienteGrupo.getId();
         this.nome=clienteGrupo.getNome();
+        this.idEmpresa=clienteGrupo.getIdEmpresa();
+    }
+
+    public ClienteGrupoORM(final int id, final String nome) {
+        this.id=id;
+        this.nome=nome;
     }
 }

@@ -31,6 +31,8 @@ public class Presenter implements IHomeMVP.IPresenter {
 
     private List<ClienteGrupo> redes = new ArrayList<>();
 
+
+
     private IModel model;
     private IView view;
 
@@ -154,6 +156,7 @@ public class Presenter implements IHomeMVP.IPresenter {
         Funcionario funcionario = new Funcionario();
         funcionario.setId(getUserId());
         funcionario.setNome(getNomeUsuario());
+        funcionario.setIdEmpresa(this.model.pesquisarEmpresaRegistrada().getId());
         new ImportacaoTask(funcionario, this).execute();
     }
 

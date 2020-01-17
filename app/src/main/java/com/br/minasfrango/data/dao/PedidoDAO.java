@@ -29,7 +29,7 @@ public class PedidoDAO extends GenericsDAO<PedidoORM> {
     public long addPedido(PedidoORM pedidoORM) {
         long id;
         if (where().max("id") != null) {
-            id = (long) (where().max("id").intValue() + 1);
+            id = pedidoORM.getId() + 1;
         } else {
             id = 1;
         }

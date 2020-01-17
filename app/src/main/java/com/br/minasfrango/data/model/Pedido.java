@@ -33,8 +33,10 @@ public class Pedido implements Serializable {
 
     private String motivoCancelamento;
 
+    private long idNucleo;
 
 
+    private long idEmpresa;
     private double valorTotal;
 
     public static List<ItemPedido> converterListItemPedidoRealmParaModel(PedidoORM pedidoORM) {
@@ -59,5 +61,7 @@ public class Pedido implements Serializable {
         this.motivoCancelamento = pedidoORM.getMotivoCancelamento();
 
         this.valorTotal = pedidoORM.getValorTotal();
+        this.idEmpresa=pedidoORM.getIdEmpresa();
+        this.idNucleo=pedidoORM.getIdNucleo();
     }
 }

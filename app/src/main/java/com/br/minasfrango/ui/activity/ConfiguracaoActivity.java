@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -59,6 +60,7 @@ public class ConfiguracaoActivity extends AppCompatActivity implements IView {
         // Init
         mPresenter = new Presenter(this);
         mPresenter.setMac(getMacAddr());
+        Log.d("Mac",mPresenter.getMac());
         if(mPresenter.statusSistema().equals("DISPOSITIVO_HABILITADO")){
             mPresenter
                     .getContext()
