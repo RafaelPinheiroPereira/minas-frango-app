@@ -353,7 +353,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
         if ((mPresenter.getItens().size() > 0)
                 && (!new ControleSessao(mPresenter.getContext())
                        .getEnderecoBluetooth()
-                        .isEmpty()))
+                       .isEmpty()))
         {
             // Realiza Update do PedidoORM
             if (mPresenter.getPedido() != null) {
@@ -377,6 +377,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
                                             "Erro Formatacao Data PedidoORM: " + e.getMessage()));
                 }
             }
+
            mPresenter.esperarPorConexao();
 
         } else if (new ControleSessao(mPresenter.getContext()).getEnderecoBluetooth().isEmpty()) {

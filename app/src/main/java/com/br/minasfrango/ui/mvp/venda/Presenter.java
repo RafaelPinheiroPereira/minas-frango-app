@@ -384,6 +384,7 @@ public class Presenter implements IVendaMVP.IPresenter {
         pedido.setCodigoFuncionario(controleSessao.getIdUsuario());
         pedido.setCodigoCliente(getCliente().getId());
         pedido.setValorTotal(calcularTotalDaVenda());
+        pedido.setIdNucleo(controleSessao.getIdNucleo());
 
 
         long codigoVendaMaxima=this.mModel.pesquisarCodigoMaximoDeVendaDoFuncionario(controleSessao.getIdUsuario());
