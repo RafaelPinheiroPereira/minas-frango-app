@@ -42,6 +42,10 @@ public class Recebimento implements Serializable, Comparable<Recebimento> {
     private double valorVenda;
     private String idConta;
 
+    private long idPedidoBloco;
+    private long idNucleo;
+
+
     public Recebimento(RecebimentoORM recebimentoORM) {
         this.idRecibo = recebimentoORM.getId();
         this.check = recebimentoORM.isCheck();
@@ -57,6 +61,8 @@ public class Recebimento implements Serializable, Comparable<Recebimento> {
         this.idVenda = recebimentoORM.getIdVenda();
         this.idConta=recebimentoORM.getIdConta();
         this.idEmpresa=recebimentoORM.getIdEmpresa();
+        this.idPedidoBloco=recebimentoORM.getIdPedidoBloco();
+        this.idNucleo=recebimentoORM.getIdNucleo();
     }
 
 

@@ -327,6 +327,7 @@ public class ImpressoraUtil {
         textBuffer.append("{s}FONE:(98)988962910{br}{br}");
         textBuffer.append("{reset}{center}{b}COMPROVANTE DE PAGAMENTOS {br}");
         textBuffer.append("{reset}");
+
         textBuffer.append("{b}CLIENTE: " + cliente.getNome() + "{br}");
         textBuffer.append(
                 "{b}VALOR: " + String.format("%.2f",valorTotalAmortizado) + "{br}");

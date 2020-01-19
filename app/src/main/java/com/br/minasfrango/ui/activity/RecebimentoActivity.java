@@ -277,7 +277,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
 
     @OnClick(R.id.btnSalvarRecebimento)
     public void salvarRecebimento() {
-        if (!new ControleSessao(mPresenter.getContext()).getEnderecoBluetooth().isEmpty()) {
+       if (!new ControleSessao(mPresenter.getContext()).getEnderecoBluetooth().isEmpty()) {
             mPresenter.salvarAmortizacao();
             mPresenter.atualizarRecycleView();
             mPresenter.esperarPorConexao();

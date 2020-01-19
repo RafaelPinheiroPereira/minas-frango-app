@@ -281,7 +281,7 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
 
             }
         } catch (IOException e) {
-           // Log.d("Error",e.getMessage());
+            Log.d("Error",e.getMessage());
             e.printStackTrace();
         }
         return true;
