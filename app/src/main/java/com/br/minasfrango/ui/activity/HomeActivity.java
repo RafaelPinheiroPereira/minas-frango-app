@@ -39,6 +39,8 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 public class HomeActivity extends AppCompatActivity
         implements RecyclerViewOnClickListenerHack, IView {
 
+    private static  String SPINNER_POICAO_KEY ="posicaoSpinnerRede";
+
     ClienteAdapter mClientAdapter;
 
     ArrayAdapter mRedeAdapter;
@@ -61,6 +63,7 @@ public class HomeActivity extends AppCompatActivity
     private IDrawer navigateDrawer;
 
     private ProgressDialog mProgressDialog;
+    private static Bundle mBundleState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +109,27 @@ public class HomeActivity extends AppCompatActivity
     public void onHideProgressDialog() {
         if (getProgressDialog().isShowing()) {
             getProgressDialog().dismiss();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mBundleState = new Bundle();
+        mBundleState.putInt(SPINNER_POICAO_KEY, spnClienteGrupo.getSelectedItemPosition());
+
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+
+        if (mBundleState != null) {
+           int  mPosicao = mBundleState.getInt(SPINNER_POICAO_KEY);
+
+           spnClienteGrupo.setSelection(mPosicao);
         }
     }
 
