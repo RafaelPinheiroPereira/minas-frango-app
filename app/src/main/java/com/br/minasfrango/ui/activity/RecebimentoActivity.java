@@ -33,6 +33,7 @@ import com.br.minasfrango.util.ControleSessao;
 import com.br.minasfrango.util.CurrencyEditText;
 import com.br.minasfrango.util.DateUtils;
 import com.br.minasfrango.util.FormatacaoMoeda;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -251,7 +252,11 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
                 new Date(System.currentTimeMillis())).replace("/", "-")
                 + mPresenter.getCliente().getNome();
         CameraUtil cameraUtil = new CameraUtil((Activity) mPresenter.getContext());
-        cameraUtil.tirarFoto(CameraUtil.CAMINHO_IMAGEM_RECEBIMENTOS, nomeFoto);
+        try {
+            cameraUtil.tirarFoto(CameraUtil.CAMINHO_IMAGEM_RECEBIMENTOS, nomeFoto);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

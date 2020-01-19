@@ -58,6 +58,7 @@ import com.br.minasfrango.util.ControleSessao;
 import com.br.minasfrango.util.CurrencyEditText;
 import com.br.minasfrango.util.DateUtils;
 import com.br.minasfrango.util.FormatacaoMoeda;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Date;
@@ -453,7 +454,11 @@ public class VendasActivity extends AppCompatActivity implements IView {
                         + String.format("%08d", mPresenter.getPedido().getIdVenda());
 
         CameraUtil cameraUtil = new CameraUtil((Activity) mPresenter.getContext());
-        cameraUtil.tirarFoto(CameraUtil.CAMINHO_IMAGEM_VENDAS, nomeFoto);
+        try {
+            cameraUtil.tirarFoto(CameraUtil.CAMINHO_IMAGEM_VENDAS, nomeFoto);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

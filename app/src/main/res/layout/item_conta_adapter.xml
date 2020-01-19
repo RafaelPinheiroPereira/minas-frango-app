@@ -4,20 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/txt_conta"
-        android:text="Conta"
-        android:padding="10dp"
-        android:textSize="12sp">
 
-    </TextView>
     <TextView
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:id="@+id/txt_agencia"
-        android:text="Agencia"
+        android:id="@+id/txt_id_conta"
+        android:text="Id Conta"
         android:padding="10dp"
         android:textSize="12sp">
 

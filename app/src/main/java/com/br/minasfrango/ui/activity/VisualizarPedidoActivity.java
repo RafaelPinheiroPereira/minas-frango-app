@@ -1,6 +1,8 @@
 package com.br.minasfrango.ui.activity;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,11 +18,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.br.minasfrango.R;
+import com.br.minasfrango.ui.abstracts.AbstractActivity;
 import com.br.minasfrango.ui.adapter.ItensPedidoVisualizarAdapter;
 import com.br.minasfrango.ui.mvp.visualizar.IViewOrderMVP;
 import com.br.minasfrango.ui.mvp.visualizar.IViewOrderMVP.IView;
 import com.br.minasfrango.ui.mvp.visualizar.Presenter;
 import com.br.minasfrango.util.CameraUtil;
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 
 public class VisualizarPedidoActivity extends AppCompatActivity implements IView {
@@ -133,7 +138,11 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
 
 
         CameraUtil cameraUtil = new CameraUtil((Activity) mPresenter.getContext());
-        cameraUtil.tirarFoto(CameraUtil.CAMINHO_IMAGEM_VENDAS, nomeFoto);
+        try {
+            cameraUtil.tirarFoto(CameraUtil.CAMINHO_IMAGEM_VENDAS, nomeFoto);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
     }
@@ -173,4 +182,26 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CameraUtil.RESULTADO_INTENCAO_FOTO) {
+            if (resultCode == RESULT_OK) {
+
+                AbstractActivity.showToast(
+                        mPresenter.getContext(),
+                        "Imagem salva: " + CameraUtil.LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                File f = new File(CameraUtil.LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
+                Uri contentUri = Uri.fromFile(f);
+                mediaScanIntent.setData(contentUri);
+                this.sendBroadcast(mediaScanIntent);
+                this.finish();
+
+            } else {
+                AbstractActivity.showToast(mPresenter.getContext(), "Imagem não foi salva");
+            }
+        }
+    }
+
 }

@@ -20,6 +20,7 @@ public class ContaDAO extends GenericsDAO<ContaORM> {
 
     public List<Conta> pesquisarContaPorId() {
         List<Conta> contas = new ArrayList<>();
+        contas.add(new Conta("",  "DINHEIRO", "-----","-----"));
         RealmResults<ContaORM> results = where().findAll().sort("id", Sort.ASCENDING);
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
             results.forEach(contaORM->contas.add(new Conta(contaORM)));

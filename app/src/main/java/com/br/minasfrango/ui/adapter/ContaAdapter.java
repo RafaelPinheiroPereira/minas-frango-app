@@ -74,13 +74,13 @@ public class ContaAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
         convertView = inflter.inflate(R.layout.item_conta_adapter, null);
-        TextView txtConta = convertView.findViewById(R.id.txt_conta);
-        TextView txtAgencia = convertView.findViewById(R.id.txt_agencia);
+        TextView txtIdConta = convertView.findViewById(R.id.txt_id_conta);
+
         TextView txtBanco = convertView.findViewById(R.id.txt_banco);
 
-        txtConta.setText(this.mContas.get(position).getConta());
+        txtIdConta.setText(this.mContas.get(position).getId());
         txtBanco.setText(this.mContas.get(position).getDescricao());
-        txtAgencia.setText(this.mContas.get(position).getAgencia());
+
 
         return convertView;
     }

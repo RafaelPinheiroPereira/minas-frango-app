@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import androidx.core.content.FileProvider;
 import com.br.minasfrango.BuildConfig;
 import java.io.File;
+import java.io.IOException;
 
 public class CameraUtil {
 
@@ -27,7 +28,7 @@ public class CameraUtil {
         mActivity = activity;
     }
 
-    public void tirarFoto(String nomeDiretorio, String nomeFoto) {
+    public void tirarFoto(String nomeDiretorio, String nomeFoto) throws IOException {
         Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File output = null;
 
@@ -35,16 +36,18 @@ public class CameraUtil {
 
             File dir = this.mActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
-            output = new File(dir + "/Minas Frango/" + nomeDiretorio, nomeFoto + ".jpeg");
+            output =new File(dir + "/Minas_Frango/" + nomeDiretorio, nomeFoto + ".jpeg");
 
             Uri fotoURI =
                     FileProvider.getUriForFile(
                             this.mActivity, BuildConfig.APPLICATION_ID + ".provider", output);
             i.putExtra(MediaStore.EXTRA_OUTPUT, fotoURI);
-        } else {
-            File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 
-            output = new File(dir + "/Minas Frango/" + nomeDiretorio, nomeFoto + ".jpeg");
+        } else {
+            File dir =
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+
+            output = new File(dir + "/Minas_Frango/" + nomeDiretorio, nomeFoto + ".jpeg");
             i.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(output));
         }
 

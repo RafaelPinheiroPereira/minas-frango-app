@@ -28,11 +28,20 @@ public class PedidoDAO extends GenericsDAO<PedidoORM> {
 
     public long addPedido(PedidoORM pedidoORM) {
         long id;
-        if (pedidoORM.getId()>0) {
-            id = pedidoORM.getId() + 1;
-        } else {
-            id = 1;
+        if (this.existePedidoComIdMaiorDoQueOCodigoDeVendaMaxima(pedidoORM.getId())) {
+            id = where().max("id").longValue() +1;
+
+            }
+        else{
+            if (pedidoORM.getId()>0) {
+                id = pedidoORM.getId() + 1;
+            } else {
+                id = 1;
+            }
         }
+
+
+
         try {
 
             pedidoORM.setId(id);
@@ -159,6 +168,17 @@ public class PedidoDAO extends GenericsDAO<PedidoORM> {
 
         } catch (RealmException ex) {
             realm.cancelTransaction();
+        }
+    }
+
+    public boolean existePedidoComIdMaiorDoQueOCodigoDeVendaMaxima(long codigoVendaMaxima){
+        long id;
+        if (where().max("id") != null) {
+            id = where().max("id").longValue();
+            return id > codigoVendaMaxima;
+            }
+        else {
+           return false;
         }
     }
 }
