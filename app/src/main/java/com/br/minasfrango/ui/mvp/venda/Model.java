@@ -176,8 +176,8 @@ public class Model implements IVendaMVP.IModel {
     @Override
     public long pesquisarCodigoMaximoDeVendaDoFuncionario(final int idUsuario) {
 
-        FuncionarioORM funcionarioORM=mFuncionarioDAO.findById(Long.valueOf(idUsuario));
-        Funcionario funcionarioPequisado= new Funcionario(funcionarioORM);
+        Funcionario funcionarioPequisado =mFuncionarioDAO.pesquisarPorId(Long.valueOf(idUsuario));
+
         return funcionarioPequisado.getMaxIdVenda();
     }
 

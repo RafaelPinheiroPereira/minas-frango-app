@@ -18,7 +18,7 @@ public interface ILoginMVP {
 
         List<Nucleo> carregarTodosOsNucleos();
 
-        void criarSessao(String idUser, String password, String nameEmployee,long idNucleo);
+        void criarSessao(String idUser, String password, String nameEmployee, long idNucleo, long maxIdVenda);
 
         Empresa pesquisarEmpresaRegistrada();
 

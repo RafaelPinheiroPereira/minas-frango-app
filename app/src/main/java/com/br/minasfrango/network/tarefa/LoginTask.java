@@ -81,8 +81,9 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
             case HttpConstant.OK:
                 Funcionario funcionario = response.body();
                 funcionario.setSenha(password);
+
                 mPresenter.salvarFuncionario(funcionario);
-                mPresenter.criarSessao(idUser, password, funcionario.getNome(),mPresenter.getNucleo().getId());
+                mPresenter.criarSessao(idUser, password, funcionario.getNome(),mPresenter.getNucleo().getId(),funcionario.getMaxIdVenda());
                 return "SUCESS";
 
             case HttpConstant.UNAUTHORIZED:
@@ -93,7 +94,7 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
     }
 
     private String validateAcessOffLine(String idUser, String password) {
-        mPresenter.criarSessao(idUser, password, "teste-off-line",mPresenter.getNucleo().getId());
+       // mPresenter.criarSessao(idUser, password, "teste-off-line",mPresenter.getNucleo().getId(), funcionario.getMaxIdVenda());
         return "SUCESS";
     }
 }
