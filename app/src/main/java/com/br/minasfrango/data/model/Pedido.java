@@ -35,18 +35,16 @@ public class Pedido implements Serializable {
 
     private long idNucleo;
 
-
     private long idEmpresa;
     private double valorTotal;
 
     public static List<ItemPedido> converterListItemPedidoRealmParaModel(PedidoORM pedidoORM) {
         List<ItemPedido> itens = new ArrayList<>();
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
-            pedidoORM.getItens().forEach(itemPedidoORM->itens.add(new ItemPedido(itemPedidoORM)));
-        }else{
-            for(ItemPedidoORM itemPedidoORM: pedidoORM.getItens()){
+            pedidoORM.getItens().forEach(itemPedidoORM -> itens.add(new ItemPedido(itemPedidoORM)));
+        } else {
+            for (ItemPedidoORM itemPedidoORM : pedidoORM.getItens()) {
                 itens.add(new ItemPedido(itemPedidoORM));
-
             }
         }
         return itens;
@@ -61,7 +59,7 @@ public class Pedido implements Serializable {
         this.motivoCancelamento = pedidoORM.getMotivoCancelamento();
 
         this.valorTotal = pedidoORM.getValorTotal();
-        this.idEmpresa=pedidoORM.getIdEmpresa();
-        this.idNucleo=pedidoORM.getIdNucleo();
+        this.idEmpresa = pedidoORM.getIdEmpresa();
+        this.idNucleo = pedidoORM.getIdNucleo();
     }
 }

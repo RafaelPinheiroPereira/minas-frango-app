@@ -3,10 +3,12 @@ package com.br.minasfrango.ui.mvp.recebimento;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.data.dao.ContaDAO;
+import com.br.minasfrango.data.dao.FuncionarioDAO;
 import com.br.minasfrango.data.dao.RecebimentoDAO;
 import com.br.minasfrango.data.model.Conta;
 import com.br.minasfrango.data.model.Recebimento;
 import com.br.minasfrango.data.realm.ContaORM;
+import com.br.minasfrango.data.realm.FuncionarioORM;
 import com.br.minasfrango.data.realm.RecebimentoORM;
 import com.br.minasfrango.util.ConstantsUtil;
 import com.br.minasfrango.util.ControleSessao;
@@ -27,13 +29,15 @@ public class Model implements IRecebimentoMVP.IModel {
 
     ContaDAO mContaDAO = ContaDAO.getInstace(ContaORM.class);
 
+    FuncionarioDAO mFuncionarioDAO = FuncionarioDAO.getInstace(FuncionarioORM.class);
+
     int position = 0;
 
     RecebimentoDAO recebimentoDAO = RecebimentoDAO.getInstace(RecebimentoORM.class);
 
     public Model(final IRecebimentoMVP.IPresenter presenter) {
         mPresenter = presenter;
-        this.mControleSessao=new ControleSessao(this.mPresenter.getContext());
+        this.mControleSessao = new ControleSessao(this.mPresenter.getContext());
     }
 
     @Override
@@ -109,6 +113,7 @@ public class Model implements IRecebimentoMVP.IModel {
     public List<Conta> pesquisarContaPorId() {
         return this.mContaDAO.pesquisarContaPorId();
     }
+
 
     @Override
     public List<Recebimento> pesquisarRecebimentoPorCliente() {
@@ -226,9 +231,11 @@ public class Model implements IRecebimentoMVP.IModel {
                                     } catch (ParseException e) {
                                         e.printStackTrace();
                                     }
+
                                     item.setIdConta(String.valueOf(mPresenter.getConta().getId()));
                                     item.setIdNucleo(mControleSessao.getIdNucleo());
                                     recebimentoDAO.alterar(new RecebimentoORM(item));
+
                                 }
                             });
         } else {
@@ -245,10 +252,14 @@ public class Model implements IRecebimentoMVP.IModel {
                     recebimento.setIdConta(String.valueOf(mPresenter.getConta().getId()));
                     recebimento.setIdNucleo(mControleSessao.getIdNucleo());
                     recebimentoDAO.alterar(new RecebimentoORM(recebimento));
+
+
                 }
             }
         }
     }
+
+
 
     @Override
     public void setOrdenarSelecaoAutomaticaDasNotas() {}

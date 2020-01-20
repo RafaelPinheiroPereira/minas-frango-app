@@ -21,9 +21,25 @@ public class RecebimentoDAO extends GenericsDAO<RecebimentoORM> {
         super(type);
     }
 
-    public void addRecibo(RecebimentoORM recebimentoORM) {
+    public long addRecibo(RecebimentoORM recebimentoORM) {
+        long id=0;
         try {
 
+
+
+            if (this.existeReciboComIdMaiorDoQueOCodigoDeReciboMaximo(recebimentoORM.getId())) {
+                id = where().max("id").longValue() +1;
+
+            }
+            else{
+                if (recebimentoORM.getId()>0) {
+                    id = recebimentoORM.getId() + 1;
+                } else {
+                    id = 1;
+                }
+            }
+
+            recebimentoORM.setId(id);
             realm.beginTransaction();
             realm.copyToRealmOrUpdate(recebimentoORM);
             realm.commitTransaction();
@@ -32,6 +48,8 @@ public class RecebimentoDAO extends GenericsDAO<RecebimentoORM> {
 
             realm.cancelTransaction();
         }
+
+        return  id;
     }
 
     public Recebimento findByID(Long id) {
@@ -87,5 +105,17 @@ public class RecebimentoDAO extends GenericsDAO<RecebimentoORM> {
         }
 
         return recebimentos;
+    }
+
+
+    public boolean existeReciboComIdMaiorDoQueOCodigoDeReciboMaximo(long codigoReciboMaximo){
+        long id;
+        if (where().max("id") != null) {
+            id = where().max("id").longValue();
+            return id > codigoReciboMaximo;
+        }
+        else {
+            return false;
+        }
     }
 }

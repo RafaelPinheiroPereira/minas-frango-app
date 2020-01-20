@@ -104,18 +104,9 @@ public interface IRecebimentoMVP {
     interface IModel {
 
         void calcularAmortizacaoAutomatica();
-
         void calcularArmotizacaoManual(int position);
-
         boolean crediValueIsGranThenZero();
-
-
-
         List<Conta> pesquisarContaPorId();
-
-
-
-
 
         void processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(
                 final int posicao, Recebimento recebimentoToUpdate);

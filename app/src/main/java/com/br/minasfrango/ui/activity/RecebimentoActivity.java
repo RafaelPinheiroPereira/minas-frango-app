@@ -286,7 +286,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
             mPresenter.salvarAmortizacao();
             mPresenter.atualizarRecycleView();
             mPresenter.esperarPorConexao();
-        } else {
+       } else {
             AbstractActivity.showToast(
                     mPresenter.getContext(),
                     "Endereço MAC da impressora não encontrado.\nHabilite no Menu: Configurar impressora");
