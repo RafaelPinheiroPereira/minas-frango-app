@@ -42,6 +42,10 @@ public class Model implements IModel {
         mPresenter = presenter;
     }
 
+
+
+
+
     @Override
     public void deletarFuncionarioDaSessao() {
         FuncionarioORM funcionarioORM =this.mFuncionarioDAO.where().findFirst();
@@ -93,5 +97,11 @@ public class Model implements IModel {
     @Override
     public List<Recebimento> pesquisarRecebimentoPorCliente(final Cliente cliente) {
         return mRecebimentoDAO.pesquisarRecebimentoPorCliente(cliente);
+    }
+
+    @Override
+    public void salvarRecebimento(final Recebimento recebimento) {
+        RecebimentoORM recebimentoORM= new RecebimentoORM(recebimento);
+        this.mRecebimentoDAO.alterar(recebimentoORM);
     }
 }

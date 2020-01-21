@@ -351,10 +351,10 @@ public class VendasActivity extends AppCompatActivity implements IView {
     @OnClick(R.id.btnSalvarVenda)
     public void btnConfirmSaleOnClicked(View view) {
 
-        if (mPresenter.getItens().size() > 0)
-               // && (!new ControleSessao(mPresenter.getContext())
-                 //      .getEnderecoBluetooth()
-                   //    .isEmpty()))
+        if ((mPresenter.getItens().size() > 0)
+                && (!new ControleSessao(mPresenter.getContext())
+                     .getEnderecoBluetooth()
+                     .isEmpty()))
         {
             // Realiza Update do PedidoORM
             if (mPresenter.getPedido() != null) {
@@ -387,7 +387,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
                 }
             }
 
-          // mPresenter.esperarPorConexao();
+           mPresenter.esperarPorConexao();
 
         } else if (new ControleSessao(mPresenter.getContext()).getEnderecoBluetooth().isEmpty()) {
             AbstractActivity.showToast(

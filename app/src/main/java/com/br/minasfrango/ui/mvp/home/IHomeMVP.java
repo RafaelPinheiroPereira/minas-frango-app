@@ -14,6 +14,8 @@ public interface IHomeMVP {
 
     interface IPresenter {
 
+
+
         void esconderProgressDialog();
 
         void exibirDialogClient(final Cliente cliente);
@@ -41,6 +43,8 @@ public interface IHomeMVP {
         int getUserId();
 
         void logout();
+
+        void salvarRecebimento(Recebimento recebimento);
 
         void setDrawer(final Bundle savedInstanceState);
 
@@ -84,6 +88,10 @@ public interface IHomeMVP {
 
     interface IModel {
 
+
+
+
+
         void deletarFuncionarioDaSessao();
 
         List<ClienteGrupo> obterTodasRedes();
@@ -101,5 +109,7 @@ public interface IHomeMVP {
         Funcionario pesquisarFuncionarioDaSessao();
 
         List<Recebimento> pesquisarRecebimentoPorCliente(Cliente cliente);
+
+        void salvarRecebimento(Recebimento recebimento);
     }
 }

@@ -47,7 +47,7 @@ public class Recebimento implements Serializable, Comparable<Recebimento> {
 
 
     public Recebimento(RecebimentoORM recebimentoORM) {
-        this.idRecibo = recebimentoORM.getId();
+        this.idRecibo = recebimentoORM.getIdVenda();
         this.check = recebimentoORM.isCheck();
         this.dataRecebimento = recebimentoORM.getDataRecebimento();
         this.dataVencimento = recebimentoORM.getDataVencimento();

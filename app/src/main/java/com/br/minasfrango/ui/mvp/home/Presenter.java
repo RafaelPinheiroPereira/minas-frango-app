@@ -41,6 +41,8 @@ public class Presenter implements IHomeMVP.IPresenter {
         this.model = new Model(this);
     }
 
+
+
     @Override
     public void esconderProgressDialog() {
         this.view.onHideProgressDialog();
@@ -164,6 +166,11 @@ public class Presenter implements IHomeMVP.IPresenter {
 
 
         this.mControleSessao.logout();
+    }
+
+    @Override
+    public void salvarRecebimento(final Recebimento recebimento) {
+        this.model.salvarRecebimento(recebimento);
     }
 
     @Override

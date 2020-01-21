@@ -24,6 +24,7 @@ public class Funcionario implements Serializable {
     private long idEmpresa;
 
     private  long maxIdVenda;
+    private  long maxIdRecibo;
 
 
     public Funcionario(FuncionarioORM funcionarioORM) {
@@ -33,6 +34,7 @@ public class Funcionario implements Serializable {
         this.tipoFuncionario = funcionarioORM.getTipoFuncionario();
         this.idEmpresa=funcionarioORM.getIdEmpresa();
         this.maxIdVenda=funcionarioORM.getMaxIdVenda();
+        this.maxIdRecibo=funcionarioORM.getMaxIdRecibo();
 
     }
 }

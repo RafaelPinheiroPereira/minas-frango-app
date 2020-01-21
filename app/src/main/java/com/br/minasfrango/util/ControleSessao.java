@@ -21,7 +21,8 @@ public class ControleSessao {
 
     public static final String CHAVE_NOME = "nome";
     public static final String CHAVE_NUCLEO = "idNucleo";
-    public static final String CHAVE_ID_VENDA_MAXIMA = "idMaxima";
+    public static final String CHAVE_ID_VENDA_MAXIMA = "idVendaMaxima";
+
 
     public static final String CHAVE_ENDERECO_BLUETOOTH = "device_address";
 
@@ -64,7 +65,7 @@ public class ControleSessao {
         return false;
     }
 
-    public void criarSessao(String matricula, String senha, String nome,long idNucleo, long idVendaMaxima) {
+    public void criarSessao(String matricula, String senha, String nome, long idNucleo, long idVendaMaxima) {
 
         editor.putBoolean(USUARIO_CONECTADO, true);
 
@@ -76,6 +77,7 @@ public class ControleSessao {
         editor.putString(CHAVE_NOME, nome);
         editor.putLong(CHAVE_NUCLEO,idNucleo);
         editor.putLong(CHAVE_ID_VENDA_MAXIMA,idVendaMaxima);
+
 
         // commit changes
         editor.commit();
@@ -120,6 +122,7 @@ public class ControleSessao {
         return pref.getLong(CHAVE_NUCLEO, 0);
 
     }
+
     public long getIVendaMaxima(){
         pref = this.contexto.getSharedPreferences(PREFERENCIAS, 0);
         return pref.getLong(CHAVE_ID_VENDA_MAXIMA, 0);

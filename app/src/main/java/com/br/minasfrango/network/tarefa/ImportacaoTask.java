@@ -211,6 +211,7 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
 
     private void salvarRecebimentos(List<Recebimento> recebimentos) {
 
+
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
@@ -226,6 +227,10 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
             }
         }
         realm.commitTransaction();
+
+        Log.d("Importacao Recebimentos", "Sucess");
+
+
 
         Log.d("Importacao Recebimentos", "Sucess");
     }
