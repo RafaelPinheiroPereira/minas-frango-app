@@ -28,7 +28,7 @@ public interface ILoginMVP {
 
         AutenticacaoService getServicoLogin();
 
-        boolean loginValidado();
+        boolean estaoValidadosOsInputs();
 
         void salvarFuncionario(Funcionario funcionario);
 
@@ -39,6 +39,16 @@ public interface ILoginMVP {
         Nucleo getNucleo();
 
         void setNucleo(Nucleo nucleo);
+
+        String getIdUsuario();
+
+        void setIdUsuario(String idUsuario);
+
+        String getSenha();
+
+        void setSenha(String senha);
+
+
     }
     interface  IModel{
 

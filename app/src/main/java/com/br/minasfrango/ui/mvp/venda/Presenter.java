@@ -91,6 +91,12 @@ public class Presenter implements IVendaMVP.IPresenter {
     }
 
     @Override
+    public long configurarSequenceDoPedido(final ControleSessao controleSessao) {
+       return  this.mModel.configurarSequenceDoPedido(controleSessao);
+
+    }
+
+    @Override
     public int getBicos() {
         return bicos;
     }
@@ -358,7 +364,7 @@ public class Presenter implements IVendaMVP.IPresenter {
     }
 
     @Override
-    public void salvarVenda() throws ParseException {
+    public void salvarVenda(final long sequencePedido) throws ParseException {
 
         Pedido pedido = new Pedido();
         pedido.setDataPedido(
@@ -376,42 +382,30 @@ public class Presenter implements IVendaMVP.IPresenter {
                 this.mModel.addItemPedido(itemPedido);
             }
         }
+
         ControleSessao controleSessao = new ControleSessao(getContext());
-
-
-
         pedido.setIdEmpresa(this.mModel.pesquisarEmpresaRegistrada().getId());
         pedido.setCodigoFuncionario(controleSessao.getIdUsuario());
+
         pedido.setCodigoCliente(getCliente().getId());
         pedido.setValorTotal(calcularTotalDaVenda());
         pedido.setIdNucleo(controleSessao.getIdNucleo());
 
-
-        long codigoVendaMaxima=controleSessao.getIVendaMaxima();
-
-
-
-
-        pedido.setIdVenda(codigoVendaMaxima);
+        pedido.setIdVenda(sequencePedido);
         PedidoORM pedidoORM = new PedidoORM(pedido);
 
-
-
-
-        // Salva o pedidoORM e retorna o id salvo
-        long idVenda = this.mModel.salvarPedido(pedidoORM);
 
         // Seta a chave composta do item pedidoORM com o id da venda
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
             getItens().forEach(item->{
-                item.getChavesItemPedido().setIdVenda(idVenda);
+                item.getChavesItemPedido().setIdVenda(sequencePedido);
                 this.mModel.atualizarChaveItemPedido(item.getChavesItemPedido());
 
 
             });
         } else {
             for (ItemPedido itemPedido : getItens()) {
-                itemPedido.getChavesItemPedido().setIdVenda(idVenda);
+                itemPedido.getChavesItemPedido().setIdVenda(sequencePedido);
                 this.mModel.atualizarChaveItemPedido(itemPedido.getChavesItemPedido());
             }
         }
@@ -420,7 +414,7 @@ public class Presenter implements IVendaMVP.IPresenter {
 
         this.mModel.copyOrUpdateSaleOrder(pedido);
 
-        this.mModel.atualizarIdMaximoDeVenda(controleSessao.getIdUsuario(),idVenda);
+        this.mModel.atualizarIdMaximoDeVenda(controleSessao.getIdUsuario(),sequencePedido);
     }
 
     @Override

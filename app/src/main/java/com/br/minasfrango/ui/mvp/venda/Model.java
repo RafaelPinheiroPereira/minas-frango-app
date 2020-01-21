@@ -31,16 +31,16 @@ import com.br.minasfrango.data.realm.PrecoIDORM;
 import com.br.minasfrango.data.realm.PrecoORM;
 import com.br.minasfrango.data.realm.ProdutoORM;
 import com.br.minasfrango.data.realm.UnidadeORM;
+import com.br.minasfrango.util.ControleSessao;
+import io.realm.Sort;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Model implements IVendaMVP.IModel {
 
-
-
     ItemPedidoDAO itemPedidoDAO = ItemPedidoDAO.getInstace(ItemPedidoORM.class);
 
-    ItemPedidoIDDAO mItemPedidoIDDAO=ItemPedidoIDDAO.getInstace(ItemPedidoIDORM.class);
+    ItemPedidoIDDAO mItemPedidoIDDAO = ItemPedidoIDDAO.getInstace(ItemPedidoIDORM.class);
 
     ClienteDAO mClienteDAO = ClienteDAO.getInstace(ClienteORM.class);
 
@@ -56,14 +56,11 @@ public class Model implements IVendaMVP.IModel {
 
     PedidoDAO saleDAO = PedidoDAO.getInstace(PedidoORM.class);
 
-    EmpresaDAO mEmpresaDAO= EmpresaDAO.getInstace(EmpresaORM.class);
-
-
+    EmpresaDAO mEmpresaDAO = EmpresaDAO.getInstace(EmpresaORM.class);
 
     UnidadeDAO unidadeDAO = UnidadeDAO.getInstace(UnidadeORM.class);
 
-    FuncionarioDAO mFuncionarioDAO=FuncionarioDAO.getInstace(FuncionarioORM.class);
-
+    FuncionarioDAO mFuncionarioDAO = FuncionarioDAO.getInstace(FuncionarioORM.class);
 
     private com.br.minasfrango.ui.mvp.venda.Presenter mPresenter;
 
@@ -79,7 +76,6 @@ public class Model implements IVendaMVP.IModel {
     @Override
     public void atualizarChaveItemPedido(final ItemPedidoID chavesItemPedido) {
         this.mItemPedidoIDDAO.alterar(new ItemPedidoIDORM(chavesItemPedido));
-
     }
 
     @Override
@@ -94,17 +90,18 @@ public class Model implements IVendaMVP.IModel {
 
     @Override
     public Preco carregarPrecoUnidadePorProduto(final String unityID) {
-        String id = mPrecoIDDAO.findPrecoIDByUnidadeAndProdutoAndCliente(mPresenter.getProdutoSelecionado(), unityID,
-                mPresenter.getCliente());
-        if (id.equals("")){
-            String padrao = mPrecoIDDAO.findPrecoIDByUnidadeAndProdutoPadrao(mPresenter.getProdutoSelecionado(), unityID);
+        String id =
+                mPrecoIDDAO.findPrecoIDByUnidadeAndProdutoAndCliente(
+                        mPresenter.getProdutoSelecionado(), unityID, mPresenter.getCliente());
+        if (id.equals("")) {
+            String padrao =
+                    mPrecoIDDAO.findPrecoIDByUnidadeAndProdutoPadrao(
+                            mPresenter.getProdutoSelecionado(), unityID);
             return this.mPrecoDAO.findPriceByPriceID(padrao);
+        } else {
+
+            return this.mPrecoDAO.findPriceByPriceID(id);
         }
-        else{
-
-
-
-        return this.mPrecoDAO.findPriceByPriceID(id);}
     }
 
     @Override
@@ -112,21 +109,64 @@ public class Model implements IVendaMVP.IModel {
 
         ArrayList<String> productIds = new ArrayList<>();
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
-            produtos.forEach(item->productIds.add(String.valueOf(item.getId())));
+            produtos.forEach(item -> productIds.add(String.valueOf(item.getId())));
         } else {
             for (Produto produto : produtos) {
                 productIds.add(String.valueOf(produto.getId()));
             }
         }
         return productIds;
+    }
 
+    @Override
+    public long configurarSequenceDoPedido(ControleSessao controleSessao) {
+        FuncionarioORM funcionarioORM = mFuncionarioDAO.where().equalTo("id",controleSessao.getIdUsuario()).findFirst();
+        Funcionario funcionarioPesquisado= new Funcionario(funcionarioORM);
+
+
+        if(controleSessao.getIVendaMaxima()>0 &&funcionarioPesquisado.getMaxIdVenda()==0){
+            funcionarioPesquisado.setMaxIdVenda(controleSessao.getIVendaMaxima());
+        }
+
+
+        PedidoORM pedidoORM = mPedidoDAO.where().findFirst();
+        /**Já houve pedido salvo no tablet*/
+        if(pedidoORM!=null){
+            PedidoORM pedidoORMRecente = mPedidoDAO.where().sort("id", Sort.DESCENDING).findAll().first();
+            Pedido pedidoMaisRecente=new Pedido(pedidoORMRecente);
+
+            if(funcionarioPesquisado.getMaxIdVenda()<pedidoMaisRecente.getIdVenda() && funcionarioPesquisado.getMaxIdVenda()==0){
+                /**Houve delete no banco */
+                return -1;
+
+            }else{
+                /** Segue fluxo normal**/
+                return pedidoMaisRecente.getIdVenda()+1;
+            }
+
+        }
+        /**Pode nao ter pedido no tablet , mas ja existiu vendas para aquele funcionario em outra versao*/
+        else if (funcionarioPesquisado.getMaxIdVenda()>0){
+
+            return funcionarioPesquisado.getMaxIdVenda()+1;
+
+        }
+        /** A primeira venda do funcionario*/
+        else if (funcionarioPesquisado.getMaxIdVenda()==0){
+
+                 return funcionarioPesquisado.getMaxIdVenda()+1;
+        }
+
+
+
+      return -1;
     }
 
     @Override
     public ArrayList<String> carregarProdutoPorNome(final List<Produto> produtos) {
         ArrayList<String> productNames = new ArrayList<String>();
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
-            produtos.forEach(item->productNames.add(item.getNome()));
+            produtos.forEach(item -> productNames.add(item.getNome()));
         } else {
             for (Produto produto : produtos) {
                 productNames.add(produto.getNome());
@@ -143,20 +183,19 @@ public class Model implements IVendaMVP.IModel {
         mPresenter.setPedido(pedido);
     }
 
-
     @Override
     public ArrayList<String> converterUnidadeParaString(final List<Unidade> unidades) {
         ArrayList<String> unityNames = new ArrayList<>();
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
-            unidades.forEach(item->{
-                String[] unitID = item.getId().split("-");
-                unityNames.add(unitID[0]);
-            });
+            unidades.forEach(
+                    item -> {
+                        String[] unitID = item.getId().split("-");
+                        unityNames.add(unitID[0]);
+                    });
         } else {
             for (Unidade unidade : unidades) {
                 String[] unitID = unidade.getId().split("-");
                 unityNames.add(unitID[0]);
-
             }
         }
         return unityNames;
@@ -165,7 +204,6 @@ public class Model implements IVendaMVP.IModel {
     @Override
     public void criarChaveItemPedido(final ItemPedidoID chavesItemPedido) {
         this.mItemPedidoIDDAO.inserir(chavesItemPedido);
-
     }
 
     @Override
@@ -176,7 +214,7 @@ public class Model implements IVendaMVP.IModel {
     @Override
     public long pesquisarCodigoMaximoDeVendaDoFuncionario(final int idUsuario) {
 
-        Funcionario funcionarioPequisado =mFuncionarioDAO.pesquisarPorId(Long.valueOf(idUsuario));
+        Funcionario funcionarioPequisado = mFuncionarioDAO.pesquisarPorId(Long.valueOf(idUsuario));
 
         return funcionarioPequisado.getMaxIdVenda();
     }
@@ -206,10 +244,6 @@ public class Model implements IVendaMVP.IModel {
         return this.unidadeDAO.getAll();
     }
 
-
-
-
-
     @Override
     public Unidade pesquisarUnidadePorProduto() {
         return this.unidadeDAO.findUnityPattenByProduct(mPresenter.getProdutoSelecionado());
@@ -224,12 +258,15 @@ public class Model implements IVendaMVP.IModel {
     }
 
     @Override
-    public long salvarPedido(final PedidoORM saleOrderToSave) {
-        return this.mPedidoDAO.addPedido(saleOrderToSave);
+    public void salvarPedido(final PedidoORM saleOrderToSave) {
+         this.mPedidoDAO.salvarPedido(saleOrderToSave);
     }
+
     @Override
     public void atualizarIdMaximoDeVenda(final long idFuncionario, final long idVendaMaxima) {
-        Funcionario funcionarioPesquisado= new Funcionario(this.mFuncionarioDAO.findById(idFuncionario));
+       FuncionarioORM  funcionarioORM=this.mFuncionarioDAO.findById(idFuncionario);
+        Funcionario funcionarioPesquisado =
+                new Funcionario(funcionarioORM);
         funcionarioPesquisado.setMaxIdVenda(idVendaMaxima);
         this.mFuncionarioDAO.alterar(new FuncionarioORM(funcionarioPesquisado));
     }

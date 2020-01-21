@@ -11,6 +11,7 @@ import com.br.minasfrango.data.model.Preco;
 import com.br.minasfrango.data.model.Produto;
 import com.br.minasfrango.data.model.Unidade;
 import com.br.minasfrango.data.realm.PedidoORM;
+import com.br.minasfrango.util.ControleSessao;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ public interface IVendaMVP {
         void atualizarRecyclerItens();
 
         void atualizarSpinnerLotes();
+
+        long configurarSequenceDoPedido(final ControleSessao controleSessao);
 
         void error(String msg);
 
@@ -142,7 +145,7 @@ public interface IVendaMVP {
 
         void setTotalProductValue(BigDecimal totalProductValue);
 
-        void salvarVenda() throws ParseException;
+        void salvarVenda(final long sequencePedido) throws ParseException;
 
         void updateTxtAmountOrderSale();
 
@@ -210,6 +213,8 @@ public interface IVendaMVP {
 
         ArrayList<String> carregarProdutoPorId(List<Produto> products);
 
+        long configurarSequenceDoPedido(final ControleSessao controleSessao);
+
         void copyOrUpdateSaleOrder(Pedido pedido);
 
         ArrayList<String> carregarProdutoPorNome(List<Produto> produto);
@@ -244,6 +249,6 @@ public interface IVendaMVP {
         /**
          * @return saleOrderIdSaved
          */
-        long salvarPedido(final PedidoORM saleOrderToSave);
+        void salvarPedido(final PedidoORM saleOrderToSave);
     }
 }

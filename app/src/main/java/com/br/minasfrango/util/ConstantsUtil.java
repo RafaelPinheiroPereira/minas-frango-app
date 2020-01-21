@@ -11,6 +11,8 @@ public class ConstantsUtil {
 
     public static final int EQUAL = 0;
 
+
+
     public static String[] PERMISSIONS = {
             Manifest.permission.BLUETOOTH,
             Manifest.permission.BLUETOOTH_ADMIN,

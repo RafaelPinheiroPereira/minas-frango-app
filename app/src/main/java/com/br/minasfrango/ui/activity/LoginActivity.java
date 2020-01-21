@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity implements IView {
 
 
 
-    private static int REQUEST_STORAGE = 112;
+
 
     @BindView(R.id.btnLogin)
     Button btnLogin;
@@ -93,8 +93,8 @@ public class LoginActivity extends AppCompatActivity implements IView {
 
     @OnClick(R.id.btnLogin)
     public void btnSubmitClicked(View view) {
-        // realizar login
-        if (presenter.loginValidado()) {
+
+        if (presenter.estaoValidadosOsInputs()) {
             try {
                 presenter.realizarLogin(edtMatricula.getText().toString(), edtSenha.getText().toString());
 

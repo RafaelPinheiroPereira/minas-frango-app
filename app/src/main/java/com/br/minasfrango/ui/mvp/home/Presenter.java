@@ -153,17 +153,17 @@ public class Presenter implements IHomeMVP.IPresenter {
 
     @Override
     public void importar() {
-        Funcionario funcionario = new Funcionario();
-        funcionario.setId(getUserId());
-        funcionario.setNome(getNomeUsuario());
+
+        Funcionario funcionario=this.model.pesquisarFuncionarioDaSessao();
         funcionario.setIdEmpresa(this.model.pesquisarEmpresaRegistrada().getId());
         new ImportacaoTask(funcionario, this).execute();
     }
 
     @Override
     public void logout() {
+
+
         this.mControleSessao.logout();
-        this.model.deletarFuncionarioDaSessao(this.mControleSessao.getIdUsuario());
     }
 
     @Override

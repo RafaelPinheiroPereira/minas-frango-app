@@ -37,9 +37,11 @@ public class Model implements IModel {
 
     @Override
     public void salvarFuncionario(final Funcionario funcionario) {
+        FuncionarioORM funcionarioORM= new FuncionarioORM(funcionario);
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        realm.insert(new FuncionarioORM(funcionario));
+        realm.copyToRealmOrUpdate(funcionarioORM);
         realm.commitTransaction();
+
     }
 }

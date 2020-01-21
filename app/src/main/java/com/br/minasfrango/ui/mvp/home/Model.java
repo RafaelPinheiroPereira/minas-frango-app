@@ -43,8 +43,9 @@ public class Model implements IModel {
     }
 
     @Override
-    public void deletarFuncionarioDaSessao(final int idUsuario) {
-        Funcionario funcionarioDeletado=new Funcionario(this.mFuncionarioDAO.findById(Long.valueOf(idUsuario)));
+    public void deletarFuncionarioDaSessao() {
+        FuncionarioORM funcionarioORM =this.mFuncionarioDAO.where().findFirst();
+        Funcionario funcionarioDeletado=new Funcionario(funcionarioORM);
         this.mFuncionarioDAO.deletar(new FuncionarioORM(funcionarioDeletado));
     }
 
@@ -78,6 +79,14 @@ public class Model implements IModel {
     @Override
     public Empresa pesquisarEmpresaRegistrada() {
         return mEmpresaDAO.pesquisarEmpresaRegistradaNoDispositivo();
+    }
+
+    @Override
+    public Funcionario pesquisarFuncionarioDaSessao() {
+
+        FuncionarioORM funcionarioORM = mFuncionarioDAO.where().findFirst();
+        Funcionario funcionario= new Funcionario(funcionarioORM);
+        return funcionario;
     }
 
     @RequiresApi(api = VERSION_CODES.N)

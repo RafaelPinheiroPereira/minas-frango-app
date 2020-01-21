@@ -35,6 +35,7 @@ import com.br.minasfrango.ui.mvp.home.Presenter;
 import com.br.minasfrango.util.AlertDialogClient;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity
         implements RecyclerViewOnClickListenerHack, IView {
@@ -286,6 +287,7 @@ public class HomeActivity extends AppCompatActivity
 
                             case 8:
                                 presenter.exibirDialogLogout();
+
                                 break;
                         }
                         return true;
@@ -311,6 +313,7 @@ public class HomeActivity extends AppCompatActivity
                         presenter.logout();
                         dialog.dismiss();
                         // edtConfirmaEmail.setText("");
+
 
                         return;
                     }
@@ -369,5 +372,19 @@ public class HomeActivity extends AppCompatActivity
         rvCliente.setLayoutManager(layoutManager);
         toolbar.setTitle("Trinity Mobile - Minas Frango");
         setSupportActionBar(toolbar);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        // first clear the recycler view so items are not populated twice
+         // clear list
+        mClientAdapter = new ClienteAdapter(this, new ArrayList<>());
+        mClientAdapter.notifyDataSetChanged();
+
+        mRedeAdapter= new ArrayAdapter(
+                this, android.R.layout.simple_list_item_1, new ArrayList());
+        mRedeAdapter.notifyDataSetChanged();
     }
 }

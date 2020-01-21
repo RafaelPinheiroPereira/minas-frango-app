@@ -144,6 +144,7 @@ public class ControleSessao {
 
         // Staring Login Activity
         contexto.startActivity(i);
+
     }
 
     // Check for login

@@ -26,6 +26,13 @@ public class Presenter implements ILoginMVP.IPresenter {
 
     private Empresa mEmpresa;
 
+    private String idUsuario;
+    private String senha;
+
+
+
+
+
     public Presenter(final ILoginMVP.IView view) {
         this.view = view;
         this.mIModel = new Model(this);
@@ -53,8 +60,10 @@ public class Presenter implements ILoginMVP.IPresenter {
     }
 
     @Override
-    public void realizarLogin(final String idUser, final String password) {
-        mLoginTask = new LoginTask(this, this.view, idUser, password);
+    public void realizarLogin(final String idUsuario, final String senha) {
+        this.setIdUsuario(idUsuario);
+        this.setSenha(senha);
+        mLoginTask = new LoginTask(this);
         mLoginTask.execute();
     }
 
@@ -69,7 +78,7 @@ public class Presenter implements ILoginMVP.IPresenter {
     }
 
     @Override
-    public boolean loginValidado() {
+    public boolean estaoValidadosOsInputs() {
         return view.validarForm();
     }
 
@@ -97,4 +106,24 @@ public class Presenter implements ILoginMVP.IPresenter {
     public void setNucleo(final Nucleo nucleo) {
         mNucleo = nucleo;
     }
+
+    @Override
+    public String getIdUsuario() {
+        return idUsuario;
+    }
+    @Override
+    public void setIdUsuario(final String idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+    @Override
+    public String getSenha() {
+        return senha;
+    }
+    @Override
+    public void setSenha(final String senha) {
+        this.senha = senha;
+    }
+
+
+
 }

@@ -26,35 +26,14 @@ public class PedidoDAO extends GenericsDAO<PedidoORM> {
         super(type);
     }
 
-    public long addPedido(PedidoORM pedidoORM) {
-        long id;
-        if (this.existePedidoComIdMaiorDoQueOCodigoDeVendaMaxima(pedidoORM.getId())) {
-            id = where().max("id").longValue() +1;
+    public void salvarPedido(PedidoORM pedidoORM) {
 
-            }
-        else{
-            if (pedidoORM.getId()>0) {
-                id = pedidoORM.getId() + 1;
-            } else {
-                id = 1;
-            }
-        }
-
-
-
-        try {
-
-            pedidoORM.setId(id);
 
             realm.beginTransaction();
             realm.insert(pedidoORM);
             realm.commitTransaction();
 
-        } catch (RealmException e) {
 
-            realm.cancelTransaction();
-        }
-        return id;
     }
 
     public Pedido pesquisarPedido(Cliente clienteParaPesquisar) {

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.ClienteGrupo;
 import com.br.minasfrango.data.model.Empresa;
+import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.model.Recebimento;
 import java.util.List;
@@ -83,7 +84,7 @@ public interface IHomeMVP {
 
     interface IModel {
 
-        void deletarFuncionarioDaSessao(int idUsuario);
+        void deletarFuncionarioDaSessao();
 
         List<ClienteGrupo> obterTodasRedes();
 
@@ -96,6 +97,8 @@ public interface IHomeMVP {
         List<Cliente> pesquisarClientePorRede(ClienteGrupo clienteGrupo);
 
         Empresa pesquisarEmpresaRegistrada();
+
+        Funcionario pesquisarFuncionarioDaSessao();
 
         List<Recebimento> pesquisarRecebimentoPorCliente(Cliente cliente);
     }

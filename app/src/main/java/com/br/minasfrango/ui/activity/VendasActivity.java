@@ -351,10 +351,10 @@ public class VendasActivity extends AppCompatActivity implements IView {
     @OnClick(R.id.btnSalvarVenda)
     public void btnConfirmSaleOnClicked(View view) {
 
-        if ((mPresenter.getItens().size() > 0)
-                && (!new ControleSessao(mPresenter.getContext())
-                       .getEnderecoBluetooth()
-                       .isEmpty()))
+        if (mPresenter.getItens().size() > 0)
+               // && (!new ControleSessao(mPresenter.getContext())
+                 //      .getEnderecoBluetooth()
+                   //    .isEmpty()))
         {
             // Realiza Update do PedidoORM
             if (mPresenter.getPedido() != null) {
@@ -368,18 +368,26 @@ public class VendasActivity extends AppCompatActivity implements IView {
             } else {
                 // Salva o PedidoORM
                 try {
-                    mPresenter.salvarVenda();
+                  long sequencePedido =  mPresenter.configurarSequenceDoPedido(new ControleSessao(mPresenter.getContext()));
+
+                    if (sequencePedido > 0) {
+                        mPresenter.salvarVenda(sequencePedido);
+                    }else{
+                        AbstractActivity.showToast(
+                                mPresenter.getContext(),
+                                "Código de Venda não atualizao com o Sevidor de Dados: ");
+                    }
 
                 } catch (ParseException e) {
                     VendasActivity.this.runOnUiThread(
                             () ->
                                     AbstractActivity.showToast(
                                             mPresenter.getContext(),
-                                            "Erro Formatacao Data PedidoORM: " + e.getMessage()));
+                                            "Erro Formatacao Data Pedido: " + e.getMessage()));
                 }
             }
 
-           mPresenter.esperarPorConexao();
+          // mPresenter.esperarPorConexao();
 
         } else if (new ControleSessao(mPresenter.getContext()).getEnderecoBluetooth().isEmpty()) {
             AbstractActivity.showToast(
