@@ -273,7 +273,8 @@ public class Model implements IRecebimentoMVP.IModel {
 
         BlocoRecibo blocoRecibo= new BlocoRecibo();
         blocoRecibo.setId(idBlocoRecibo);
-        blocoRecibo.setIdFormatado(String.format("%03d",mControleSessao.getIdUsuario()) + String.format("%05d",idBlocoRecibo));
+        long idUsuario=mControleSessao.getIdUsuario();
+        blocoRecibo.setIdFormatado(String.format("%03d",idUsuario) + String.format("%05d",idBlocoRecibo));
         BlocoReciboORM blocoReciboORM= new BlocoReciboORM(blocoRecibo);
         mBlocoPedidoDAO.alterar(blocoReciboORM);
 
