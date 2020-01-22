@@ -145,6 +145,11 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
     }
 
     @Override
+    public long configurarSequenceDoRecebimento() {
+        return this.mModel.configurarSequenceDoRecebimento();
+    }
+
+    @Override
     public void exibirBotaoGerarRecibo() {
         this.view.exibirBotaoComprovante();
     }
@@ -237,9 +242,9 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
 
 
     @Override
-    public void salvarAmortizacao() {
+    public void salvarAmortizacao(final long idBlocoRecibo) {
 
-        this.mModel.salvarAmortizacao();
+        this.mModel.salvarAmortizacao(idBlocoRecibo);
 
 
     }

@@ -2,17 +2,22 @@ package com.br.minasfrango.ui.mvp.recebimento;
 
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
+import com.br.minasfrango.data.dao.BlocoPedidoDAO;
 import com.br.minasfrango.data.dao.ContaDAO;
 import com.br.minasfrango.data.dao.FuncionarioDAO;
 import com.br.minasfrango.data.dao.RecebimentoDAO;
+import com.br.minasfrango.data.model.BlocoRecibo;
 import com.br.minasfrango.data.model.Conta;
+import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.data.model.Recebimento;
+import com.br.minasfrango.data.realm.BlocoReciboORM;
 import com.br.minasfrango.data.realm.ContaORM;
 import com.br.minasfrango.data.realm.FuncionarioORM;
 import com.br.minasfrango.data.realm.RecebimentoORM;
 import com.br.minasfrango.util.ConstantsUtil;
 import com.br.minasfrango.util.ControleSessao;
 import com.br.minasfrango.util.DateUtils;
+import io.realm.Sort;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Collections;
@@ -30,6 +35,8 @@ public class Model implements IRecebimentoMVP.IModel {
     ContaDAO mContaDAO = ContaDAO.getInstace(ContaORM.class);
 
     FuncionarioDAO mFuncionarioDAO = FuncionarioDAO.getInstace(FuncionarioORM.class);
+
+    BlocoPedidoDAO mBlocoPedidoDAO = BlocoPedidoDAO.getInstace(BlocoReciboORM.class);
 
     int position = 0;
 
@@ -73,6 +80,52 @@ public class Model implements IRecebimentoMVP.IModel {
         mPresenter.showInsuficentCredit("Saldo do  Credito: " + mPresenter.getCredito());
         mPresenter.atualizarViewSaldoDevedor();
     }
+
+    @Override
+    public long configurarSequenceDoRecebimento() {
+        FuncionarioORM funcionarioORM = mFuncionarioDAO.where().equalTo("id",mControleSessao.getIdUsuario()).findFirst();
+        Funcionario funcionarioPesquisado= new Funcionario(funcionarioORM);
+
+
+        if(mControleSessao.getIdReciboMaximo()>0 &&funcionarioPesquisado.getMaxIdRecibo()==0){
+            funcionarioPesquisado.setMaxIdRecibo(mControleSessao.getIdReciboMaximo());
+        }
+
+
+        BlocoReciboORM blocoReciboORM = mBlocoPedidoDAO.where().findFirst();
+        /**Já houve bloco pedido salvo no tablet*/
+        if(blocoReciboORM!=null){
+            BlocoReciboORM blocoReciboORMRecente = mBlocoPedidoDAO.where().sort("id", Sort.DESCENDING).findAll().first();
+            BlocoRecibo blocoReciboRecente=new BlocoRecibo(blocoReciboORMRecente);
+
+            if(funcionarioPesquisado.getMaxIdRecibo()<blocoReciboRecente.getId() && funcionarioPesquisado.getMaxIdRecibo()==0){
+                /**Houve delete no banco */
+                return -1;
+
+            }else{
+                /** Segue fluxo normal**/
+                return blocoReciboRecente.getId()+1;
+            }
+
+        }
+        /**Pode nao ter bloco no tablet , mas ja existiu blocos para aquele funcionario em outra versao*/
+        else if (funcionarioPesquisado.getMaxIdRecibo()>0){
+
+            return funcionarioPesquisado.getMaxIdRecibo()+1;
+
+        }
+        /** O primeiro bloco do funcionario*/
+        else if (funcionarioPesquisado.getMaxIdRecibo()==0){
+
+            return funcionarioPesquisado.getMaxIdRecibo()+1;
+        }
+
+
+
+        return -1;
+    }
+
+
 
     @Override
     public void calcularAmortizacaoAutomatica() {
@@ -215,7 +268,14 @@ public class Model implements IRecebimentoMVP.IModel {
     }
 
     @Override
-    public void salvarAmortizacao() {
+    public void salvarAmortizacao(final long idBlocoRecibo) {
+
+
+        BlocoRecibo blocoRecibo= new BlocoRecibo();
+        blocoRecibo.setId(idBlocoRecibo);
+        blocoRecibo.setIdFormatado(String.format("%03d",mControleSessao.getIdUsuario()) + String.format("%05d",idBlocoRecibo));
+        BlocoReciboORM blocoReciboORM= new BlocoReciboORM(blocoRecibo);
+        mBlocoPedidoDAO.alterar(blocoReciboORM);
 
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
             mPresenter
@@ -232,8 +292,10 @@ public class Model implements IRecebimentoMVP.IModel {
                                         e.printStackTrace();
                                     }
 
+
                                     item.setIdConta(String.valueOf(mPresenter.getConta().getId()));
                                     item.setIdNucleo(mControleSessao.getIdNucleo());
+                                    item.setIdRecibo(Long.parseLong(blocoRecibo.getIdFormatado()));
                                     recebimentoDAO.alterar(new RecebimentoORM(item));
 
                                 }
@@ -249,6 +311,7 @@ public class Model implements IRecebimentoMVP.IModel {
                         e.printStackTrace();
                     }
 
+                    recebimento.setIdRecibo(Long.parseLong(blocoRecibo.getIdFormatado()));
                     recebimento.setIdConta(String.valueOf(mPresenter.getConta().getId()));
                     recebimento.setIdNucleo(mControleSessao.getIdNucleo());
                     recebimentoDAO.alterar(new RecebimentoORM(recebimento));
@@ -257,9 +320,19 @@ public class Model implements IRecebimentoMVP.IModel {
                 }
             }
         }
+
+        this.atualizarIdReciboMaximo(idBlocoRecibo);
     }
 
+    private void atualizarIdReciboMaximo(long idRecibo) {
 
+        FuncionarioORM  funcionarioORM=this.mFuncionarioDAO.findById(Long.valueOf(mControleSessao.getIdUsuario()));
+        Funcionario funcionarioPesquisado =
+                new Funcionario(funcionarioORM);
+        funcionarioPesquisado.setMaxIdRecibo(idRecibo);
+        this.mFuncionarioDAO.alterar(new FuncionarioORM(funcionarioPesquisado));
+
+    }
 
     @Override
     public void setOrdenarSelecaoAutomaticaDasNotas() {}

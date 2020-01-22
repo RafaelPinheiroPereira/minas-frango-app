@@ -283,14 +283,24 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
     @OnClick(R.id.btnSalvarRecebimento)
     public void salvarRecebimento() {
       if (!new ControleSessao(mPresenter.getContext()).getEnderecoBluetooth().isEmpty()) {
-            mPresenter.salvarAmortizacao();
+
+            long idBlocoRecibo= mPresenter.configurarSequenceDoRecebimento();
+        if (idBlocoRecibo > 0) {
+            mPresenter.salvarAmortizacao(idBlocoRecibo);
             mPresenter.atualizarRecycleView();
-            mPresenter.esperarPorConexao();
-       } else {
+            }else{
+
             AbstractActivity.showToast(
-                    mPresenter.getContext(),
-                    "Endereço MAC da impressora não encontrado.\nHabilite no Menu: Configurar impressora");
+                   mPresenter.getContext(),
+                   "Dados do recibo não atualizados com o servidor.\nContate o suporte do sistema");
+
         }
+           mPresenter.esperarPorConexao();
+      } else {
+           AbstractActivity.showToast(
+                   mPresenter.getContext(),
+                   "Endereço MAC da impressora não encontrado.\nHabilite no Menu: Configurar impressora");
+       }
     }
 
     @OnCheckedChanged(R.id.swtcAmortize)

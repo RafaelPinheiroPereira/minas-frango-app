@@ -49,9 +49,10 @@ public class Presenter implements ILoginMVP.IPresenter {
     }
 
     @Override
-    public void criarSessao(final String id, final String senha, final String nome, long idNucleo, long maxIdVenda) {
+    public void criarSessao(final String id, final String senha, final String nome, long idNucleo, long maxIdVenda,
+            final long maxIdRecibo) {
         this.mControleSessao = new ControleSessao(getContexto());
-        mControleSessao.criarSessao(id, senha, nome, idNucleo,maxIdVenda);
+        mControleSessao.criarSessao(id, senha, nome, idNucleo,maxIdVenda,maxIdRecibo);
     }
 
     @Override

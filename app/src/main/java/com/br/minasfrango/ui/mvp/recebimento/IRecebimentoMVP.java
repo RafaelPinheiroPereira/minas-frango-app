@@ -46,11 +46,13 @@ public interface IRecebimentoMVP {
 
         void removerAmortizacao(int position);
 
-        void salvarAmortizacao();
+        void salvarAmortizacao(final long idBlocoRecibo);
 
         void setCliente(Cliente cliente);
 
         Context getContext();
+
+        long configurarSequenceDoRecebimento();
 
 
 
@@ -105,6 +107,9 @@ public interface IRecebimentoMVP {
 
         void calcularAmortizacaoAutomatica();
         void calcularArmotizacaoManual(int position);
+
+        long configurarSequenceDoRecebimento();
+
         boolean crediValueIsGranThenZero();
         List<Conta> pesquisarContaPorId();
 
@@ -118,7 +123,7 @@ public interface IRecebimentoMVP {
 
         boolean saldoDevidoEhMaiorQueZero();
 
-        void salvarAmortizacao();
+        void salvarAmortizacao(final long idBlocoRecibo);
 
         void setOrdenarSelecaoAutomaticaDasNotas();
 

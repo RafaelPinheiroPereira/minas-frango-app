@@ -85,12 +85,14 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
                 funcionario.setSenha( mPresenter.getSenha());
 
                 mPresenter.salvarFuncionario(funcionario);
+                String codigoReciboFormatado=String.valueOf(funcionario.getMaxIdRecibo()).substring(2);
+                funcionario.setMaxIdRecibo(Long.parseLong(codigoReciboFormatado));
                 mPresenter.criarSessao(
                         mPresenter.getIdUsuario(),
                         mPresenter.getSenha(),
                         funcionario.getNome(),
                         mPresenter.getNucleo().getId(),
-                        funcionario.getMaxIdVenda());
+                        funcionario.getMaxIdVenda(),funcionario.getMaxIdRecibo());
                 return "SUCESS";
 
             case HttpConstant.UNAUTHORIZED:
