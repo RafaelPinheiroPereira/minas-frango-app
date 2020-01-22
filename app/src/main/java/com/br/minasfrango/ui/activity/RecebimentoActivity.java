@@ -329,7 +329,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
             }
         } else {
             // Devo informar que o valor recebido eh maior do que o devido
-            cetValorAmortizar.setError("RecebimentoORM superior ao Valor Devido");
+            cetValorAmortizar.setError("Recebimento superior ao Valor Devido");
         }
     }
 

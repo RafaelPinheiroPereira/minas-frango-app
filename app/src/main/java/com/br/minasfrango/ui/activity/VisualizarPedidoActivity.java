@@ -89,7 +89,7 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
 
         mPresenter.setDataView();
 
-       mPresenter.esperarPorConexao();
+      mPresenter.esperarPorConexao();
     }
 
     @Override
