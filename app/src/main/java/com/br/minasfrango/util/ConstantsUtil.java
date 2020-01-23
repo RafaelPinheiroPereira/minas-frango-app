@@ -25,6 +25,8 @@ public class ConstantsUtil {
     };
 
     public static int REQUEST_STORAGE = 112;
+    public static final int  REQUEST_CODE_SIGN_IN=1;
+    public static final int REQUEST_CODE_OPEN_DOCUMENT = 2;
 
 
 }

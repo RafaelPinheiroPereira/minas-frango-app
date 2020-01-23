@@ -23,6 +23,10 @@ import com.br.minasfrango.ui.mvp.visualizar.IViewOrderMVP;
 import com.br.minasfrango.ui.mvp.visualizar.IViewOrderMVP.IView;
 import com.br.minasfrango.ui.mvp.visualizar.Presenter;
 import com.br.minasfrango.util.CameraUtil;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.api.services.drive.Drive;
+
 import java.io.IOException;
 import java.text.DateFormat;
 
@@ -85,6 +89,8 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
         mPresenter.setPedido(mPresenter.getParametrosDaVenda(getIntent().getExtras()));
         mPresenter.setCliente(mPresenter.pesquisarClientePorID(mPresenter.getPedido().getCodigoCliente()));
 
+
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getApplicationContext());
 
         mPresenter.setDataView();
 
@@ -190,6 +196,8 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
                 AbstractActivity.showToast(
                         mPresenter.getContext(),
                         "Imagem salva: " + CameraUtil.LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
+
+
 
 
             } else {

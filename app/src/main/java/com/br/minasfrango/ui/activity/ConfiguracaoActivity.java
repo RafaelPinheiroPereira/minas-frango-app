@@ -1,11 +1,15 @@
 package com.br.minasfrango.ui.activity;
 
 import static com.br.minasfrango.util.ConstantsUtil.PERMISSIONS;
+import static com.br.minasfrango.util.ConstantsUtil.REQUEST_CODE_OPEN_DOCUMENT;
+import static com.br.minasfrango.util.ConstantsUtil.REQUEST_CODE_SIGN_IN;
 import static com.br.minasfrango.util.ConstantsUtil.REQUEST_STORAGE;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -21,11 +25,26 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.br.minasfrango.R;
+import com.br.minasfrango.data.model.Configuracao;
 import com.br.minasfrango.ui.abstracts.AbstractActivity;
 import com.br.minasfrango.ui.mvp.configuracao.IConfiguracaoMVP.IPresenter;
 import com.br.minasfrango.ui.mvp.configuracao.IConfiguracaoMVP.IView;
 import com.br.minasfrango.ui.mvp.configuracao.Presenter;
+import com.br.minasfrango.util.ConstantsUtil;
 import com.br.minasfrango.util.Mask;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.tasks.OnCanceledListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
+
 import java.net.NetworkInterface;
 import java.util.Collections;
 import java.util.List;
@@ -37,6 +56,9 @@ public class ConfiguracaoActivity extends AppCompatActivity implements IView {
 
     @BindView(R.id.btnConfigurar)
     Button btnConfigurar;
+
+    @BindView(R.id.btnLoginGoogleDrive)
+    Button btnLoginGoogleDrive;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -59,6 +81,8 @@ public class ConfiguracaoActivity extends AppCompatActivity implements IView {
         // Init
         mPresenter = new Presenter(this);
         mPresenter.setMac(getMacAddr());
+
+        btnConfigurar.setVisibility(View.INVISIBLE);
 
         if(mPresenter.statusSistema().equals("DISPOSITIVO_HABILITADO")){
             mPresenter
@@ -84,6 +108,14 @@ public class ConfiguracaoActivity extends AppCompatActivity implements IView {
         StrictMode.setThreadPolicy(policy);
     }
 
+    @OnClick(R.id.btnLoginGoogleDrive)
+    public void setBtnLoginGoogleDriveClicked(View view){
+
+           mPresenter.solicitarLoginGoogleDrive();
+
+    }
+
+
     @OnClick(R.id.btnConfigurar)
     public void btnSubmitClicked(View view){
 
@@ -91,16 +123,15 @@ public class ConfiguracaoActivity extends AppCompatActivity implements IView {
 
             edtCNPJ.setError("CNPJ é obrigatório!");
 
-
         }else{
 
             mPresenter.setCnpj(edtCNPJ.getText().toString());
-
-
             mPresenter.realizarConfiguracao();
         }
 
     }
+
+
 
     public static String getMacAddr() {
         try {
@@ -184,5 +215,78 @@ public class ConfiguracaoActivity extends AppCompatActivity implements IView {
     public boolean estaVazioOCNPJ() {
         return edtCNPJ.getText().toString().isEmpty();
 
+    }
+
+    @Override
+    public void solicitarLoginGoogleDrive() {
+
+        GoogleSignInOptions signInOptions =
+                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestEmail()
+                        .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
+                        .build();
+
+        GoogleSignInClient client = GoogleSignIn.getClient(this, signInOptions);
+        mPresenter.setmGoogleSignInClient(client);
+
+        startActivityForResult(mPresenter.getmGoogleSignInClient().getSignInIntent(), ConstantsUtil.REQUEST_CODE_SIGN_IN);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        switch (requestCode) {
+            case REQUEST_CODE_SIGN_IN:
+                if (resultCode == Activity.RESULT_OK && resultData != null) {
+
+                    handleSignInResult(resultData);
+
+                    btnConfigurar.setVisibility(View.VISIBLE);
+
+                }else{
+                    AbstractActivity.showToast(mPresenter.getContext(),"Não foi possível realizar o vínculo  da conta com Google Drive");
+                }
+                break;
+
+            case  ConstantsUtil.REQUEST_CODE_OPEN_DOCUMENT:
+                if (resultCode == Activity.RESULT_OK && resultData != null) {
+                    Uri uri = resultData.getData();
+                    if (uri != null) {
+                      //  openFileFromFilePicker(uri);
+                    }
+                }
+                break;
+        }
+
+        super.onActivityResult(requestCode, resultCode, resultData);
+    }
+
+    private void handleSignInResult(Intent resultData) {
+
+        GoogleSignIn.getSignedInAccountFromIntent(resultData).addOnSuccessListener(new OnSuccessListener<GoogleSignInAccount>() {
+            @Override
+            public void onSuccess(GoogleSignInAccount googleSignInAccount) {
+
+                GoogleAccountCredential credential =
+                        GoogleAccountCredential.usingOAuth2(
+                                mPresenter.getContext(), Collections.singleton(DriveScopes.DRIVE_FILE));
+                credential.setSelectedAccount(googleSignInAccount.getAccount());
+                mPresenter.setCredential(credential);
+
+                Drive googleDriveService =
+                        new Drive.Builder(
+                                AndroidHttp.newCompatibleTransport(),
+                                new GsonFactory(),
+                                credential)
+                                .setApplicationName("Minas Frango")
+                                .build();
+                mPresenter.setGoogleDriveService(googleDriveService);
+
+            }
+        }).addOnCanceledListener(new OnCanceledListener() {
+            @Override
+            public void onCanceled() {
+
+            }
+        });
     }
 }
