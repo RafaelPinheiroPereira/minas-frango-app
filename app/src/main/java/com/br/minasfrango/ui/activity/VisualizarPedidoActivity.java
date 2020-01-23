@@ -2,7 +2,6 @@ package com.br.minasfrango.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +23,6 @@ import com.br.minasfrango.ui.mvp.visualizar.IViewOrderMVP;
 import com.br.minasfrango.ui.mvp.visualizar.IViewOrderMVP.IView;
 import com.br.minasfrango.ui.mvp.visualizar.Presenter;
 import com.br.minasfrango.util.CameraUtil;
-import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 
@@ -76,6 +74,7 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
         setContentView(R.layout.activity_visualizar_pedido);
         ButterKnife.bind(this);
         iniciarViews();
+
     }
 
     @Override
@@ -191,12 +190,7 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
                 AbstractActivity.showToast(
                         mPresenter.getContext(),
                         "Imagem salva: " + CameraUtil.LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
-                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                File f = new File(CameraUtil.LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
-                Uri contentUri = Uri.fromFile(f);
-                mediaScanIntent.setData(contentUri);
-                this.sendBroadcast(mediaScanIntent);
-                this.finish();
+
 
             } else {
                 AbstractActivity.showToast(mPresenter.getContext(), "Imagem não foi salva");
