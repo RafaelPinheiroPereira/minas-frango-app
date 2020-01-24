@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,6 +32,7 @@ import com.br.minasfrango.ui.mvp.configuracao.IConfiguracaoMVP.IPresenter;
 import com.br.minasfrango.ui.mvp.configuracao.IConfiguracaoMVP.IView;
 import com.br.minasfrango.ui.mvp.configuracao.Presenter;
 import com.br.minasfrango.util.ConstantsUtil;
+import com.br.minasfrango.util.DriveServiceHelper;
 import com.br.minasfrango.util.Mask;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -280,6 +282,25 @@ public class ConfiguracaoActivity extends AppCompatActivity implements IView {
                                 .setApplicationName("Minas Frango")
                                 .build();
                 mPresenter.setGoogleDriveService(googleDriveService);
+
+                DriveServiceHelper mdDriveServiceHelper= new DriveServiceHelper(mPresenter.getGoogleDriveService());
+
+                mdDriveServiceHelper.verificarPermissoesDoUsuarioNaPasta("14j1XBN6jnZ4YJK703HPOgN4IhQhGqv5p").addOnSuccessListener(new OnSuccessListener<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean temPermissao) {
+
+                        Log.d("ConfiguracoesActivity", "Vericando as permissoes do usuario para a paasta ->" + temPermissao);
+
+                    }
+                });
+
+//                mdDriveServiceHelper.criarPastaNoDrive(ConstantsUtil.CAMINHO_IMAGEM_VENDAS).addOnSuccessListener(new OnSuccessListener<String>() {
+//                    @Override
+//                    public void onSuccess(String idDoArquivo) {
+//                        Log.d("ConfiguracaoActivity->",idDoArquivo);
+//                    }
+//                });
+//                mdDriveServiceHelper.criarPastaNoDrive(ConstantsUtil.CAMINHO_IMAGEM_RECEBIMENTOS);
 
             }
         }).addOnCanceledListener(new OnCanceledListener() {

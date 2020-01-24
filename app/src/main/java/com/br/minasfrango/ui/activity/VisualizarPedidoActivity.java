@@ -23,12 +23,23 @@ import com.br.minasfrango.ui.mvp.visualizar.IViewOrderMVP;
 import com.br.minasfrango.ui.mvp.visualizar.IViewOrderMVP.IView;
 import com.br.minasfrango.ui.mvp.visualizar.Presenter;
 import com.br.minasfrango.util.CameraUtil;
+import com.br.minasfrango.util.DriveServiceHelper;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
+import com.google.api.services.drive.model.File;
+
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.Collections;
 
 public class VisualizarPedidoActivity extends AppCompatActivity implements IView {
 
@@ -72,6 +83,8 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
     @BindView(R.id.txtTipoRecebimento)
     TextView txtTipoRecebimento;
 
+    DriveServiceHelper mdDriveServiceHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,12 +103,31 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
         mPresenter.setCliente(mPresenter.pesquisarClientePorID(mPresenter.getPedido().getCodigoCliente()));
 
 
+
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getApplicationContext());
+        GoogleAccountCredential credential =
+                GoogleAccountCredential.usingOAuth2(
+                        this, Collections.singleton(DriveScopes.DRIVE_FILE));
+        credential.setSelectedAccount(account.getAccount());
+        Drive googleDriveService =
+                new Drive.Builder(
+                        AndroidHttp.newCompatibleTransport(),
+                        new GsonFactory(),
+                        credential)
+                        .setApplicationName("Minas Frangos")
+                        .build();
+
+        mdDriveServiceHelper= new DriveServiceHelper(googleDriveService);
+
+
+
 
         mPresenter.setDataView();
 
       mPresenter.esperarPorConexao();
     }
+
+
 
     @Override
     protected void onDestroy() {
@@ -193,6 +225,18 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
         if (requestCode == CameraUtil.RESULTADO_INTENCAO_FOTO) {
             if (resultCode == RESULT_OK) {
 
+                Task<String> idDaPasta= mdDriveServiceHelper.criarPastaNoDrive(CameraUtil.CAMINHO_IMAGEM_VENDAS).addOnSuccessListener(new OnSuccessListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+
+                    }
+                });
+                if(idDaPasta.isComplete()){
+                    idDaPasta.getResult();
+                    mdDriveServiceHelper.inserirArquivoNaPasta( idDaPasta.getResult() ,CameraUtil.LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
+
+                }
+
                 AbstractActivity.showToast(
                         mPresenter.getContext(),
                         "Imagem salva: " + CameraUtil.LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
@@ -205,5 +249,6 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
             }
         }
     }
+
 
 }

@@ -8,11 +8,12 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- Permisoes de Bluetooth -->
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH" /> <!-- Escrita e leitura no Storage -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"  android:maxSdkVersion= "28" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- Permissao e Recurso de camera -->
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission><!--Obter endereco mac-->
-
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- Obter endereco mac -->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -28,7 +29,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:appComponentFactory">
-
+        <activity android:name=".ui.activity.DriverActivity"></activity>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -43,7 +44,9 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-        <activity android:name=".ui.activity.ConfiguracaoActivity"
+
+        <activity
+            android:name=".ui.activity.ConfiguracaoActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -78,9 +81,7 @@
 
         <activity
             android:name=".ui.activity.LoginActivity"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
-
-        </activity>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"></activity>
         <activity
             android:name=".ui.activity.VendasActivity"
             android:parentActivityName=".ui.activity.HomeActivity">
@@ -110,8 +111,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activity.VisualizarPedidoActivity" />
         </activity>
-
-
     </application>
 
 </manifest>

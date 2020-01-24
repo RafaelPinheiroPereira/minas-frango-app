@@ -8,6 +8,7 @@ import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.realm.ClientePedido;
 import com.br.minasfrango.ui.abstracts.AbstractActivity;
+import com.br.minasfrango.ui.activity.DriverActivity;
 import com.br.minasfrango.ui.activity.VendasActivity;
 import com.br.minasfrango.ui.activity.VisualizarPedidoActivity;
 import com.br.minasfrango.ui.mvp.pedido.IPedidoMVP.IModel;
@@ -92,7 +93,8 @@ public class Presenter implements IPedidoMVP.IPresenter {
 
     @Override
     public void onNavigateToViewSalesOrderActivity(final Pedido pedido) {
-        Intent intent = new Intent(getContext(), VisualizarPedidoActivity.class);
+       Intent intent = new Intent(getContext(), VisualizarPedidoActivity.class);
+     
         Bundle params = new Bundle();
         params.putLong("keyPedido", pedido.getIdVenda());
         intent.putExtras(params);

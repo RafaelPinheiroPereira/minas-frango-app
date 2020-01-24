@@ -28,5 +28,13 @@ public class ConstantsUtil {
     public static final int  REQUEST_CODE_SIGN_IN=1;
     public static final int REQUEST_CODE_OPEN_DOCUMENT = 2;
 
+    public static String LOCAL_ONDE_A_IMAGEM_FOI_SALVA = "";
+
+    public static final int RESULTADO_INTENCAO_FOTO = 72;
+
+    public static final String CAMINHO_IMAGEM_VENDAS = "Comprovantes-Vendas";
+
+    public static final String CAMINHO_IMAGEM_RECEBIMENTOS = "Comprovantes-Recebimentos";
+
 
 }
