@@ -1,10 +1,16 @@
 package com.br.minasfrango.ui.mvp.home;
 
+import static com.br.minasfrango.util.ConstantsUtil.CAMINHO_IMAGEM_RECEBIMENTOS;
+import static com.br.minasfrango.util.ConstantsUtil.CAMINHO_IMAGEM_VENDAS;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import androidx.annotation.NonNull;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.ClienteGrupo;
+import com.br.minasfrango.data.model.ConfiguracaoGoogleDrive;
 import com.br.minasfrango.data.model.Exportacao;
 import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.data.model.ListaPedido;
@@ -18,6 +24,9 @@ import com.br.minasfrango.ui.activity.VendasActivity;
 import com.br.minasfrango.ui.mvp.home.IHomeMVP.IModel;
 import com.br.minasfrango.ui.mvp.home.IHomeMVP.IView;
 import com.br.minasfrango.util.ControleSessao;
+import com.br.minasfrango.util.DriveServiceHelper;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,7 +40,9 @@ public class Presenter implements IHomeMVP.IPresenter {
 
     private List<ClienteGrupo> redes = new ArrayList<>();
 
+    private DriveServiceHelper mDriveServiceHelper;
 
+    private ConfiguracaoGoogleDrive mConfiguracaoGoogleDrive;
 
     private IModel model;
     private IView view;
@@ -41,7 +52,79 @@ public class Presenter implements IHomeMVP.IPresenter {
         this.model = new Model(this);
     }
 
+    @Override
+    public void configurarGoogleDrive() {
 
+        ConfiguracaoGoogleDrive configuracaoGoogleDrive =
+                this.model.consultarConfiguracaoGoogleDrivePorFuncionario(
+                        mControleSessao.getIdUsuario());
+        this.setConfiguracaoGoogleDrive(configuracaoGoogleDrive);
+    }
+
+    @Override
+    public void criarPastasDefaultNoDrive(final ConfiguracaoGoogleDrive configuracaoGoogleDrive) {
+
+        getDriveServiceHelper()
+                .criarPastaNoDrive(
+                        configuracaoGoogleDrive.getIdPastaFuncionario(), CAMINHO_IMAGEM_VENDAS)
+                .addOnFailureListener(
+                        new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull final Exception e) {
+                                AbstractActivity.showToast(
+                                        getContext(),
+                                        "Falha ao criar pasta de vendas" + e.getMessage());
+                                Log.d("onFailure -> ", "Error: " + e.getMessage());
+                            }
+                        })
+                .addOnSuccessListener(
+                        new OnSuccessListener<String>() {
+                            @Override
+                            public void onSuccess(final String idPastaVenda) {
+                                configuracaoGoogleDrive.setIdPastaVenda(idPastaVenda);
+
+                                getDriveServiceHelper()
+                                        .criarPastaNoDrive(
+                                                configuracaoGoogleDrive.getIdPastaFuncionario(),
+                                                CAMINHO_IMAGEM_RECEBIMENTOS)
+                                        .addOnSuccessListener(
+                                                new OnSuccessListener<String>() {
+                                                    @Override
+                                                    public void onSuccess(
+                                                            final String idPastaRecibo) {
+                                                        configuracaoGoogleDrive.setIdPastaRecibo(
+                                                                idPastaRecibo);
+                                                        model.alterarConfiguracaoGoogleDrive(
+                                                                configuracaoGoogleDrive);
+                                                        AbstractActivity.showToast(
+                                                                getContext(),
+                                                                "Pastas criadas no Google Drive  com sucesso.");
+                                                    }
+                                                })
+                                        .addOnFailureListener(
+                                                new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(
+                                                            @NonNull final Exception e) {
+                                                        AbstractActivity.showToast(
+                                                                getContext(),
+                                                                "Falha ao criar pasta de recebimentos "
+                                                                        + e.getMessage());
+                                                    }
+                                                });
+                            }
+                        });
+    }
+
+    @Override
+    public ConfiguracaoGoogleDrive getConfiguracaoGoogleDrive() {
+        return mConfiguracaoGoogleDrive;
+    }
+
+    @Override
+    public void setConfiguracaoGoogleDrive(final ConfiguracaoGoogleDrive configuracaoGoogleDrive) {
+        mConfiguracaoGoogleDrive = configuracaoGoogleDrive;
+    }
 
     @Override
     public void esconderProgressDialog() {
@@ -72,11 +155,15 @@ public class Presenter implements IHomeMVP.IPresenter {
     public void exportar() {
         List<Pedido> pedidos = this.model.obterTodosPedidos();
         List<Recebimento> recebimentos = this.model.obterTodosRecebimentos();
+        ConfiguracaoGoogleDrive configuracaoGoogleDrive =
+                this.model.consultarConfiguracaoGoogleDrivePorFuncionario(
+                        mControleSessao.getIdUsuario());
         ListaPedido listaPedido = new ListaPedido();
         listaPedido.setPedidos(pedidos);
         Exportacao exportacao = new Exportacao();
         exportacao.setListaPedido(listaPedido);
-       exportacao.setRecebimentos(recebimentos);
+        exportacao.setRecebimentos(recebimentos);
+        exportacao.setConfiguracaoGoogleDrive(configuracaoGoogleDrive);
         new ExportacaoTask(this, exportacao).execute();
     }
 
@@ -156,14 +243,13 @@ public class Presenter implements IHomeMVP.IPresenter {
     @Override
     public void importar() {
 
-        Funcionario funcionario=this.model.pesquisarFuncionarioDaSessao();
+        Funcionario funcionario = this.model.pesquisarFuncionarioDaSessao();
         funcionario.setIdEmpresa(this.model.pesquisarEmpresaRegistrada().getId());
         new ImportacaoTask(funcionario, this).execute();
     }
 
     @Override
     public void logout() {
-
 
         this.mControleSessao.logout();
     }
@@ -186,9 +272,24 @@ public class Presenter implements IHomeMVP.IPresenter {
     }
 
     @Override
+    public void verificarCredenciaisGoogleDrive() {
+        this.view.verificarCredenciaisGoogleDrive();
+    }
+
+    @Override
     public boolean verificarLogin() {
         this.mControleSessao = new ControleSessao(getContext());
         return mControleSessao.checkLogin();
+    }
+
+    @Override
+    public DriveServiceHelper getDriveServiceHelper() {
+        return mDriveServiceHelper;
+    }
+
+    @Override
+    public void setDriveServiceHelper(final DriveServiceHelper driveServiceHelper) {
+        mDriveServiceHelper = driveServiceHelper;
     }
 
     @Override

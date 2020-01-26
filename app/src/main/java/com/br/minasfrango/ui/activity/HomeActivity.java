@@ -33,9 +33,18 @@ import com.br.minasfrango.ui.mvp.home.IHomeMVP.IPresenter;
 import com.br.minasfrango.ui.mvp.home.IHomeMVP.IView;
 import com.br.minasfrango.ui.mvp.home.Presenter;
 import com.br.minasfrango.util.AlertDialogClient;
+import com.br.minasfrango.util.DriveServiceHelper;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class HomeActivity extends AppCompatActivity
         implements RecyclerViewOnClickListenerHack, IView {
@@ -85,6 +94,7 @@ public class HomeActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         presenter.setAdapters();
+        presenter.verificarCredenciaisGoogleDrive();
         mClientAdapter.setRecyclerViewOnClickListenerHack(this);
     }
 
@@ -333,6 +343,27 @@ public class HomeActivity extends AppCompatActivity
         AlertDialog dialog = builder.create();
         // display mProgressDialog
         dialog.show();
+    }
+
+    @Override
+    public void verificarCredenciaisGoogleDrive() {
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getApplicationContext());
+        GoogleAccountCredential credential =
+                GoogleAccountCredential.usingOAuth2(
+                        this, Collections.singleton(DriveScopes.DRIVE_FILE));
+        credential.setSelectedAccount(account.getAccount());
+        Drive googleDriveService =
+                new Drive.Builder(
+                        AndroidHttp.newCompatibleTransport(),
+                        new GsonFactory(),
+                        credential)
+                        .setApplicationName("Minas Frangos")
+                        .build();
+
+        presenter.setDriveServiceHelper(new DriveServiceHelper(googleDriveService));
+
+
+
     }
 
     @Override

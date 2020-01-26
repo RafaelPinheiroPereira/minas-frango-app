@@ -2,9 +2,6 @@ package com.br.minasfrango.ui.mvp.configuracao;
 
 import android.content.Context;
 import com.br.minasfrango.data.model.Configuracao;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.services.drive.Drive;
 
 public interface IConfiguracaoMVP {
 
@@ -12,11 +9,11 @@ public interface IConfiguracaoMVP {
 
         Context getContext();
 
+         void solicitarLoginGoogleDrive();
 
-        public void solicitarLoginGoogleDrive();
         String statusSistema();
 
-        public void realizarConfiguracao();
+         void realizarConfiguracao();
 
         void salvarConfiguracoes(final Configuracao configuracao);
 
@@ -27,23 +24,9 @@ public interface IConfiguracaoMVP {
         void setMac(String mac);
 
         void setCnpj(String cnpj);
-
-        GoogleSignInClient getmGoogleSignInClient();
-
-        void setmGoogleSignInClient(GoogleSignInClient mGoogleSignInClient);
-
-        GoogleAccountCredential getCredential();
-
-        void setCredential(GoogleAccountCredential credential);
-
-        Drive getGoogleDriveService();
-
-        void setGoogleDriveService(Drive googleDriveService);
     }
 
     interface IModel {
-
-
 
         String statusSistema();
 
@@ -52,8 +35,8 @@ public interface IConfiguracaoMVP {
 
     interface IView {
 
-        public boolean estaVazioOCNPJ();
+         boolean estaVazioOCNPJ();
 
-        public  void solicitarLoginGoogleDrive();
+         void solicitarLoginGoogleDrive();
     }
 }

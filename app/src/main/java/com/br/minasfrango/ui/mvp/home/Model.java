@@ -4,18 +4,21 @@ import android.os.Build.VERSION_CODES;
 import androidx.annotation.RequiresApi;
 import com.br.minasfrango.data.dao.ClienteDAO;
 import com.br.minasfrango.data.dao.ClienteGrupoDAO;
+import com.br.minasfrango.data.dao.ConfiguracaoGoogleDriveDAO;
 import com.br.minasfrango.data.dao.EmpresaDAO;
 import com.br.minasfrango.data.dao.FuncionarioDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
 import com.br.minasfrango.data.dao.RecebimentoDAO;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.ClienteGrupo;
+import com.br.minasfrango.data.model.ConfiguracaoGoogleDrive;
 import com.br.minasfrango.data.model.Empresa;
 import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.model.Recebimento;
 import com.br.minasfrango.data.realm.ClienteGrupoORM;
 import com.br.minasfrango.data.realm.ClienteORM;
+import com.br.minasfrango.data.realm.ConfiguracaoGoogleDriveORM;
 import com.br.minasfrango.data.realm.EmpresaORM;
 import com.br.minasfrango.data.realm.FuncionarioORM;
 import com.br.minasfrango.data.realm.PedidoORM;
@@ -33,8 +36,10 @@ public class Model implements IModel {
 
     ClienteGrupoDAO mClienteGrupoDAO = ClienteGrupoDAO.getInstace(ClienteGrupoORM.class);
 
-    EmpresaDAO mEmpresaDAO =EmpresaDAO.getInstace(EmpresaORM.class);
-    FuncionarioDAO mFuncionarioDAO=FuncionarioDAO.getInstace(FuncionarioORM.class);
+    EmpresaDAO mEmpresaDAO = EmpresaDAO.getInstace(EmpresaORM.class);
+    FuncionarioDAO mFuncionarioDAO = FuncionarioDAO.getInstace(FuncionarioORM.class);
+    ConfiguracaoGoogleDriveDAO mConfiguracaoGoogleDriveDAO =
+            ConfiguracaoGoogleDriveDAO.getInstace(ConfiguracaoGoogleDriveORM.class);
 
     private Presenter mPresenter;
 
@@ -42,14 +47,21 @@ public class Model implements IModel {
         mPresenter = presenter;
     }
 
+    @Override
+    public void alterarConfiguracaoGoogleDrive(final ConfiguracaoGoogleDrive configuracaoGoogleDrive) {
+        this.mConfiguracaoGoogleDriveDAO.alterar(new ConfiguracaoGoogleDriveORM(configuracaoGoogleDrive));
+    }
 
+    @Override
+    public ConfiguracaoGoogleDrive consultarConfiguracaoGoogleDrivePorFuncionario(final int idUsuario) {
+           return  mConfiguracaoGoogleDriveDAO.pesquisarPorIdDoFuncionario(idUsuario);
 
-
+    }
 
     @Override
     public void deletarFuncionarioDaSessao() {
-        FuncionarioORM funcionarioORM =this.mFuncionarioDAO.where().findFirst();
-        Funcionario funcionarioDeletado=new Funcionario(funcionarioORM);
+        FuncionarioORM funcionarioORM = this.mFuncionarioDAO.where().findFirst();
+        Funcionario funcionarioDeletado = new Funcionario(funcionarioORM);
         this.mFuncionarioDAO.deletar(new FuncionarioORM(funcionarioDeletado));
     }
 
@@ -89,7 +101,7 @@ public class Model implements IModel {
     public Funcionario pesquisarFuncionarioDaSessao() {
 
         FuncionarioORM funcionarioORM = mFuncionarioDAO.where().findFirst();
-        Funcionario funcionario= new Funcionario(funcionarioORM);
+        Funcionario funcionario = new Funcionario(funcionarioORM);
         return funcionario;
     }
 
@@ -101,7 +113,7 @@ public class Model implements IModel {
 
     @Override
     public void salvarRecebimento(final Recebimento recebimento) {
-        RecebimentoORM recebimentoORM= new RecebimentoORM(recebimento);
+        RecebimentoORM recebimentoORM = new RecebimentoORM(recebimento);
         this.mRecebimentoDAO.alterar(recebimentoORM);
     }
 }

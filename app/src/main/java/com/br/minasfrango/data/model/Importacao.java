@@ -20,5 +20,7 @@ public class Importacao {
     List<Conta> contas;
     List<ClienteGrupo> clientesGrupos;
 
+    ConfiguracaoGoogleDrive configuracaoGoogleDrive;
+
 
 }

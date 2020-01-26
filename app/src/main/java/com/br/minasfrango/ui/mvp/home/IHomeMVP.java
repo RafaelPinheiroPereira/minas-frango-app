@@ -4,17 +4,25 @@ import android.content.Context;
 import android.os.Bundle;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.ClienteGrupo;
+import com.br.minasfrango.data.model.ConfiguracaoGoogleDrive;
 import com.br.minasfrango.data.model.Empresa;
 import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.model.Recebimento;
+import com.br.minasfrango.util.DriveServiceHelper;
 import java.util.List;
 
 public interface IHomeMVP {
 
     interface IPresenter {
 
+        void configurarGoogleDrive();
 
+        void criarPastasDefaultNoDrive(ConfiguracaoGoogleDrive configuracaoGoogleDrive);
+
+        ConfiguracaoGoogleDrive getConfiguracaoGoogleDrive();
+
+        void setConfiguracaoGoogleDrive(ConfiguracaoGoogleDrive configuracaoGoogleDrive);
 
         void esconderProgressDialog();
 
@@ -46,6 +54,10 @@ public interface IHomeMVP {
 
         void salvarRecebimento(Recebimento recebimento);
 
+        DriveServiceHelper getDriveServiceHelper();
+
+        void setDriveServiceHelper(DriveServiceHelper driveServiceHelper);
+
         void setDrawer(final Bundle savedInstanceState);
 
         String getNomeUsuario();
@@ -61,6 +73,10 @@ public interface IHomeMVP {
         void obterClientesAposImportarDados();
 
         void obterRotasAposImportarDados();
+
+
+
+        void verificarCredenciaisGoogleDrive();
 
         boolean verificarLogin();
     }
@@ -84,11 +100,15 @@ public interface IHomeMVP {
         void obterRotasAposImportarDados();
 
         void showDialogLogout();
+
+        void verificarCredenciaisGoogleDrive();
     }
 
     interface IModel {
 
+        void alterarConfiguracaoGoogleDrive(ConfiguracaoGoogleDrive configuracaoGoogleDrive);
 
+        ConfiguracaoGoogleDrive consultarConfiguracaoGoogleDrivePorFuncionario(int idUsuario);
 
 
 

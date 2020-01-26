@@ -23,23 +23,8 @@ import com.br.minasfrango.ui.mvp.visualizar.IViewOrderMVP;
 import com.br.minasfrango.ui.mvp.visualizar.IViewOrderMVP.IView;
 import com.br.minasfrango.ui.mvp.visualizar.Presenter;
 import com.br.minasfrango.util.CameraUtil;
-import com.br.minasfrango.util.DriveServiceHelper;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.DriveScopes;
-import com.google.api.services.drive.model.File;
-
-
 import java.io.IOException;
 import java.text.DateFormat;
-import java.util.Collections;
 
 public class VisualizarPedidoActivity extends AppCompatActivity implements IView {
 
@@ -83,7 +68,6 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
     @BindView(R.id.txtTipoRecebimento)
     TextView txtTipoRecebimento;
 
-    DriveServiceHelper mdDriveServiceHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +75,6 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
         setContentView(R.layout.activity_visualizar_pedido);
         ButterKnife.bind(this);
         iniciarViews();
-
     }
 
     @Override
@@ -100,34 +83,13 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
 
         mPresenter = new Presenter(this);
         mPresenter.setPedido(mPresenter.getParametrosDaVenda(getIntent().getExtras()));
-        mPresenter.setCliente(mPresenter.pesquisarClientePorID(mPresenter.getPedido().getCodigoCliente()));
-
-
-
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getApplicationContext());
-        GoogleAccountCredential credential =
-                GoogleAccountCredential.usingOAuth2(
-                        this, Collections.singleton(DriveScopes.DRIVE_FILE));
-        credential.setSelectedAccount(account.getAccount());
-        Drive googleDriveService =
-                new Drive.Builder(
-                        AndroidHttp.newCompatibleTransport(),
-                        new GsonFactory(),
-                        credential)
-                        .setApplicationName("Minas Frangos")
-                        .build();
-
-        mdDriveServiceHelper= new DriveServiceHelper(googleDriveService);
-
-
-
+        mPresenter.setCliente(
+                mPresenter.pesquisarClientePorID(mPresenter.getPedido().getCodigoCliente()));
 
         mPresenter.setDataView();
 
-      mPresenter.esperarPorConexao();
+        mPresenter.esperarPorConexao();
     }
-
-
 
     @Override
     protected void onDestroy() {
@@ -163,16 +125,12 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
         this.mPresenter.exibirBotaoFotografar();
     }
 
-
     @OnClick(R.id.btnFotografar)
     public void fotografarComprovante(View view) {
-
 
         String nomeFoto =
                 String.format("%03d", mPresenter.getPedido().getCodigoFuncionario())
                         + String.format("%08d", mPresenter.getPedido().getIdVenda());
-
-
 
         CameraUtil cameraUtil = new CameraUtil((Activity) mPresenter.getContext());
         try {
@@ -180,12 +138,7 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
-
-
-
 
     @Override
     public void setDataView() {
@@ -211,7 +164,6 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
     @Override
     public void exibirBotaoFotografar() {
         btnFotografar.setVisibility(View.VISIBLE);
-
     }
 
     private void iniciarViews() {
@@ -219,36 +171,28 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CameraUtil.RESULTADO_INTENCAO_FOTO) {
             if (resultCode == RESULT_OK) {
 
-                Task<String> idDaPasta= mdDriveServiceHelper.criarPastaNoDrive(CameraUtil.CAMINHO_IMAGEM_VENDAS).addOnSuccessListener(new OnSuccessListener<String>() {
-                    @Override
-                    public void onSuccess(String s) {
-
-                    }
-                });
-                if(idDaPasta.isComplete()){
-                    idDaPasta.getResult();
-                    mdDriveServiceHelper.inserirArquivoNaPasta( idDaPasta.getResult() ,CameraUtil.LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
-
-                }
+                //
+                //                if(idDaPasta.isComplete()){
+                //                    idDaPasta.getResult();
+                //                    mdDriveServiceHelper.inserirArquivoNaPasta(
+                // idDaPasta.getResult() ,CameraUtil.LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
+                //
+                //                }
 
                 AbstractActivity.showToast(
                         mPresenter.getContext(),
                         "Imagem salva: " + CameraUtil.LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
-
-
-
 
             } else {
                 AbstractActivity.showToast(mPresenter.getContext(), "Imagem não foi salva");
             }
         }
     }
-
-
 }

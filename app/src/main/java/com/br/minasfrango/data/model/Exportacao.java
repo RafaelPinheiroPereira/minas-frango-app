@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class Exportacao  implements Serializable {
     ListaPedido listaPedido;
     List<Recebimento> recebimentos;
+    ConfiguracaoGoogleDrive configuracaoGoogleDrive;
 }

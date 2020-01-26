@@ -14,12 +14,10 @@ import com.br.minasfrango.data.realm.EmpresaORM;
 import com.br.minasfrango.data.realm.NucleoORM;
 import com.br.minasfrango.ui.mvp.configuracao.IConfiguracaoMVP.IModel;
 import io.realm.Realm;
-import java.util.Optional;
 
 public class Model implements IModel {
 
     Presenter mPresenter;
-
     EmpresaDAO mEmpresaDAO = EmpresaDAO.getInstace(EmpresaORM.class);
     NucleoDAO mNucleoDAO = NucleoDAO.getInstace(NucleoORM.class);
     DispositivoDAO mDispositivoDAO = DispositivoDAO.getInstace(DispositivoORM.class);

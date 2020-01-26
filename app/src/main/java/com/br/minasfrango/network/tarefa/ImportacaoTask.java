@@ -6,6 +6,7 @@ import android.os.Build.VERSION_CODES;
 import android.util.Log;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.ClienteGrupo;
+import com.br.minasfrango.data.model.ConfiguracaoGoogleDrive;
 import com.br.minasfrango.data.model.Conta;
 import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.data.model.Importacao;
@@ -16,6 +17,7 @@ import com.br.minasfrango.data.model.Recebimento;
 import com.br.minasfrango.data.model.Unidade;
 import com.br.minasfrango.data.realm.ClienteGrupoORM;
 import com.br.minasfrango.data.realm.ClienteORM;
+import com.br.minasfrango.data.realm.ConfiguracaoGoogleDriveORM;
 import com.br.minasfrango.data.realm.ContaORM;
 import com.br.minasfrango.data.realm.PrecoORM;
 import com.br.minasfrango.data.realm.ProdutoORM;
@@ -25,6 +27,7 @@ import com.br.minasfrango.network.RetrofitConfig;
 import com.br.minasfrango.network.servico.ImportacaoService;
 import com.br.minasfrango.ui.mvp.home.IHomeMVP;
 import com.br.minasfrango.util.ControleSessao;
+import com.br.minasfrango.util.DriveServiceHelper;
 import io.realm.Realm;
 import java.io.IOException;
 import java.util.List;
@@ -40,20 +43,20 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
 
     ControleSessao mControleSessao;
 
-
+    DriveServiceHelper mdDriveServiceHelper;
 
     public ImportacaoTask(Funcionario funcionario, IHomeMVP.IPresenter homePresenter) {
         this.mFuncionario = funcionario;
         this.mHomePresenter = homePresenter;
-        this.mControleSessao=new ControleSessao(mHomePresenter.getContext());
+        this.mControleSessao = new ControleSessao(mHomePresenter.getContext());
     }
 
     public boolean importarDados() {
         boolean importou = false;
 
-                    if (importar()) {
-                        importou = true;
-                    }
+        if (importar()) {
+            importou = true;
+        }
 
         return importou;
     }
@@ -70,6 +73,14 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
 
         if (importou) {
 
+            this.mHomePresenter.configurarGoogleDrive();
+
+           if(mHomePresenter.getConfiguracaoGoogleDrive().getIdPastaVenda()==null & mHomePresenter.getConfiguracaoGoogleDrive().getIdPastaRecibo()==null)
+                this.mHomePresenter.criarPastasDefaultNoDrive(
+                        mHomePresenter.getConfiguracaoGoogleDrive());
+           }
+
+
             this.mHomePresenter.esconderProgressDialog();
             this.mHomePresenter.exibirToast("Importação realizada com sucesso!");
             this.mHomePresenter.obterClientesAposImportarDados();
@@ -77,7 +88,7 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
 
             this.mHomePresenter.fecharDrawer();
         }
-    }
+
 
     @Override
     protected void onPreExecute() {
@@ -105,7 +116,8 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
-            clienteGrupos.forEach(clienteGrupo -> realm.copyToRealmOrUpdate(new ClienteGrupoORM(clienteGrupo)));
+            clienteGrupos.forEach(
+                    clienteGrupo -> realm.copyToRealmOrUpdate(new ClienteGrupoORM(clienteGrupo)));
         } else {
             for (ClienteGrupo clienteGrupo : clienteGrupos) {
                 realm.copyToRealmOrUpdate(new ClienteGrupoORM(clienteGrupo));
@@ -120,7 +132,6 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
 
-
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
 
             contas.forEach(conta -> realm.copyToRealmOrUpdate(new ContaORM(conta)));
@@ -133,38 +144,14 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
         Log.d("Importacao Contas", "Sucess");
     }
 
-    private void salvarPrecos( List<Preco> precos) {
+    private void salvarPrecos(List<Preco> precos) {
 
-                Realm realm = Realm.getDefaultInstance();
-                realm.beginTransaction();
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
 
-                if (VERSION.SDK_INT >= VERSION_CODES.N) {
-                    precos.forEach(
-                            preco -> {
-                                PrecoID precoID =
-                                        new PrecoID(
-                                                preco.getChavesPreco().getId(),
-                                                preco.getChavesPreco().getIdCliente(),
-                                                preco.getChavesPreco().getIdProduto(),
-                                                preco.getChavesPreco().getUnidadeProduto(),
-                                                preco.getChavesPreco().getDataPreco());
-
-                                preco.setChavesPreco(precoID);
-                                preco.setId(
-                                        preco.getChavesPreco().getId()
-                                                + "-"
-                                                + preco.getChavesPreco().getIdCliente()
-                                                + "-"
-                                                + preco.getChavesPreco().getIdProduto()
-                                                + "-"
-                                                + preco.getChavesPreco().getUnidadeProduto()
-                                                + "-"
-                                                + preco.getChavesPreco().getDataPreco());
-                                realm.copyToRealmOrUpdate(new PrecoORM(preco));
-                            });
-                } else {
-                    for (Preco preco : precos) {
-
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            precos.forEach(
+                    preco -> {
                         PrecoID precoID =
                                 new PrecoID(
                                         preco.getChavesPreco().getId(),
@@ -185,13 +172,35 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
                                         + "-"
                                         + preco.getChavesPreco().getDataPreco());
                         realm.copyToRealmOrUpdate(new PrecoORM(preco));
-                    }
-                }
+                    });
+        } else {
+            for (Preco preco : precos) {
 
-                realm.commitTransaction();
-                Log.d("Importacao Precos", "Sucess");
+                PrecoID precoID =
+                        new PrecoID(
+                                preco.getChavesPreco().getId(),
+                                preco.getChavesPreco().getIdCliente(),
+                                preco.getChavesPreco().getIdProduto(),
+                                preco.getChavesPreco().getUnidadeProduto(),
+                                preco.getChavesPreco().getDataPreco());
 
+                preco.setChavesPreco(precoID);
+                preco.setId(
+                        preco.getChavesPreco().getId()
+                                + "-"
+                                + preco.getChavesPreco().getIdCliente()
+                                + "-"
+                                + preco.getChavesPreco().getIdProduto()
+                                + "-"
+                                + preco.getChavesPreco().getUnidadeProduto()
+                                + "-"
+                                + preco.getChavesPreco().getDataPreco());
+                realm.copyToRealmOrUpdate(new PrecoORM(preco));
+            }
+        }
 
+        realm.commitTransaction();
+        Log.d("Importacao Precos", "Sucess");
     }
 
     private void salvarProdutos(List<Produto> produtos) {
@@ -211,7 +220,6 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
 
     private void salvarRecebimentos(List<Recebimento> recebimentos) {
 
-
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
@@ -229,46 +237,42 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
         realm.commitTransaction();
 
         Log.d("Importacao Recebimentos", "Sucess");
-
-
-
-        Log.d("Importacao Recebimentos", "Sucess");
     }
 
+    private void salvarUnidades(List<Unidade> unidades) {
 
-    private void salvarUnidades(List<Unidade> unidades ) {
-
-                Realm realm = Realm.getDefaultInstance();
-                realm.beginTransaction();
-                if (VERSION.SDK_INT >= VERSION_CODES.N) {
-                    unidades.forEach(
-                            unidade -> {
-                                unidade.setId(
-                                        unidade.getChavesUnidade().getIdUnidade()
-                                                + "-"
-                                                + unidade.getChavesUnidade().getIdProduto());
-                                realm.copyToRealmOrUpdate(new UnidadeORM(unidade));
-                            });
-                } else {
-                    for (Unidade unidade : unidades) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        if (VERSION.SDK_INT >= VERSION_CODES.N) {
+            unidades.forEach(
+                    unidade -> {
                         unidade.setId(
                                 unidade.getChavesUnidade().getIdUnidade()
                                         + "-"
                                         + unidade.getChavesUnidade().getIdProduto());
                         realm.copyToRealmOrUpdate(new UnidadeORM(unidade));
-                    }
-                }
-                realm.commitTransaction();
-                Log.d("Importacao de  Unidades", "Sucess");
-
-
-
+                    });
+        } else {
+            for (Unidade unidade : unidades) {
+                unidade.setId(
+                        unidade.getChavesUnidade().getIdUnidade()
+                                + "-"
+                                + unidade.getChavesUnidade().getIdProduto());
+                realm.copyToRealmOrUpdate(new UnidadeORM(unidade));
+            }
+        }
+        realm.commitTransaction();
+        Log.d("Importacao de  Unidades", "Sucess");
     }
 
     private boolean importar() {
         ImportacaoService importacaoService = new RetrofitConfig().getImportacaoService();
 
-        Call<Importacao> importacaoCall = importacaoService.realizarImportacao(this.mFuncionario.getId(),this.mFuncionario.getIdEmpresa(), mControleSessao.getIdNucleo());
+        Call<Importacao> importacaoCall =
+                importacaoService.realizarImportacao(
+                        this.mFuncionario.getId(),
+                        this.mFuncionario.getIdEmpresa(),
+                        mControleSessao.getIdNucleo());
         try {
             Response<Importacao> importacaoResponse = importacaoCall.execute();
             if (importacaoResponse.isSuccessful()) {
@@ -282,13 +286,22 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
                 salvarRecebimentos(importacao.getRecebimentosDTO());
                 salvarContas(importacao.getContas());
                 salvarClientesGrupos(importacao.getClientesGrupos());
-
-
+                salvarConfiguracaoGoogleDrive(importacao.getConfiguracaoGoogleDrive());
             }
         } catch (IOException e) {
-            Log.d("Error",e.getMessage());
+            Log.d("Error", e.getMessage());
             e.printStackTrace();
         }
         return true;
+    }
+
+    private void salvarConfiguracaoGoogleDrive(
+            final ConfiguracaoGoogleDrive configuracaoGoogleDrive) {
+
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(new ConfiguracaoGoogleDriveORM(configuracaoGoogleDrive));
+        realm.commitTransaction();
+        Log.d("Importacao ", "Configuracao Google Drive Sucess");
     }
 }
