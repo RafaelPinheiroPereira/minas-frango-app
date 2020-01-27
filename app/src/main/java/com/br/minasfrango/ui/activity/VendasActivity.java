@@ -74,6 +74,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static com.br.minasfrango.util.ConstantsUtil.CAMINHO_IMAGEM_VENDAS;
+
 public class VendasActivity extends AppCompatActivity implements IView {
 
     /** Positions initials of spinners present in to activity */
@@ -480,7 +482,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
 
         CameraUtil cameraUtil = new CameraUtil((Activity) mPresenter.getContext());
         try {
-            cameraUtil.tirarFoto(CameraUtil.CAMINHO_IMAGEM_VENDAS, nomeFoto);
+            cameraUtil.tirarFoto(CAMINHO_IMAGEM_VENDAS, nomeFoto);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-   <external-path name="comprovantes-vendas" path="Minas_Frangos/Comprovantes-Vendas/"/>
-   <external-path name="comprovantes-recebimento" path="Minas_Frangos/Comprovantes-Recebimentos/"/>
+   <external-path name="comprovantes-vendas" path="Minas_Frangos/Vendas/"/>
+   <external-path name="comprovantes-recebimento" path="Minas_Frangos/Pagamentos/"/>
 
 </paths>

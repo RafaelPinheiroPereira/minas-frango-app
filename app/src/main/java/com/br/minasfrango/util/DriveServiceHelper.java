@@ -122,36 +122,36 @@ public class DriveServiceHelper {
 
 
 
-    public Task<FileList> queryFolders() {
-        return Tasks.call(
-                mExecutor,
-                new Callable<FileList>() {
-                    @Override
-                    public FileList call() throws Exception {
-
-                        String pageToken = null;
-                        FileList result = null;
-                        do {
-                            result =
-                                    mDriveService
-                                            .files()
-                                            .list()
-                                            .setQ("mimeType='application/vnd.google-apps.folder'")
-                                            .setSpaces("drive")
-                                            .setFields("nextPageToken, files(id, name)")
-                                            .setPageToken(pageToken)
-                                            .execute();
-                            for (File file : result.getFiles()) {
-                                System.out.printf(
-                                        "Found file: %s (%s)\n", file.getName(), file.getId());
-                            }
-                            pageToken = result.getNextPageToken();
-                        } while (pageToken != null);
-
-                        return result;
-                    }
-                });
-    }
+//    public Task<FileList> queryPhotos(String nomeFoto) {
+//        return Tasks.call(
+//                mExecutor,
+//                new Callable<FileList>() {
+//                    @Override
+//                    public FileList call() throws Exception {
+//
+//                        String pageToken = null;
+//                        FileList result = null;
+//                        do {
+//                            result =
+//                                    mDriveService
+//                                            .files()
+//                                            .list()
+//                                            .setQ("name='"+nomefoto+"'")
+//                                            .setSpaces("drive")
+//                                            .setFields("nextPageToken, files(id, name)")
+//                                            .setPageToken(pageToken)
+//                                            .execute();
+//                            for (File file : result.getFiles()) {
+//                                System.out.printf(
+//                                        "Found file: %s (%s)\n", file.getName(), file.getId());
+//                            }
+//                            pageToken = result.getNextPageToken();
+//                        } while (pageToken != null);
+//
+//                        return result;
+//                    }
+//                });
+//    }
 
     /** Returns an {@link Intent} for opening the Storage Access Framework file picker. */
     public Intent createFilePickerIntent() {
@@ -231,6 +231,9 @@ public class DriveServiceHelper {
                 new Callable<String>() {
                     @Override
                     public String call() throws Exception {
+
+
+
                         File fileMetadata = new File();
                         fileMetadata.setParents(Collections.singletonList(idDaPasta));
 

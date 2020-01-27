@@ -35,6 +35,8 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Collections;
 
+import static com.br.minasfrango.util.ConstantsUtil.CAMINHO_IMAGEM_VENDAS;
+
 public class VisualizarPedidoActivity extends AppCompatActivity implements IView {
 
     @BindView(R.id.btnFotografar)
@@ -142,7 +144,7 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
 
         CameraUtil cameraUtil = new CameraUtil((Activity) mPresenter.getContext());
         try {
-            cameraUtil.tirarFoto(CameraUtil.CAMINHO_IMAGEM_VENDAS, nomeFoto);
+            cameraUtil.tirarFoto(CAMINHO_IMAGEM_VENDAS, nomeFoto);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -203,6 +205,9 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
             if (resultCode == RESULT_OK) {
 
                 String idPastaDeVenda = mPresenter.pesquisarPastaDeVendas();
+
+
+
                 mPresenter
                         .getDriveServiceHelper()
                         .inserirArquivoNaPasta(

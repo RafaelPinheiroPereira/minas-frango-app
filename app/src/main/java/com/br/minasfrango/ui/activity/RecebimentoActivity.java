@@ -44,6 +44,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Collections;
 
+import static com.br.minasfrango.util.ConstantsUtil.CAMINHO_IMAGEM_RECEBIMENTOS;
+
 public class RecebimentoActivity extends AppCompatActivity implements IRecebimentoMVP.IView {
 
     private static final int POSICAO_INICIAL = 0;
@@ -269,7 +271,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
                 String.format("%08d",mPresenter.getRecebimentos().get(0).getIdRecibo());
         CameraUtil cameraUtil = new CameraUtil((Activity) mPresenter.getContext());
         try {
-            cameraUtil.tirarFoto(CameraUtil.CAMINHO_IMAGEM_RECEBIMENTOS, nomeFoto);
+            cameraUtil.tirarFoto(CAMINHO_IMAGEM_RECEBIMENTOS, nomeFoto);
         } catch (IOException e) {
             e.printStackTrace();
         }
