@@ -138,7 +138,7 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
 
         String nomeFoto = String.format("%02d",mPresenter.getPedido().getIdNucleo())+
                 String.format("%03d", mPresenter.getPedido().getCodigoFuncionario())
-                        + String.format("%05d", mPresenter.getPedido().getIdVenda());
+                        + String.format("%08d", mPresenter.getPedido().getIdVenda());
 
         CameraUtil cameraUtil = new CameraUtil((Activity) mPresenter.getContext());
         try {

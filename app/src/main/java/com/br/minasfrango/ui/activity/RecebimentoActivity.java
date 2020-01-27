@@ -266,7 +266,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
 
         String nomeFoto = String.format("%02d",mPresenter.getRecebimentos().get(0).getIdNucleo())+
                 String.format("%03d",mPresenter.getRecebimentos().get(0).getIdFuncionario())+
-                String.format("%05d",mPresenter.getRecebimentos().get(0).getIdRecibo());
+                String.format("%08d",mPresenter.getRecebimentos().get(0).getIdRecibo());
         CameraUtil cameraUtil = new CameraUtil((Activity) mPresenter.getContext());
         try {
             cameraUtil.tirarFoto(CameraUtil.CAMINHO_IMAGEM_RECEBIMENTOS, nomeFoto);

@@ -18,9 +18,9 @@ public class CameraUtil {
 
     public static final int RESULTADO_INTENCAO_FOTO = 72;
 
-    public static final String CAMINHO_IMAGEM_VENDAS = "Comprovantes-Vendas";
+    public static final String CAMINHO_IMAGEM_VENDAS = "Vendas";
 
-    public static final String CAMINHO_IMAGEM_RECEBIMENTOS = "Comprovantes-Recebimentos";
+    public static final String CAMINHO_IMAGEM_RECEBIMENTOS = "Pagamentos";
 
 
     Activity mActivity;
