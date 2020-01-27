@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.ui.mvp.visualizar.IViewOrderMVP.IView;
+import com.br.minasfrango.util.DriveServiceHelper;
 import com.br.minasfrango.util.ImpressoraUtil;
 
 public class Presenter implements IViewOrderMVP.IPresenter {
@@ -15,6 +16,8 @@ public class Presenter implements IViewOrderMVP.IPresenter {
     IViewOrderMVP.IModel mModel;
 
     Pedido mPedido;
+
+    DriveServiceHelper mDriveServiceHelper;
 
 
 
@@ -45,6 +48,11 @@ public class Presenter implements IViewOrderMVP.IPresenter {
         return mCliente;
     }
 
+    @Override
+    public String pesquisarPastaDeVendas() {
+        return this.mModel.pesquisarIdPastaDeVendas();
+    }
+
     public void setCliente(final Cliente cliente) {
         mCliente = cliente;
     }
@@ -57,6 +65,14 @@ public class Presenter implements IViewOrderMVP.IPresenter {
     @Override
     public void setPedido(final Pedido pedido) {
         mPedido = pedido;
+    }
+    @Override
+    public DriveServiceHelper getDriveServiceHelper() {
+        return mDriveServiceHelper;
+    }
+    @Override
+    public void setDriveServiceHelper(final DriveServiceHelper driveServiceHelper) {
+        mDriveServiceHelper = driveServiceHelper;
     }
 
     /**
@@ -96,5 +112,10 @@ public class Presenter implements IViewOrderMVP.IPresenter {
     @Override
     public void exibirBotaoFotografar() {
         this.mView.exibirBotaoFotografar();
+    }
+
+    @Override
+    public void verificarCredenciaisGoogleDrive() {
+        this.mView.verificarCredenciaisGoogleDrive();
     }
 }

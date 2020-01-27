@@ -22,6 +22,7 @@ public class CameraUtil {
 
     public static final String CAMINHO_IMAGEM_RECEBIMENTOS = "Comprovantes-Recebimentos";
 
+
     Activity mActivity;
 
     public CameraUtil(final Activity activity) {
@@ -61,6 +62,6 @@ public class CameraUtil {
         }
 
         if(!filesDir.exists()) filesDir.mkdirs();
-        return new File(filesDir,nomeFoto + ".jpeg");
+        return new File(filesDir,nomeFoto + ".jpg");
     }
 }

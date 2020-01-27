@@ -8,6 +8,7 @@ import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Conta;
 import com.br.minasfrango.data.model.Recebimento;
 import com.br.minasfrango.ui.mvp.recebimento.IRecebimentoMVP.IView;
+import com.br.minasfrango.util.DriveServiceHelper;
 import com.br.minasfrango.util.ImpressoraUtil;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -38,6 +39,10 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
     BigDecimal valorTotalDevido;
 
     IRecebimentoMVP.IView view;
+
+    DriveServiceHelper mDriveServiceHelper;
+
+
 
     public Presenter(final IView view) {
         this.view = view;
@@ -123,6 +128,11 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
     }
 
     @Override
+    public String pesquisarPastaDeRecibos() {
+        return this.mModel.pesquisarIdPastaReciboPorFuncionario(this.getRecebimentos().get(0).getIdFuncionario());
+    }
+
+    @Override
     public void processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(
             final int posicao, final Recebimento recebimento) {
         this.mModel.processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(posicao, recebimento);
@@ -201,6 +211,15 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
     @Override
     public void getParametros() {
         this.view.getParametros();
+    }
+
+    @Override
+    public DriveServiceHelper getDriveServiceHelper() {
+        return mDriveServiceHelper;
+    }
+    @Override
+    public void setDriveServiceHelper(final DriveServiceHelper driveServiceHelper) {
+        mDriveServiceHelper = driveServiceHelper;
     }
 
     @Override
@@ -286,5 +305,10 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
     @Override
     public List<Conta> pesquisarContaPorId() {
         return this.mModel.pesquisarContaPorId();
+    }
+
+    @Override
+    public void verificarCredenciaisGoogleDrive() {
+        this.view.verificarCredenciaisGoogleDrive();
     }
 }

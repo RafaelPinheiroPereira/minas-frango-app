@@ -31,11 +31,18 @@ import com.br.minasfrango.ui.mvp.recebimento.Presenter;
 import com.br.minasfrango.util.CameraUtil;
 import com.br.minasfrango.util.ControleSessao;
 import com.br.minasfrango.util.CurrencyEditText;
-import com.br.minasfrango.util.DateUtils;
+import com.br.minasfrango.util.DriveServiceHelper;
 import com.br.minasfrango.util.FormatacaoMoeda;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.util.Collections;
 
 public class RecebimentoActivity extends AppCompatActivity implements IRecebimentoMVP.IView {
 
@@ -105,6 +112,8 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
 
         mPresenter.getParametros();
         mPresenter.configurarViewComDadosDoCliente();
+
+        mPresenter.verificarCredenciaisGoogleDrive();
 
         swtcAmortiza.setChecked(false);
 
@@ -194,6 +203,14 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
         if (requestCode == CameraUtil.RESULTADO_INTENCAO_FOTO) {
             if (resultCode == RESULT_OK) {
 
+
+                String idPastaDoRecibo = mPresenter.pesquisarPastaDeRecibos();
+                mPresenter
+                        .getDriveServiceHelper()
+                        .inserirArquivoNaPasta(
+                                idPastaDoRecibo, CameraUtil.LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
+
+
                 AbstractActivity.showToast(
                         mPresenter.getContext(),
                         "Imagem salva em :" + CameraUtil.LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
@@ -247,10 +264,9 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
     @OnClick(R.id.btnFotografar)
     public void fotografarComprovante(View view) {
 
-        String nomeFoto = mPresenter.getCliente().getId()
-                + DateUtils.formatarDateddMMyyyyhhmmParaString(
-                new Date(System.currentTimeMillis())).replace("/", "-")
-                + mPresenter.getCliente().getNome();
+        String nomeFoto = String.format("%02d",mPresenter.getRecebimentos().get(0).getIdNucleo())+
+                String.format("%03d",mPresenter.getRecebimentos().get(0).getIdFuncionario())+
+                String.format("%05d",mPresenter.getRecebimentos().get(0).getIdRecibo());
         CameraUtil cameraUtil = new CameraUtil((Activity) mPresenter.getContext());
         try {
             cameraUtil.tirarFoto(CameraUtil.CAMINHO_IMAGEM_RECEBIMENTOS, nomeFoto);
@@ -348,6 +364,22 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
     @Override
     public void updateRecycleViewAlteredItem(final int position) {
         adapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void verificarCredenciaisGoogleDrive() {
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getApplicationContext());
+        GoogleAccountCredential credential =
+                GoogleAccountCredential.usingOAuth2(
+                        this, Collections.singleton(DriveScopes.DRIVE_FILE));
+        credential.setSelectedAccount(account.getAccount());
+        Drive googleDriveService =
+                new Drive.Builder(
+                        AndroidHttp.newCompatibleTransport(), new GsonFactory(), credential)
+                        .setApplicationName("Minas Frangos")
+                        .build();
+
+        mPresenter.setDriveServiceHelper(new DriveServiceHelper(googleDriveService));
     }
 
     @Override

@@ -3,14 +3,17 @@ package com.br.minasfrango.ui.mvp.recebimento;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.data.dao.BlocoPedidoDAO;
+import com.br.minasfrango.data.dao.ConfiguracaoGoogleDriveDAO;
 import com.br.minasfrango.data.dao.ContaDAO;
 import com.br.minasfrango.data.dao.FuncionarioDAO;
 import com.br.minasfrango.data.dao.RecebimentoDAO;
 import com.br.minasfrango.data.model.BlocoRecibo;
+import com.br.minasfrango.data.model.ConfiguracaoGoogleDrive;
 import com.br.minasfrango.data.model.Conta;
 import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.data.model.Recebimento;
 import com.br.minasfrango.data.realm.BlocoReciboORM;
+import com.br.minasfrango.data.realm.ConfiguracaoGoogleDriveORM;
 import com.br.minasfrango.data.realm.ContaORM;
 import com.br.minasfrango.data.realm.FuncionarioORM;
 import com.br.minasfrango.data.realm.RecebimentoORM;
@@ -37,6 +40,9 @@ public class Model implements IRecebimentoMVP.IModel {
     FuncionarioDAO mFuncionarioDAO = FuncionarioDAO.getInstace(FuncionarioORM.class);
 
     BlocoPedidoDAO mBlocoPedidoDAO = BlocoPedidoDAO.getInstace(BlocoReciboORM.class);
+    ConfiguracaoGoogleDriveDAO mConfiguracaoGoogleDriveDAO= ConfiguracaoGoogleDriveDAO.getInstace(
+            ConfiguracaoGoogleDriveORM.class);
+
 
     int position = 0;
 
@@ -167,6 +173,12 @@ public class Model implements IRecebimentoMVP.IModel {
         return this.mContaDAO.pesquisarContaPorId();
     }
 
+    @Override
+    public String pesquisarIdPastaReciboPorFuncionario(final long idFuncionario) {
+        ConfiguracaoGoogleDrive configuracaoGoogleDrive= mConfiguracaoGoogleDriveDAO.pesquisarPorIdDoFuncionario(
+                (int) idFuncionario);
+        return  configuracaoGoogleDrive.getIdPastaRecibo();
+    }
 
     @Override
     public List<Recebimento> pesquisarRecebimentoPorCliente() {
@@ -273,7 +285,7 @@ public class Model implements IRecebimentoMVP.IModel {
 
         BlocoRecibo blocoRecibo= new BlocoRecibo();
         blocoRecibo.setId(idBlocoRecibo);
-        long idUsuario=mControleSessao.getIdUsuario();
+        long idUsuario=mPresenter.getRecebimentos().get(0).getIdFuncionario();
         blocoRecibo.setIdFormatado(String.format("%03d",idUsuario) + String.format("%05d",idBlocoRecibo));
         BlocoReciboORM blocoReciboORM= new BlocoReciboORM(blocoRecibo);
         mBlocoPedidoDAO.alterar(blocoReciboORM);

@@ -3,6 +3,7 @@ package com.br.minasfrango.ui.mvp.venda;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import com.br.minasfrango.data.dao.ClienteDAO;
+import com.br.minasfrango.data.dao.ConfiguracaoGoogleDriveDAO;
 import com.br.minasfrango.data.dao.EmpresaDAO;
 import com.br.minasfrango.data.dao.FuncionarioDAO;
 import com.br.minasfrango.data.dao.ItemPedidoDAO;
@@ -13,6 +14,7 @@ import com.br.minasfrango.data.dao.PrecoIDDAO;
 import com.br.minasfrango.data.dao.ProdutoDAO;
 import com.br.minasfrango.data.dao.UnidadeDAO;
 import com.br.minasfrango.data.model.Cliente;
+import com.br.minasfrango.data.model.ConfiguracaoGoogleDrive;
 import com.br.minasfrango.data.model.Empresa;
 import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.data.model.ItemPedido;
@@ -22,6 +24,7 @@ import com.br.minasfrango.data.model.Preco;
 import com.br.minasfrango.data.model.Produto;
 import com.br.minasfrango.data.model.Unidade;
 import com.br.minasfrango.data.realm.ClienteORM;
+import com.br.minasfrango.data.realm.ConfiguracaoGoogleDriveORM;
 import com.br.minasfrango.data.realm.EmpresaORM;
 import com.br.minasfrango.data.realm.FuncionarioORM;
 import com.br.minasfrango.data.realm.ItemPedidoIDORM;
@@ -61,6 +64,10 @@ public class Model implements IVendaMVP.IModel {
     UnidadeDAO unidadeDAO = UnidadeDAO.getInstace(UnidadeORM.class);
 
     FuncionarioDAO mFuncionarioDAO = FuncionarioDAO.getInstace(FuncionarioORM.class);
+
+    ConfiguracaoGoogleDriveDAO mConfiguracaoGoogleDriveDAO= ConfiguracaoGoogleDriveDAO.getInstace(
+            ConfiguracaoGoogleDriveORM.class);
+
 
     private com.br.minasfrango.ui.mvp.venda.Presenter mPresenter;
 
@@ -222,6 +229,14 @@ public class Model implements IVendaMVP.IModel {
     @Override
     public Empresa pesquisarEmpresaRegistrada() {
         return mEmpresaDAO.pesquisarEmpresaRegistradaNoDispositivo();
+    }
+
+    @Override
+    public String pesquisarIdPastaDeVendas() {
+
+        ConfiguracaoGoogleDrive configuracaoGoogleDrive= mConfiguracaoGoogleDriveDAO.pesquisarPorIdDoFuncionario(
+                (int) mPresenter.getPedido().getCodigoFuncionario());
+        return configuracaoGoogleDrive.getIdPastaVenda();
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.content.Context;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Conta;
 import com.br.minasfrango.data.model.Recebimento;
+import com.br.minasfrango.util.DriveServiceHelper;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -44,6 +45,8 @@ public interface IRecebimentoMVP {
 
         void exibirBotaoFotografar();
 
+        String pesquisarPastaDeRecibos();
+
         void removerAmortizacao(int position);
 
         void salvarAmortizacao(final long idBlocoRecibo);
@@ -69,6 +72,10 @@ public interface IRecebimentoMVP {
         void getParametros();
 
         List<Recebimento> getRecebimentos();
+
+        DriveServiceHelper getDriveServiceHelper();
+
+        void setDriveServiceHelper(DriveServiceHelper driveServiceHelper);
 
         BigDecimal getValorTotalDevido();
 
@@ -101,6 +108,8 @@ public interface IRecebimentoMVP {
         boolean valorTotalDevidoEhMenorOuIgualAoCredito();
 
         List<Conta> pesquisarContaPorId();
+
+        void verificarCredenciaisGoogleDrive();
     }
 
     interface IModel {
@@ -112,6 +121,8 @@ public interface IRecebimentoMVP {
 
         boolean crediValueIsGranThenZero();
         List<Conta> pesquisarContaPorId();
+
+        String pesquisarIdPastaReciboPorFuncionario(long idFuncionario);
 
         void processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(
                 final int posicao, Recebimento recebimentoToUpdate);
@@ -152,5 +163,7 @@ public interface IRecebimentoMVP {
         void updateRecycleView();
 
         void updateRecycleViewAlteredItem(int position);
+
+        void verificarCredenciaisGoogleDrive();
     }
 }

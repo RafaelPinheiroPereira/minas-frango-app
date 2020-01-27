@@ -232,9 +232,11 @@ public class DriveServiceHelper {
                     @Override
                     public String call() throws Exception {
                         File fileMetadata = new File();
-                        fileMetadata.setName("photo.jpg");
                         fileMetadata.setParents(Collections.singletonList(idDaPasta));
+
                         java.io.File filePath = new java.io.File(nomeArquivo);
+                        fileMetadata.setName(filePath.getName());
+
                         FileContent mediaContent = new FileContent("image/jpeg", filePath);
                         File file =
                                 mDriveService
@@ -253,48 +255,5 @@ public class DriveServiceHelper {
                 });
     }
 
-    public Task<Boolean> verificarPermissoesDoUsuarioNaPasta(String idDaPasta) {
-        return Tasks.call(
-                mExecutor,
-                new Callable<Boolean>() {
-                    @Override
-                    public Boolean call() throws Exception {
-                        File file = mDriveService.files().get(idDaPasta).execute();
 
-                        return file.getCapabilities().getCanEdit().booleanValue();
-                    }
-                });
-    }
-
-    /**
-     * Adicionar Pasta Compartilhada ao Meu Drive no aplicativo, é necessário pois a query só
-     * encontra os arquivos do app
-     *
-     * @param idPasta da pasta Compartilhada no Google Drive
-     * @return
-     */
-    public Task<String> adicionarPastaCompartilhadaAoDrive(String idPasta) {
-
-        return Tasks.call(
-                mExecutor,
-                new Callable<String>() {
-                    @Override
-                    public String call() throws Exception {
-                        File fileMetadata = new File();
-                        fileMetadata.setParents(Collections.singletonList("root"));
-                        fileMetadata.setId(idPasta);
-                        fileMetadata.setMimeType("application/vnd.google-apps.folder");
-                        File file = null;
-
-                        file = mDriveService.files().create(fileMetadata).execute();
-
-                        if (file != null) {
-
-                            return file.getId();
-                        } else {
-                            throw new IOException("Não foi possível adicionar a pasta compartilhada ao Google Drive.\nEntre em contato com o Suporte do Sistema.");
-                        }
-                    }
-                });
-    }
 }

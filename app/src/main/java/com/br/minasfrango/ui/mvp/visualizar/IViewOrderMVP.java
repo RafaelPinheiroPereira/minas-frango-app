@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Pedido;
-
+import com.br.minasfrango.util.DriveServiceHelper;
 
 public interface IViewOrderMVP {
 
@@ -15,6 +15,8 @@ public interface IViewOrderMVP {
         Cliente pesquisarClientePorID(long codigoCliente);
 
         Cliente getCliente();
+
+        String pesquisarPastaDeVendas();
 
         void setCliente(Cliente cliente);
 
@@ -29,6 +31,10 @@ public interface IViewOrderMVP {
 
         void setDataView();
 
+        DriveServiceHelper getDriveServiceHelper();
+
+        void setDriveServiceHelper(DriveServiceHelper driveServiceHelper);
+
         /**
          * Metodos relacionados a impressao
          */
@@ -41,13 +47,15 @@ public interface IViewOrderMVP {
         void imprimirComprovante();
 
         void exibirBotaoFotografar();
+
+        void verificarCredenciaisGoogleDrive();
     }
 
     interface IModel {
 
         Cliente pesquisarClientePorID(long codigoCliente);
 
-
+        String pesquisarIdPastaDeVendas();
 
         Pedido pesquisarVendaPorId(Long id);
     }
@@ -59,6 +67,8 @@ public interface IViewOrderMVP {
         void setDataView();
 
         void exibirBotaoFotografar();
+
+        void verificarCredenciaisGoogleDrive();
     }
 
 }

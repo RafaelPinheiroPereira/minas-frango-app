@@ -57,10 +57,19 @@ import com.br.minasfrango.util.CameraUtil;
 import com.br.minasfrango.util.ControleSessao;
 import com.br.minasfrango.util.CurrencyEditText;
 import com.br.minasfrango.util.DateUtils;
+import com.br.minasfrango.util.DriveServiceHelper;
 import com.br.minasfrango.util.FormatacaoMoeda;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -157,6 +166,8 @@ public class VendasActivity extends AppCompatActivity implements IView {
         mPresenter = new Presenter(this);
         mPresenter.getParametros();
 
+        mPresenter.verificarCredenciaisGoogleDrive();
+
 
         setAdaptadores();
         try {
@@ -214,6 +225,12 @@ public class VendasActivity extends AppCompatActivity implements IView {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CameraUtil.RESULTADO_INTENCAO_FOTO) {
             if (resultCode == RESULT_OK) {
+
+                String idPastaDeVenda = mPresenter.pesquisarPastaDeVendas();
+                mPresenter
+                        .getDriveServiceHelper()
+                        .inserirArquivoNaPasta(
+                                idPastaDeVenda, CameraUtil.LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
 
                 AbstractActivity.showToast(
                         mPresenter.getContext(),
@@ -457,9 +474,9 @@ public class VendasActivity extends AppCompatActivity implements IView {
 
     @OnClick(R.id.btnFotografar)
     public void fotografarComprovante(View view) {
-        String nomeFoto =
+        String nomeFoto = String.format("%02d",mPresenter.getPedido().getIdNucleo())+
                 String.format("%03d", mPresenter.getPedido().getCodigoFuncionario())
-                        + String.format("%08d", mPresenter.getPedido().getIdVenda());
+                        + String.format("%05d", mPresenter.getPedido().getIdVenda());
 
         CameraUtil cameraUtil = new CameraUtil((Activity) mPresenter.getContext());
         try {
@@ -612,6 +629,22 @@ public class VendasActivity extends AppCompatActivity implements IView {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void verificarCredenciaisGoogleDrive() {
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getApplicationContext());
+        GoogleAccountCredential credential =
+                GoogleAccountCredential.usingOAuth2(
+                        this, Collections.singleton(DriveScopes.DRIVE_FILE));
+        credential.setSelectedAccount(account.getAccount());
+        Drive googleDriveService =
+                new Drive.Builder(
+                        AndroidHttp.newCompatibleTransport(), new GsonFactory(), credential)
+                        .setApplicationName("Minas Frangos")
+                        .build();
+
+        mPresenter.setDriveServiceHelper(new DriveServiceHelper(googleDriveService));
     }
 
     @NonNull

@@ -16,6 +16,7 @@ import com.br.minasfrango.data.realm.PedidoORM;
 import com.br.minasfrango.ui.mvp.venda.IVendaMVP.IView;
 import com.br.minasfrango.util.ControleSessao;
 import com.br.minasfrango.util.DateUtils;
+import com.br.minasfrango.util.DriveServiceHelper;
 import com.br.minasfrango.util.ImpressoraUtil;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -58,6 +59,10 @@ public class Presenter implements IVendaMVP.IPresenter {
     String loteSelecionado;
 
     private AlertDialog mAlertDialog;
+
+    private DriveServiceHelper mDriveServiceHelper;
+
+
 
     public Presenter(final IView view) {
         mView = view;
@@ -104,6 +109,21 @@ public class Presenter implements IVendaMVP.IPresenter {
     @Override
     public Empresa pesquisarEmpresaRegistrada() {
        return  this.mModel.pesquisarEmpresaRegistrada();
+    }
+    @Override
+    public DriveServiceHelper getDriveServiceHelper() {
+        return mDriveServiceHelper;
+    }
+
+    @Override
+    public String pesquisarPastaDeVendas() {
+
+        return this.mModel.pesquisarIdPastaDeVendas();
+    }
+
+    @Override
+    public void setDriveServiceHelper(final DriveServiceHelper driveServiceHelper) {
+        mDriveServiceHelper = driveServiceHelper;
     }
 
     @Override
@@ -455,5 +475,10 @@ public class Presenter implements IVendaMVP.IPresenter {
     @Override
     public String getLoteSelecionado() {
         return this.loteSelecionado;
+    }
+
+    @Override
+    public void verificarCredenciaisGoogleDrive() {
+        this.mView.verificarCredenciaisGoogleDrive();
     }
 }

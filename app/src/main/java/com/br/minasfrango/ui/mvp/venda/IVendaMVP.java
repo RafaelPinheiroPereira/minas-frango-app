@@ -12,6 +12,7 @@ import com.br.minasfrango.data.model.Produto;
 import com.br.minasfrango.data.model.Unidade;
 import com.br.minasfrango.data.realm.PedidoORM;
 import com.br.minasfrango.util.ControleSessao;
+import com.br.minasfrango.util.DriveServiceHelper;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -30,6 +31,12 @@ public interface IVendaMVP {
         void atualizarSpinnerLotes();
 
         long configurarSequenceDoPedido(final ControleSessao controleSessao);
+
+        DriveServiceHelper getDriveServiceHelper();
+
+        String pesquisarPastaDeVendas();
+
+        void setDriveServiceHelper(DriveServiceHelper driveServiceHelper);
 
         void error(String msg);
 
@@ -157,6 +164,8 @@ public interface IVendaMVP {
 
         void setLoteSelecionado(String loteSelecionado);
         String getLoteSelecionado();
+
+        void verificarCredenciaisGoogleDrive();
     }
 
     interface IView {
@@ -197,6 +206,7 @@ public interface IVendaMVP {
 
         boolean validarCamposAntesDeAdicionarItem();
 
+        void verificarCredenciaisGoogleDrive();
     }
 
     interface IModel {
@@ -230,6 +240,8 @@ public interface IVendaMVP {
         long pesquisarCodigoMaximoDeVendaDoFuncionario(int idUsuario);
 
         Empresa pesquisarEmpresaRegistrada();
+
+        String pesquisarIdPastaDeVendas();
 
         Produto pesquisarProdutoPorId(long id);
 
