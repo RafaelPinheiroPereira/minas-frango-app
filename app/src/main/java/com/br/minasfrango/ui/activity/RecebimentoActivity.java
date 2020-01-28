@@ -1,5 +1,7 @@
 package com.br.minasfrango.ui.activity;
 
+import static com.br.minasfrango.util.ConstantsUtil.CAMINHO_IMAGEM_RECEBIMENTOS;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -12,6 +14,7 @@ import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,6 +38,10 @@ import com.br.minasfrango.util.DriveServiceHelper;
 import com.br.minasfrango.util.FormatacaoMoeda;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.json.gson.GsonFactory;
@@ -43,8 +50,6 @@ import com.google.api.services.drive.DriveScopes;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Collections;
-
-import static com.br.minasfrango.util.ConstantsUtil.CAMINHO_IMAGEM_RECEBIMENTOS;
 
 public class RecebimentoActivity extends AppCompatActivity implements IRecebimentoMVP.IView {
 
@@ -95,6 +100,8 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
 
     @BindView(R.id.txtTotalDevido)
     TextView txtValorTotalDevido;
+
+    private String nomeFoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,20 +212,70 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
         if (requestCode == CameraUtil.RESULTADO_INTENCAO_FOTO) {
             if (resultCode == RESULT_OK) {
 
+                String idPastaRecibo = mPresenter.pesquisarPastaDeRecibos();
 
-                String idPastaDoRecibo = mPresenter.pesquisarPastaDeRecibos();
                 mPresenter
                         .getDriveServiceHelper()
-                        .inserirArquivoNaPasta(
-                                idPastaDoRecibo, CameraUtil.LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
+                        .temFotoExistente(nomeFoto, idPastaRecibo)
+                        .addOnCompleteListener(
+                                new OnCompleteListener<String>() {
+                                    @Override
+                                    public void onComplete(@NonNull final Task<String> task) {
+                                        if (task.isSuccessful()) {
+
+                                            if (!task.getResult().isEmpty())  {
+
+                                                mPresenter
+                                                        .getDriveServiceHelper()
+                                                        .deleteFileById(
+                                                              task.getResult())
+                                                        .addOnSuccessListener(
+                                                                new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(
+                                                                            final Void aVoid) {
+                                                                        mPresenter
+                                                                                .getDriveServiceHelper()
+                                                                                .inserirArquivoNaPasta(
+                                                                                        idPastaRecibo,
+                                                                                        CameraUtil
+                                                                                                .LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
+                                                                    }
+                                                                })
+                                                        .addOnFailureListener(
+                                                                new OnFailureListener() {
+                                                                    @Override
+                                                                    public void onFailure(
+                                                                            @NonNull
+                                                                            final Exception
+                                                                                    e) {
+                                                                        AbstractActivity.showToast(
+                                                                                mPresenter
+                                                                                        .getContext(),
+                                                                                "Não foi posível deletar o arquivo: "
+                                                                                        + e
+                                                                                        .getMessage());
+                                                                    }
+                                                                });
+
+                                            } else {
+                                                mPresenter
+                                                        .getDriveServiceHelper()
+                                                        .inserirArquivoNaPasta(
+                                                                idPastaRecibo,
+                                                                CameraUtil
+                                                                        .LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
 
 
+                                            }
+                                        }
+                                    }
+                                });
                 AbstractActivity.showToast(
                         mPresenter.getContext(),
-                        "Imagem salva em :" + CameraUtil.LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
-                this.finish();
-
-
+                        "Imagem salva: "
+                                + CameraUtil
+                                .LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
             } else {
                 AbstractActivity.showToast(mPresenter.getContext(), "Imagem não foi salva");
             }
@@ -266,7 +323,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
     @OnClick(R.id.btnFotografar)
     public void fotografarComprovante(View view) {
 
-        String nomeFoto = String.format("%02d",mPresenter.getRecebimentos().get(0).getIdNucleo())+
+         nomeFoto = String.format("%02d",mPresenter.getRecebimentos().get(0).getIdNucleo())+
                 String.format("%03d",mPresenter.getRecebimentos().get(0).getIdFuncionario())+
                 String.format("%08d",mPresenter.getRecebimentos().get(0).getIdRecibo());
         CameraUtil cameraUtil = new CameraUtil((Activity) mPresenter.getContext());

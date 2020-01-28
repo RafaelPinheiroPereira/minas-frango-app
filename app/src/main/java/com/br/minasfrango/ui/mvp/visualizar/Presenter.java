@@ -19,6 +19,8 @@ public class Presenter implements IViewOrderMVP.IPresenter {
 
     DriveServiceHelper mDriveServiceHelper;
 
+    private String nomeDaFoto;
+
 
 
     IViewOrderMVP.IView mView;
@@ -42,6 +44,15 @@ public class Presenter implements IViewOrderMVP.IPresenter {
     public Cliente pesquisarClientePorID(final long codigoCliente) {
         return this.mModel.pesquisarClientePorID(codigoCliente);
     }
+    @Override
+    public String getNomeDaFoto() {
+        return nomeDaFoto;
+    }
+    @Override
+    public void setNomeDaFoto(final String nomeDaFoto) {
+        this.nomeDaFoto = nomeDaFoto;
+    }
+
 
     @Override
     public Cliente getCliente() {

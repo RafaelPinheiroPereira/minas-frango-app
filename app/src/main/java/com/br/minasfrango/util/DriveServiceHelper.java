@@ -120,38 +120,50 @@ public class DriveServiceHelper {
                 });
     }
 
+    public Task<Void> deleteFileById(String idFile) {
+        return Tasks.call(
+                mExecutor,
+                new Callable<Void>() {
+                    @Override
+                    public Void call() throws Exception {
+                        return mDriveService.files().delete(idFile).execute();
+                    }
+                });
+    }
 
 
-//    public Task<FileList> queryPhotos(String nomeFoto) {
-//        return Tasks.call(
-//                mExecutor,
-//                new Callable<FileList>() {
-//                    @Override
-//                    public FileList call() throws Exception {
-//
-//                        String pageToken = null;
-//                        FileList result = null;
-//                        do {
-//                            result =
-//                                    mDriveService
-//                                            .files()
-//                                            .list()
-//                                            .setQ("name='"+nomefoto+"'")
-//                                            .setSpaces("drive")
-//                                            .setFields("nextPageToken, files(id, name)")
-//                                            .setPageToken(pageToken)
-//                                            .execute();
-//                            for (File file : result.getFiles()) {
-//                                System.out.printf(
-//                                        "Found file: %s (%s)\n", file.getName(), file.getId());
-//                            }
-//                            pageToken = result.getNextPageToken();
-//                        } while (pageToken != null);
-//
-//                        return result;
-//                    }
-//                });
-//    }
+
+    public Task<String> temFotoExistente(String nomeFoto, String idPastaPai) {
+        return Tasks.call(
+                mExecutor,
+                new Callable<String>() {
+                    @Override
+                    public String call() throws Exception {
+
+
+                        FileList result = null;
+
+                            result =
+                                    mDriveService
+                                            .files()
+                                            .list()
+                                            .setQ("name='"+nomeFoto+".jpg"+"' and parents = '"+ idPastaPai+"'")
+                                            .setSpaces("drive")
+                                            .setFields("files(id,name,parents)")
+                                            .execute();
+
+                        String nomeFotoComExtensao=nomeFoto.concat(".jpg");
+                        for(File file: result.getFiles()){
+
+                                if( file.getName().equals(nomeFotoComExtensao)){
+                                    return file.getId();
+                                }
+                        }
+
+                        return "";
+                    }
+                });
+    }
 
     /** Returns an {@link Intent} for opening the Storage Access Framework file picker. */
     public Intent createFilePickerIntent() {

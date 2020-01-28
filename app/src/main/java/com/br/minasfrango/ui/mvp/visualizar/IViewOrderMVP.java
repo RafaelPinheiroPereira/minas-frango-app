@@ -14,6 +14,10 @@ public interface IViewOrderMVP {
 
         Cliente pesquisarClientePorID(long codigoCliente);
 
+        String getNomeDaFoto();
+
+        void setNomeDaFoto(String nomeDaFoto);
+
         Cliente getCliente();
 
         String pesquisarPastaDeVendas();

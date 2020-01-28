@@ -1,5 +1,7 @@
 package com.br.minasfrango.ui.activity;
 
+import static com.br.minasfrango.util.ConstantsUtil.CAMINHO_IMAGEM_VENDAS;
+
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
@@ -61,6 +63,10 @@ import com.br.minasfrango.util.DriveServiceHelper;
 import com.br.minasfrango.util.FormatacaoMoeda;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.json.gson.GsonFactory;
@@ -73,8 +79,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
-import static com.br.minasfrango.util.ConstantsUtil.CAMINHO_IMAGEM_VENDAS;
 
 public class VendasActivity extends AppCompatActivity implements IView {
 
@@ -150,6 +154,8 @@ public class VendasActivity extends AppCompatActivity implements IView {
     Button btnFotografar;
 
     ArrayAdapter<CharSequence> adaptadorLotes;
+
+    private String nomeFoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,14 +235,72 @@ public class VendasActivity extends AppCompatActivity implements IView {
             if (resultCode == RESULT_OK) {
 
                 String idPastaDeVenda = mPresenter.pesquisarPastaDeVendas();
+
                 mPresenter
                         .getDriveServiceHelper()
-                        .inserirArquivoNaPasta(
-                                idPastaDeVenda, CameraUtil.LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
+                        .temFotoExistente(nomeFoto, idPastaDeVenda)
+                        .addOnCompleteListener(
+                                new OnCompleteListener<String>() {
+                                    @Override
+                                    public void onComplete(@NonNull final Task<String> task) {
 
+
+
+                                            if (task.isSuccessful()) {
+
+                                                if (!task.getResult().isEmpty())  {
+
+                                                mPresenter
+                                                        .getDriveServiceHelper()
+                                                        .deleteFileById(
+                                                                task.getResult())
+                                                        .addOnSuccessListener(
+                                                                new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(
+                                                                            final Void aVoid) {
+                                                                        mPresenter
+                                                                                .getDriveServiceHelper()
+                                                                                .inserirArquivoNaPasta(
+                                                                                        idPastaDeVenda,
+                                                                                        CameraUtil
+                                                                                                .LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
+                                                                    }
+                                                                })
+                                                        .addOnFailureListener(
+                                                                new OnFailureListener() {
+                                                                    @Override
+                                                                    public void onFailure(
+                                                                            @NonNull
+                                                                            final Exception
+                                                                                    e) {
+                                                                        AbstractActivity.showToast(
+                                                                                mPresenter
+                                                                                        .getContext(),
+                                                                                "Não foi posível deletar o arquivo: "
+                                                                                        + e
+                                                                                        .getMessage());
+                                                                    }
+                                                                });
+
+                                            } else {
+                                                mPresenter
+                                                        .getDriveServiceHelper()
+                                                        .inserirArquivoNaPasta(
+                                                                idPastaDeVenda,
+                                                                CameraUtil
+                                                                        .LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
+
+
+                                            }
+                                        }
+                                    }
+                                });
                 AbstractActivity.showToast(
                         mPresenter.getContext(),
-                        "Imagem salva: " + CameraUtil.LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
+                        "Imagem salva: "
+                                + CameraUtil
+                                .LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
                 this.finish();
 
             } else {
@@ -476,7 +540,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
 
     @OnClick(R.id.btnFotografar)
     public void fotografarComprovante(View view) {
-        String nomeFoto = String.format("%02d",mPresenter.getPedido().getIdNucleo())+
+         nomeFoto = String.format("%02d",mPresenter.getPedido().getIdNucleo())+
                 String.format("%03d", mPresenter.getPedido().getCodigoFuncionario())
                         + String.format("%08d", mPresenter.getPedido().getIdVenda());
 

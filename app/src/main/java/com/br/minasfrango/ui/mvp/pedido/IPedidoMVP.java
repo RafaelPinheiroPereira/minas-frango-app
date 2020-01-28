@@ -27,6 +27,10 @@ public interface IPedidoMVP {
 
         void setPedido(Pedido pedidoSelecionado);
 
+        String getNomeDaFoto();
+
+        void setNomeDaFoto(String nomeDaFoto);
+
         void onNavigateToEditSalesOrderActivity(Pedido pedido);
 
         void onNavigateToViewSalesOrderActivity(Pedido pedido);

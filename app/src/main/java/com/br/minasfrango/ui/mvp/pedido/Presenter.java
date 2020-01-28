@@ -8,7 +8,6 @@ import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.realm.ClientePedido;
 import com.br.minasfrango.ui.abstracts.AbstractActivity;
-import com.br.minasfrango.ui.activity.DriverActivity;
 import com.br.minasfrango.ui.activity.VendasActivity;
 import com.br.minasfrango.ui.activity.VisualizarPedidoActivity;
 import com.br.minasfrango.ui.mvp.pedido.IPedidoMVP.IModel;
@@ -24,6 +23,10 @@ public class Presenter implements IPedidoMVP.IPresenter {
     private Pedido mPedido;
 
     private IView mView;
+
+    private String nomeDaFoto;
+
+
 
     public Presenter(final IView view) {
         this.mView = view;
@@ -65,6 +68,15 @@ public class Presenter implements IPedidoMVP.IPresenter {
     @Override
     public Pedido getPedido() {
         return this.mPedido;
+    }
+
+    @Override
+    public String getNomeDaFoto() {
+        return nomeDaFoto;
+    }
+    @Override
+    public void setNomeDaFoto(final String nomeDaFoto) {
+        this.nomeDaFoto = nomeDaFoto;
     }
 
     @Override
