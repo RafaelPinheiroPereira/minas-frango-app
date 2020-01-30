@@ -5,13 +5,11 @@ import static com.br.minasfrango.util.ConstantsUtil.CAMINHO_IMAGEM_VENDAS;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NavUtils;
@@ -30,10 +28,6 @@ import com.br.minasfrango.util.CameraUtil;
 import com.br.minasfrango.util.DriveServiceHelper;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.json.gson.GsonFactory;
@@ -215,76 +209,7 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
 
                 String idPastaDeVenda = mPresenter.pesquisarPastaDeVendas();
 
-                mPresenter
-                        .getDriveServiceHelper()
-                        .temFotoExistente(nomeFoto, idPastaDeVenda)
-                        .addOnCompleteListener(
-                                new OnCompleteListener<String>() {
-                                    @Override
-                                    public void onComplete(@NonNull final Task<String> task) {
-                                        if (task.isSuccessful()) {
 
-                                            if (!task.getResult().isEmpty()) {
-
-                                                mPresenter
-                                                        .getDriveServiceHelper()
-                                                        .deleteFileById(task.getResult())
-                                                        .addOnSuccessListener(
-                                                                new OnSuccessListener<Void>() {
-                                                                    @Override
-                                                                    public void onSuccess(
-                                                                            final Void aVoid) {
-                                                                        Log.d("onSuces","Arquivo deletado");
-                                                                        mPresenter
-                                                                                .getDriveServiceHelper()
-                                                                                .inserirArquivoNaPasta(
-                                                                                        idPastaDeVenda,
-                                                                                        CameraUtil
-                                                                                                .LOCAL_ONDE_A_IMAGEM_FOI_SALVA).addOnSuccessListener(
-                                                                                new OnSuccessListener<String>() {
-                                                                                    @Override
-                                                                                    public void onSuccess(
-                                                                                            final String s) {
-                                                                                        Log.d("onSuces","Arquivo criado");
-                                                                                    }
-                                                                                }).addOnFailureListener(
-                                                                                new OnFailureListener() {
-                                                                                    @Override
-                                                                                    public void onFailure(
-                                                                                            @NonNull final Exception e) {
-                                                                                        Log.d("onFailure",e.getMessage());
-                                                                                    }
-                                                                                });
-                                                                    }
-                                                                })
-                                                        .addOnFailureListener(
-                                                                new OnFailureListener() {
-                                                                    @Override
-                                                                    public void onFailure(
-                                                                            @NonNull
-                                                                                    final Exception
-                                                                                            e) {
-
-                                                                        Log.d("onFailure",e.getMessage());
-                                                                        AbstractActivity.showToast(
-                                                                                mPresenter
-                                                                                        .getContext(),
-                                                                                "Não foi posível deletar o arquivo: "
-                                                                                        + e .getMessage());
-                                                                    }
-                                                                });
-
-                                            } else {
-                                                mPresenter
-                                                        .getDriveServiceHelper()
-                                                        .inserirArquivoNaPasta(
-                                                                idPastaDeVenda,
-                                                                CameraUtil
-                                                                        .LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
-                                            }
-                                        }
-                                    }
-                                });
                 AbstractActivity.showToast(
                         mPresenter.getContext(),
                         "Imagem salva: " + CameraUtil.LOCAL_ONDE_A_IMAGEM_FOI_SALVA);

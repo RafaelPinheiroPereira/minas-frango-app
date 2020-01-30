@@ -16,11 +16,19 @@ public interface IHomeMVP {
 
     interface IPresenter {
 
+        String getIdPastarecebimento();
+
+        void setIdPastaRecebimento(String idPastarecebimento);
+
         void configurarGoogleDrive();
 
         void criarPastasDefaultNoDrive(ConfiguracaoGoogleDrive configuracaoGoogleDrive);
 
         ConfiguracaoGoogleDrive getConfiguracaoGoogleDrive();
+
+        String pesquisarPastaRecebimentos();
+
+        void salvarFotosNoDrive();
 
         void setConfiguracaoGoogleDrive(ConfiguracaoGoogleDrive configuracaoGoogleDrive);
 
@@ -79,11 +87,18 @@ public interface IHomeMVP {
         void verificarCredenciaisGoogleDrive();
 
         boolean verificarLogin();
+
+        String pesquisarPastaDeVendas();
+
+        String getIdPastaVenda();
+
+        void setIdPastaVenda(String idPastaVenda);
     }
 
     interface IView {
 
         void fecharDrawer();
+
 
         void setAdapters();
 
@@ -110,7 +125,7 @@ public interface IHomeMVP {
 
         ConfiguracaoGoogleDrive consultarConfiguracaoGoogleDrivePorFuncionario(int idUsuario);
 
-
+        String pesquisarIdPastaReciboPorFuncionario(long idFuncionario);
 
         void deletarFuncionarioDaSessao();
 
@@ -130,6 +145,10 @@ public interface IHomeMVP {
 
         List<Recebimento> pesquisarRecebimentoPorCliente(Cliente cliente);
 
+        void sincronizarFotos();
+
         void salvarRecebimento(Recebimento recebimento);
+
+        String pesquisarIdPastaDeVendas();
     }
 }

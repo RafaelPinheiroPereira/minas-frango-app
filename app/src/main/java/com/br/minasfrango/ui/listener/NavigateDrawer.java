@@ -38,6 +38,10 @@ public class NavigateDrawer implements IDrawer {
                 new PrimaryDrawerItem().withName("Exportar Dados")
                         .withIcon(mActivity.getResources().getDrawable(R.drawable.ic_file_upload_black_24dp)));
         drawer.addItem(
+                new PrimaryDrawerItem().withName("Salvar Fotos Google Drive")
+                        .withIcon(R.mipmap.insert_photo_black));
+
+        drawer.addItem(
                 new PrimaryDrawerItem().withName("Configurar Impressora").withIcon(R.mipmap.ic_print_black_36dp));
 
         drawer.addItem(

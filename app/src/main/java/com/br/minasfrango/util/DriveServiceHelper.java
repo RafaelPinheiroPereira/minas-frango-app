@@ -133,7 +133,7 @@ public class DriveServiceHelper {
 
 
 
-    public Task<String> temFotoExistente(String nomeFoto, String idPastaPai) {
+    public Task<String> salvarFoto( String idPastaPai,  java.io.File foto) {
         return Tasks.call(
                 mExecutor,
                 new Callable<String>() {
@@ -141,28 +141,57 @@ public class DriveServiceHelper {
                     public String call() throws Exception {
 
 
-                        FileList result = null;
+                          FileList result = null;
+                          result =
+                                  mDriveService
+                                          .files()
+                                          .list()
+                                          .setQ("name='"+foto.getName()+"' and parents = '"+ idPastaPai+"'")
+                                          .setSpaces("drive")
+                                          .setFields("files(id,name,parents)")
+                                          .execute();
 
-                            result =
-                                    mDriveService
-                                            .files()
-                                            .list()
-                                            .setQ("name='"+nomeFoto+".jpg"+"' and parents = '"+ idPastaPai+"'")
-                                            .setSpaces("drive")
-                                            .setFields("files(id,name,parents)")
-                                            .execute();
+                          for(File file: result.getFiles()){
 
-                        String nomeFotoComExtensao=nomeFoto.concat(".jpg");
-                        for(File file: result.getFiles()){
+                              if( file.getName().equals(foto.getName())){
 
-                                if( file.getName().equals(nomeFotoComExtensao)){
-                                    return file.getId();
-                                }
-                        }
+                                  //Deleta o arquivo
+                                  mDriveService.files().delete(file.getId()).execute();
+                                  return inserirArquivo( idPastaPai, foto);
+                              }else{
+                                  return inserirArquivo( idPastaPai, foto);
 
-                        return "";
-                    }
+
+                              }
+                          }
+                          return inserirArquivo( idPastaPai, foto);
+
+                     }
                 });
+    }
+
+    private String inserirArquivo( final String idPastaPai, final java.io.File fotoFile)
+            throws IOException {
+        //Insere o arquivo na pasta
+        File fileMetadata = new File();
+        fileMetadata.setParents(Collections.singletonList(idPastaPai));
+
+        fileMetadata.setName(fotoFile.getName());
+
+        FileContent mediaContent = new FileContent("image/jpeg", fotoFile);
+        File fotoSalva =
+                mDriveService
+                        .files()
+                        .create(fileMetadata, mediaContent)
+                        .setFields("id, parents,name")
+                        .execute();
+
+        if (fotoSalva != null) {
+            System.out.println("Arquivo ID: " + fotoSalva.getId());
+            return fotoSalva.getId();
+        } else {
+            throw new IOException("Null result when requesting file creation.");
+        }
     }
 
     /** Returns an {@link Intent} for opening the Storage Access Framework file picker. */

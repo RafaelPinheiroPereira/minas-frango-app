@@ -49,7 +49,7 @@ import java.util.Collections;
 public class HomeActivity extends AppCompatActivity
         implements RecyclerViewOnClickListenerHack, IView {
 
-    private static  String SPINNER_POICAO_KEY ="posicaoSpinnerRede";
+    private static String SPINNER_POICAO_KEY = "posicaoSpinnerRede";
 
     ClienteAdapter mClientAdapter;
 
@@ -106,6 +106,8 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
+
+
     @Override
     public void obterClientesAposImportarDados() {
         mClientAdapter.notifyDataSetChanged();
@@ -128,19 +130,16 @@ public class HomeActivity extends AppCompatActivity
         super.onPause();
         mBundleState = new Bundle();
         mBundleState.putInt(SPINNER_POICAO_KEY, spnClienteGrupo.getSelectedItemPosition());
-
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
 
-
         if (mBundleState != null) {
-           int  mPosicao = mBundleState.getInt(SPINNER_POICAO_KEY);
+            int mPosicao = mBundleState.getInt(SPINNER_POICAO_KEY);
 
-           spnClienteGrupo.setSelection(mPosicao);
+            spnClienteGrupo.setSelection(mPosicao);
         }
     }
 
@@ -169,7 +168,7 @@ public class HomeActivity extends AppCompatActivity
         if (result != null && result.isDrawerOpen()) {
             result.closeDrawer();
         } else {
-            //super.onBackPressed();
+            // super.onBackPressed();
         }
     }
 
@@ -183,8 +182,8 @@ public class HomeActivity extends AppCompatActivity
 
             case R.id.btnReceber:
                 if (presenter
-                        .pesquisarRecebimentoPorCliente(mClientAdapter.getItem(position))
-                        .size()
+                                .pesquisarRecebimentoPorCliente(mClientAdapter.getItem(position))
+                                .size()
                         > 0) {
                     presenter.navigateToReceiptsActivity(mClientAdapter.getItem(position));
                 } else {
@@ -230,8 +229,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void onLongPressClickListener(final View view, final int position) {
-    }
+    public void onLongPressClickListener(final View view, final int position) {}
 
     @Override
     public void setAdapters() {
@@ -253,7 +251,9 @@ public class HomeActivity extends AppCompatActivity
     public void setDrawer(final Bundle savedInstanceState) {
 
         navigateDrawer = new NavigateDrawer(this);
-        result = navigateDrawer.builder(this, toolbar, savedInstanceState, presenter.getNomeUsuario());
+        result =
+                navigateDrawer.builder(
+                        this, toolbar, savedInstanceState, presenter.getNomeUsuario());
 
         result.setOnDrawerItemClickListener(
                 new Drawer.OnDrawerItemClickListener() {
@@ -281,21 +281,37 @@ public class HomeActivity extends AppCompatActivity
                                 break;
 
                             case 6:
-                                AbstractActivity.navigateToActivity(
-                                        presenter.getContext(),
-                                        new Intent(
-                                                presenter.getContext(), DeviceListActivity.class));
+                                String idPastaDeVenda = presenter.pesquisarPastaDeVendas();
+
+                                String idPastaRecebimentos= presenter.pesquisarPastaRecebimentos();
+
+                                if (idPastaDeVenda != null && idPastaRecebimentos !=null) {
+
+                                    presenter.setIdPastaVenda(idPastaDeVenda);
+                                    presenter.setIdPastaRecebimento(idPastaRecebimentos);
+                                    presenter.salvarFotosNoDrive();
+                                } else {
+                                    AbstractActivity.showToast(
+                                            presenter.getContext(),
+                                            "Por favor realize a importação dos dados!");
+                                }
+
                                 break;
 
                             case 7:
                                 AbstractActivity.navigateToActivity(
                                         presenter.getContext(),
                                         new Intent(
-                                                presenter.getContext(), ExclusaoActivity.class));
+                                                presenter.getContext(), DeviceListActivity.class));
                                 break;
 
-
                             case 8:
+                                AbstractActivity.navigateToActivity(
+                                        presenter.getContext(),
+                                        new Intent(presenter.getContext(), ExclusaoActivity.class));
+                                break;
+
+                            case 9:
                                 presenter.exibirDialogLogout();
 
                                 break;
@@ -323,7 +339,6 @@ public class HomeActivity extends AppCompatActivity
                         presenter.logout();
                         dialog.dismiss();
                         // edtConfirmaEmail.setText("");
-
 
                         return;
                     }
@@ -354,16 +369,11 @@ public class HomeActivity extends AppCompatActivity
         credential.setSelectedAccount(account.getAccount());
         Drive googleDriveService =
                 new Drive.Builder(
-                        AndroidHttp.newCompatibleTransport(),
-                        new GsonFactory(),
-                        credential)
+                                AndroidHttp.newCompatibleTransport(), new GsonFactory(), credential)
                         .setApplicationName("Minas Frangos")
                         .build();
 
         presenter.setDriveServiceHelper(new DriveServiceHelper(googleDriveService));
-
-
-
     }
 
     @Override
@@ -377,10 +387,9 @@ public class HomeActivity extends AppCompatActivity
     @OnItemSelected(R.id.spnClienteGrupo)
     void onItemSelected(int position) {
 
-            presenter.pesquisarClientePorRede((ClienteGrupo) mRedeAdapter.getItem(position));
-            mClientAdapter.notifyDataSetChanged();
-            spnClienteGrupo.setSelection(position);
-        
+        presenter.pesquisarClientePorRede((ClienteGrupo) mRedeAdapter.getItem(position));
+        mClientAdapter.notifyDataSetChanged();
+        spnClienteGrupo.setSelection(position);
     }
 
     @Override
@@ -410,12 +419,12 @@ public class HomeActivity extends AppCompatActivity
         super.onRestart();
 
         // first clear the recycler view so items are not populated twice
-         // clear list
+        // clear list
         mClientAdapter = new ClienteAdapter(this, new ArrayList<>());
         mClientAdapter.notifyDataSetChanged();
 
-        mRedeAdapter= new ArrayAdapter(
-                this, android.R.layout.simple_list_item_1, new ArrayList());
+        mRedeAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, new ArrayList());
         mRedeAdapter.notifyDataSetChanged();
     }
+
 }

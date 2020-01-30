@@ -47,6 +47,11 @@ public class Presenter implements IHomeMVP.IPresenter {
     private IModel model;
     private IView view;
 
+    private String idPastaVenda;
+
+
+    private String idPastarecebimento;
+
     public Presenter(final IView view) {
         this.view = view;
         this.model = new Model(this);
@@ -119,6 +124,20 @@ public class Presenter implements IHomeMVP.IPresenter {
     @Override
     public ConfiguracaoGoogleDrive getConfiguracaoGoogleDrive() {
         return mConfiguracaoGoogleDrive;
+    }
+
+    @Override
+    public String pesquisarPastaRecebimentos() {
+        return this.model.pesquisarIdPastaReciboPorFuncionario(mControleSessao.getIdUsuario());
+    }
+
+    @Override
+    public void salvarFotosNoDrive() {
+
+        this.model.sincronizarFotos();
+
+
+
     }
 
     @Override
@@ -295,5 +314,29 @@ public class Presenter implements IHomeMVP.IPresenter {
     @Override
     public void setDrawer(final Bundle savedInstanceState) {
         this.view.setDrawer(savedInstanceState);
+    }
+
+    @Override
+    public String pesquisarPastaDeVendas() {
+        return this.model.pesquisarIdPastaDeVendas();
+    }
+
+    @Override
+    public String getIdPastaVenda() {
+        return idPastaVenda;
+    }
+
+    @Override
+    public void setIdPastaVenda(final String idPastaVenda) {
+        this.idPastaVenda = idPastaVenda;
+    }
+
+    @Override
+    public String getIdPastarecebimento() {
+        return idPastarecebimento;
+    }
+    @Override
+    public void setIdPastaRecebimento(final String idPastarecebimento) {
+        this.idPastarecebimento = idPastarecebimento;
     }
 }

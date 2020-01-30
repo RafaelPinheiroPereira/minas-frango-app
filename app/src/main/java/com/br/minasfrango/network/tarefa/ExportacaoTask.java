@@ -24,9 +24,8 @@ public class ExportacaoTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected Boolean doInBackground(Void... voids) {
 
-        //Aqui vem a chamada do service
+        // Aqui vem a chamada do service
         return exportar(mExportacao);
-
     }
 
     @Override
@@ -55,8 +54,7 @@ public class ExportacaoTask extends AsyncTask<Void, Void, Boolean> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return false;
     }
-
-
 }

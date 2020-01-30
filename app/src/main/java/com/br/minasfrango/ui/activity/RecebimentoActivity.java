@@ -14,7 +14,6 @@ import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -38,10 +37,6 @@ import com.br.minasfrango.util.DriveServiceHelper;
 import com.br.minasfrango.util.FormatacaoMoeda;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.json.gson.GsonFactory;
@@ -214,63 +209,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
 
                 String idPastaRecibo = mPresenter.pesquisarPastaDeRecibos();
 
-                mPresenter
-                        .getDriveServiceHelper()
-                        .temFotoExistente(nomeFoto, idPastaRecibo)
-                        .addOnCompleteListener(
-                                new OnCompleteListener<String>() {
-                                    @Override
-                                    public void onComplete(@NonNull final Task<String> task) {
-                                        if (task.isSuccessful()) {
 
-                                            if (!task.getResult().isEmpty())  {
-
-                                                mPresenter
-                                                        .getDriveServiceHelper()
-                                                        .deleteFileById(
-                                                              task.getResult())
-                                                        .addOnSuccessListener(
-                                                                new OnSuccessListener<Void>() {
-                                                                    @Override
-                                                                    public void onSuccess(
-                                                                            final Void aVoid) {
-                                                                        mPresenter
-                                                                                .getDriveServiceHelper()
-                                                                                .inserirArquivoNaPasta(
-                                                                                        idPastaRecibo,
-                                                                                        CameraUtil
-                                                                                                .LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
-                                                                    }
-                                                                })
-                                                        .addOnFailureListener(
-                                                                new OnFailureListener() {
-                                                                    @Override
-                                                                    public void onFailure(
-                                                                            @NonNull
-                                                                            final Exception
-                                                                                    e) {
-                                                                        AbstractActivity.showToast(
-                                                                                mPresenter
-                                                                                        .getContext(),
-                                                                                "Não foi posível deletar o arquivo: "
-                                                                                        + e
-                                                                                        .getMessage());
-                                                                    }
-                                                                });
-
-                                            } else {
-                                                mPresenter
-                                                        .getDriveServiceHelper()
-                                                        .inserirArquivoNaPasta(
-                                                                idPastaRecibo,
-                                                                CameraUtil
-                                                                        .LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
-
-
-                                            }
-                                        }
-                                    }
-                                });
                 AbstractActivity.showToast(
                         mPresenter.getContext(),
                         "Imagem salva: "

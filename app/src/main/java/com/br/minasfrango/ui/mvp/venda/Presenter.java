@@ -477,8 +477,5 @@ public class Presenter implements IVendaMVP.IPresenter {
         return this.loteSelecionado;
     }
 
-    @Override
-    public void verificarCredenciaisGoogleDrive() {
-        this.mView.verificarCredenciaisGoogleDrive();
-    }
+
 }

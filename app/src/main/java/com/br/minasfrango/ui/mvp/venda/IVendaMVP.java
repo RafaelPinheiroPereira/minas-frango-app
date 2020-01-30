@@ -165,7 +165,7 @@ public interface IVendaMVP {
         void setLoteSelecionado(String loteSelecionado);
         String getLoteSelecionado();
 
-        void verificarCredenciaisGoogleDrive();
+
     }
 
     interface IView {
@@ -206,7 +206,6 @@ public interface IVendaMVP {
 
         boolean validarCamposAntesDeAdicionarItem();
 
-        void verificarCredenciaisGoogleDrive();
     }
 
     interface IModel {
