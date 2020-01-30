@@ -142,13 +142,14 @@ public class Model implements IModel {
     public void sincronizarFotos() {
         ArquivoUtils mArquivoUtils = new ArquivoUtils();
         progressDialog = new ProgressDialog(mPresenter.getContext());
-        progressDialog.setTitle("Sincronização Google Drive");
-        progressDialog.setMessage("Sincronizando fotos...");
+
 
         File[] fotosVendas = mArquivoUtils.lerFotosDoDiretorio(ConstantsUtil.CAMINHO_IMAGEM_VENDAS);
         File[] fotosRecebimentos = mArquivoUtils.lerFotosDoDiretorio(ConstantsUtil.CAMINHO_IMAGEM_RECEBIMENTOS);
 
         if (fotosVendas.length > 0) {
+            progressDialog.setTitle("Sincronização Google Drive");
+            progressDialog.setMessage("Sincronizando fotos de vendas...");
             progressDialog.show();
             for (File foto : fotosVendas) {
                 mPresenter
@@ -183,6 +184,7 @@ public class Model implements IModel {
                                                         mPresenter.getContext(),
                                                         "Todas as fotos de vendas foram sincronizadas.");
                                                 progressDialog.dismiss();
+                                                contadorVendas=0;
                                             }
                                     }
                                 });
@@ -194,13 +196,14 @@ public class Model implements IModel {
                     mPresenter.getContext(), "Não existem fotos de vendas para serem salvas.");
 
         }
+        progressDialog = new ProgressDialog(mPresenter.getContext());
+
 
         if(fotosRecebimentos.length>0){
 
-            if(!progressDialog.isShowing()){
-                progressDialog.show();
-            }
-
+            progressDialog.setTitle("Sincronização Google Drive");
+            progressDialog.setMessage("Sincronizando fotos de recebimentos...");
+            progressDialog.show();
             for (File foto : fotosRecebimentos) {
 
                 mPresenter
@@ -235,6 +238,7 @@ public class Model implements IModel {
                                                         mPresenter.getContext(),
                                                         "Todas as fotos do recebimento foram sincronizadas.");
                                                 progressDialog.dismiss();
+                                                contadorRecibos=0;
                                             }
                                     }
                                 });
@@ -242,9 +246,7 @@ public class Model implements IModel {
             }
 
         else{
-            if(progressDialog.isShowing()){
-                progressDialog.dismiss();
-            }
+
             AbstractActivity.showToast(
                     mPresenter.getContext(), "Não existem fotos de recebimentos para serem salvas.");
         }
