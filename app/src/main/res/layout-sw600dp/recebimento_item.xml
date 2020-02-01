@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="-4dp"
@@ -12,12 +11,95 @@
     app:cardCornerRadius="8dp"
     app:cardElevation="2dp"
     app:cardUseCompatPadding="true">
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
 
+        >
 
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <CheckBox
+
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:visibility="invisible" />
+
+        <TextView
+
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="ORDEM"
+
+            android:textSize="20sp"
+
+            />
+
+        <TextView
+
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="COD."
+
+            android:textSize="20sp"
+
+            />
+
+        <TextView
+
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="VENDA"
+
+            android:textSize="20sp"
+
+            />
+
+        <TextView
+
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="VENC."
+
+            android:textSize="20sp"
+
+            />
+
+        <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="right"
+            android:padding="5dp"
+            android:text="QTD"
+            android:textSize="20sp"
+            />
+
+
+    </LinearLayout>
+
 
 
     <LinearLayout
@@ -36,7 +118,7 @@
 
         <TextView
             android:id="@+id/txtOrderSelect"
-            android:layout_width="60dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center_horizontal"
@@ -46,7 +128,7 @@
             android:textSize="20sp" />
         <TextView
             android:id="@+id/txtRecebimentoIDVenda"
-            android:layout_width="50dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:text="ID"
             android:layout_gravity="center_vertical"
@@ -94,7 +176,7 @@
             android:text="QTD"
 
             android:textColor="@android:color/primary_text_light"
-            android:textSize="18sp"
+            android:textSize="20sp"
             />
     </LinearLayout>
 
@@ -160,6 +242,6 @@
     </LinearLayout>
 
 </LinearLayout>
-
+    </HorizontalScrollView>
 
 </androidx.cardview.widget.CardView>

@@ -385,7 +385,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
                     }else{
                         AbstractActivity.showToast(
                                 mPresenter.getContext(),
-                                "Código de Venda não atualizao com o Sevidor de Dados: ");
+                                "Código de vendas não está atualizado.\nPor favor, contate o suporte do sistema. ");
                     }
 
                 } catch (ParseException e) {
@@ -616,7 +616,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
             edtQTDBicos.requestFocus();
             return false;
         }
-        if (Integer.parseInt(edtQTDBicos.getText().toString()) <= 0) {
+        if (Long.parseLong(edtQTDBicos.getText().toString()) <= 0) {
             edtQTDBicos.setError("Quantidade mínima de 1 bico!");
             edtQTDBicos.requestFocus();
             return false;

@@ -20,7 +20,7 @@ public class ItemPedidoAdapter extends RecyclerView.Adapter<ItemPedidoAdapter.My
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView txtDescricao, txtValorUnitario, txtUnidade, txtQuantidade, txtValorTotal;
+        public TextView txtDescricao, txtValorUnitario, txtUnidade, txtQuantidade, txtValorTotal,txtBico;
 
 
         public MyViewHolder(View itemView) {
@@ -31,6 +31,7 @@ public class ItemPedidoAdapter extends RecyclerView.Adapter<ItemPedidoAdapter.My
             txtQuantidade = itemView.findViewById(R.id.txtQTDProducts);
             txtValorTotal = itemView.findViewById(R.id.txt_valor_total_item);
             txtValorUnitario = itemView.findViewById(R.id.txtValorUnitario);
+            txtBico=itemView.findViewById(R.id.txt_bicos);
 
 
         }
@@ -65,6 +66,9 @@ public class ItemPedidoAdapter extends RecyclerView.Adapter<ItemPedidoAdapter.My
         myViewHolder.txtValorUnitario.setText(FormatacaoMoeda.converterParaReal(itemPedido.getValorUnitario()));
         myViewHolder.txtValorTotal
                 .setText(FormatacaoMoeda.converterParaReal(itemPedido.getValorTotal()));
+        myViewHolder.txtBico.setText(String.valueOf(itemPedido.getBicos()));
+
+
 
     }
 
