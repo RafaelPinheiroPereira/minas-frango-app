@@ -12,11 +12,97 @@
     app:cardElevation="2dp"
     app:cardUseCompatPadding="true">
 
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
 
+        >
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <CheckBox
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
+
+        <TextView
+
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="ORDEM"
+
+            android:textSize="14sp"
+
+            />
+
+        <TextView
+
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="COD."
+
+            android:textSize="14sp"
+
+            />
+
+        <TextView
+
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="VENDA"
+
+            android:textSize="14sp"
+
+            />
+
+        <TextView
+
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="VENC."
+
+            android:textSize="14sp"
+
+            />
+
+        <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="right"
+            android:padding="5dp"
+            android:text="QTD"
+
+
+            android:textSize="14sp"
+            />
+
+
+    </LinearLayout>
+
 
 
     <LinearLayout
@@ -98,6 +184,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="5dp"
+
         android:orientation="horizontal">
 
         <TextView
@@ -144,7 +231,7 @@
             android:layout_height="wrap_content"
             android:text="Saldo"
             android:layout_gravity="center_vertical"
-            android:gravity="right"
+
             android:padding="5dp"
             android:textSize="16sp"
             android:textColor="@android:color/primary_text_light" />
@@ -152,6 +239,7 @@
     </LinearLayout>
 
 </LinearLayout>
+    </HorizontalScrollView>
 
 
 </androidx.cardview.widget.CardView>

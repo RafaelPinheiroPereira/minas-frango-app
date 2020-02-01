@@ -63,9 +63,7 @@ public class RecebimentoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    private static final int ITEM_VIEW_TYPE_HEADER = 0;
 
-    private static final int ITEM_VIEW_TYPE_ITEM = 1;
 
     IRecebimentoMVP.IPresenter mPresenter;
 
@@ -79,47 +77,40 @@ public class RecebimentoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        return mPresenter.getRecebimentos().size() + 1;
+        return mPresenter.getRecebimentos().size();
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return isHeader(position) ? ITEM_VIEW_TYPE_HEADER : ITEM_VIEW_TYPE_ITEM;
-    }
 
-    public boolean isHeader(int position) {
-        return position == 0;
-    }
+
+
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 
-        if (isHeader(position)) {
-            return;
-        } else {
+
 
 
             ((MyViewHolder) viewHolder)
                     .txtRecebimentoIDVenda.setText(
-                    String.valueOf(mPresenter.getRecebimentos().get(position - 1).getIdVenda()));
+                    String.valueOf(mPresenter.getRecebimentos().get(position ).getIdVenda()));
 
             ((MyViewHolder) viewHolder)
                     .txtSalesDate.setText(
                     DateUtils.formatarDateddMMyyyyParaString(
                                     mPresenter
                                             .getRecebimentos()
-                                            .get(position - 1)
+                                            .get(position )
                                             .getDataVenda()));
             ((MyViewHolder) viewHolder)
                     .txtDateVencimento.setText(
                     mPresenter
                             .getRecebimentos()
-                            .get(position - 1)
+                            .get(position )
                             .getDataVencimento()!=null?
                     DateUtils.formatarDateddMMyyyyParaString(
                                     mPresenter
                                             .getRecebimentos()
-                                            .get(position - 1)
+                                            .get(position )
                                             .getDataVencimento()): DateUtils.formatarDateddMMyyyyParaString(new Date()));
 
             ((MyViewHolder) viewHolder)
@@ -127,7 +118,7 @@ public class RecebimentoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     (FormatacaoMoeda.converterParaDolar(
                             mPresenter
                                     .getRecebimentos()
-                                    .get(position - 1)
+                                    .get(position )
                                     .getValorVenda())));
 
             ((MyViewHolder) viewHolder)
@@ -135,11 +126,11 @@ public class RecebimentoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     (FormatacaoMoeda.converterParaDolar(
                             mPresenter
                                     .getRecebimentos()
-                                    .get(position - 1)
+                                    .get(position )
                                     .getValorAmortizado())));
 
-            if (mPresenter.getRecebimentos().get(position - 1).getValorVenda()
-                    - mPresenter.getRecebimentos().get(position - 1).getValorAmortizado()
+            if (mPresenter.getRecebimentos().get(position ).getValorVenda()
+                    - mPresenter.getRecebimentos().get(position ).getValorAmortizado()
                     > 0) {
                 ((MyViewHolder) viewHolder).txtSaldo.setTextColor(Color.RED);
             } else {
@@ -148,10 +139,10 @@ public class RecebimentoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             ((MyViewHolder) viewHolder)
                     .txtSaldo.setText(
                     (FormatacaoMoeda.converterParaDolar(
-                            mPresenter.getRecebimentos().get(position - 1).getValorVenda()
+                            mPresenter.getRecebimentos().get(position ).getValorVenda()
                                     - mPresenter
                                     .getRecebimentos()
-                                    .get(position - 1)
+                                    .get(position )
                                     .getValorAmortizado())));
 
             ((MyViewHolder) viewHolder)
@@ -159,20 +150,20 @@ public class RecebimentoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     String.valueOf(
                             mPresenter
                                     .getRecebimentos()
-                                    .get(position - 1)
+                                    .get(position )
                                     .getOrderSelected()));
             ((MyViewHolder) viewHolder)
-                    .txtQDT.setText((position) + "/" + mPresenter.getRecebimentos().size());
+                    .txtQDT.setText((position+1) + "/" + mPresenter.getRecebimentos().size());
             ((MyViewHolder) viewHolder)
                     .chbRecebimento.setChecked(
-                    mPresenter.getRecebimentos().get(position - 1).isCheck());
+                    mPresenter.getRecebimentos().get(position ).isCheck());
 
             // Quando o tipo de amortizacao eh automatico o checkbox deve ficar desabilitado
             if (mPresenter.ehAmortizacaoAutomatica()) {
                 ((MyViewHolder) viewHolder).chbRecebimento.setClickable(false);
 
             } else if (!mPresenter.ehAmortizacaoAutomatica() && !mPresenter.getRecebimentos()
-                    .get(position - 1).isCheck()
+                    .get(position ).isCheck()
                     && !mPresenter.valorDoCreditoEhMaiorDoQueZero()) {
                 ((MyViewHolder) viewHolder).chbRecebimento.setClickable(false);
             } else {
@@ -189,17 +180,17 @@ public class RecebimentoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             {
                                 if (mPresenter
                                         .getRecebimentos()
-                                        .get(position - 1)
+                                        .get(position )
                                         .isCheck()) {
-                                    mPresenter.removerAmortizacao(position - 1);
+                                    mPresenter.removerAmortizacao(position );
 
                                 }
                                 // O item nao estiver selecionado entao quer dizer que estou
                                 // marcando
                                 else {
-                                    mPresenter.calcularArmotizacaoManual(position - 1);
-                                    mPresenter.processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(position - 1,
-                                            mPresenter.getRecebimentos().get(position - 1));
+                                    mPresenter.calcularArmotizacaoManual(position );
+                                    mPresenter.processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(position ,
+                                            mPresenter.getRecebimentos().get(position ));
 
                                 }
                             }
@@ -208,9 +199,9 @@ public class RecebimentoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                 // Esta marcado entao quer dizer que ta desmarcando
                                 if (mPresenter
                                         .getRecebimentos()
-                                        .get(position - 1)
+                                        .get(position )
                                         .isCheck()) {
-                                    mPresenter.removerAmortizacao(position - 1);
+                                    mPresenter.removerAmortizacao(position );
                                 }
                                 // Senao quer marcar porem nao ha saldo
                                 else {
@@ -222,20 +213,16 @@ public class RecebimentoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             }
                         });
             }
-        }
+
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View v;
-        if (viewType == ITEM_VIEW_TYPE_HEADER) {
-            View headerView =
-                    mLayoutInflater.inflate(R.layout.header_recebimento, viewGroup, false);
-            return new RecebimentoAdapter.Header(headerView);
-        } else {
+
             v = mLayoutInflater.inflate(R.layout.recebimento_item, viewGroup, false);
             RecebimentoAdapter.MyViewHolder mvh = new RecebimentoAdapter.MyViewHolder(v);
             return mvh;
-        }
+
     }
 }
