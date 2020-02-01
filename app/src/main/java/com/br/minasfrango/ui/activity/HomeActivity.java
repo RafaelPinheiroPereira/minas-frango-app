@@ -244,6 +244,9 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void setAdapters() {
 
+        mClientAdapter = new ClienteAdapter(this, new ArrayList<>());
+        mClientAdapter.notifyDataSetChanged();
+
         mClientAdapter = new ClienteAdapter(this, presenter.obterTodosClientes());
 
         rvCliente.setAdapter(mClientAdapter);
@@ -291,14 +294,12 @@ public class HomeActivity extends AppCompatActivity
                                 break;
 
                             case 6:
-                                String idPastaDeVenda = presenter.pesquisarPastaDeVendas();
 
-                                String idPastaRecebimentos= presenter.pesquisarPastaRecebimentos();
 
-                                if (idPastaDeVenda != null && idPastaRecebimentos !=null) {
 
-                                    presenter.setIdPastaVenda(idPastaDeVenda);
-                                    presenter.setIdPastaRecebimento(idPastaRecebimentos);
+
+                                if (presenter.getFuncionario().getIdPastaVendas() != null && presenter.getFuncionario().getIdPastaPagamentos() !=null) {
+
                                     presenter.salvarFotosNoDrive();
                                 } else {
                                     AbstractActivity.showToast(

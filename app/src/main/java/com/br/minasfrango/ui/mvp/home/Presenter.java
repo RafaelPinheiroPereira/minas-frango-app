@@ -10,7 +10,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.ClienteGrupo;
-import com.br.minasfrango.data.model.ConfiguracaoGoogleDrive;
 import com.br.minasfrango.data.model.Exportacao;
 import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.data.model.ListaPedido;
@@ -42,7 +41,7 @@ public class Presenter implements IHomeMVP.IPresenter {
 
     private DriveServiceHelper mDriveServiceHelper;
 
-    private ConfiguracaoGoogleDrive mConfiguracaoGoogleDrive;
+
 
     private IModel model;
     private IView view;
@@ -70,21 +69,14 @@ public class Presenter implements IHomeMVP.IPresenter {
         mFuncionario = funcionario;
     }
 
-    @Override
-    public void configurarGoogleDrive() {
 
-        ConfiguracaoGoogleDrive configuracaoGoogleDrive =
-                this.model.consultarConfiguracaoGoogleDrivePorFuncionario(
-                        this.getControleSessao().getIdUsuario());
-        this.setConfiguracaoGoogleDrive(configuracaoGoogleDrive);
-    }
 
     @Override
-    public void criarPastasDefaultNoDrive(final ConfiguracaoGoogleDrive configuracaoGoogleDrive) {
+    public void criarPastasNoDrive(Funcionario funcionario) {
 
         getDriveServiceHelper()
                 .criarPastaNoDrive(
-                        configuracaoGoogleDrive.getIdPastaFuncionario(), CAMINHO_IMAGEM_VENDAS)
+                        this.getFuncionario().getIdPastaFuncionario(), CAMINHO_IMAGEM_VENDAS)
                 .addOnFailureListener(
                         new OnFailureListener() {
                             @Override
@@ -99,21 +91,21 @@ public class Presenter implements IHomeMVP.IPresenter {
                         new OnSuccessListener<String>() {
                             @Override
                             public void onSuccess(final String idPastaVenda) {
-                                configuracaoGoogleDrive.setIdPastaVenda(idPastaVenda);
+                                funcionario.setIdPastaVendas(idPastaVenda);
 
                                 getDriveServiceHelper()
                                         .criarPastaNoDrive(
-                                                configuracaoGoogleDrive.getIdPastaFuncionario(),
+                                                funcionario.getIdPastaFuncionario(),
                                                 CAMINHO_IMAGEM_RECEBIMENTOS)
                                         .addOnSuccessListener(
                                                 new OnSuccessListener<String>() {
                                                     @Override
                                                     public void onSuccess(
                                                             final String idPastaRecibo) {
-                                                        configuracaoGoogleDrive.setIdPastaRecibo(
+                                                        funcionario.setIdPastaPagamentos(
                                                                 idPastaRecibo);
-                                                        model.alterarConfiguracaoGoogleDrive(
-                                                                configuracaoGoogleDrive);
+                                                        model.alterarFuncionario(funcionario);
+
                                                         AbstractActivity.showToast(
                                                                 getContext(),
                                                                 "Pastas criadas no Google Drive  com sucesso.");
@@ -134,15 +126,9 @@ public class Presenter implements IHomeMVP.IPresenter {
                         });
     }
 
-    @Override
-    public ConfiguracaoGoogleDrive getConfiguracaoGoogleDrive() {
-        return mConfiguracaoGoogleDrive;
-    }
 
-    @Override
-    public String pesquisarPastaRecebimentos() {
-        return this.model.pesquisarIdPastaReciboPorFuncionario(mControleSessao.getIdUsuario());
-    }
+
+
 
     @Override
     public void salvarFotosNoDrive() {
@@ -153,10 +139,7 @@ public class Presenter implements IHomeMVP.IPresenter {
 
     }
 
-    @Override
-    public void setConfiguracaoGoogleDrive(final ConfiguracaoGoogleDrive configuracaoGoogleDrive) {
-        mConfiguracaoGoogleDrive = configuracaoGoogleDrive;
-    }
+
 
     @Override
     public void esconderProgressDialog() {
@@ -187,15 +170,13 @@ public class Presenter implements IHomeMVP.IPresenter {
     public void exportar() {
         List<Pedido> pedidos = this.model.obterTodosPedidos();
         List<Recebimento> recebimentos = this.model.obterTodosRecebimentos();
-        ConfiguracaoGoogleDrive configuracaoGoogleDrive =
-                this.model.consultarConfiguracaoGoogleDrivePorFuncionario(
-                        mControleSessao.getIdUsuario());
+
         ListaPedido listaPedido = new ListaPedido();
         listaPedido.setPedidos(pedidos);
         Exportacao exportacao = new Exportacao();
         exportacao.setListaPedido(listaPedido);
         exportacao.setRecebimentos(recebimentos);
-        exportacao.setConfiguracaoGoogleDrive(configuracaoGoogleDrive);
+
         new ExportacaoTask(this, exportacao).execute();
     }
 
@@ -278,7 +259,7 @@ public class Presenter implements IHomeMVP.IPresenter {
         Funcionario funcionario = this.model.pesquisarFuncionarioDaSessao();
         funcionario.setIdEmpresa(this.model.pesquisarEmpresaRegistrada().getId());
         this.setFuncionario(funcionario);
-        new ImportacaoTask(funcionario, this).execute();
+        new ImportacaoTask( this).execute();
     }
 
     @Override
@@ -340,25 +321,8 @@ public class Presenter implements IHomeMVP.IPresenter {
         this.view.setDrawer(savedInstanceState);
     }
 
-    @Override
-    public String pesquisarPastaDeVendas() {
-        return this.model.pesquisarIdPastaDeVendas();
-    }
 
-    @Override
-    public String getIdPastaVenda() {
-        return idPastaVenda;
-    }
 
-    @Override
-    public void setIdPastaVenda(final String idPastaVenda) {
-        this.idPastaVenda = idPastaVenda;
-    }
-
-    @Override
-    public String getIdPastarecebimento() {
-        return idPastarecebimento;
-    }
 
     @Override
     public Funcionario pesquisarUsuarioDaSesao() {
@@ -370,8 +334,5 @@ public class Presenter implements IHomeMVP.IPresenter {
         this.model.deletarFuncionarioDaSessao();
     }
 
-    @Override
-    public void setIdPastaRecebimento(final String idPastarecebimento) {
-        this.idPastarecebimento = idPastarecebimento;
-    }
+
 }

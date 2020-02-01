@@ -127,10 +127,7 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
         this.view.exibirBotaoFotografar();
     }
 
-    @Override
-    public String pesquisarPastaDeRecibos() {
-        return this.mModel.pesquisarIdPastaReciboPorFuncionario(this.getRecebimentos().get(0).getIdFuncionario());
-    }
+
 
     @Override
     public void processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(

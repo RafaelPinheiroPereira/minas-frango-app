@@ -45,7 +45,7 @@ public interface IRecebimentoMVP {
 
         void exibirBotaoFotografar();
 
-        String pesquisarPastaDeRecibos();
+
 
         void removerAmortizacao(int position);
 
@@ -122,7 +122,7 @@ public interface IRecebimentoMVP {
         boolean crediValueIsGranThenZero();
         List<Conta> pesquisarContaPorId();
 
-        String pesquisarIdPastaReciboPorFuncionario(long idFuncionario);
+
 
         void processarOrdemDeSelecaoDaNotaAposAmortizacaoManual(
                 final int posicao, Recebimento recebimentoToUpdate);

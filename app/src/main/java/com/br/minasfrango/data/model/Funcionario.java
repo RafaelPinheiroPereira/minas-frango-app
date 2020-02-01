@@ -26,6 +26,11 @@ public class Funcionario implements Serializable {
     private  long maxIdVenda;
     private  long maxIdRecibo;
 
+    private String idPastaFuncionario;
+    private String idPastaVendas;
+    private String idPastaPagamentos;
+
+
 
 
 
@@ -37,6 +42,9 @@ public class Funcionario implements Serializable {
         this.idEmpresa=funcionarioORM.getIdEmpresa();
         this.maxIdVenda=funcionarioORM.getMaxIdVenda();
         this.maxIdRecibo=funcionarioORM.getMaxIdRecibo();
+        this.idPastaFuncionario=funcionarioORM.getIdPastaFuncionario();
+        this.idPastaPagamentos=funcionarioORM.getIdPastaPagamentos();
+        this.idPastaVendas=funcionarioORM.getIdPastaVendas();
 
 
     }

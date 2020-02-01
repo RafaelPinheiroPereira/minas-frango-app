@@ -1,14 +1,11 @@
 package com.br.minasfrango.ui.mvp.visualizar;
 
 import com.br.minasfrango.data.dao.ClienteDAO;
-import com.br.minasfrango.data.dao.ConfiguracaoGoogleDriveDAO;
 import com.br.minasfrango.data.dao.ItemPedidoDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
 import com.br.minasfrango.data.model.Cliente;
-import com.br.minasfrango.data.model.ConfiguracaoGoogleDrive;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.realm.ClienteORM;
-import com.br.minasfrango.data.realm.ConfiguracaoGoogleDriveORM;
 import com.br.minasfrango.data.realm.ItemPedidoORM;
 import com.br.minasfrango.data.realm.PedidoORM;
 
@@ -20,8 +17,7 @@ public class Model implements IViewOrderMVP.IModel {
 
     ItemPedidoDAO mItemPedidoDAO = ItemPedidoDAO.getInstace(ItemPedidoORM.class);
 
-    ConfiguracaoGoogleDriveDAO mConfiguracaoGoogleDriveDAO= ConfiguracaoGoogleDriveDAO.getInstace(
-            ConfiguracaoGoogleDriveORM.class);
+
 
     IViewOrderMVP.IPresenter mPresenter;
 
@@ -37,12 +33,7 @@ public class Model implements IViewOrderMVP.IModel {
         return new Cliente(this.mClienteDAO.findById(codigoCliente));
     }
 
-    @Override
-    public String pesquisarIdPastaDeVendas() {
-        ConfiguracaoGoogleDrive configuracaoGoogleDrive= mConfiguracaoGoogleDriveDAO.pesquisarPorIdDoFuncionario(
-                (int) mPresenter.getPedido().getCodigoFuncionario());
-        return configuracaoGoogleDrive.getIdPastaVenda();
-    }
+
 
     @Override
     public Pedido pesquisarVendaPorId(final Long id) {

@@ -19,7 +19,7 @@ public class Rota implements Serializable {
 
     public Rota(RotaORM rotaORM) {
         this.id = rotaORM.getId();
-        this.funcionario = new Funcionario(rotaORM.getMFuncionarioORM());
+        //this.funcionario = new Funcionario(rotaORM.getMFuncionarioORM());
         this.nome = rotaORM.getNome();
     }
 

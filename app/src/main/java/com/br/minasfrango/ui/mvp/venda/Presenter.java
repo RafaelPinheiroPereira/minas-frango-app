@@ -115,11 +115,7 @@ public class Presenter implements IVendaMVP.IPresenter {
         return mDriveServiceHelper;
     }
 
-    @Override
-    public String pesquisarPastaDeVendas() {
 
-        return this.mModel.pesquisarIdPastaDeVendas();
-    }
 
     @Override
     public void setDriveServiceHelper(final DriveServiceHelper driveServiceHelper) {

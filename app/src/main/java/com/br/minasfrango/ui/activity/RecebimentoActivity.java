@@ -207,14 +207,14 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
         if (requestCode == CameraUtil.RESULTADO_INTENCAO_FOTO) {
             if (resultCode == RESULT_OK) {
 
-                String idPastaRecibo = mPresenter.pesquisarPastaDeRecibos();
-
 
                 AbstractActivity.showToast(
                         mPresenter.getContext(),
                         "Imagem salva: "
                                 + CameraUtil
                                 .LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
+
+                this.finish();
             } else {
                 AbstractActivity.showToast(mPresenter.getContext(), "Imagem não foi salva");
             }
@@ -263,7 +263,7 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
     public void fotografarComprovante(View view) {
 
          nomeFoto = String.format("%02d",mPresenter.getRecebimentos().get(0).getIdNucleo())+
-                String.format("%03d",mPresenter.getRecebimentos().get(0).getIdFuncionario())+
+                String.format("%03d",new ControleSessao(mPresenter.getContext()).getIdUsuario())+
                 String.format("%08d",mPresenter.getRecebimentos().get(0).getIdRecibo());
         CameraUtil cameraUtil = new CameraUtil((Activity) mPresenter.getContext());
         try {

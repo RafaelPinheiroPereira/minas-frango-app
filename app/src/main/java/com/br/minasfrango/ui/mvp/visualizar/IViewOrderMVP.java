@@ -20,18 +20,11 @@ public interface IViewOrderMVP {
 
         Cliente getCliente();
 
-        String pesquisarPastaDeVendas();
-
         void setCliente(Cliente cliente);
 
         Pedido getPedido();
 
         void setPedido(Pedido pedido);
-
-
-
-
-
 
         void setDataView();
 
@@ -39,9 +32,7 @@ public interface IViewOrderMVP {
 
         void setDriveServiceHelper(DriveServiceHelper driveServiceHelper);
 
-        /**
-         * Metodos relacionados a impressao
-         */
+        /** Metodos relacionados a impressao */
         void esperarPorConexao();
 
         void fecharConexaoAtiva();
@@ -59,8 +50,6 @@ public interface IViewOrderMVP {
 
         Cliente pesquisarClientePorID(long codigoCliente);
 
-        String pesquisarIdPastaDeVendas();
-
         Pedido pesquisarVendaPorId(Long id);
     }
 
@@ -74,5 +63,4 @@ public interface IViewOrderMVP {
 
         void verificarCredenciaisGoogleDrive();
     }
-
 }

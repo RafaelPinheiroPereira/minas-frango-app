@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.ClienteGrupo;
-import com.br.minasfrango.data.model.ConfiguracaoGoogleDrive;
 import com.br.minasfrango.data.model.Empresa;
 import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.data.model.Pedido;
@@ -17,29 +16,19 @@ public interface IHomeMVP {
 
     interface IPresenter {
 
-        String getIdPastarecebimento();
+
 
         Funcionario pesquisarUsuarioDaSesao();
 
         void retirarFuncionarioDaSessao();
 
-        void setIdPastaRecebimento(String idPastarecebimento);
-
         Funcionario getFuncionario();
 
         void setFuncionario(Funcionario funcionario);
 
-        void configurarGoogleDrive();
-
-        void criarPastasDefaultNoDrive(ConfiguracaoGoogleDrive configuracaoGoogleDrive);
-
-        ConfiguracaoGoogleDrive getConfiguracaoGoogleDrive();
-
-        String pesquisarPastaRecebimentos();
+        void criarPastasNoDrive(Funcionario funcionario);
 
         void salvarFotosNoDrive();
-
-        void setConfiguracaoGoogleDrive(ConfiguracaoGoogleDrive configuracaoGoogleDrive);
 
         void esconderProgressDialog();
 
@@ -91,8 +80,6 @@ public interface IHomeMVP {
 
         void obterRotasAposImportarDados();
 
-
-
         void verificarCredenciaisGoogleDrive();
 
         ControleSessao getControleSessao();
@@ -101,17 +88,12 @@ public interface IHomeMVP {
 
         boolean verificarLogin();
 
-        String pesquisarPastaDeVendas();
 
-        String getIdPastaVenda();
-
-        void setIdPastaVenda(String idPastaVenda);
     }
 
     interface IView {
 
         void fecharDrawer();
-
 
         void setAdapters();
 
@@ -134,11 +116,7 @@ public interface IHomeMVP {
 
     interface IModel {
 
-        void alterarConfiguracaoGoogleDrive(ConfiguracaoGoogleDrive configuracaoGoogleDrive);
-
-        ConfiguracaoGoogleDrive consultarConfiguracaoGoogleDrivePorFuncionario(long idUsuario);
-
-        String pesquisarIdPastaReciboPorFuncionario(long idFuncionario);
+        void alterarFuncionario(Funcionario funcionario);
 
         void deletarFuncionarioDaSessao();
 
@@ -161,7 +139,5 @@ public interface IHomeMVP {
         void sincronizarFotos();
 
         void salvarRecebimento(Recebimento recebimento);
-
-        String pesquisarIdPastaDeVendas();
     }
 }

@@ -34,7 +34,7 @@ public interface IVendaMVP {
 
         DriveServiceHelper getDriveServiceHelper();
 
-        String pesquisarPastaDeVendas();
+
 
         void setDriveServiceHelper(DriveServiceHelper driveServiceHelper);
 
@@ -240,7 +240,7 @@ public interface IVendaMVP {
 
         Empresa pesquisarEmpresaRegistrada();
 
-        String pesquisarIdPastaDeVendas();
+
 
         Produto pesquisarProdutoPorId(long id);
 

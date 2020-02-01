@@ -59,10 +59,6 @@ public class Presenter implements IViewOrderMVP.IPresenter {
         return mCliente;
     }
 
-    @Override
-    public String pesquisarPastaDeVendas() {
-        return this.mModel.pesquisarIdPastaDeVendas();
-    }
 
     public void setCliente(final Cliente cliente) {
         mCliente = cliente;

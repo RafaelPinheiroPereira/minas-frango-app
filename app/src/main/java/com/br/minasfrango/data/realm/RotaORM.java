@@ -27,7 +27,7 @@ public class RotaORM extends RealmObject implements Serializable {
 
     public RotaORM(Rota rota) {
         this.id = rota.getId();
-        this.mFuncionarioORM = new FuncionarioORM(rota.getFuncionario());
+        //this.mFuncionarioORM = new FuncionarioORM(rota.getFuncionario());
         this.nome = rota.getNome();
     }
 

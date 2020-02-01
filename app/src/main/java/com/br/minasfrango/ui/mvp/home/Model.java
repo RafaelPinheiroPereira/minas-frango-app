@@ -7,21 +7,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import com.br.minasfrango.data.dao.ClienteDAO;
 import com.br.minasfrango.data.dao.ClienteGrupoDAO;
-import com.br.minasfrango.data.dao.ConfiguracaoGoogleDriveDAO;
 import com.br.minasfrango.data.dao.EmpresaDAO;
 import com.br.minasfrango.data.dao.FuncionarioDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
 import com.br.minasfrango.data.dao.RecebimentoDAO;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.ClienteGrupo;
-import com.br.minasfrango.data.model.ConfiguracaoGoogleDrive;
 import com.br.minasfrango.data.model.Empresa;
 import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.model.Recebimento;
 import com.br.minasfrango.data.realm.ClienteGrupoORM;
 import com.br.minasfrango.data.realm.ClienteORM;
-import com.br.minasfrango.data.realm.ConfiguracaoGoogleDriveORM;
 import com.br.minasfrango.data.realm.EmpresaORM;
 import com.br.minasfrango.data.realm.FuncionarioORM;
 import com.br.minasfrango.data.realm.PedidoORM;
@@ -30,6 +27,7 @@ import com.br.minasfrango.ui.abstracts.AbstractActivity;
 import com.br.minasfrango.ui.mvp.home.IHomeMVP.IModel;
 import com.br.minasfrango.util.ArquivoUtils;
 import com.br.minasfrango.util.ConstantsUtil;
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -49,8 +47,7 @@ public class Model implements IModel {
 
     EmpresaDAO mEmpresaDAO = EmpresaDAO.getInstace(EmpresaORM.class);
     FuncionarioDAO mFuncionarioDAO = FuncionarioDAO.getInstace(FuncionarioORM.class);
-    ConfiguracaoGoogleDriveDAO mConfiguracaoGoogleDriveDAO =
-            ConfiguracaoGoogleDriveDAO.getInstace(ConfiguracaoGoogleDriveORM.class);
+
 
 
     int contadorVendas=0;
@@ -63,27 +60,17 @@ public class Model implements IModel {
         mPresenter = presenter;
     }
 
-    @Override
-    public void alterarConfiguracaoGoogleDrive(
-            final ConfiguracaoGoogleDrive configuracaoGoogleDrive) {
-        this.mConfiguracaoGoogleDriveDAO.alterar(
-                new ConfiguracaoGoogleDriveORM(configuracaoGoogleDrive));
-    }
+
 
     @Override
-    public ConfiguracaoGoogleDrive consultarConfiguracaoGoogleDrivePorFuncionario(
-            final long idUsuario) {
-        return mConfiguracaoGoogleDriveDAO.pesquisarPorIdDoFuncionario(idUsuario);
+    public void alterarFuncionario(final Funcionario funcionario) {
+        FuncionarioORM funcionarioORM = new FuncionarioORM(funcionario);
+        mFuncionarioDAO.alterar(funcionarioORM);
     }
 
 
-        @Override
-        public String pesquisarIdPastaReciboPorFuncionario(final long idFuncionario) {
-            ConfiguracaoGoogleDrive configuracaoGoogleDrive= mConfiguracaoGoogleDriveDAO.pesquisarPorIdDoFuncionario(
-                    (int) idFuncionario);
-            return  configuracaoGoogleDrive.getIdPastaRecibo();
 
-    }
+
 
     @Override
     public void deletarFuncionarioDaSessao() {
@@ -141,20 +128,24 @@ public class Model implements IModel {
     @Override
     public void sincronizarFotos() {
         ArquivoUtils mArquivoUtils = new ArquivoUtils();
-        progressDialog = new ProgressDialog(mPresenter.getContext());
+
 
 
         File[] fotosVendas = mArquivoUtils.lerFotosDoDiretorio(ConstantsUtil.CAMINHO_IMAGEM_VENDAS);
         File[] fotosRecebimentos = mArquivoUtils.lerFotosDoDiretorio(ConstantsUtil.CAMINHO_IMAGEM_RECEBIMENTOS);
 
+        progressDialog = new ProgressDialog(mPresenter.getContext());
+
+
         if (fotosVendas.length > 0) {
+
             progressDialog.setTitle("Sincronização Google Drive");
-            progressDialog.setMessage("Sincronizando fotos de vendas...");
+            progressDialog.setMessage("Sincronizando fotos ...");
             progressDialog.show();
             for (File foto : fotosVendas) {
                 mPresenter
                         .getDriveServiceHelper()
-                        .salvarFoto(mPresenter.getIdPastaVenda(), foto)
+                        .salvarFoto(mPresenter.getFuncionario().getIdPastaVendas(), foto)
                         .addOnSuccessListener(
                                 new OnSuccessListener<String>() {
                                     @Override
@@ -178,78 +169,126 @@ public class Model implements IModel {
                                 new OnCompleteListener<String>() {
                                     @Override
                                     public void onComplete(@NonNull final Task<String> task) {
-                                        if (task.isSuccessful())
+                                        if (task.isSuccessful()) {
                                             if (contadorVendas == fotosVendas.length) {
-                                                AbstractActivity.showToast(
-                                                        mPresenter.getContext(),
-                                                        "Todas as fotos de vendas foram sincronizadas.");
+
                                                 progressDialog.dismiss();
-                                                contadorVendas=0;
+                                                contadorVendas = 0;
+
+                                                if(fotosRecebimentos.length>0){
+                                                    if (!progressDialog.isShowing()) {
+                                                        progressDialog.show();
+                                                    }
+                                                    for (File foto : fotosRecebimentos) {
+
+                                                        sincronizarFotosRecebimentos(fotosRecebimentos, foto);
+                                                    }
+                                                }
+
+                                                else{
+
+                                                    AbstractActivity.showToast(
+                                                            mPresenter.getContext(), "Fotos de vendas  sincronizadas e não existem fotos de recebimentos para serem salvas.");
+                                                }
                                             }
+                                        }
+                                    }
+                                })
+                        .addOnCanceledListener(
+                                new OnCanceledListener() {
+                                    @Override
+                                    public void onCanceled() {
+
+                                        AbstractActivity.showToast(
+                                                mPresenter.getContext(),
+                                                "Sincronização cancelada.");
+                                        progressDialog.dismiss();
                                     }
                                 });
 }
-        } else {
-
-
+        }else if (fotosVendas.length==0 && fotosRecebimentos.length==0){
             AbstractActivity.showToast(
-                    mPresenter.getContext(), "Não existem fotos de vendas para serem salvas.");
-
+                    mPresenter.getContext(), "Não existem fotos de vendas e recebimentos para serem salvas.");
         }
-        progressDialog = new ProgressDialog(mPresenter.getContext());
 
-
-        if(fotosRecebimentos.length>0){
+        else {
 
             progressDialog.setTitle("Sincronização Google Drive");
-            progressDialog.setMessage("Sincronizando fotos de recebimentos...");
-            progressDialog.show();
-            for (File foto : fotosRecebimentos) {
+            progressDialog.setMessage("Sincronizando fotos ...");
 
-                mPresenter
-                        .getDriveServiceHelper()
-                        .salvarFoto(mPresenter.getIdPastarecebimento(), foto)
-                        .addOnSuccessListener(
-                                new OnSuccessListener<String>() {
-                                    @Override
-                                    public void onSuccess(final String s) {
-                                        Log.d("onSucess", "Foto Salva " + s);
-                                        contadorRecibos++;
-                                    }
-                                })
-                        .addOnFailureListener(
-                                new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull final Exception e) {
-                                        AbstractActivity.showToast(
-                                                mPresenter.getContext(),
-                                                "Não foi possível realizar a operação."
-                                                        + e.getMessage());
-                                        progressDialog.dismiss();
-                                    }
-                                })
-                        .addOnCompleteListener(
-                                new OnCompleteListener<String>() {
-                                    @Override
-                                    public void onComplete(@NonNull final Task<String> task) {
-                                        if (task.isSuccessful())
-                                            if (contadorRecibos == fotosRecebimentos.length) {
-                                                AbstractActivity.showToast(
-                                                        mPresenter.getContext(),
-                                                        "Todas as fotos do recebimento foram sincronizadas.");
-                                                progressDialog.dismiss();
-                                                contadorRecibos=0;
-                                            }
-                                    }
-                                });
-        }
+
+            if(fotosRecebimentos.length>0){
+                if (!progressDialog.isShowing()) {
+                    progressDialog.show();
+                }
+                for (File foto : fotosRecebimentos) {
+
+                    sincronizarFotosRecebimentos(fotosRecebimentos, foto);
+                }
             }
 
-        else{
+            else  if (fotosVendas.length>0 && fotosRecebimentos.length==0){
 
-            AbstractActivity.showToast(
-                    mPresenter.getContext(), "Não existem fotos de recebimentos para serem salvas.");
+                AbstractActivity.showToast(
+                        mPresenter.getContext(), "Não existem fotos de recebimentos para serem salvas.");
+            }
+
+
         }
+
+
+
+
+    }
+
+    private void sincronizarFotosRecebimentos(final File[] fotosRecebimentos, final File foto) {
+        mPresenter
+                .getDriveServiceHelper()
+                .salvarFoto(mPresenter.getFuncionario().getIdPastaPagamentos(), foto)
+                .addOnSuccessListener(
+                        new OnSuccessListener<String>() {
+                            @Override
+                            public void onSuccess(final String s) {
+                                Log.d("onSucess", "Foto Salva " + s);
+                                contadorRecibos++;
+                            }
+                        })
+                .addOnFailureListener(
+                        new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull final Exception e) {
+                                AbstractActivity.showToast(
+                                        mPresenter.getContext(),
+                                        "Não foi possível realizar a operação."
+                                                + e.getMessage());
+                                progressDialog.dismiss();
+                            }
+                        })
+                .addOnCompleteListener(
+                        new OnCompleteListener<String>() {
+                            @Override
+                            public void onComplete(@NonNull final Task<String> task) {
+                                if (task.isSuccessful()) {
+                                    if (contadorRecibos == fotosRecebimentos.length) {
+                                        AbstractActivity.showToast(
+                                                mPresenter.getContext(),
+                                                "Todas as fotos de vendas e  recebimento foram sincronizadas.");
+                                        progressDialog.dismiss();
+                                        contadorRecibos = 0;
+                                    }
+                                }
+                            }
+                        })
+                .addOnCanceledListener(
+                        new OnCanceledListener() {
+                            @Override
+                            public void onCanceled() {
+                                AbstractActivity.showToast(
+                                        mPresenter.getContext(),
+                                        "Sincronização cancelada.");
+                                progressDialog.dismiss();
+                            }
+                        });
     }
 
     @Override
@@ -258,11 +297,5 @@ public class Model implements IModel {
         this.mRecebimentoDAO.alterar(recebimentoORM);
     }
 
-    @Override
-    public String pesquisarIdPastaDeVendas() {
-        ConfiguracaoGoogleDrive configuracaoGoogleDrive =
-                mConfiguracaoGoogleDriveDAO.pesquisarPorIdDoFuncionario(
-                        mPresenter.getUserId());
-        return configuracaoGoogleDrive.getIdPastaVenda();
-    }
+
 }

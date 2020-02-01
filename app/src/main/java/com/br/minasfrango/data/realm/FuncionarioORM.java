@@ -15,8 +15,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 public class FuncionarioORM extends RealmObject implements Serializable {
 
-    @PrimaryKey
-    private long id;
+    @PrimaryKey private long id;
 
     private String nome;
 
@@ -26,10 +25,12 @@ public class FuncionarioORM extends RealmObject implements Serializable {
 
     private long idEmpresa;
 
-    private  long maxIdVenda;
-    private  long maxIdRecibo;
+    private long maxIdVenda;
+    private long maxIdRecibo;
 
-
+    private String idPastaFuncionario;
+    private String idPastaVendas;
+    private String idPastaPagamentos;
 
     public FuncionarioORM(Funcionario funcionario) {
 
@@ -37,10 +38,11 @@ public class FuncionarioORM extends RealmObject implements Serializable {
         this.senha = funcionario.getSenha();
         this.nome = funcionario.getNome();
         this.tipoFuncionario = funcionario.getTipoFuncionario();
-        this.idEmpresa=funcionario.getIdEmpresa();
-        this.maxIdVenda=funcionario.getMaxIdVenda();
-        this.maxIdRecibo=funcionario.getMaxIdRecibo();
-
-
+        this.idEmpresa = funcionario.getIdEmpresa();
+        this.maxIdVenda = funcionario.getMaxIdVenda();
+        this.maxIdRecibo = funcionario.getMaxIdRecibo();
+        this.idPastaFuncionario = funcionario.getIdPastaFuncionario();
+        this.idPastaPagamentos = funcionario.getIdPastaPagamentos();
+        this.idPastaVendas = funcionario.getIdPastaVendas();
     }
 }

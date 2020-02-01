@@ -6,7 +6,6 @@ import android.os.Build.VERSION_CODES;
 import android.util.Log;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.ClienteGrupo;
-import com.br.minasfrango.data.model.ConfiguracaoGoogleDrive;
 import com.br.minasfrango.data.model.Conta;
 import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.data.model.Importacao;
@@ -17,7 +16,6 @@ import com.br.minasfrango.data.model.Recebimento;
 import com.br.minasfrango.data.model.Unidade;
 import com.br.minasfrango.data.realm.ClienteGrupoORM;
 import com.br.minasfrango.data.realm.ClienteORM;
-import com.br.minasfrango.data.realm.ConfiguracaoGoogleDriveORM;
 import com.br.minasfrango.data.realm.ContaORM;
 import com.br.minasfrango.data.realm.PrecoORM;
 import com.br.minasfrango.data.realm.ProdutoORM;
@@ -45,8 +43,8 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
 
     DriveServiceHelper mdDriveServiceHelper;
 
-    public ImportacaoTask(Funcionario funcionario, IHomeMVP.IPresenter homePresenter) {
-        this.mFuncionario = funcionario;
+    public ImportacaoTask( IHomeMVP.IPresenter homePresenter) {
+
         this.mHomePresenter = homePresenter;
         this.mControleSessao = new ControleSessao(mHomePresenter.getContext());
     }
@@ -73,11 +71,11 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
 
         if (importou) {
 
-            this.mHomePresenter.configurarGoogleDrive();
 
-           if(mHomePresenter.getConfiguracaoGoogleDrive().getIdPastaVenda()==null & mHomePresenter.getConfiguracaoGoogleDrive().getIdPastaRecibo()==null)
-                this.mHomePresenter.criarPastasDefaultNoDrive(
-                        mHomePresenter.getConfiguracaoGoogleDrive());
+
+           if(mHomePresenter.getFuncionario().getIdPastaVendas()==null & mHomePresenter.getFuncionario().getIdPastaPagamentos()==null)
+                this.mHomePresenter.criarPastasNoDrive(
+                        mHomePresenter.getFuncionario());
            }
 
 
@@ -270,8 +268,8 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
 
         Call<Importacao> importacaoCall =
                 importacaoService.realizarImportacao(
-                        this.mFuncionario.getId(),
-                        this.mFuncionario.getIdEmpresa(),
+                        mHomePresenter.getFuncionario().getId(),
+                        mHomePresenter.getFuncionario().getIdEmpresa(),
                         mControleSessao.getIdNucleo());
         try {
             Response<Importacao> importacaoResponse = importacaoCall.execute();
@@ -286,7 +284,7 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
                 salvarRecebimentos(importacao.getRecebimentosDTO());
                 salvarContas(importacao.getContas());
                 salvarClientesGrupos(importacao.getClientesGrupos());
-                salvarConfiguracaoGoogleDrive(importacao.getConfiguracaoGoogleDrive());
+
             }
         } catch (IOException e) {
             Log.d("Error", e.getMessage());
@@ -295,13 +293,5 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
         return true;
     }
 
-    private void salvarConfiguracaoGoogleDrive(
-            final ConfiguracaoGoogleDrive configuracaoGoogleDrive) {
 
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        realm.copyToRealmOrUpdate(new ConfiguracaoGoogleDriveORM(configuracaoGoogleDrive));
-        realm.commitTransaction();
-        Log.d("Importacao ", "Configuracao Google Drive Sucess");
-    }
 }

@@ -221,7 +221,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
         if (requestCode == CameraUtil.RESULTADO_INTENCAO_FOTO) {
             if (resultCode == RESULT_OK) {
 
-                String idPastaDeVenda = mPresenter.pesquisarPastaDeVendas();
+
 
                 AbstractActivity.showToast(
                         mPresenter.getContext(),
