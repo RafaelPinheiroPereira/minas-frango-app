@@ -68,13 +68,15 @@ public class ItemPedidoAdapter extends RecyclerView.Adapter<ItemPedidoAdapter.My
                 .setText(FormatacaoMoeda.converterParaReal(itemPedido.getValorTotal()));
         myViewHolder.txtBico.setText(String.valueOf(itemPedido.getBicos()));
 
+
+
     }
 
 
     @Override
     public ItemPedidoAdapter.MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
-        View v = mLayoutInflater.inflate(R.layout.item_pedido_new, viewGroup, false);
+        View v = mLayoutInflater.inflate(R.layout.item_pedido, viewGroup, false);
         ItemPedidoAdapter.MyViewHolder mvh = new ItemPedidoAdapter.MyViewHolder(v);
         return mvh;
 
