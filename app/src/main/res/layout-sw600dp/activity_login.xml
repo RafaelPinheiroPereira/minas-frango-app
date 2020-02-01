@@ -65,6 +65,17 @@
             android:id="@+id/spnNucleo">
 
         </Spinner>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLoginGoogleDrive"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_horizontal"
+            android:text="LOGIN GOOGLE DRIVE"
+            android:layout_marginTop="20dp"
+            android:textColor="@android:color/primary_text_dark"
+            android:textSize="18sp"
+            app:backgroundTint="@color/primary_dark" />
     </LinearLayout>
 
 
@@ -75,6 +86,7 @@
         android:layout_alignEnd="@+id/lnLoginBox"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
+
         android:layout_alignStart="@+id/lnLoginBox"
 
         android:layout_marginBottom="131dp"
@@ -83,6 +95,7 @@
         android:layout_marginTop="120dp"
         android:gravity="center_horizontal"
         android:text="@string/acessar"
+        android:visibility="invisible"
         android:textColor="@android:color/primary_text_dark"
         android:textSize="20sp"
         app:backgroundTint="@color/primary_dark" />

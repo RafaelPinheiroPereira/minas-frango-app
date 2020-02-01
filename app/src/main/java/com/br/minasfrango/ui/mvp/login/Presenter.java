@@ -26,7 +26,7 @@ public class Presenter implements ILoginMVP.IPresenter {
 
     private Empresa mEmpresa;
 
-    private String idUsuario;
+    private long idUsuario;
     private String senha;
 
 
@@ -39,8 +39,8 @@ public class Presenter implements ILoginMVP.IPresenter {
     }
 
     @Override
-    public Call<Funcionario> autenticarLogin(final String id, final String senha, long idEmpresa) {
-        return getServicoLogin().autenticar(Long.parseLong(id), senha, idEmpresa);
+    public Call<Funcionario> autenticarLogin(final long id, final String senha, long idEmpresa) {
+        return getServicoLogin().autenticar(id, senha, idEmpresa);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class Presenter implements ILoginMVP.IPresenter {
     }
 
     @Override
-    public void criarSessao(final String id, final String senha, final String nome, long idNucleo, long maxIdVenda,
+    public void criarSessao(final long id, final String senha, final String nome, long idNucleo, long maxIdVenda,
             final long maxIdRecibo) {
         this.mControleSessao = new ControleSessao(getContexto());
         mControleSessao.criarSessao(id, senha, nome, idNucleo,maxIdVenda,maxIdRecibo);
@@ -61,7 +61,7 @@ public class Presenter implements ILoginMVP.IPresenter {
     }
 
     @Override
-    public void realizarLogin(final String idUsuario, final String senha) {
+    public void realizarLogin(final long idUsuario, final String senha) {
         this.setIdUsuario(idUsuario);
         this.setSenha(senha);
         mLoginTask = new LoginTask(this);
@@ -109,11 +109,11 @@ public class Presenter implements ILoginMVP.IPresenter {
     }
 
     @Override
-    public String getIdUsuario() {
+    public long getIdUsuario() {
         return idUsuario;
     }
     @Override
-    public void setIdUsuario(final String idUsuario) {
+    public void setIdUsuario(final long idUsuario) {
         this.idUsuario = idUsuario;
     }
     @Override
@@ -125,6 +125,11 @@ public class Presenter implements ILoginMVP.IPresenter {
         this.senha = senha;
     }
 
+    @Override
+    public void solicitarLoginGoogleDrive() {
+
+            this.view.solicitarLoginGoogleDrive();
+    }
 
 
 }

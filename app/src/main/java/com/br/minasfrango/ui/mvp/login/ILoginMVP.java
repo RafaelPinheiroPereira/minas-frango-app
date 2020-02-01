@@ -14,16 +14,16 @@ public interface ILoginMVP {
 
 
 
-        Call<Funcionario> autenticarLogin(String idUser, String password,long idEmpresa);
+        Call<Funcionario> autenticarLogin(long idUser, String password,long idEmpresa);
 
         List<Nucleo> carregarTodosOsNucleos();
 
-        void criarSessao(String idUser, String password, String nameEmployee, long idNucleo, long maxIdVenda,
+        void criarSessao(long idUser, String password, String nameEmployee, long idNucleo, long maxIdVenda,
                 final long maxIdRecibo);
 
         Empresa pesquisarEmpresaRegistrada();
 
-        void realizarLogin(String user, String password);
+        void realizarLogin(long user, String password);
 
         Context getContexto();
 
@@ -41,15 +41,15 @@ public interface ILoginMVP {
 
         void setNucleo(Nucleo nucleo);
 
-        String getIdUsuario();
+        long getIdUsuario();
 
-        void setIdUsuario(String idUsuario);
+        void setIdUsuario(long idUsuario);
 
         String getSenha();
 
         void setSenha(String senha);
 
-
+        void solicitarLoginGoogleDrive();
     }
     interface  IModel{
 
@@ -62,6 +62,8 @@ public interface ILoginMVP {
     interface IView {
 
         void carregarAnimacaoInicializacao();
+
+        void solicitarLoginGoogleDrive();
 
         boolean validarForm();
     }

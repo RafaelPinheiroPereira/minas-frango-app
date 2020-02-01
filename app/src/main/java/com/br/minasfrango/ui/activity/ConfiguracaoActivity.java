@@ -1,11 +1,9 @@
 package com.br.minasfrango.ui.activity;
 
 import static com.br.minasfrango.util.ConstantsUtil.PERMISSIONS;
-import static com.br.minasfrango.util.ConstantsUtil.REQUEST_CODE_SIGN_IN;
 import static com.br.minasfrango.util.ConstantsUtil.REQUEST_STORAGE;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -16,7 +14,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -28,17 +25,7 @@ import com.br.minasfrango.ui.abstracts.AbstractActivity;
 import com.br.minasfrango.ui.mvp.configuracao.IConfiguracaoMVP.IPresenter;
 import com.br.minasfrango.ui.mvp.configuracao.IConfiguracaoMVP.IView;
 import com.br.minasfrango.ui.mvp.configuracao.Presenter;
-import com.br.minasfrango.util.ConstantsUtil;
 import com.br.minasfrango.util.Mask;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.api.services.drive.DriveScopes;
 import java.net.NetworkInterface;
 import java.util.Collections;
 import java.util.List;
@@ -51,8 +38,7 @@ public class ConfiguracaoActivity extends AppCompatActivity implements IView {
     @BindView(R.id.btnConfigurar)
     Button btnConfigurar;
 
-    @BindView(R.id.btnLoginGoogleDrive)
-    Button btnLoginGoogleDrive;
+
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -76,7 +62,9 @@ public class ConfiguracaoActivity extends AppCompatActivity implements IView {
         mPresenter = new Presenter(this);
         mPresenter.setMac(getMacAddr());
 
-        btnConfigurar.setVisibility(View.INVISIBLE);
+        mPresenter.criarPastasDasImagens();
+
+
 
         if (mPresenter.statusSistema().equals("DISPOSITIVO_HABILITADO")) {
             mPresenter
@@ -100,11 +88,7 @@ public class ConfiguracaoActivity extends AppCompatActivity implements IView {
         StrictMode.setThreadPolicy(policy);
     }
 
-    @OnClick(R.id.btnLoginGoogleDrive)
-    public void setBtnLoginGoogleDriveClicked(View view) {
 
-        mPresenter.solicitarLoginGoogleDrive();
-    }
 
     @OnClick(R.id.btnConfigurar)
     public void btnSubmitClicked(View view) {
@@ -203,70 +187,7 @@ public class ConfiguracaoActivity extends AppCompatActivity implements IView {
         return edtCNPJ.getText().toString().isEmpty();
     }
 
-    @Override
-    public void solicitarLoginGoogleDrive() {
 
-        GoogleSignInOptions signInOptions =
-                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestEmail()
-                        .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
-                        .build();
 
-        GoogleSignInClient client = GoogleSignIn.getClient(this, signInOptions);
-        startActivityForResult(client.getSignInIntent(), ConstantsUtil.REQUEST_CODE_SIGN_IN);
-    }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
-        switch (requestCode) {
-            case REQUEST_CODE_SIGN_IN:
-                if (resultCode == Activity.RESULT_OK && resultData != null) {
-
-                    handleSignInResult(resultData);
-
-                } else {
-                    AbstractActivity.showToast(
-                            mPresenter.getContext(),
-                            "Não foi possível realizar o vínculo  da conta com Google Drive");
-                }
-                break;
-        }
-
-        super.onActivityResult(requestCode, resultCode, resultData);
-    }
-
-    private void handleSignInResult(Intent resultData) {
-
-        GoogleSignIn.getSignedInAccountFromIntent(resultData)
-                .addOnFailureListener(
-                        new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull final Exception e) {
-                                AbstractActivity.showToast(
-                                        mPresenter.getContext(),
-                                        "Não foi possível obter as credenciais do usuário: "
-                                                + e.getMessage());
-                            }
-                        })
-                .addOnCompleteListener(
-                        new OnCompleteListener<GoogleSignInAccount>() {
-                            @Override
-                            public void onComplete(@NonNull final Task<GoogleSignInAccount> task) {
-
-                                if (task.isSuccessful()) {
-                                    AbstractActivity.showToast(
-                                            mPresenter.getContext(),
-                                            "Usuário conectado: " + task.getResult().getEmail());
-
-                                    btnConfigurar.setVisibility(View.VISIBLE);
-
-                                } else if (task.isCanceled()) {
-
-                                    AbstractActivity.showToast(
-                                            mPresenter.getContext(),
-                                            "Usuário cancelou a operação.");
-                                }
-                            }
-                        });
-    }
 }

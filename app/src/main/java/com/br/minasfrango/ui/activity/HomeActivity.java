@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +37,10 @@ import com.br.minasfrango.util.AlertDialogClient;
 import com.br.minasfrango.util.DriveServiceHelper;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.json.gson.GsonFactory;
@@ -94,8 +99,13 @@ public class HomeActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         presenter.setAdapters();
+
+
         presenter.verificarCredenciaisGoogleDrive();
         mClientAdapter.setRecyclerViewOnClickListenerHack(this);
+
+        presenter.setFuncionario(presenter.pesquisarUsuarioDaSesao());
+
     }
 
     @Override
@@ -337,6 +347,19 @@ public class HomeActivity extends AppCompatActivity
                         // positive button logic
 
                         presenter.logout();
+
+
+                        GoogleSignInClient mGoogleSignInClient=GoogleSignIn.getClient(HomeActivity.this,new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                .requestEmail()
+                                .build());
+                       mGoogleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
+                           @Override
+                           public void onComplete(@NonNull final Task<Void> task) {
+                                       AbstractActivity.showToast(presenter.getContext(),"Logout do Google Drive realizado com sucesso.");
+                           }
+                       });
+
+                        presenter.retirarFuncionarioDaSessao();
                         dialog.dismiss();
                         // edtConfirmaEmail.setText("");
 

@@ -26,8 +26,14 @@ public class DriveServiceHelper {
     private final Executor mExecutor = Executors.newSingleThreadExecutor();
     private final Drive mDriveService;
 
+
+
     public DriveServiceHelper(Drive driveService) {
         mDriveService = driveService;
+    }
+
+    public Drive getDriveService() {
+        return mDriveService;
     }
 
     /** Creates a text file in the user's My Drive folder and returns its file ID. */

@@ -13,7 +13,7 @@ public class ConfiguracaoGoogleDriveDAO extends GenericsDAO<ConfiguracaoGoogleDr
         return new ConfiguracaoGoogleDriveDAO(type);
     }
 
-    public ConfiguracaoGoogleDrive pesquisarPorIdDoFuncionario(final int idUsuario) {
+    public ConfiguracaoGoogleDrive pesquisarPorIdDoFuncionario(final long idUsuario) {
 
         ConfiguracaoGoogleDriveORM configuracaoGoogleDriveORM = where().equalTo("idFuncionario",idUsuario).findFirst();
         return new ConfiguracaoGoogleDrive(configuracaoGoogleDriveORM);

@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/bg_swipe_item_neutral"
     android:fitsSystemWindows="true"
-    android:orientation="vertical"
 
 
-    android:background="@color/bg_swipe_item_neutral">
+    android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
-            android:elevation="0dp"
-            android:layout_height="56dp"
             android:layout_width="match_parent"
+            android:layout_height="56dp"
             android:background="@color/colorPrimaryDark"
+            android:elevation="0dp"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:title="Trinity Mobile - Minas Frango"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
             app:subtitle="Configurações"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"/>
+            app:title="Trinity Mobile - Minas Frango" />
 
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -31,11 +32,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_gravity="center_vertical"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:layout_gravity="center_vertical"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/imgLogo"
@@ -43,37 +44,26 @@
             android:layout_height="200dp"
             android:gravity="center_horizontal"
             android:src="@drawable/logo" />
+
         <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
             style="@style/TextInputLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtCNPJ"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="left"
+                android:hint="CNPJ da Empresa"
                 android:inputType="number"
                 android:maxLength="18"
-                android:hint="CNPJ da Empresa"
                 android:padding="10dp"
-                android:textSize="18sp"
-                android:gravity="left"
+                android:textColor="@android:color/primary_text_light"
 
-                android:textColor="@android:color/primary_text_light" />
+                android:textSize="18sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnLoginGoogleDrive"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:gravity="center_horizontal"
-            android:text="LOGIN GOOGLE DRIVE"
-            android:textColor="@android:color/primary_text_dark"
-            android:textSize="18sp"
-
-
-            app:backgroundTint="@color/primary_dark" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnConfigurar"
@@ -88,7 +78,6 @@
 
 
     </LinearLayout>
-
 
 
 </LinearLayout>

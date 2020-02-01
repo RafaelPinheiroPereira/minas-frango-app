@@ -66,13 +66,13 @@ public class ControleSessao {
         return false;
     }
 
-    public void criarSessao(String matricula, String senha, String nome, long idNucleo, long idVendaMaxima,
+    public void criarSessao(long matricula, String senha, String nome, long idNucleo, long idVendaMaxima,
             final long maxIdRecibo) {
 
         editor.putBoolean(USUARIO_CONECTADO, true);
 
         // salva matricula
-        editor.putString(CHAVE_MATRICULA, matricula);
+        editor.putLong(CHAVE_MATRICULA, matricula);
 
         // salva senha
         editor.putString(CHAVE_SENHA, senha);
@@ -112,9 +112,9 @@ public class ControleSessao {
         return (pref.getString(CHAVE_ENDERECO_BLUETOOTH, ""));
     }
 
-    public int getIdUsuario() {
+    public long getIdUsuario() {
         pref = this.contexto.getSharedPreferences(PREFERENCIAS, 0);
-        return Integer.parseInt(pref.getString(CHAVE_MATRICULA, ""));
+        return pref.getLong(CHAVE_MATRICULA, 0);
     }
 
     public String getUserName() {

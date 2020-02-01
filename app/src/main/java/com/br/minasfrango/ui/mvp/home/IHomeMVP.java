@@ -9,6 +9,7 @@ import com.br.minasfrango.data.model.Empresa;
 import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.model.Recebimento;
+import com.br.minasfrango.util.ControleSessao;
 import com.br.minasfrango.util.DriveServiceHelper;
 import java.util.List;
 
@@ -18,7 +19,15 @@ public interface IHomeMVP {
 
         String getIdPastarecebimento();
 
+        Funcionario pesquisarUsuarioDaSesao();
+
+        void retirarFuncionarioDaSessao();
+
         void setIdPastaRecebimento(String idPastarecebimento);
+
+        Funcionario getFuncionario();
+
+        void setFuncionario(Funcionario funcionario);
 
         void configurarGoogleDrive();
 
@@ -56,7 +65,7 @@ public interface IHomeMVP {
 
         void fecharDrawer();
 
-        int getUserId();
+        long getUserId();
 
         void logout();
 
@@ -85,6 +94,10 @@ public interface IHomeMVP {
 
 
         void verificarCredenciaisGoogleDrive();
+
+        ControleSessao getControleSessao();
+
+        void setControleSessao(ControleSessao controleSessao);
 
         boolean verificarLogin();
 
@@ -123,7 +136,7 @@ public interface IHomeMVP {
 
         void alterarConfiguracaoGoogleDrive(ConfiguracaoGoogleDrive configuracaoGoogleDrive);
 
-        ConfiguracaoGoogleDrive consultarConfiguracaoGoogleDrivePorFuncionario(int idUsuario);
+        ConfiguracaoGoogleDrive consultarConfiguracaoGoogleDrivePorFuncionario(long idUsuario);
 
         String pesquisarIdPastaReciboPorFuncionario(long idFuncionario);
 

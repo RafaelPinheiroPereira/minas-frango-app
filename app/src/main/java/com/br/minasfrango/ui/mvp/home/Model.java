@@ -72,7 +72,7 @@ public class Model implements IModel {
 
     @Override
     public ConfiguracaoGoogleDrive consultarConfiguracaoGoogleDrivePorFuncionario(
-            final int idUsuario) {
+            final long idUsuario) {
         return mConfiguracaoGoogleDriveDAO.pesquisarPorIdDoFuncionario(idUsuario);
     }
 
@@ -87,7 +87,7 @@ public class Model implements IModel {
 
     @Override
     public void deletarFuncionarioDaSessao() {
-        FuncionarioORM funcionarioORM = this.mFuncionarioDAO.where().findFirst();
+        FuncionarioORM funcionarioORM = this.mFuncionarioDAO.where().equalTo("id",mPresenter.getFuncionario().getId()).findFirst();
         Funcionario funcionarioDeletado = new Funcionario(funcionarioORM);
         this.mFuncionarioDAO.deletar(new FuncionarioORM(funcionarioDeletado));
     }
@@ -127,7 +127,7 @@ public class Model implements IModel {
     @Override
     public Funcionario pesquisarFuncionarioDaSessao() {
 
-        FuncionarioORM funcionarioORM = mFuncionarioDAO.where().findFirst();
+        FuncionarioORM funcionarioORM = mFuncionarioDAO.where().equalTo("id",mPresenter.getControleSessao().getIdUsuario()).findFirst();
         Funcionario funcionario = new Funcionario(funcionarioORM);
         return funcionario;
     }

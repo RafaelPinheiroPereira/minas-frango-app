@@ -1,11 +1,13 @@
 package com.br.minasfrango.ui.mvp.configuracao;
 
+import android.app.Activity;
 import android.content.Context;
 import com.br.minasfrango.data.model.Configuracao;
 import com.br.minasfrango.network.tarefa.ConfiguracaoTask;
 import com.br.minasfrango.ui.mvp.configuracao.IConfiguracaoMVP.IModel;
 import com.br.minasfrango.ui.mvp.configuracao.IConfiguracaoMVP.IPresenter;
 import com.br.minasfrango.ui.mvp.configuracao.IConfiguracaoMVP.IView;
+import com.br.minasfrango.util.ArquivoUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,6 +26,9 @@ public class Presenter implements IPresenter {
     String cnpj;
 
 
+    private ArquivoUtils mArquivoUtils ;
+
+
 
     private ConfiguracaoTask mConfiguracaoTask;
 
@@ -32,17 +37,18 @@ public class Presenter implements IPresenter {
         mIModel = new Model(this);
     }
 
+    @Override
+    public void criarPastasDasImagens() {
+        this.mArquivoUtils=new ArquivoUtils();
+        this.mArquivoUtils.criarPastas((Activity) this.getContext());
+    }
 
     @Override
     public Context getContext() {
         return (Context) this.mView;
     }
 
-    @Override
-    public void solicitarLoginGoogleDrive() {
-        this.mView.solicitarLoginGoogleDrive();
-    }
-
+   
     @Override
     public String statusSistema() {
         return this.mIModel.statusSistema();
@@ -78,8 +84,14 @@ public class Presenter implements IPresenter {
     public void setCnpj(final String cnpj) {
         this.cnpj = cnpj;
     }
-
-
+    @Override
+    public ArquivoUtils getArquivoUtils() {
+        return mArquivoUtils;
+    }
+    @Override
+    public void setArquivoUtils(final ArquivoUtils arquivoUtils) {
+        mArquivoUtils = arquivoUtils;
+    }
 
 
 

@@ -2,18 +2,20 @@ package com.br.minasfrango.ui.mvp.configuracao;
 
 import android.content.Context;
 import com.br.minasfrango.data.model.Configuracao;
+import com.br.minasfrango.util.ArquivoUtils;
 
 public interface IConfiguracaoMVP {
 
     interface IPresenter {
 
+        void criarPastasDasImagens();
+
         Context getContext();
 
-         void solicitarLoginGoogleDrive();
 
         String statusSistema();
 
-         void realizarConfiguracao();
+        void realizarConfiguracao();
 
         void salvarConfiguracoes(final Configuracao configuracao);
 
@@ -24,6 +26,10 @@ public interface IConfiguracaoMVP {
         void setMac(String mac);
 
         void setCnpj(String cnpj);
+
+        ArquivoUtils getArquivoUtils();
+
+        void setArquivoUtils(ArquivoUtils arquivoUtils);
     }
 
     interface IModel {
@@ -35,8 +41,6 @@ public interface IConfiguracaoMVP {
 
     interface IView {
 
-         boolean estaVazioOCNPJ();
-
-         void solicitarLoginGoogleDrive();
+        boolean estaVazioOCNPJ();
     }
 }

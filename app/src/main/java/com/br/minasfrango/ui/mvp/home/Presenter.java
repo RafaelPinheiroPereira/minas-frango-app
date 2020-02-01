@@ -52,9 +52,22 @@ public class Presenter implements IHomeMVP.IPresenter {
 
     private String idPastarecebimento;
 
+    private Funcionario mFuncionario;
+
+
+
     public Presenter(final IView view) {
         this.view = view;
         this.model = new Model(this);
+    }
+
+    @Override
+    public Funcionario getFuncionario() {
+        return mFuncionario;
+    }
+    @Override
+    public void setFuncionario(final Funcionario funcionario) {
+        mFuncionario = funcionario;
     }
 
     @Override
@@ -62,7 +75,7 @@ public class Presenter implements IHomeMVP.IPresenter {
 
         ConfiguracaoGoogleDrive configuracaoGoogleDrive =
                 this.model.consultarConfiguracaoGoogleDrivePorFuncionario(
-                        mControleSessao.getIdUsuario());
+                        this.getControleSessao().getIdUsuario());
         this.setConfiguracaoGoogleDrive(configuracaoGoogleDrive);
     }
 
@@ -234,7 +247,7 @@ public class Presenter implements IHomeMVP.IPresenter {
     }
 
     @Override
-    public int getUserId() {
+    public long getUserId() {
         return this.mControleSessao.getIdUsuario();
     }
 
@@ -264,6 +277,7 @@ public class Presenter implements IHomeMVP.IPresenter {
 
         Funcionario funcionario = this.model.pesquisarFuncionarioDaSessao();
         funcionario.setIdEmpresa(this.model.pesquisarEmpresaRegistrada().getId());
+        this.setFuncionario(funcionario);
         new ImportacaoTask(funcionario, this).execute();
     }
 
@@ -271,6 +285,7 @@ public class Presenter implements IHomeMVP.IPresenter {
     public void logout() {
 
         this.mControleSessao.logout();
+
     }
 
     @Override
@@ -294,10 +309,19 @@ public class Presenter implements IHomeMVP.IPresenter {
     public void verificarCredenciaisGoogleDrive() {
         this.view.verificarCredenciaisGoogleDrive();
     }
+    @Override
+    public ControleSessao getControleSessao() {
+        return mControleSessao;
+    }
+    @Override
+    public void setControleSessao(final ControleSessao controleSessao) {
+        mControleSessao = controleSessao;
+    }
 
     @Override
     public boolean verificarLogin() {
         this.mControleSessao = new ControleSessao(getContext());
+        this.setControleSessao(this.mControleSessao);
         return mControleSessao.checkLogin();
     }
 
@@ -335,6 +359,17 @@ public class Presenter implements IHomeMVP.IPresenter {
     public String getIdPastarecebimento() {
         return idPastarecebimento;
     }
+
+    @Override
+    public Funcionario pesquisarUsuarioDaSesao() {
+        return this.model.pesquisarFuncionarioDaSessao();
+    }
+
+    @Override
+    public void retirarFuncionarioDaSessao() {
+        this.model.deletarFuncionarioDaSessao();
+    }
+
     @Override
     public void setIdPastaRecebimento(final String idPastarecebimento) {
         this.idPastarecebimento = idPastarecebimento;

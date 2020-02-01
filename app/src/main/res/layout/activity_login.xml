@@ -65,6 +65,18 @@
 
         </Spinner>
 
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLoginGoogleDrive"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_horizontal"
+            android:text="LOGIN GOOGLE DRIVE"
+            android:layout_marginTop="20dp"
+            android:textColor="@android:color/primary_text_dark"
+            android:textSize="18sp"
+            app:backgroundTint="@color/primary_dark" />
+
     </LinearLayout>
 
 
@@ -85,6 +97,7 @@
         android:text="@string/acessar"
         android:textColor="@android:color/primary_text_dark"
         android:textSize="20sp"
+        android:visibility="invisible"
         app:backgroundTint="@color/primary_dark" />
 
 
