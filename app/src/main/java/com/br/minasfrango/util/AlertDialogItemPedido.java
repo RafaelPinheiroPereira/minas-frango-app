@@ -67,6 +67,12 @@ public class AlertDialogItemPedido {
         dialogBuilder.setView(dialogView);
         dialogBuilder.setTitle("Edição do Item");
 
+        if (mIPresenter.getFuncionario().getAlteraPreco().equals(ConstantsUtil.TEM_PERMISSAO_PARA_ALTERAR_PRECO)) {
+            cetPriceDialog.setEnabled(true);
+        } else {
+            cetPriceDialog.setEnabled(false);
+        }
+
         txtProductIDDialog.setText(
                 String.valueOf(mIPresenter.getItemPedido().getChavesItemPedido().getIdProduto()));
         txtNameProductDialog.setText(mIPresenter.getItemPedido().getDescricao());
@@ -124,12 +130,15 @@ public class AlertDialogItemPedido {
                 .getItemPedido()
                 .getChavesItemPedido()
                 .setIdUnidade(adapterUnidade.getItem(position));
-        mIPresenter
+
+        /**Não sera mais necessário... visto que se o usuário tiver a permissão para alterar o preço
+         * ele pode modifica-lo, caso não tenha, o padrão é zerar os valores */
+       /* mIPresenter
                 .getItemPedido()
                 .setValorUnitario(
                         mIPresenter
                                 .pesquisarPrecoDaUnidadePorProduto(adapterUnidade.getItem(position))
-                                .getValor());
-        cetPriceDialog.setText(FormatacaoMoeda.converterParaDolar(mIPresenter.getItemPedido().getValorUnitario()));
+                                .getValor());*/
+        //cetPriceDialog.setText(FormatacaoMoeda.converterParaDolar(mIPresenter.getItemPedido().getValorUnitario()));
     }
 }

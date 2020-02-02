@@ -26,11 +26,16 @@ public class FuncionarioORM extends RealmObject implements Serializable {
     private long idEmpresa;
 
     private long maxIdVenda;
+
     private long maxIdRecibo;
 
     private String idPastaFuncionario;
+
     private String idPastaVendas;
+
     private String idPastaPagamentos;
+
+    private String alteraPreco;
 
     public FuncionarioORM(Funcionario funcionario) {
 
@@ -44,5 +49,6 @@ public class FuncionarioORM extends RealmObject implements Serializable {
         this.idPastaFuncionario = funcionario.getIdPastaFuncionario();
         this.idPastaPagamentos = funcionario.getIdPastaPagamentos();
         this.idPastaVendas = funcionario.getIdPastaVendas();
+        this.alteraPreco=funcionario.getAlteraPreco();
     }
 }

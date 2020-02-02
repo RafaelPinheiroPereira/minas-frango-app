@@ -56,6 +56,7 @@ import com.br.minasfrango.ui.mvp.venda.IVendaMVP.IView;
 import com.br.minasfrango.ui.mvp.venda.Presenter;
 import com.br.minasfrango.util.AlertDialogItemPedido;
 import com.br.minasfrango.util.CameraUtil;
+import com.br.minasfrango.util.ConstantsUtil;
 import com.br.minasfrango.util.ControleSessao;
 import com.br.minasfrango.util.CurrencyEditText;
 import com.br.minasfrango.util.DateUtils;
@@ -130,10 +131,13 @@ public class VendasActivity extends AppCompatActivity implements IView {
 
     @BindView(R.id.txtClienteID)
     TextView txtClienteID;
+
     @BindView(R.id.txtRazaoSocial)
     TextView txtRazaoSocial;
+
     @BindView(R.id.txtCidade)
     TextView txtCidade;
+
     @BindView(R.id.txtEndereco)
     TextView txtEndereco;
 
@@ -157,12 +161,15 @@ public class VendasActivity extends AppCompatActivity implements IView {
     protected void onStart() {
         super.onStart();
 
-
         mPresenter = new Presenter(this);
         mPresenter.getParametros();
+        mPresenter.setFuncionario(mPresenter.getFuncionarioDaSessao());
 
-
-
+        if(mPresenter.getFuncionario().getAlteraPreco().equals(ConstantsUtil.TEM_PERMISSAO_PARA_ALTERAR_PRECO)){
+            cetPrecoUnitario.setEnabled(true);
+        }else{
+            cetPrecoUnitario.setEnabled(false);
+        }
 
         setAdaptadores();
         try {
@@ -221,13 +228,9 @@ public class VendasActivity extends AppCompatActivity implements IView {
         if (requestCode == CameraUtil.RESULTADO_INTENCAO_FOTO) {
             if (resultCode == RESULT_OK) {
 
-
-
                 AbstractActivity.showToast(
                         mPresenter.getContext(),
-                        "Imagem salva: "
-                                + CameraUtil
-                                .LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
+                        "Imagem salva: " + CameraUtil.LOCAL_ONDE_A_IMAGEM_FOI_SALVA);
                 this.finish();
 
             } else {
@@ -363,9 +366,8 @@ public class VendasActivity extends AppCompatActivity implements IView {
 
         if ((mPresenter.getItens().size() > 0)
                 && (!new ControleSessao(mPresenter.getContext())
-                     .getEnderecoBluetooth()
-                     .isEmpty()))
-        {
+                        .getEnderecoBluetooth()
+                        .isEmpty())) {
             // Realiza Update do PedidoORM
             if (mPresenter.getPedido() != null) {
 
@@ -378,11 +380,13 @@ public class VendasActivity extends AppCompatActivity implements IView {
             } else {
                 // Salva o PedidoORM
                 try {
-                  long sequencePedido =  mPresenter.configurarSequenceDoPedido(new ControleSessao(mPresenter.getContext()));
+                    long sequencePedido =
+                            mPresenter.configurarSequenceDoPedido(
+                                    new ControleSessao(mPresenter.getContext()));
 
                     if (sequencePedido > 0) {
                         mPresenter.salvarVenda(sequencePedido);
-                    }else{
+                    } else {
                         AbstractActivity.showToast(
                                 mPresenter.getContext(),
                                 "Código de vendas não está atualizado.\nPor favor, contate o suporte do sistema. ");
@@ -397,7 +401,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
                 }
             }
 
-           mPresenter.esperarPorConexao();
+            mPresenter.esperarPorConexao();
 
         } else if (new ControleSessao(mPresenter.getContext()).getEnderecoBluetooth().isEmpty()) {
             AbstractActivity.showToast(
@@ -467,8 +471,9 @@ public class VendasActivity extends AppCompatActivity implements IView {
 
     @OnClick(R.id.btnFotografar)
     public void fotografarComprovante(View view) {
-         nomeFoto = String.format("%02d",mPresenter.getPedido().getIdNucleo())+
-                String.format("%03d", mPresenter.getPedido().getCodigoFuncionario())
+        nomeFoto =
+                String.format("%02d", mPresenter.getPedido().getIdNucleo())
+                        + String.format("%03d", mPresenter.getPedido().getCodigoFuncionario())
                         + String.format("%08d", mPresenter.getPedido().getIdVenda());
 
         CameraUtil cameraUtil = new CameraUtil((Activity) mPresenter.getContext());
@@ -575,12 +580,29 @@ public class VendasActivity extends AppCompatActivity implements IView {
     public void setSpnUnityOnSelected(int position) {
         // setar o preco de acordo com aquela unidade  no presenter
         // Setar o edit text do preco com o preco daquela unidade
-        mPresenter.setPreco(
-                mPresenter.pesquisarPrecoDaUnidadePorProduto(adaptadorUnidades.getItem(position)));
+
+        if (mPresenter
+                .getFuncionario()
+                .getAlteraPreco()
+                .equals(ConstantsUtil.TEM_PERMISSAO_PARA_ALTERAR_PRECO)) {
+
+            mPresenter.setPreco(
+                    mPresenter.pesquisarPrecoDaUnidadePorProduto(
+                            adaptadorUnidades.getItem(position)));
+            mPresenter.getPreco().setValor(cetPrecoUnitario.getCurrencyDouble());
+        } else {
+
+            Preco precoZerado =
+                    mPresenter.pesquisarPrecoDaUnidadePorProduto(
+                            adaptadorUnidades.getItem(position));
+            precoZerado.setValor(0.0);
+            mPresenter.setPreco(precoZerado);
+        }
+
         cetPrecoUnitario.setText(
                 FormatacaoMoeda.converterParaDolar(mPresenter.getPreco().getValor()));
         mPresenter.setQuantidadeProdutos(
-                new BigDecimal(edtQuantidadeProduto.getText().toString().replace(",","."))
+                new BigDecimal(edtQuantidadeProduto.getText().toString().replace(",", "."))
                         .setScale(2, BigDecimal.ROUND_HALF_DOWN));
         txtValorTotalProduto.setText(
                 FormatacaoMoeda.converterParaReal(
@@ -606,7 +628,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
             edtQuantidadeProduto.requestFocus();
             return false;
         }
-        if (edtQuantidadeProduto.getCurrencyDouble()<=0) {
+        if (edtQuantidadeProduto.getCurrencyDouble() <= 0) {
             edtQuantidadeProduto.setError("Quantidade mínima de 1 item!");
             edtQuantidadeProduto.requestFocus();
             return false;
@@ -623,7 +645,6 @@ public class VendasActivity extends AppCompatActivity implements IView {
         }
         return true;
     }
-
 
     @NonNull
     private ItemPedido getItemPedido() {
@@ -757,9 +778,6 @@ public class VendasActivity extends AppCompatActivity implements IView {
         edtQuantidadeProduto.setText("0.00");
         txtValorTotalVenda.setText("R$ 00,00");
 
-
-
-
         LinearLayoutManager layoutManager;
         layoutManager = new LinearLayoutManager(VendasActivity.this);
         // Configurando os recycle views
@@ -816,7 +834,7 @@ public class VendasActivity extends AppCompatActivity implements IView {
         spnLote.setAdapter(adaptadorLotes);
         spnLote.setSelection(POSICAO_INICIAL);
 
-        txtClienteID.setText(String.format("%05d",mPresenter.getCliente().getId()));
+        txtClienteID.setText(String.format("%05d", mPresenter.getCliente().getId()));
         txtRazaoSocial.setText(mPresenter.getCliente().getRazaoSocial());
         txtCidade.setText(mPresenter.getCliente().getCidade());
         txtEndereco.setText(mPresenter.getCliente().getEndereco());

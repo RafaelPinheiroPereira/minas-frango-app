@@ -23,29 +23,29 @@ public class Funcionario implements Serializable {
 
     private long idEmpresa;
 
-    private  long maxIdVenda;
-    private  long maxIdRecibo;
+    private long maxIdVenda;
+
+    private long maxIdRecibo;
 
     private String idPastaFuncionario;
+
     private String idPastaVendas;
+
     private String idPastaPagamentos;
 
-
-
-
+    private String alteraPreco;
 
     public Funcionario(FuncionarioORM funcionarioORM) {
         this.id = funcionarioORM.getId();
         this.senha = funcionarioORM.getSenha();
         this.nome = funcionarioORM.getNome();
         this.tipoFuncionario = funcionarioORM.getTipoFuncionario();
-        this.idEmpresa=funcionarioORM.getIdEmpresa();
-        this.maxIdVenda=funcionarioORM.getMaxIdVenda();
-        this.maxIdRecibo=funcionarioORM.getMaxIdRecibo();
-        this.idPastaFuncionario=funcionarioORM.getIdPastaFuncionario();
-        this.idPastaPagamentos=funcionarioORM.getIdPastaPagamentos();
-        this.idPastaVendas=funcionarioORM.getIdPastaVendas();
-
-
+        this.idEmpresa = funcionarioORM.getIdEmpresa();
+        this.maxIdVenda = funcionarioORM.getMaxIdVenda();
+        this.maxIdRecibo = funcionarioORM.getMaxIdRecibo();
+        this.idPastaFuncionario = funcionarioORM.getIdPastaFuncionario();
+        this.idPastaPagamentos = funcionarioORM.getIdPastaPagamentos();
+        this.idPastaVendas = funcionarioORM.getIdPastaVendas();
+        this.alteraPreco=funcionarioORM.getAlteraPreco();
     }
 }

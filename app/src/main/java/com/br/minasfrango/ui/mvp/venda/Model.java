@@ -166,6 +166,12 @@ public class Model implements IVendaMVP.IModel {
     }
 
     @Override
+    public Funcionario consultarFuncionarioDaSessao(final long idUsuario) {
+        return mFuncionarioDAO.pesquisarPorId(idUsuario);
+
+    }
+
+    @Override
     public ArrayList<String> carregarProdutoPorNome(final List<Produto> produtos) {
         ArrayList<String> productNames = new ArrayList<String>();
         if (VERSION.SDK_INT >= VERSION_CODES.N) {

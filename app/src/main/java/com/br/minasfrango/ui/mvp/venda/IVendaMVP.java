@@ -4,6 +4,7 @@ import android.content.Context;
 import androidx.appcompat.app.AlertDialog;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Empresa;
+import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.data.model.ItemPedido;
 import com.br.minasfrango.data.model.ItemPedidoID;
 import com.br.minasfrango.data.model.Pedido;
@@ -21,6 +22,12 @@ import java.util.List;
 public interface IVendaMVP {
 
     interface IPresenter {
+
+        Funcionario getFuncionario();
+
+        Funcionario getFuncionarioDaSessao();
+
+        void setFuncionario(Funcionario funcionario);
 
         void atualizarActCodigoProduto();
 
@@ -223,6 +230,8 @@ public interface IVendaMVP {
         ArrayList<String> carregarProdutoPorId(List<Produto> products);
 
         long configurarSequenceDoPedido(final ControleSessao controleSessao);
+
+        Funcionario consultarFuncionarioDaSessao(final long idUsuario);
 
         void copyOrUpdateSaleOrder(Pedido pedido);
 

@@ -7,6 +7,7 @@ import android.os.Build.VERSION_CODES;
 import androidx.appcompat.app.AlertDialog;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Empresa;
+import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.data.model.ItemPedido;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.model.Preco;
@@ -62,7 +63,7 @@ public class Presenter implements IVendaMVP.IPresenter {
 
     private DriveServiceHelper mDriveServiceHelper;
 
-
+    private Funcionario mFuncionario;
 
     public Presenter(final IView view) {
         mView = view;
@@ -97,8 +98,7 @@ public class Presenter implements IVendaMVP.IPresenter {
 
     @Override
     public long configurarSequenceDoPedido(final ControleSessao controleSessao) {
-       return  this.mModel.configurarSequenceDoPedido(controleSessao);
-
+        return this.mModel.configurarSequenceDoPedido(controleSessao);
     }
 
     @Override
@@ -108,14 +108,13 @@ public class Presenter implements IVendaMVP.IPresenter {
 
     @Override
     public Empresa pesquisarEmpresaRegistrada() {
-       return  this.mModel.pesquisarEmpresaRegistrada();
+        return this.mModel.pesquisarEmpresaRegistrada();
     }
+
     @Override
     public DriveServiceHelper getDriveServiceHelper() {
         return mDriveServiceHelper;
     }
-
-
 
     @Override
     public void setDriveServiceHelper(final DriveServiceHelper driveServiceHelper) {
@@ -163,13 +162,17 @@ public class Presenter implements IVendaMVP.IPresenter {
     public Double calcularTotalDaVenda() {
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
 
-            return new BigDecimal(getItens().stream().mapToDouble(ItemPedido::getValorTotal).sum()).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue();
+            return new BigDecimal(getItens().stream().mapToDouble(ItemPedido::getValorTotal).sum())
+                    .setScale(2, BigDecimal.ROUND_HALF_DOWN)
+                    .doubleValue();
         } else {
             double valorTotalVenda = 0.0;
             for (ItemPedido itemPedido : getItens()) {
                 valorTotalVenda += itemPedido.getValorTotal();
             }
-            return new BigDecimal(valorTotalVenda).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue();
+            return new BigDecimal(valorTotalVenda)
+                    .setScale(2, BigDecimal.ROUND_HALF_DOWN)
+                    .doubleValue();
         }
     }
 
@@ -212,8 +215,6 @@ public class Presenter implements IVendaMVP.IPresenter {
         this.itens = itens;
     }
 
-
-
     @Override
     public List<Unidade> carregarUnidades() {
         return this.mModel.getAllUnitys();
@@ -228,7 +229,6 @@ public class Presenter implements IVendaMVP.IPresenter {
     public ItemPedido getItemPedido() {
         return itemPedido;
     }
-
 
     @Override
     public void setPedido(Pedido pedido) {
@@ -255,13 +255,10 @@ public class Presenter implements IVendaMVP.IPresenter {
         return this.mModel.pesquisarUnidadePorProduto();
     }
 
-
     @Override
     public void desabilitarBotaoSalvarPedido() {
         this.mView.desabilitarCliqueBotaoSalvarVenda();
     }
-
-
 
     @Override
     public void exibirDialogAlterarItemPedido(final int position) {
@@ -319,8 +316,6 @@ public class Presenter implements IVendaMVP.IPresenter {
         this.produtoSelecionado = produtoSelecionado;
     }
 
-
-
     @Override
     public BigDecimal getQuantidadeProdutos() {
         return quantidadeProdutos;
@@ -372,8 +367,6 @@ public class Presenter implements IVendaMVP.IPresenter {
         return this.mModel.pesquisarProdutoPorId(id);
     }
 
-
-
     @Override
     public Pedido pesquisarVendaPorId(final long keyPedido) {
         return this.mModel.pesquisarVendaPorId(keyPedido);
@@ -388,10 +381,12 @@ public class Presenter implements IVendaMVP.IPresenter {
         // Agora setar o id definitivo do item do pedido
 
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
-            getItens().forEach(item->{
-                this.mModel.criarChaveItemPedido(item.getChavesItemPedido());
-                this.mModel.addItemPedido(item);
-            });
+            getItens()
+                    .forEach(
+                            item -> {
+                                this.mModel.criarChaveItemPedido(item.getChavesItemPedido());
+                                this.mModel.addItemPedido(item);
+                            });
         } else {
             for (ItemPedido itemPedido : getItens()) {
                 this.mModel.criarChaveItemPedido(itemPedido.getChavesItemPedido());
@@ -410,15 +405,14 @@ public class Presenter implements IVendaMVP.IPresenter {
         pedido.setIdVenda(sequencePedido);
         PedidoORM pedidoORM = new PedidoORM(pedido);
 
-
         // Seta a chave composta do item pedidoORM com o id da venda
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
-            getItens().forEach(item->{
-                item.getChavesItemPedido().setIdVenda(sequencePedido);
-                this.mModel.atualizarChaveItemPedido(item.getChavesItemPedido());
-
-
-            });
+            getItens()
+                    .forEach(
+                            item -> {
+                                item.getChavesItemPedido().setIdVenda(sequencePedido);
+                                this.mModel.atualizarChaveItemPedido(item.getChavesItemPedido());
+                            });
         } else {
             for (ItemPedido itemPedido : getItens()) {
                 itemPedido.getChavesItemPedido().setIdVenda(sequencePedido);
@@ -430,7 +424,7 @@ public class Presenter implements IVendaMVP.IPresenter {
 
         this.mModel.copyOrUpdateSaleOrder(pedido);
 
-        this.mModel.atualizarIdMaximoDeVenda(controleSessao.getIdUsuario(),sequencePedido);
+        this.mModel.atualizarIdMaximoDeVenda(controleSessao.getIdUsuario(), sequencePedido);
     }
 
     @Override
@@ -465,7 +459,7 @@ public class Presenter implements IVendaMVP.IPresenter {
 
     @Override
     public void setLoteSelecionado(final String loteSelecionado) {
-        this.loteSelecionado=loteSelecionado;
+        this.loteSelecionado = loteSelecionado;
     }
 
     @Override
@@ -473,5 +467,18 @@ public class Presenter implements IVendaMVP.IPresenter {
         return this.loteSelecionado;
     }
 
+    @Override
+    public Funcionario getFuncionario() {
+        return mFuncionario;
+    }
 
+    @Override
+    public Funcionario getFuncionarioDaSessao() {
+        return this.mModel.consultarFuncionarioDaSessao(new ControleSessao(this.getContext()).getIdUsuario());
+    }
+
+    @Override
+    public void setFuncionario(final Funcionario funcionario) {
+        mFuncionario = funcionario;
+    }
 }
