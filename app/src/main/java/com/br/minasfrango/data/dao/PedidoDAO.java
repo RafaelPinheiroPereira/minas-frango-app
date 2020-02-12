@@ -34,7 +34,7 @@ public class PedidoDAO extends GenericsDAO<PedidoORM> {
 
         List<Pedido> pedidos = new ArrayList<>();
         RealmResults<PedidoORM> results =
-                where().equalTo("migrado", false).findAll();
+                where().equalTo("fotoMigrada", false).findAll();
         if (results.size() > 0 && results != null) {
             if (VERSION.SDK_INT >= VERSION_CODES.N) {
                 results.forEach(pedidoORM->pedidos.add(new Pedido(pedidoORM)));

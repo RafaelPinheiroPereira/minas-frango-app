@@ -326,14 +326,14 @@ public class Presenter implements IHomeMVP.IPresenter {
     @Override
     public void atualizarBlocoReciboPorNomeDaFoto(final String name) {
        BlocoRecibo blocoRecibo= this.model.pesquisarBlocoReciboPorNomeDaFoto(name);
-       blocoRecibo.setMigrado(true);
+       blocoRecibo.setFotoMigrada(true);
        this.model.atualizarBlocoReciboParaMigrado(blocoRecibo);
     }
 
     @Override
     public void atualizarPedidoPorNomeDaFoto(final String name) {
        Pedido pedido= this.model.consultarPedidoPorNomeDaFoto(name);
-       pedido.setMigrado(true);
+       pedido.setFotoMigrada(true);
        this.model.atualizarPedidoParaMigrado(pedido);
     }
 

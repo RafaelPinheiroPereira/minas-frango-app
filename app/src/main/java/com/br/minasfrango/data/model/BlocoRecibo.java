@@ -19,13 +19,13 @@ public class BlocoRecibo implements Serializable {
 
     private String nomeFoto;
 
-    private boolean migrado = false;
+    private boolean fotoMigrada = false;
 
     public BlocoRecibo(BlocoReciboORM blocoReciboORM) {
         this.id = blocoReciboORM.getId();
         this.idFormatado=blocoReciboORM.getIdFormatado();
         this.nomeFoto=blocoReciboORM.getNomeFoto();
-        this.migrado=blocoReciboORM.isMigrado();
+        this.fotoMigrada =blocoReciboORM.isFotoMigrada();
 
     }
 }

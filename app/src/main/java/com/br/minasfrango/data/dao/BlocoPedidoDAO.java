@@ -29,7 +29,7 @@ public class BlocoPedidoDAO extends GenericsDAO<BlocoReciboORM> {
     public List<BlocoRecibo> getRecibosNaoMigrados() {
         List<BlocoRecibo> recibos = new ArrayList<>();
         RealmResults<BlocoReciboORM> results =
-                where().equalTo("migrado", false).findAll();
+                where().equalTo("fotoMigrada", false).findAll();
         if (results.size() > 0 && results != null) {
             if (VERSION.SDK_INT >= VERSION_CODES.N) {
                 results.forEach(blocoReciboORM->recibos.add(new BlocoRecibo(blocoReciboORM)));

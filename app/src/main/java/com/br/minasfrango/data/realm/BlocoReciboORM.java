@@ -21,12 +21,12 @@ public class BlocoReciboORM extends RealmObject implements Serializable {
 
     private String nomeFoto;
 
-    private boolean migrado = false;
+    private boolean fotoMigrada = false;
 
     public BlocoReciboORM(BlocoRecibo blocoRecibo) {
         this.id = blocoRecibo.getId();
         this.idFormatado=blocoRecibo.getIdFormatado();
         this.nomeFoto=blocoRecibo.getNomeFoto();
-        this.migrado=blocoRecibo.isMigrado();
+        this.fotoMigrada =blocoRecibo.isFotoMigrada();
     }
 }

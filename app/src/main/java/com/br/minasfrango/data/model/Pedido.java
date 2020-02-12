@@ -40,7 +40,7 @@ public class Pedido implements Serializable {
 
     private String nomeFoto;
 
-    private boolean migrado = false;
+    private boolean fotoMigrada = false;
 
     public static List<ItemPedido> converterListItemPedidoRealmParaModel(PedidoORM pedidoORM) {
         List<ItemPedido> itens = new ArrayList<>();
@@ -65,6 +65,6 @@ public class Pedido implements Serializable {
         this.idEmpresa = pedidoORM.getIdEmpresa();
         this.idNucleo = pedidoORM.getIdNucleo();
         this.nomeFoto = pedidoORM.getNomeFoto();
-        this.migrado = pedidoORM.isMigrado();
+        this.fotoMigrada = pedidoORM.isFotoMigrada();
     }
 }
