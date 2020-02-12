@@ -5,18 +5,21 @@ import android.os.Build.VERSION_CODES;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import com.br.minasfrango.data.dao.BlocoPedidoDAO;
 import com.br.minasfrango.data.dao.ClienteDAO;
 import com.br.minasfrango.data.dao.ClienteGrupoDAO;
 import com.br.minasfrango.data.dao.EmpresaDAO;
 import com.br.minasfrango.data.dao.FuncionarioDAO;
 import com.br.minasfrango.data.dao.PedidoDAO;
 import com.br.minasfrango.data.dao.RecebimentoDAO;
+import com.br.minasfrango.data.model.BlocoRecibo;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.ClienteGrupo;
 import com.br.minasfrango.data.model.Empresa;
 import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.data.model.Pedido;
 import com.br.minasfrango.data.model.Recebimento;
+import com.br.minasfrango.data.realm.BlocoReciboORM;
 import com.br.minasfrango.data.realm.ClienteGrupoORM;
 import com.br.minasfrango.data.realm.ClienteORM;
 import com.br.minasfrango.data.realm.EmpresaORM;
@@ -33,6 +36,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Model implements IModel {
@@ -42,6 +46,8 @@ public class Model implements IModel {
     PedidoDAO mOrderDAO = PedidoDAO.getInstace(PedidoORM.class);
 
     RecebimentoDAO mRecebimentoDAO = RecebimentoDAO.getInstace(RecebimentoORM.class);
+    BlocoPedidoDAO mBlocoPedidoDAO= BlocoPedidoDAO.getInstace(BlocoReciboORM.class);
+    PedidoDAO mPedidoDAO=PedidoDAO.getInstace(PedidoORM.class);
 
     ClienteGrupoDAO mClienteGrupoDAO = ClienteGrupoDAO.getInstace(ClienteGrupoORM.class);
 
@@ -68,9 +74,21 @@ public class Model implements IModel {
         mFuncionarioDAO.alterar(funcionarioORM);
     }
 
+    @Override
+    public void atualizarBlocoReciboParaMigrado(final BlocoRecibo blocoRecibo) {
+        this.mBlocoPedidoDAO.alterar(new BlocoReciboORM(blocoRecibo));
+    }
 
+    @Override
+    public void atualizarPedidoParaMigrado(final Pedido pedido) {
+        this.mOrderDAO.alterar(new PedidoORM(pedido));
+    }
 
+    @Override
+    public Pedido consultarPedidoPorNomeDaFoto(final String name) {
 
+        return  this.mOrderDAO.consultarPedidoPorNomeDaFoto(name);
+    }
 
     @Override
     public void deletarFuncionarioDaSessao() {
@@ -102,6 +120,12 @@ public class Model implements IModel {
         return this.mRecebimentoDAO.pesquisarTodosRecebimentos();
     }
 
+    @Override
+    public BlocoRecibo pesquisarBlocoReciboPorNomeDaFoto(final String name) {
+
+        return this.mBlocoPedidoDAO.consultarBlocoReciboPorNome(name);
+    }
+
     public List<Cliente> pesquisarClientePorRede(final ClienteGrupo clienteGrupo) {
         return mClienteDAO.pesquisarClientePorRede(clienteGrupo);
     }
@@ -119,6 +143,11 @@ public class Model implements IModel {
         return funcionario;
     }
 
+    @Override
+    public List<Pedido> pesquisarPedidosNaoMigrados() {
+       return this.mPedidoDAO.getPedidosNaoMigrados();
+    }
+
     @RequiresApi(api = VERSION_CODES.N)
     @Override
     public List<Recebimento> pesquisarRecebimentoPorCliente(final Cliente cliente) {
@@ -126,23 +155,48 @@ public class Model implements IModel {
     }
 
     @Override
+    public List<BlocoRecibo> pesquisarRecibosNaoMigrados() {
+        return this.mBlocoPedidoDAO.getRecibosNaoMigrados();
+    }
+
+    @Override
     public void sincronizarFotos() {
         ArquivoUtils mArquivoUtils = new ArquivoUtils();
-
-
 
         File[] fotosVendas = mArquivoUtils.lerFotosDoDiretorio(ConstantsUtil.CAMINHO_IMAGEM_VENDAS);
         File[] fotosRecebimentos = mArquivoUtils.lerFotosDoDiretorio(ConstantsUtil.CAMINHO_IMAGEM_RECEBIMENTOS);
 
+        List<File> fotosVendasNaoMigradas= new ArrayList<>();
+        List<File> fotosRecibosNaoMigrados= new ArrayList<>();
+
+        for(Pedido pedido:mPresenter.getFotosPedidos()){
+            for (File foto: fotosVendas){
+                if(pedido.getNomeFoto().equals(foto.getName())){
+                    fotosVendasNaoMigradas.add(foto);
+                }
+            }
+
+        }
+
+        for(BlocoRecibo blocoRecibo: mPresenter.getFotosRecibos()){
+            for (File foto: fotosRecebimentos){
+                if(blocoRecibo.getNomeFoto().equals(foto.getName())){
+                    fotosRecibosNaoMigrados.add(foto);
+                }
+            }
+        }
+
         progressDialog = new ProgressDialog(mPresenter.getContext());
 
-
-        if (fotosVendas.length > 0) {
+        if (fotosVendasNaoMigradas.size() > 0) {
 
             progressDialog.setTitle("Sincronização Google Drive");
             progressDialog.setMessage("Sincronizando fotos ...");
             progressDialog.show();
-            for (File foto : fotosVendas) {
+
+            for (File foto : fotosVendasNaoMigradas) {
+
+
                 mPresenter
                         .getDriveServiceHelper()
                         .salvarFoto(mPresenter.getFuncionario().getIdPastaVendas(), foto)
@@ -151,7 +205,10 @@ public class Model implements IModel {
                                     @Override
                                     public void onSuccess(final String s) {
                                         Log.d("onSucess", "Foto Salva " + s);
+
                                         contadorVendas++;
+
+                                        mPresenter.atualizarPedidoPorNomeDaFoto(foto.getName());
                                     }
                                 })
                         .addOnFailureListener(
@@ -170,18 +227,18 @@ public class Model implements IModel {
                                     @Override
                                     public void onComplete(@NonNull final Task<String> task) {
                                         if (task.isSuccessful()) {
-                                            if (contadorVendas == fotosVendas.length) {
+                                            if (contadorVendas == fotosVendasNaoMigradas.size()) {
 
                                                 progressDialog.dismiss();
                                                 contadorVendas = 0;
 
-                                                if(fotosRecebimentos.length>0){
+                                                if(fotosRecibosNaoMigrados.size()>0){
                                                     if (!progressDialog.isShowing()) {
                                                         progressDialog.show();
                                                     }
-                                                    for (File foto : fotosRecebimentos) {
+                                                    for (File foto : fotosRecibosNaoMigrados) {
 
-                                                        sincronizarFotosRecebimentos(fotosRecebimentos, foto);
+                                                        sincronizarFotosRecebimentos(fotosRecibosNaoMigrados, foto);
                                                     }
                                                 }
 
@@ -206,7 +263,7 @@ public class Model implements IModel {
                                     }
                                 });
 }
-        }else if (fotosVendas.length==0 && fotosRecebimentos.length==0){
+        }else if (fotosVendasNaoMigradas.size()==0 && fotosRecibosNaoMigrados.size()==0){
             AbstractActivity.showToast(
                     mPresenter.getContext(), "Não existem fotos de vendas e recebimentos para serem salvas.");
         }
@@ -217,13 +274,13 @@ public class Model implements IModel {
             progressDialog.setMessage("Sincronizando fotos ...");
 
 
-            if(fotosRecebimentos.length>0){
+            if(fotosRecibosNaoMigrados.size()>0){
                 if (!progressDialog.isShowing()) {
                     progressDialog.show();
                 }
-                for (File foto : fotosRecebimentos) {
+                for (File foto : fotosRecibosNaoMigrados) {
 
-                    sincronizarFotosRecebimentos(fotosRecebimentos, foto);
+                    sincronizarFotosRecebimentos(fotosRecibosNaoMigrados, foto);
                 }
             }
 
@@ -241,7 +298,7 @@ public class Model implements IModel {
 
     }
 
-    private void sincronizarFotosRecebimentos(final File[] fotosRecebimentos, final File foto) {
+    private void sincronizarFotosRecebimentos(final List<File> fotosRecebimentos, final File foto) {
         mPresenter
                 .getDriveServiceHelper()
                 .salvarFoto(mPresenter.getFuncionario().getIdPastaPagamentos(), foto)
@@ -251,6 +308,7 @@ public class Model implements IModel {
                             public void onSuccess(final String s) {
                                 Log.d("onSucess", "Foto Salva " + s);
                                 contadorRecibos++;
+                                mPresenter.atualizarBlocoReciboPorNomeDaFoto(foto.getName());
                             }
                         })
                 .addOnFailureListener(
@@ -269,7 +327,7 @@ public class Model implements IModel {
                             @Override
                             public void onComplete(@NonNull final Task<String> task) {
                                 if (task.isSuccessful()) {
-                                    if (contadorRecibos == fotosRecebimentos.length) {
+                                    if (contadorRecibos == fotosRecebimentos.size()) {
                                         AbstractActivity.showToast(
                                                 mPresenter.getContext(),
                                                 "Todas as fotos de vendas e  recebimento foram sincronizadas.");

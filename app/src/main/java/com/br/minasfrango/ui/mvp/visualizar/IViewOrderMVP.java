@@ -10,6 +10,8 @@ public interface IViewOrderMVP {
 
     interface IPresenter {
 
+        void atualizarPedido(Pedido pedido);
+
         Pedido getParametrosDaVenda(final Bundle extras);
 
         Cliente pesquisarClientePorID(long codigoCliente);
@@ -47,6 +49,8 @@ public interface IViewOrderMVP {
     }
 
     interface IModel {
+
+        void atualizarPedido(Pedido pedido);
 
         Cliente pesquisarClientePorID(long codigoCliente);
 

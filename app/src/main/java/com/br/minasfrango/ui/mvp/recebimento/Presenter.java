@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
+import com.br.minasfrango.data.model.BlocoRecibo;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Conta;
 import com.br.minasfrango.data.model.Recebimento;
@@ -41,6 +42,8 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
     IRecebimentoMVP.IView view;
 
     DriveServiceHelper mDriveServiceHelper;
+
+    BlocoRecibo mBlocoRecibo;
 
 
 
@@ -294,6 +297,12 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
     public boolean valorTotalDevidoEhMenorOuIgualAoCredito() {
         return this.mModel.ehMenorOuIgualAoCreditoOValorDoDebito();
     }
+
+    @Override
+    public void alterarBlocoRecibo(final BlocoRecibo blocoRecibo) {
+        this.mModel.alterarBlocoRecibo(blocoRecibo);
+    }
+
     @Override
     public List<Recebimento> obterRecebimentoPorCliente() {
 
@@ -307,5 +316,15 @@ public class Presenter implements IRecebimentoMVP.IPresenter {
     @Override
     public void verificarCredenciaisGoogleDrive() {
         this.view.verificarCredenciaisGoogleDrive();
+    }
+
+
+    @Override
+    public BlocoRecibo getBlocoRecibo() {
+        return mBlocoRecibo;
+    }
+    @Override
+    public void setBlocoRecibo(final BlocoRecibo blocoRecibo) {
+        mBlocoRecibo = blocoRecibo;
     }
 }

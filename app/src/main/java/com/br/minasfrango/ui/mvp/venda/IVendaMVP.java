@@ -23,6 +23,8 @@ public interface IVendaMVP {
 
     interface IPresenter {
 
+        void salvarNomeFoto(final Pedido pedido);
+
         Funcionario getFuncionario();
 
         Funcionario getFuncionarioDaSessao();

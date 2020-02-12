@@ -228,6 +228,10 @@ public class VendasActivity extends AppCompatActivity implements IView {
         if (requestCode == CameraUtil.RESULTADO_INTENCAO_FOTO) {
             if (resultCode == RESULT_OK) {
 
+              mPresenter.getPedido().setNomeFoto(nomeFoto+".jpg");
+              mPresenter.atualizarPedido(mPresenter.getPedido());
+
+
                 AbstractActivity.showToast(
                         mPresenter.getContext(),
                         "Imagem salva: " + CameraUtil.LOCAL_ONDE_A_IMAGEM_FOI_SALVA);

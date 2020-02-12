@@ -62,6 +62,8 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected Boolean doInBackground(Void... params) {
 
+
+
         return importarDados();
     }
 

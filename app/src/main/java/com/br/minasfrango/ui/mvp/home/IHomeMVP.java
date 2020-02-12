@@ -2,6 +2,7 @@ package com.br.minasfrango.ui.mvp.home;
 
 import android.content.Context;
 import android.os.Bundle;
+import com.br.minasfrango.data.model.BlocoRecibo;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.ClienteGrupo;
 import com.br.minasfrango.data.model.Empresa;
@@ -16,7 +17,13 @@ public interface IHomeMVP {
 
     interface IPresenter {
 
+        void atualizarBlocoReciboPorNomeDaFoto(String name);
 
+        void atualizarPedidoPorNomeDaFoto(String name);
+
+        List<Pedido> consultarPedidosNaoMigrados();
+
+        List<BlocoRecibo> consultarRecibosNaoMigrados();
 
         Funcionario pesquisarUsuarioDaSesao();
 
@@ -88,7 +95,13 @@ public interface IHomeMVP {
 
         boolean verificarLogin();
 
+        List<Pedido> getFotosPedidos();
 
+        void setFotosPedidos(List<Pedido> fotosPedidos);
+
+        List<BlocoRecibo> getFotosRecibos();
+
+        void setFotosRecibos(List<BlocoRecibo> fotosRecibos);
     }
 
     interface IView {
@@ -118,6 +131,12 @@ public interface IHomeMVP {
 
         void alterarFuncionario(Funcionario funcionario);
 
+        void atualizarBlocoReciboParaMigrado(BlocoRecibo blocoRecibo);
+
+        void atualizarPedidoParaMigrado(Pedido pedido);
+
+        Pedido consultarPedidoPorNomeDaFoto(String name);
+
         void deletarFuncionarioDaSessao();
 
         List<ClienteGrupo> obterTodasRedes();
@@ -128,13 +147,19 @@ public interface IHomeMVP {
 
         List<Recebimento> obterTodosRecebimentos();
 
+        BlocoRecibo pesquisarBlocoReciboPorNomeDaFoto(String name);
+
         List<Cliente> pesquisarClientePorRede(ClienteGrupo clienteGrupo);
 
         Empresa pesquisarEmpresaRegistrada();
 
         Funcionario pesquisarFuncionarioDaSessao();
 
+        List<Pedido> pesquisarPedidosNaoMigrados();
+
         List<Recebimento> pesquisarRecebimentoPorCliente(Cliente cliente);
+
+        List<BlocoRecibo> pesquisarRecibosNaoMigrados();
 
         void sincronizarFotos();
 

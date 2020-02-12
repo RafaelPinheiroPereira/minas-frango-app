@@ -42,6 +42,6 @@ public class DateUtils {
     }
 
     public static boolean ehUmPeriodoValido(Date dataInicial,Date dataFinal){
-        return dataInicial.before(dataFinal);
+        return dataInicial.before(dataFinal) || dataInicial.equals(dataFinal);
     }
 }

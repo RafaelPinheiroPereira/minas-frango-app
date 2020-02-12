@@ -21,8 +21,8 @@ public class RetrofitConfig {
                 .build();
         this.retrofit =
                 new Retrofit.Builder()
-                        //.baseUrl("http://10.0.2.2:8080/api/")
-                      //.baseUrl("http://192.168.25.4:8080/api/")
+                       // .baseUrl("http://10.0.2.2:8080/api/")
+                      //.baseUrl("http://192.168.25.5:8080/api/")
                         /** AMBIENTE DE DESENVOLVIMENTO*/
                       //  .baseUrl(    "http://api-minas-frango-desenv.2scamzggaf.us-east-2.elasticbeanstalk.com/api/")
 

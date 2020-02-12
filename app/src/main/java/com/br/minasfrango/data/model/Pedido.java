@@ -38,6 +38,10 @@ public class Pedido implements Serializable {
     private long idEmpresa;
     private double valorTotal;
 
+    private String nomeFoto;
+
+    private boolean migrado = false;
+
     public static List<ItemPedido> converterListItemPedidoRealmParaModel(PedidoORM pedidoORM) {
         List<ItemPedido> itens = new ArrayList<>();
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
@@ -57,9 +61,10 @@ public class Pedido implements Serializable {
         this.codigoFuncionario = pedidoORM.getCodigoFuncionario();
         this.dataPedido = pedidoORM.getDataPedido();
         this.motivoCancelamento = pedidoORM.getMotivoCancelamento();
-
         this.valorTotal = pedidoORM.getValorTotal();
         this.idEmpresa = pedidoORM.getIdEmpresa();
         this.idNucleo = pedidoORM.getIdNucleo();
+        this.nomeFoto = pedidoORM.getNomeFoto();
+        this.migrado = pedidoORM.isMigrado();
     }
 }

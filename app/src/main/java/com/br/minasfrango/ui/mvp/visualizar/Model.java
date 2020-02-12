@@ -29,6 +29,11 @@ public class Model implements IViewOrderMVP.IModel {
     }
 
     @Override
+    public void atualizarPedido(final Pedido pedido) {
+        this.mPedidoDAO.alterar(new PedidoORM(pedido));
+    }
+
+    @Override
     public Cliente pesquisarClientePorID(final long codigoCliente) {
         return new Cliente(this.mClienteDAO.findById(codigoCliente));
     }

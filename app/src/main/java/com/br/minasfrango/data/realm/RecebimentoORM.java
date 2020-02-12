@@ -17,6 +17,10 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 public class RecebimentoORM extends RealmObject implements Serializable {
 
+
+    @PrimaryKey
+    private long id;
+
     private boolean check = false;
 
     private Date dataRecebimento;
@@ -24,9 +28,6 @@ public class RecebimentoORM extends RealmObject implements Serializable {
     private Date dataVencimento;
 
     private Date dataVenda;
-
-    @PrimaryKey
-    private long id;
 
     private long idCliente;
 
@@ -44,11 +45,15 @@ public class RecebimentoORM extends RealmObject implements Serializable {
     private double valorAmortizado;
 
     private double valorVenda;
+
     private String idConta;
 
     private long idPedidoBloco;
+
     private long idNucleo;
+
     private long idRecibo;
+
 
 
 
@@ -70,6 +75,7 @@ public class RecebimentoORM extends RealmObject implements Serializable {
         this.idPedidoBloco=recebimento.getIdPedidoBloco();
         this.idNucleo=recebimento.getIdNucleo();
         this.idRecibo=recebimento.getIdRecibo();
+
 
     }
 }

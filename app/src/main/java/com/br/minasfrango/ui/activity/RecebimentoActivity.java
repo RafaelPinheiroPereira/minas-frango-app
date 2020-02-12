@@ -207,6 +207,9 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
         if (requestCode == CameraUtil.RESULTADO_INTENCAO_FOTO) {
             if (resultCode == RESULT_OK) {
 
+                mPresenter.getBlocoRecibo().setNomeFoto(nomeFoto + ".jpg");
+               mPresenter.alterarBlocoRecibo(mPresenter.getBlocoRecibo());
+
 
                 AbstractActivity.showToast(
                         mPresenter.getContext(),

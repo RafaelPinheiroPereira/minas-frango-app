@@ -127,7 +127,10 @@ public class Model implements IRecebimentoMVP.IModel {
         return -1;
     }
 
-
+    @Override
+    public void alterarBlocoRecibo(final BlocoRecibo blocoRecibo) {
+        this.mBlocoPedidoDAO.alterar(new BlocoReciboORM(blocoRecibo));
+    }
 
     @Override
     public void calcularAmortizacaoAutomatica() {
@@ -280,6 +283,8 @@ public class Model implements IRecebimentoMVP.IModel {
         blocoRecibo.setIdFormatado(String.format("%03d",idUsuario) + String.format("%05d",idBlocoRecibo));
         BlocoReciboORM blocoReciboORM= new BlocoReciboORM(blocoRecibo);
         mBlocoPedidoDAO.alterar(blocoReciboORM);
+        mPresenter.setBlocoRecibo(blocoRecibo);
+
 
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
             mPresenter

@@ -208,7 +208,8 @@ public class VisualizarPedidoActivity extends AppCompatActivity implements IView
             if (resultCode == RESULT_OK) {
 
 
-
+                mPresenter.getPedido().setNomeFoto(nomeFoto+".jpg");
+                mPresenter.atualizarPedido(mPresenter.getPedido());
 
                 AbstractActivity.showToast(
                         mPresenter.getContext(),

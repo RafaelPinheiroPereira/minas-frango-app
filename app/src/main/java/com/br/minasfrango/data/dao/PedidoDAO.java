@@ -26,11 +26,34 @@ public class PedidoDAO extends GenericsDAO<PedidoORM> {
         super(type);
     }
 
+    public Pedido consultarPedidoPorNomeDaFoto(final String name) {
+        return new Pedido(where().equalTo("nomeFoto",name).findFirst());
+    }
+
+    public List<Pedido> getPedidosNaoMigrados() {
+
+        List<Pedido> pedidos = new ArrayList<>();
+        RealmResults<PedidoORM> results =
+                where().equalTo("migrado", false).findAll();
+        if (results.size() > 0 && results != null) {
+            if (VERSION.SDK_INT >= VERSION_CODES.N) {
+                results.forEach(pedidoORM->pedidos.add(new Pedido(pedidoORM)));
+            } else {
+                for (PedidoORM pedidoORM : results) {
+                    pedidos.add(new Pedido(pedidoORM));
+                }
+            }
+        }
+
+        return pedidos;
+
+    }
+
     public void salvarPedido(PedidoORM pedidoORM) {
 
 
             realm.beginTransaction();
-            realm.insert(pedidoORM);
+            realm.copyToRealmOrUpdate(pedidoORM);
             realm.commitTransaction();
 
 

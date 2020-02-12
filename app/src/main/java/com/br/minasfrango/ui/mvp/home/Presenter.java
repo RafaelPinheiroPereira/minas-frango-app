@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import androidx.annotation.NonNull;
+import com.br.minasfrango.data.model.BlocoRecibo;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.ClienteGrupo;
 import com.br.minasfrango.data.model.Exportacao;
@@ -41,9 +42,14 @@ public class Presenter implements IHomeMVP.IPresenter {
 
     private DriveServiceHelper mDriveServiceHelper;
 
+    private List<Pedido> fotosPedidos;
 
+    private List<BlocoRecibo> fotosRecibos;
 
     private IModel model;
+
+
+
     private IView view;
 
     private String idPastaVenda;
@@ -132,11 +138,7 @@ public class Presenter implements IHomeMVP.IPresenter {
 
     @Override
     public void salvarFotosNoDrive() {
-
         this.model.sincronizarFotos();
-
-
-
     }
 
 
@@ -321,8 +323,29 @@ public class Presenter implements IHomeMVP.IPresenter {
         this.view.setDrawer(savedInstanceState);
     }
 
+    @Override
+    public void atualizarBlocoReciboPorNomeDaFoto(final String name) {
+       BlocoRecibo blocoRecibo= this.model.pesquisarBlocoReciboPorNomeDaFoto(name);
+       blocoRecibo.setMigrado(true);
+       this.model.atualizarBlocoReciboParaMigrado(blocoRecibo);
+    }
 
+    @Override
+    public void atualizarPedidoPorNomeDaFoto(final String name) {
+       Pedido pedido= this.model.consultarPedidoPorNomeDaFoto(name);
+       pedido.setMigrado(true);
+       this.model.atualizarPedidoParaMigrado(pedido);
+    }
 
+    @Override
+    public List<Pedido> consultarPedidosNaoMigrados() {
+       return this.model.pesquisarPedidosNaoMigrados();
+    }
+
+    @Override
+    public List<BlocoRecibo> consultarRecibosNaoMigrados() {
+        return this.model.pesquisarRecibosNaoMigrados();
+    }
 
     @Override
     public Funcionario pesquisarUsuarioDaSesao() {
@@ -332,6 +355,24 @@ public class Presenter implements IHomeMVP.IPresenter {
     @Override
     public void retirarFuncionarioDaSessao() {
         this.model.deletarFuncionarioDaSessao();
+    }
+
+    @Override
+    public List<Pedido> getFotosPedidos() {
+        return fotosPedidos;
+    }
+
+    @Override
+    public void setFotosPedidos(final List<Pedido> fotosPedidos) {
+        this.fotosPedidos = fotosPedidos;
+    }
+    @Override
+    public List<BlocoRecibo> getFotosRecibos() {
+        return fotosRecibos;
+    }
+    @Override
+    public void setFotosRecibos(final List<BlocoRecibo> fotosRecibos) {
+        this.fotosRecibos = fotosRecibos;
     }
 
 

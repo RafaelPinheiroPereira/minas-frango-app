@@ -34,6 +34,11 @@ public class Presenter implements IViewOrderMVP.IPresenter {
     }
 
     @Override
+    public void atualizarPedido(final Pedido pedido) {
+        this.mModel.atualizarPedido(pedido);
+    }
+
+    @Override
     public Pedido getParametrosDaVenda(final Bundle extras) {
         long id = extras.getLong("keyPedido");
 

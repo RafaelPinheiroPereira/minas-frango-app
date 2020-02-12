@@ -22,9 +22,8 @@ public class Recebimento implements Serializable, Comparable<Recebimento> {
 
     private Date dataVenda;
 
-
-
     private long idRecibo;
+
     private long idEmpresa;
 
     private long idCliente;
@@ -40,10 +39,14 @@ public class Recebimento implements Serializable, Comparable<Recebimento> {
     private double valorAmortizado;
 
     private double valorVenda;
+
     private String idConta;
 
     private long idPedidoBloco;
+
     private long idNucleo;
+
+
 
 
     public Recebimento(RecebimentoORM recebimentoORM) {
@@ -63,6 +66,7 @@ public class Recebimento implements Serializable, Comparable<Recebimento> {
         this.idEmpresa=recebimentoORM.getIdEmpresa();
         this.idPedidoBloco=recebimentoORM.getIdPedidoBloco();
         this.idNucleo=recebimentoORM.getIdNucleo();
+
 
     }
 

@@ -468,6 +468,11 @@ public class Presenter implements IVendaMVP.IPresenter {
     }
 
     @Override
+    public void salvarNomeFoto(final Pedido pedido) {
+        this.mModel.salvarPedido(new PedidoORM(pedido));
+    }
+
+    @Override
     public Funcionario getFuncionario() {
         return mFuncionario;
     }

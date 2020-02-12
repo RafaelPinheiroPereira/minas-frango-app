@@ -1,6 +1,7 @@
 package com.br.minasfrango.ui.mvp.recebimento;
 
 import android.content.Context;
+import com.br.minasfrango.data.model.BlocoRecibo;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.Conta;
 import com.br.minasfrango.data.model.Recebimento;
@@ -12,6 +13,7 @@ public interface IRecebimentoMVP {
 
     interface IPresenter {
 
+        void alterarBlocoRecibo(BlocoRecibo blocoRecibo);
 
         List<Recebimento> obterRecebimentoPorCliente();
 
@@ -110,9 +112,15 @@ public interface IRecebimentoMVP {
         List<Conta> pesquisarContaPorId();
 
         void verificarCredenciaisGoogleDrive();
+
+        BlocoRecibo getBlocoRecibo();
+
+        void setBlocoRecibo(BlocoRecibo blocoRecibo);
     }
 
     interface IModel {
+
+        void alterarBlocoRecibo(BlocoRecibo blocoRecibo);
 
         void calcularAmortizacaoAutomatica();
         void calcularArmotizacaoManual(int position);

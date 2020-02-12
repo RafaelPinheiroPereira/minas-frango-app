@@ -100,12 +100,10 @@ public class HomeActivity extends AppCompatActivity
         super.onStart();
         presenter.setAdapters();
 
-
         presenter.verificarCredenciaisGoogleDrive();
         mClientAdapter.setRecyclerViewOnClickListenerHack(this);
 
         presenter.setFuncionario(presenter.pesquisarUsuarioDaSesao());
-
     }
 
     @Override
@@ -115,8 +113,6 @@ public class HomeActivity extends AppCompatActivity
             result.closeDrawer();
         }
     }
-
-
 
     @Override
     public void obterClientesAposImportarDados() {
@@ -294,11 +290,14 @@ public class HomeActivity extends AppCompatActivity
                                 break;
 
                             case 6:
+                                if (presenter.getFuncionario().getIdPastaVendas() != null
+                                        && presenter.getFuncionario().getIdPastaPagamentos()
+                                                != null) {
 
-
-
-
-                                if (presenter.getFuncionario().getIdPastaVendas() != null && presenter.getFuncionario().getIdPastaPagamentos() !=null) {
+                                    presenter.setFotosPedidos(
+                                            presenter.consultarPedidosNaoMigrados());
+                                    presenter.setFotosRecibos(
+                                            presenter.consultarRecibosNaoMigrados());
 
                                     presenter.salvarFotosNoDrive();
                                 } else {
@@ -349,16 +348,24 @@ public class HomeActivity extends AppCompatActivity
 
                         presenter.logout();
 
-
-                        GoogleSignInClient mGoogleSignInClient=GoogleSignIn.getClient(HomeActivity.this,new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                                .requestEmail()
-                                .build());
-                       mGoogleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
-                           @Override
-                           public void onComplete(@NonNull final Task<Void> task) {
-                                       AbstractActivity.showToast(presenter.getContext(),"Logout do Google Drive realizado com sucesso.");
-                           }
-                       });
+                        GoogleSignInClient mGoogleSignInClient =
+                                GoogleSignIn.getClient(
+                                        HomeActivity.this,
+                                        new GoogleSignInOptions.Builder(
+                                                        GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                                .requestEmail()
+                                                .build());
+                        mGoogleSignInClient
+                                .signOut()
+                                .addOnCompleteListener(
+                                        new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull final Task<Void> task) {
+                                                AbstractActivity.showToast(
+                                                        presenter.getContext(),
+                                                        "Logout do Google Drive realizado com sucesso.");
+                                            }
+                                        });
 
                         presenter.retirarFuncionarioDaSessao();
                         dialog.dismiss();
@@ -450,5 +457,4 @@ public class HomeActivity extends AppCompatActivity
         mRedeAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, new ArrayList());
         mRedeAdapter.notifyDataSetChanged();
     }
-
 }

@@ -42,6 +42,10 @@ public class PedidoORM extends RealmObject implements Serializable {
     private double valorTotal;
     private long idNucleo;
 
+    private String nomeFoto;
+
+    private boolean migrado= false;
+
     public static RealmList<ItemPedidoORM> converterListModelParaListRealm(
             List<ItemPedido> itens) {
         RealmList<ItemPedidoORM> realmList = new RealmList<>();
@@ -78,5 +82,7 @@ public class PedidoORM extends RealmObject implements Serializable {
         this.valorTotal = pedido.getValorTotal();
         this.idEmpresa=pedido.getIdEmpresa();
         this.idNucleo=pedido.getIdNucleo();
+        this.nomeFoto=pedido.getNomeFoto();
+        this.migrado=pedido.isMigrado();
     }
 }
