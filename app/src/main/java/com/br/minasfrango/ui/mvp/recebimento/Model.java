@@ -88,7 +88,6 @@ public class Model implements IRecebimentoMVP.IModel {
         FuncionarioORM funcionarioORM = mFuncionarioDAO.where().equalTo("id",mControleSessao.getIdUsuario()).findFirst();
         Funcionario funcionarioPesquisado= new Funcionario(funcionarioORM);
 
-
         if(mControleSessao.getIdReciboMaximo()>0 &&funcionarioPesquisado.getMaxIdRecibo()==0){
             funcionarioPesquisado.setMaxIdRecibo(mControleSessao.getIdReciboMaximo());
         }
@@ -280,7 +279,12 @@ public class Model implements IRecebimentoMVP.IModel {
         BlocoRecibo blocoRecibo= new BlocoRecibo();
         blocoRecibo.setId(idBlocoRecibo);
         long idUsuario=new ControleSessao(mPresenter.getContext()).getIdUsuario();
-        blocoRecibo.setIdFormatado(String.format("%03d",idUsuario) + String.format("%05d",idBlocoRecibo));
+        if (idBlocoRecibo == 1) {
+            blocoRecibo.setIdFormatado(
+                    String.format("%03d", idUsuario) + String.format("%05d", idBlocoRecibo));
+        }else{
+            blocoRecibo.setIdFormatado(String.format("%05d", idBlocoRecibo));
+        }
         BlocoReciboORM blocoReciboORM= new BlocoReciboORM(blocoRecibo);
         mBlocoPedidoDAO.alterar(blocoReciboORM);
         mPresenter.setBlocoRecibo(blocoRecibo);
