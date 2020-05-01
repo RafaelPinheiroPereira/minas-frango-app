@@ -22,11 +22,10 @@ public class RetrofitConfig {
         this.retrofit =
                 new Retrofit.Builder()
                        // .baseUrl("http://10.0.2.2:8080/api/")
-                     // .baseUrl("http://192.168.25.5:8080/api/")
+                    //  .baseUrl("http://192.168.25.5:8080/api/")
+                        .baseUrl("https://ws-minas-frango.herokuapp.com/api/")
                         /** AMBIENTE DE DESENVOLVIMENTO*/
-                      //  .baseUrl(    "http://api-minas-frango-desenv.2scamzggaf.us-east-2.elasticbeanstalk.com/api/")
 
-                     .baseUrl("http://apiminasfrango-env.2scamzggaf.us-east-2.elasticbeanstalk.com/api/")
                         .client(okHttpClient)
                         .addConverterFactory(JacksonConverterFactory.create())
                         .build();

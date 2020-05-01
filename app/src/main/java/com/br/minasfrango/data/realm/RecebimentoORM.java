@@ -57,6 +57,8 @@ public class RecebimentoORM extends RealmObject implements Serializable {
 
 
 
+
+
     public RecebimentoORM(Recebimento recebimento) {
         this.id =  recebimento.getIdVenda();
         this.check = recebimento.isCheck();
@@ -75,6 +77,7 @@ public class RecebimentoORM extends RealmObject implements Serializable {
         this.idPedidoBloco=recebimento.getIdPedidoBloco();
         this.idNucleo=recebimento.getIdNucleo();
         this.idRecibo=recebimento.getIdRecibo();
+
 
 
     }

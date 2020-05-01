@@ -17,6 +17,7 @@ import com.br.minasfrango.data.model.Unidade;
 import com.br.minasfrango.data.realm.ClienteGrupoORM;
 import com.br.minasfrango.data.realm.ClienteORM;
 import com.br.minasfrango.data.realm.ContaORM;
+import com.br.minasfrango.data.realm.FuncionarioORM;
 import com.br.minasfrango.data.realm.PrecoORM;
 import com.br.minasfrango.data.realm.ProdutoORM;
 import com.br.minasfrango.data.realm.RecebimentoORM;
@@ -286,6 +287,7 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
                 salvarRecebimentos(importacao.getRecebimentosDTO());
                 salvarContas(importacao.getContas());
                 salvarClientesGrupos(importacao.getClientesGrupos());
+                this.atualizarStatusSincronizacaoDoFuncionario();
 
             }
         } catch (IOException e) {
@@ -293,6 +295,17 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
             e.printStackTrace();
         }
         return true;
+    }
+
+    private void atualizarStatusSincronizacaoDoFuncionario() {
+
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        FuncionarioORM funcionarioORM= new FuncionarioORM( mHomePresenter.getFuncionario());
+        funcionarioORM.setSincronizou(true);
+        realm.copyToRealmOrUpdate(funcionarioORM);
+        realm.commitTransaction();
+
     }
 
 

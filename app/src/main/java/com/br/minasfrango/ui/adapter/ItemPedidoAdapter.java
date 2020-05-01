@@ -69,7 +69,6 @@ public class ItemPedidoAdapter extends RecyclerView.Adapter<ItemPedidoAdapter.My
         myViewHolder.txtBico.setText(String.valueOf(itemPedido.getBicos()));
 
 
-
     }
 
 

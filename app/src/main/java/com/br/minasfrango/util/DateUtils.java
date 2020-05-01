@@ -11,6 +11,8 @@ public class DateUtils {
 
     private static final SimpleDateFormat FORMATADOR_dd_MM_YYYY =
             new SimpleDateFormat("dd/MM/yyyy");
+    private static final SimpleDateFormat FORMATADOR_YYYY_MM_DD_HH_MM_SS =
+            new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
 
     public static String formatarDateddMMyyyyParaString(java.util.Date dateToFormat) {
 
@@ -20,9 +22,26 @@ public class DateUtils {
     public static java.util.Date formatarDateParaddMMyyyyhhmm(java.util.Date dateToFormat)
             throws ParseException {
 
+
         String strDate = FORMATADOR_dd_MM_YYYY_hh_mm.format(dateToFormat);
 
         return FORMATADOR_dd_MM_YYYY_hh_mm.parse(strDate);
+    }
+
+    public static java.util.Date formatarDateParaYYYYMMDDHHMMSS(java.util.Date dateToFormat)
+            throws ParseException {
+
+        String strDate = FORMATADOR_YYYY_MM_DD_HH_MM_SS.format(dateToFormat);
+
+        return FORMATADOR_YYYY_MM_DD_HH_MM_SS.parse(strDate);
+    }
+
+    public static String formatarParaYYYYMMDDHHMMSS(java.util.Date dateToFormat)
+            {
+
+
+
+        return FORMATADOR_YYYY_MM_DD_HH_MM_SS.format(dateToFormat);
     }
 
     public static String formatarDateddMMyyyyhhmmParaString(java.util.Date dateToFormat) {

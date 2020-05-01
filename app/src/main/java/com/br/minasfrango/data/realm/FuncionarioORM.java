@@ -4,6 +4,7 @@ import com.br.minasfrango.data.model.Funcionario;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import java.io.Serializable;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -36,6 +37,9 @@ public class FuncionarioORM extends RealmObject implements Serializable {
     private String idPastaPagamentos;
 
     private String alteraPreco;
+    private Date dataUltimaSincronizacao;
+
+    private boolean sincronizou=false;
 
     public FuncionarioORM(Funcionario funcionario) {
 
@@ -50,5 +54,6 @@ public class FuncionarioORM extends RealmObject implements Serializable {
         this.idPastaPagamentos = funcionario.getIdPastaPagamentos();
         this.idPastaVendas = funcionario.getIdPastaVendas();
         this.alteraPreco=funcionario.getAlteraPreco();
+        this.dataUltimaSincronizacao=funcionario.getDataUltimaSincronizacao();
     }
 }

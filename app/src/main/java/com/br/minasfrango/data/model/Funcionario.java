@@ -2,6 +2,7 @@ package com.br.minasfrango.data.model;
 
 import com.br.minasfrango.data.realm.FuncionarioORM;
 import java.io.Serializable;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -35,6 +36,10 @@ public class Funcionario implements Serializable {
 
     private String alteraPreco;
 
+    private Date dataUltimaSincronizacao;
+
+
+
     public Funcionario(FuncionarioORM funcionarioORM) {
         this.id = funcionarioORM.getId();
         this.senha = funcionarioORM.getSenha();
@@ -47,5 +52,7 @@ public class Funcionario implements Serializable {
         this.idPastaPagamentos = funcionarioORM.getIdPastaPagamentos();
         this.idPastaVendas = funcionarioORM.getIdPastaVendas();
         this.alteraPreco=funcionarioORM.getAlteraPreco();
+        this.dataUltimaSincronizacao=funcionarioORM.getDataUltimaSincronizacao();
+
     }
 }

@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
@@ -34,6 +35,7 @@ import com.br.minasfrango.ui.mvp.home.IHomeMVP.IPresenter;
 import com.br.minasfrango.ui.mvp.home.IHomeMVP.IView;
 import com.br.minasfrango.ui.mvp.home.Presenter;
 import com.br.minasfrango.util.AlertDialogClient;
+import com.br.minasfrango.util.DateUtils;
 import com.br.minasfrango.util.DriveServiceHelper;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -48,8 +50,10 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 
 public class HomeActivity extends AppCompatActivity
         implements RecyclerViewOnClickListenerHack, IView {
@@ -70,6 +74,10 @@ public class HomeActivity extends AppCompatActivity
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+
+
+    @BindView(R.id.txt_data_ultima_sincronizacao)
+    TextView txtDataUltimaSincronizacao;
 
     private SearchView searchView;
 
@@ -104,6 +112,16 @@ public class HomeActivity extends AppCompatActivity
         mClientAdapter.setRecyclerViewOnClickListenerHack(this);
 
         presenter.setFuncionario(presenter.pesquisarUsuarioDaSesao());
+
+        try {
+            Date  dataFormatada=DateUtils.formatarDateParaYYYYMMDDHHMMSS(presenter.getFuncionario().getDataUltimaSincronizacao());
+            presenter.getFuncionario().setDataUltimaSincronizacao(dataFormatada);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        txtDataUltimaSincronizacao.setText(DateUtils.formatarParaYYYYMMDDHHMMSS(presenter.getFuncionario().getDataUltimaSincronizacao()));
+
     }
 
     @Override
