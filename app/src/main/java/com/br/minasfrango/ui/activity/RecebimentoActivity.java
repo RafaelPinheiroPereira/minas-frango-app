@@ -299,25 +299,35 @@ public class RecebimentoActivity extends AppCompatActivity implements IRecebimen
 
     @OnClick(R.id.btnSalvarRecebimento)
     public void salvarRecebimento() {
-      if (!new ControleSessao(mPresenter.getContext()).getEnderecoBluetooth().isEmpty()) {
 
-            long idBlocoRecibo= mPresenter.configurarSequenceDoRecebimento();
-        if (idBlocoRecibo > 0) {
-            mPresenter.salvarAmortizacao(idBlocoRecibo);
-            mPresenter.atualizarRecycleView();
-            }else{
+      if(!mPresenter.getConta().getId().equals("F"))  {
+          if (!new ControleSessao(mPresenter.getContext()).getEnderecoBluetooth().isEmpty()) {
 
-            AbstractActivity.showToast(
-                   mPresenter.getContext(),
-                   "Dados do recibo não atualizados com o servidor.\nContate o suporte do sistema");
+              long idBlocoRecibo= mPresenter.configurarSequenceDoRecebimento();
+              if (idBlocoRecibo > 0) {
+                  mPresenter.salvarAmortizacao(idBlocoRecibo);
+                  mPresenter.atualizarRecycleView();
+              }else{
 
-        }
-           mPresenter.esperarPorConexao();
-      } else {
-           AbstractActivity.showToast(
-                   mPresenter.getContext(),
-                   "Endereço MAC da impressora não encontrado.\nHabilite no Menu: Configurar impressora");
-       }
+                  AbstractActivity.showToast(
+                          mPresenter.getContext(),
+                          "Dados do recibo não atualizados com o servidor.\nContate o suporte do sistema");
+
+              }
+              mPresenter.esperarPorConexao();
+          } else {
+              AbstractActivity.showToast(
+                      mPresenter.getContext(),
+                      "Endereço MAC da impressora não encontrado.\nHabilite no Menu: Configurar impressora");
+          }
+      }
+      else{
+          AbstractActivity.showToast(
+                  mPresenter.getContext(),
+                  "Por favor, selecione um tipo de recebimento.\n");
+      }
+
+
     }
 
     @OnCheckedChanged(R.id.swtcAmortize)

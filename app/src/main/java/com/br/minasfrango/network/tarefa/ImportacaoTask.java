@@ -7,7 +7,6 @@ import android.util.Log;
 import com.br.minasfrango.data.model.Cliente;
 import com.br.minasfrango.data.model.ClienteGrupo;
 import com.br.minasfrango.data.model.Conta;
-import com.br.minasfrango.data.model.Funcionario;
 import com.br.minasfrango.data.model.Importacao;
 import com.br.minasfrango.data.model.Preco;
 import com.br.minasfrango.data.model.PrecoID;
@@ -26,7 +25,6 @@ import com.br.minasfrango.network.RetrofitConfig;
 import com.br.minasfrango.network.servico.ImportacaoService;
 import com.br.minasfrango.ui.mvp.home.IHomeMVP;
 import com.br.minasfrango.util.ControleSessao;
-import com.br.minasfrango.util.DriveServiceHelper;
 import io.realm.Realm;
 import java.io.IOException;
 import java.util.List;
@@ -36,13 +34,11 @@ import retrofit2.Response;
 /** Created by Pc on 13/01/2016. */
 public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
 
-    Funcionario mFuncionario;
+
 
     IHomeMVP.IPresenter mHomePresenter;
 
     ControleSessao mControleSessao;
-
-    DriveServiceHelper mdDriveServiceHelper;
 
     public ImportacaoTask( IHomeMVP.IPresenter homePresenter) {
 
@@ -221,8 +217,13 @@ public class ImportacaoTask extends AsyncTask<Void, Void, Boolean> {
 
     private void salvarRecebimentos(List<Recebimento> recebimentos) {
 
+      //  this.mHomePresenter.excluirRecebimentos();
+
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
+
+
+
         if (VERSION.SDK_INT >= VERSION_CODES.N) {
             recebimentos.forEach(
                     recebimento -> {

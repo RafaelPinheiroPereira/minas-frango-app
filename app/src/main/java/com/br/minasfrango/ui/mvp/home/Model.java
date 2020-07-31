@@ -355,5 +355,16 @@ public class Model implements IModel {
         this.mRecebimentoDAO.alterar(recebimentoORM);
     }
 
+    @Override
+    public void excluirRecebimentos() {
+                List<Recebimento> recebimentos= this.mRecebimentoDAO.pesquisarTodosRecebimentos();
+                if(recebimentos!=null && recebimentos.size()>0){
+                for(Recebimento recebimento: recebimentos){
+                    this.mRecebimentoDAO.deletar(new RecebimentoORM(recebimento));
+                }
+                }
+
+    }
+
 
 }

@@ -375,5 +375,10 @@ public class Presenter implements IHomeMVP.IPresenter {
         this.fotosRecibos = fotosRecibos;
     }
 
+    @Override
+    public void excluirRecebimentos() {
+        this.model.excluirRecebimentos();
+    }
+
 
 }

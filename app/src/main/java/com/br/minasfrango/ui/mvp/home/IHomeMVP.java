@@ -102,6 +102,8 @@ public interface IHomeMVP {
         List<BlocoRecibo> getFotosRecibos();
 
         void setFotosRecibos(List<BlocoRecibo> fotosRecibos);
+
+        void excluirRecebimentos();
     }
 
     interface IView {
@@ -164,5 +166,6 @@ public interface IHomeMVP {
         void sincronizarFotos();
 
         void salvarRecebimento(Recebimento recebimento);
+        void excluirRecebimentos();
     }
 }
